@@ -521,7 +521,7 @@ class DashboardController extends Controller
                 'icon' => 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z',
                 'color' => 'emerald',
                 'permission' => PermissionsEnum::ApplyTradeFi->value,
-                'route' => 'funding.tradefi.create',
+                'route' => 'https://luxuryxtech.org.ng/#financing',
             ],
             [
                 'id' => 'browse_courses',
@@ -539,7 +539,7 @@ class DashboardController extends Controller
                 'icon' => 'M16 4C18.2 4 20 5.8 20 8S18.2 12 16 12 12 10.2 12 8 13.8 4 16 4M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M8 6C9.1 6 10 6.9 10 8S9.1 10 8 10 6 9.1 6 8 6.9 6 8 6M8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12Z',
                 'color' => 'teal',
                 'permission' => PermissionsEnum::JoinCommunities->value,
-                'route' => 'community.index',
+                'route' => 'https://t.me/nypipcommunity',
             ],
         ];
 

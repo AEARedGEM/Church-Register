@@ -145,6 +145,66 @@ export const napsApi = {
             throw error.response?.data || error.message;
         }
     },
+
+    /**
+     * Get skill groups with sub-skills
+     */
+    getSkillGroups: async (): Promise<any> => {
+        try {
+            const response = await axios.get('/api/naps/skill-groups');
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    /**
+     * Get skills distribution with actual skill names
+     */
+    getSkillsDistribution: async (): Promise<any> => {
+        try {
+            const response = await axios.get('/api/naps/skills-distribution');
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    /**
+     * Get all OWOP sectors
+     */
+    getOwopSectors: async (): Promise<any> => {
+        try {
+            const response = await axios.get('/api/naps/sectors');
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    /**
+     * Get products for a specific sector
+     */
+    getSectorProducts: async (sectorId: number): Promise<any> => {
+        try {
+            const response = await axios.get(`/api/naps/sectors/${sectorId}/products`);
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    /**
+     * Get OWOP ward priorities
+     */
+    getWardPriorities: async (state: string, lga: string, ward: string): Promise<any> => {
+        try {
+            const response = await axios.get(`/api/naps/ward-priorities/${encodeURIComponent(state)}/${encodeURIComponent(lga)}/${encodeURIComponent(ward)}`);
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
 };
 
 export default napsApi;

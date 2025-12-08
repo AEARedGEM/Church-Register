@@ -6,11 +6,14 @@ use App\Models\NapsRespondent;
 use App\Models\NapsSurveyQuestion;
 use App\Models\NapsSurveyResponse;
 use App\Models\NapsStatistics;
+use App\Models\NapsSubSkill;
+use App\Models\NapsSkillGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class NapsApiController extends Controller
@@ -137,31 +140,51 @@ class NapsApiController extends Controller
                 ->get()
                 ->map(function($item) {
                     return [
-                        'name' => $item->employment_status ?? 'Not Specified',
-                        'value' => $item->count
+                        'name' => ucwords(str_replace('_', ' ', $item->employment_status ?? 'Not Specified')),
+                        'value' => (int)$item->count
                     ];
-                });
+                })
+                ->filter(function($item) {
+                    return $item['value'] > 0;
+                })
+                ->values();
 
-            // Skills distribution
+            // Skills distribution - Get skill names from database
             $skillsData = [];
             $respondents = NapsRespondent::whereNotNull('skills')->get();
             $skillCounts = [];
 
-            // Map skill IDs to names
-            $skillMap = [
-                1 => 'Web Development',
-                2 => 'Graphic Design',
-                3 => 'Fashion Design',
-                4 => 'Catering',
-                5 => 'Welding',
-                6 => 'Carpentry'
-            ];
+            // Get skill ID to name mapping from database (all 65 skills)
+            $skillMap = NapsSubSkill::all(['id', 'name'])
+                ->pluck('name', 'id')
+                ->toArray();
+
+            // If no skills in database, use fallback map for backward compatibility
+            if (empty($skillMap)) {
+                $skillMap = [
+                    1 => 'Web Development',
+                    2 => 'Graphic Design',
+                    3 => 'Fashion Design',
+                    4 => 'Catering',
+                    5 => 'Welding',
+                    6 => 'Carpentry'
+                ];
+            }
 
             foreach ($respondents as $respondent) {
                 if (is_array($respondent->skills)) {
                     foreach ($respondent->skills as $skillId) {
-                        $skillName = $skillMap[$skillId] ?? "Skill $skillId";
+                        $skillName = $skillMap[$skillId] ?? "Unknown Skill (ID: $skillId)";
                         $skillCounts[$skillName] = ($skillCounts[$skillName] ?? 0) + 1;
+                    }
+                } else if (is_string($respondent->skills)) {
+                    // Handle JSON string format
+                    $skills = json_decode($respondent->skills, true);
+                    if (is_array($skills)) {
+                        foreach ($skills as $skillId) {
+                            $skillName = $skillMap[$skillId] ?? "Unknown Skill (ID: $skillId)";
+                            $skillCounts[$skillName] = ($skillCounts[$skillName] ?? 0) + 1;
+                        }
                     }
                 }
             }
@@ -175,21 +198,47 @@ class NapsApiController extends Controller
                 ];
             }
 
-            // Products interest
+            // Products interest (Preferred Product)
             $productsData = [];
             $respondents = NapsRespondent::whereNotNull('products_interest')->get();
             $productCounts = [];
             foreach ($respondents as $respondent) {
-                foreach ($respondent->products_interest as $product) {
-                    $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+                if (is_array($respondent->products_interest)) {
+                    foreach ($respondent->products_interest as $product) {
+                        if (!empty($product)) {
+                            $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+                        }
+                    }
                 }
             }
 
             arsort($productCounts);
-            foreach (array_slice($productCounts, 0, 10) as $product => $count) {
+            foreach (array_slice($productCounts, 0, 12) as $product => $count) {
                 $productsData[] = [
                     'name' => $product,
-                    'value' => $count
+                    'value' => (int)$count
+                ];
+            }
+
+            // Funding Support Needed distribution
+            $fundingData = [];
+            $respondents = NapsRespondent::whereNotNull('funding_needs')->get();
+            $fundingCounts = [];
+            foreach ($respondents as $respondent) {
+                if (is_array($respondent->funding_needs)) {
+                    foreach ($respondent->funding_needs as $funding) {
+                        if (!empty($funding)) {
+                            $fundingCounts[$funding] = ($fundingCounts[$funding] ?? 0) + 1;
+                        }
+                    }
+                }
+            }
+
+            arsort($fundingCounts);
+            foreach ($fundingCounts as $funding => $count) {
+                $fundingData[] = [
+                    'name' => $funding,
+                    'value' => (int)$count
                 ];
             }
 
@@ -210,23 +259,38 @@ class NapsApiController extends Controller
             return response()->json([
                 'success' => true,
                 'stats' => [
-                    'totalRespondents' => $totalRespondents,
-                    'surveysCompleted' => $surveysCompleted,
-                    'verifiedUsers' => $verifiedUsers,
-                    'statesReached' => $statesReached,
+                    'totalRespondents' => (int)$totalRespondents,
+                    'surveysCompleted' => (int)$surveysCompleted,
+                    'verifiedUsers' => (int)$verifiedUsers,
+                    'statesReached' => (int)$statesReached,
                 ],
                 'charts' => [
-                    'employmentData' => $employmentData,
+                    'employmentData' => $employmentData->toArray(),
                     'skillsData' => $skillsData,
                     'productsData' => $productsData,
-                    'stateData' => $stateData,
+                    'fundingData' => $fundingData,
+                    'stateData' => $stateData->toArray(),
                 ]
             ]);
         } catch (\Exception $e) {
+            \Log::error('NAPS Dashboard Stats Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch statistics',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'stats' => [
+                    'totalRespondents' => 0,
+                    'surveysCompleted' => 0,
+                    'verifiedUsers' => 0,
+                    'statesReached' => 0,
+                ],
+                'charts' => [
+                    'employmentData' => [],
+                    'skillsData' => [],
+                    'productsData' => [],
+                    'fundingData' => [],
+                    'stateData' => [],
+                ]
             ], 500);
         }
     }
@@ -294,6 +358,267 @@ class NapsApiController extends Controller
                 'error' => $e->getMessage()
             ], 404);
         }
+    }
+
+    /**
+     * Get OWOP sectors with products
+     */
+    public function getOwopSectors()
+    {
+        try {
+            $config = require base_path('app/Config/OwopSectors.php');
+
+            return response()->json([
+                'success' => true,
+                'sectors' => array_values($config['sectors'])
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch sectors',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get products for a specific sector
+     */
+    public function getSectorProducts($sectorId)
+    {
+        try {
+            $config = require base_path('app/Config/OwopSectors.php');
+
+            if (!isset($config['sectors'][$sectorId])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Sector not found'
+                ], 404);
+            }
+
+            $sector = $config['sectors'][$sectorId];
+
+            return response()->json([
+                'success' => true,
+                'sector' => [
+                    'id' => $sector['id'],
+                    'name' => $sector['name'],
+                    'description' => $sector['description'],
+                    'icon' => $sector['icon'],
+                ],
+                'products' => $sector['products']
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch sector products',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get OWOP prioritization for a specific ward
+     * Returns top-3 products recommended for the ward based on scoring model
+     */
+    public function getWardOwopPriorities($state, $lga, $ward)
+    {
+        try {
+            $config = require base_path('app/Config/OwopSectors.php');
+
+            // Get all respondents from this ward
+            $respondents = NapsRespondent::where('state', $state)
+                ->where('lga', $lga)
+                ->where('ward', $ward)
+                ->get();
+
+            if ($respondents->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'No respondent data yet for this ward',
+                    'priorities' => [],
+                    'summary' => [
+                        'total_respondents' => 0,
+                        'products_voted' => 0
+                    ]
+                ]);
+            }
+
+            // Calculate scores for all products
+            $productScores = [];
+            $totalRespondents = $respondents->count();
+
+            foreach ($config['sectors'] as $sector) {
+                foreach ($sector['products'] as $product) {
+                    $productScores[$product] = [
+                        'name' => $product,
+                        'sector' => $sector['name'],
+                        'sector_id' => $sector['id'],
+                        'scores' => []
+                    ];
+                }
+            }
+
+            // Calculate individual scores
+            foreach ($respondents as $respondent) {
+                // Population Interest Score
+                if ($respondent->products_interest && is_array($respondent->products_interest)) {
+                    foreach ($respondent->products_interest as $product) {
+                        if (isset($productScores[$product])) {
+                            $productScores[$product]['scores']['population_interest'] =
+                                ($productScores[$product]['scores']['population_interest'] ?? 0) + 1;
+                        }
+                    }
+                }
+
+                // Skills Score
+                if ($respondent->skills && is_array($respondent->skills)) {
+                    $skillNames = [
+                        1 => 'Web Development',
+                        2 => 'Graphic Design',
+                        3 => 'Fashion Design',
+                        4 => 'Catering',
+                        5 => 'Welding',
+                        6 => 'Carpentry'
+                    ];
+
+                    $skillRelatedProducts = [
+                        'Web Development' => ['Software development', 'E-learning & edtech services', 'Digital marketing'],
+                        'Graphic Design' => ['Graphics & branding', 'Content creation', 'Animation & 3D design'],
+                        'Fashion Design' => ['Tailoring/fashion design', 'Shoe making', 'Bag making'],
+                        'Catering' => ['Local restaurant operations', 'Bakery products', 'Bottled water production'],
+                        'Welding' => ['Welding and fabrication', 'Metal doors & windows', 'Farm tool fabrication'],
+                        'Carpentry' => ['Furniture & carpentry', 'Wood processing', 'Wood carving'],
+                    ];
+
+                    foreach ($respondent->skills as $skillId) {
+                        $skillName = $skillNames[$skillId] ?? null;
+                        if ($skillName && isset($skillRelatedProducts[$skillName])) {
+                            foreach ($skillRelatedProducts[$skillName] as $relatedProduct) {
+                                if (isset($productScores[$relatedProduct])) {
+                                    $productScores[$relatedProduct]['scores']['skill_availability'] =
+                                        ($productScores[$relatedProduct]['scores']['skill_availability'] ?? 0) + 0.5;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Calculate final scores using the weighting model
+            $scoringModel = $config['scoring_model'];
+            $finalScores = [];
+
+            foreach ($productScores as $product => $data) {
+                $score = 0;
+
+                // Population interest (30%)
+                $populationScore = ($data['scores']['population_interest'] ?? 0) / max($totalRespondents, 1);
+                $score += $populationScore * $scoringModel['population_interest'] * 100;
+
+                // Skill availability (25%)
+                $skillScore = ($data['scores']['skill_availability'] ?? 0) / max($totalRespondents, 1);
+                $score += $skillScore * $scoringModel['skill_availability'] * 100;
+
+                // Natural resource alignment (20%)
+                $regionProducts = $this->getRegionProducts($state);
+                $resourceScore = in_array($product, $regionProducts) ? 1 : 0;
+                $score += $resourceScore * $scoringModel['natural_resource_alignment'] * 100;
+
+                // Market demand (15%) - based on overall product popularity
+                $marketDemandCount = NapsRespondent::whereJsonContains('products_interest', $product)->count();
+                $marketScore = $marketDemandCount / max(NapsRespondent::count(), 1);
+                $score += $marketScore * $scoringModel['market_demand'] * 100;
+
+                // Infrastructure proximity (10%) - base score for urban areas
+                $infrastructureScore = 0.8; // Default to 80%
+                $score += $infrastructureScore * $scoringModel['infrastructure_proximity'] * 100;
+
+                $finalScores[$product] = [
+                    'name' => $product,
+                    'sector' => $data['sector'],
+                    'sector_id' => $data['sector_id'],
+                    'score' => round($score, 2),
+                    'population_interest' => $data['scores']['population_interest'] ?? 0,
+                ];
+            }
+
+            // Sort by score and get top 3
+            usort($finalScores, function($a, $b) {
+                return $b['score'] - $a['score'];
+            });
+
+            $topPriorities = array_slice($finalScores, 0, 3);
+
+            return response()->json([
+                'success' => true,
+                'ward' => "$ward, $lga, $state",
+                'priorities' => $topPriorities,
+                'summary' => [
+                    'total_respondents' => $totalRespondents,
+                    'products_voted' => count(array_filter($finalScores, fn($p) => $p['population_interest'] > 0)),
+                    'recommendation' => count($topPriorities) > 0
+                        ? "Based on {$totalRespondents} respondents, we recommend " .
+                          implode(', ', array_map(fn($p) => $p['name'], $topPriorities))
+                        : "Not enough data to make recommendations yet"
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('OWOP Priorities Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to calculate ward priorities',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Helper function to get region products
+     */
+    private function getRegionProducts($state)
+    {
+        $config = require base_path('app/Config/OwopSectors.php');
+        $regions = $config['regional_resources'];
+
+        // Map state to region
+        $stateToRegion = [
+            'Lagos' => 'Southwest',
+            'Oyo' => 'Southwest',
+            'Osun' => 'Southwest',
+            'Ondo' => 'Southwest',
+            'Ekiti' => 'Southwest',
+            'Ogun' => 'Southwest',
+            'Enugu' => 'Southeast',
+            'Ebonyi' => 'Southeast',
+            'Anambra' => 'Southeast',
+            'Imo' => 'Southeast',
+            'Abia' => 'Southeast',
+            'Rivers' => 'Southsouth',
+            'Bayelsa' => 'Southsouth',
+            'Delta' => 'Southsouth',
+            'Cross River' => 'Southsouth',
+            'Akwa Ibom' => 'Southsouth',
+            'Borno' => 'Northeast',
+            'Yobe' => 'Northeast',
+            'Adamawa' => 'Northeast',
+            'Taraba' => 'Northeast',
+            'Katsina' => 'Northwest',
+            'Kano' => 'Northwest',
+            'Kaduna' => 'Northwest',
+            'Kebbi' => 'Northwest',
+            'Sokoto' => 'Northwest',
+            'Zamfara' => 'Northwest',
+            'Plateau' => 'North-central',
+            'Nassarawa' => 'North-central',
+            'Niger' => 'North-central',
+            'Kwara' => 'North-central',
+            'Kogi' => 'North-central',
+            'FCT' => 'North-central',
+        ];
+
+        $region = $stateToRegion[$state] ?? 'North-central';
+        return $regions[$region] ?? [];
     }
 
     /**
@@ -401,6 +726,106 @@ class NapsApiController extends Controller
             'stats' => $statsData['stats'],
             'charts' => $statsData['charts'],
         ]);
+    }
+
+    /**
+     * Get skill groups with their sub-skills
+     */
+    public function getSkillGroups()
+    {
+        try {
+            $skillGroups = \App\Models\NapsSkillGroup::with('subSkills')
+                ->orderBy('sort_order')
+                ->get()
+                ->map(function ($group) {
+                    return [
+                        'id' => $group->id,
+                        'name' => $group->name,
+                        'description' => $group->description,
+                        'sort_order' => $group->sort_order,
+                        'sub_skills' => $group->subSkills->map(function ($skill) {
+                            return [
+                                'id' => $skill->id,
+                                'name' => $skill->name,
+                                'group_id' => $skill->naps_skill_group_id,
+                            ];
+                        })->toArray(),
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'skill_groups' => $skillGroups,
+                'total_skills' => $skillGroups->sum(fn($g) => count($g['sub_skills']))
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching skill groups: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load skill groups'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get skills distribution with actual skill names
+     */
+    public function getSkillsDistribution()
+    {
+        try {
+            $respondents = NapsRespondent::whereNotNull('skills')->get();
+            $skillCounts = [];
+
+            // Get skill ID to name mapping from database
+            $skillMap = NapsSubSkill::all(['id', 'name'])
+                ->pluck('name', 'id')
+                ->toArray();
+
+            // Process each respondent's skills
+            foreach ($respondents as $respondent) {
+                $skills = $respondent->skills;
+
+                // Handle both array and JSON string formats
+                if (is_string($skills)) {
+                    $skills = json_decode($skills, true) ?: [];
+                }
+
+                if (is_array($skills)) {
+                    foreach ($skills as $skillId) {
+                        $skillName = $skillMap[$skillId] ?? "Skill {$skillId}";
+                        $skillCounts[$skillName] = ($skillCounts[$skillName] ?? 0) + 1;
+                    }
+                }
+            }
+
+            // Sort by count descending
+            arsort($skillCounts);
+
+            // Calculate total for percentages
+            $total = array_sum($skillCounts);
+
+            // Format response data
+            $data = array_map(function ($name, $count) use ($total) {
+                return [
+                    'name' => $name,
+                    'count' => $count,
+                    'percentage' => $total > 0 ? round(($count / $total) * 100, 1) : 0
+                ];
+            }, array_keys($skillCounts), array_values($skillCounts));
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'total' => $total,
+                'unique_skills' => count($skillCounts)
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching skills distribution: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load skills distribution'
+            ], 500);
+        }
     }
 
     /**

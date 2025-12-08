@@ -190,7 +190,12 @@ export default function Dashboard({
 // }
 
     const handleQuickAction = (action: QuickAction) => {
-        router.visit(route(action.route));
+        // Check if the route is an external URL
+        if (action.route.startsWith('http://') || action.route.startsWith('https://')) {
+            window.open(action.route, '_blank');
+        } else {
+            router.visit(route(action.route));
+        }
     };
 
     const getStatusColor = (status: string): string => {

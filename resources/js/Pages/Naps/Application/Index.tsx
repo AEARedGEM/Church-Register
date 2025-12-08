@@ -16,9 +16,41 @@ interface SurveyData {
   lga: string;
   ward: string;
   employmentStatus: string;
+  selectedSector?: string;
   selectedProduct: string;
+  secondarySector?: string;
+  secondaryProduct?: string;
   fundingNeeds: string[];
   governanceRating: number;
+}
+
+interface Sector {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+  products: string[];
+}
+
+interface WardPriority {
+  name: string;
+  sector: string;
+  score: number;
+  population_interest: number;
+}
+
+interface SubSkill {
+  id: number;
+  name: string;
+  group_id: number;
+}
+
+interface SkillGroup {
+  id: number;
+  name: string;
+  description: string;
+  sort_order: number;
+  sub_skills: SubSkill[];
 }
 
 const skills = [
@@ -42,6 +74,12 @@ export default function NAPSDemo() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [states, setStates] = useState<string[]>([]);
+  const [sectors, setSectors] = useState<Sector[]>([]);
+  const [sectorProducts, setSectorProducts] = useState<string[]>([]);
+  const [secondarySectorProducts, setSecondarySectorProducts] = useState<string[]>([]);
+  const [wardPriorities, setWardPriorities] = useState<WardPriority[]>([]);
+  const [skillGroups, setSkillGroups] = useState<SkillGroup[]>([]);
+  const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
 
   const [stats, setStats] = useState({
     totalRespondents: 0,
@@ -54,6 +92,7 @@ export default function NAPSDemo() {
     employmentData: [],
     skillsData: [],
     productsData: [],
+    fundingData: [],
     stateData: []
   });
 
@@ -75,9 +114,11 @@ export default function NAPSDemo() {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const [statsData, statesData] = await Promise.all([
+        const [statsData, statesData, sectorsData, skillGroupsData] = await Promise.all([
           napsApi.getDashboardStats(),
-          napsApi.getStates()
+          napsApi.getStates(),
+          napsApi.getOwopSectors(),
+          napsApi.getSkillGroups().catch(() => ({ success: false, skill_groups: [] }))
         ]);
 
         if (statsData && statsData.success) {
@@ -87,6 +128,23 @@ export default function NAPSDemo() {
 
         if (statesData && statesData.success) {
           setStates(statesData.states);
+        }
+
+        if (sectorsData && sectorsData.success) {
+          // Convert sectors object to array if it's an object
+          const sectorsArray = Array.isArray(sectorsData.sectors)
+            ? sectorsData.sectors
+            : Object.values(sectorsData.sectors);
+          setSectors(sectorsArray as Sector[]);
+        }
+
+        // Load skill groups if available
+        if (skillGroupsData && skillGroupsData.success && skillGroupsData.skill_groups) {
+          setSkillGroups(skillGroupsData.skill_groups);
+          // Expand first group by default
+          if (skillGroupsData.skill_groups.length > 0) {
+            setExpandedGroups(new Set([skillGroupsData.skill_groups[0].id]));
+          }
         }
       } catch (err) {
         console.error('Failed to load data:', err);
@@ -103,6 +161,71 @@ export default function NAPSDemo() {
     setSelectedSkills(prev =>
       prev.includes(skillId) ? prev.filter(id => id !== skillId) : [...prev, skillId]
     );
+  };
+
+  const toggleGroup = (groupId: number) => {
+    const newExpanded = new Set(expandedGroups);
+    if (newExpanded.has(groupId)) {
+      newExpanded.delete(groupId);
+    } else {
+      newExpanded.add(groupId);
+    }
+    setExpandedGroups(newExpanded);
+  };
+
+  const toggleSubSkill = (subSkillId: number) => {
+    toggleSkill(subSkillId);
+  };
+
+  const handleSectorChange = async (sectorId: string) => {
+    setSurveyData({...surveyData, selectedSector: sectorId, selectedProduct: ''});
+
+    if (sectorId) {
+      try {
+        const response = await napsApi.getSectorProducts(parseInt(sectorId));
+        if (response.success) {
+          setSectorProducts(response.products);
+        }
+      } catch (err) {
+        console.error('Failed to load sector products:', err);
+      }
+    } else {
+      setSectorProducts([]);
+    }
+  };
+
+  const handleSecondarySectorChange = async (sectorId: string) => {
+    setSurveyData({...surveyData, secondarySector: sectorId, secondaryProduct: ''});
+
+    if (sectorId) {
+      try {
+        const response = await napsApi.getSectorProducts(parseInt(sectorId));
+        if (response.success) {
+          setSecondarySectorProducts(response.products);
+        }
+      } catch (err) {
+        console.error('Failed to load secondary sector products:', err);
+      }
+    } else {
+      setSecondarySectorProducts([]);
+    }
+  };
+
+  const loadWardPriorities = async () => {
+    if (surveyData.state && surveyData.lga && surveyData.ward) {
+      try {
+        const response = await napsApi.getWardPriorities(
+          surveyData.state,
+          surveyData.lga,
+          surveyData.ward
+        );
+        if (response.success && response.priorities) {
+          setWardPriorities(response.priorities);
+        }
+      } catch (err) {
+        console.error('Failed to load ward priorities:', err);
+      }
+    }
   };
 
   const handleSurveyStepSubmit = async () => {
@@ -280,44 +403,230 @@ export default function NAPSDemo() {
           {/* Step 2: Skills */}
           {surveyStep === 2 && (
             <div className="space-y-6">
-              <p className="text-gray-600 dark:text-gray-300 mb-4">Select all skills you possess:</p>
-              <div className="grid grid-cols-2 gap-3">
-                {skills.map(skill => (
-                  <button
-                    key={skill.id}
-                    type="button"
-                    onClick={() => toggleSkill(skill.id)}
-                    className={`p-4 border rounded-lg text-left transition-all ${
-                      selectedSkills.includes(skill.id)
-                        ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-700'
-                    }`}
-                  >
-                    <p className="font-medium text-gray-900 dark:text-gray-100">{skill.name}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">{skill.category}</p>
-                  </button>
-                ))}
-              </div>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                {skillGroups.length > 0
+                  ? 'Select all skills you currently possess. Choose your primary skill groups first, then select the specific skills under each group.'
+                  : 'Select all skills you possess:'}
+              </p>
+
+              {/* Collapsible Groups View (when skillGroups available) */}
+              {skillGroups.length > 0 ? (
+                <div className="space-y-3">
+                  {/* Summary badge */}
+                  {selectedSkills.length > 0 && (
+                    <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 px-4 py-2 rounded-lg">
+                      <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                        ✓ {selectedSkills.length} skill{selectedSkills.length !== 1 ? 's' : ''} selected
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Skill Groups */}
+                  {skillGroups.map(group => (
+                    <div key={group.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                      {/* Group Header */}
+                      <button
+                        type="button"
+                        onClick={() => toggleGroup(group.id)}
+                        className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <div className="text-left flex-1">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{group.name}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{group.sub_skills.length} skills available</p>
+                        </div>
+                        <span className={`transition-transform ${expandedGroups.has(group.id) ? 'rotate-180' : ''}`}>
+                          ▼
+                        </span>
+                      </button>
+
+                      {/* Group Skills */}
+                      {expandedGroups.has(group.id) && (
+                        <div className="p-4 bg-white dark:bg-gray-900 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {group.sub_skills.map(subSkill => (
+                            <button
+                              key={subSkill.id}
+                              type="button"
+                              onClick={() => toggleSubSkill(subSkill.id)}
+                              className={`p-3 border rounded-lg text-left transition-all text-sm ${
+                                selectedSkills.includes(subSkill.id)
+                                  ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800'
+                              }`}
+                            >
+                              <p className="font-medium text-gray-900 dark:text-gray-100">{subSkill.name}</p>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                /* Fallback to simple grid view when no skill groups loaded */
+                <div className="grid grid-cols-2 gap-3">
+                  {skills.map(skill => (
+                    <button
+                      key={skill.id}
+                      type="button"
+                      onClick={() => toggleSkill(skill.id)}
+                      className={`p-4 border rounded-lg text-left transition-all ${
+                        selectedSkills.includes(skill.id)
+                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-700'
+                      }`}
+                    >
+                      <p className="font-medium text-gray-900 dark:text-gray-100">{skill.name}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">{skill.category}</p>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
-          {/* Step 3: Product */}
+          {/* Step 3: Product - One Ward One Product */}
           {surveyStep === 3 && (
             <div className="space-y-6">
-              <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg mb-6 border border-blue-200 dark:border-blue-800">
-                <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-2">One Ward One Product 🏭</h3>
-                <p className="text-blue-700 dark:text-blue-400 text-sm">Vote for a product your ward should focus on</p>
+              <div className="bg-gradient-to-r from-blue-50 to-emerald-50 dark:from-blue-900/30 dark:to-emerald-900/30 p-6 rounded-lg mb-6 border border-blue-200 dark:border-blue-800">
+                <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                  <span className="text-2xl">🏭</span> One Ward One Product (OWOP)
+                </h3>
+                <p className="text-blue-700 dark:text-blue-400 text-sm mb-3">Vote for products your ward should focus on producing and exporting. Select up to 2 sectors/products.</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preferred Product</label>
-                <select
-                  value={surveyData.selectedProduct}
-                  onChange={(e) => setSurveyData({...surveyData, selectedProduct: e.target.value})}
-                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
-                >
-                  <option value="">Select a product...</option>
-                  {products.map((p, i) => <option key={i} value={p}>{p}</option>)}
-                </select>
+
+              {/* Ward Priorities Recommendation */}
+              {wardPriorities.length > 0 && (
+                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
+                  <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">🎯 Recommended for Your Ward</h4>
+                  <div className="space-y-2">
+                    {wardPriorities.map((priority, idx) => (
+                      <div key={idx} className="text-sm text-amber-700 dark:text-amber-200">
+                        <strong className="text-lg">#{idx + 1}</strong> {priority.name}
+                        <span className="ml-2 text-xs bg-amber-200 dark:bg-amber-900 px-2 py-1 rounded">{priority.sector}</span>
+                        <div className="mt-1 bg-amber-200 dark:bg-amber-900 h-2 rounded overflow-hidden">
+                          <div
+                            className="bg-amber-600 h-full"
+                            style={{width: `${Math.min((priority.score / 100) * 100, 100)}%`}}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Primary Sector and Product Selection */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Select Primary Sector
+                  </label>
+                  <select
+                    value={surveyData.selectedSector || ''}
+                    onChange={(e) => handleSectorChange(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                  >
+                    <option value="">Choose a sector...</option>
+                    {sectors.map((sector) => (
+                      <option key={sector.id} value={sector.id}>
+                        {sector.icon} {sector.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {sectorProducts.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Select Product from {sectors.find(s => s.id === parseInt(surveyData.selectedSector || '0'))?.name}
+                    </label>
+                    <select
+                      value={surveyData.selectedProduct}
+                      onChange={(e) => setSurveyData({...surveyData, selectedProduct: e.target.value})}
+                      className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                    >
+                      <option value="">Choose a product...</option>
+                      {sectorProducts.map((product, i) => (
+                        <option key={i} value={product}>{product}</option>
+                      ))}
+                    </select>
+                    {surveyData.selectedProduct && (
+                      <div className="mt-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
+                        <p className="text-sm text-emerald-800 dark:text-emerald-200">
+                          ✓ Primary choice: <strong>{surveyData.selectedProduct}</strong>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Secondary Sector Option */}
+              <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <input
+                    type="checkbox"
+                    id="secondary-sector"
+                    checked={!!surveyData.secondarySector}
+                    onChange={(e) => {
+                      if (!e.target.checked) {
+                        setSurveyData({...surveyData, secondarySector: undefined, secondaryProduct: undefined});
+                        setSecondarySectorProducts([]);
+                      }
+                    }}
+                    className="w-4 h-4"
+                  />
+                  <label htmlFor="secondary-sector" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Add a secondary sector/product? (Optional)
+                  </label>
+                </div>
+
+                {surveyData.secondarySector !== undefined && (
+                  <div className="space-y-4 ml-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Select Secondary Sector
+                      </label>
+                      <select
+                        value={surveyData.secondarySector || ''}
+                        onChange={(e) => handleSecondarySectorChange(e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                      >
+                        <option value="">Choose a sector...</option>
+                        {sectors.filter(s => s.id !== parseInt(surveyData.selectedSector || '0')).map((sector) => (
+                          <option key={sector.id} value={sector.id}>
+                            {sector.icon} {sector.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {secondarySectorProducts.length > 0 && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Select Product
+                        </label>
+                        <select
+                          value={surveyData.secondaryProduct || ''}
+                          onChange={(e) => setSurveyData({...surveyData, secondaryProduct: e.target.value})}
+                          className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                        >
+                          <option value="">Choose a product...</option>
+                          {secondarySectorProducts.map((product, i) => (
+                            <option key={i} value={product}>{product}</option>
+                          ))}
+                        </select>
+                        {surveyData.secondaryProduct && (
+                          <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                            <p className="text-sm text-blue-800 dark:text-blue-200">
+                              ✓ Secondary choice: <strong>{surveyData.secondaryProduct}</strong>
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -446,6 +755,10 @@ export default function NAPSDemo() {
       return <div className="p-6 text-center">Loading statistics...</div>;
     }
 
+    if (error) {
+      return <div className="p-6 text-center text-red-600">{error}</div>;
+    }
+
     return (
       <div className="min-h-auto bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
         <div className="p-6 space-y-6">
@@ -469,11 +782,12 @@ export default function NAPSDemo() {
             </div>
           </div>
 
-          {/* Charts */}
+          {/* Charts - Row 1 */}
           <div className="grid md:grid-cols-2 gap-6">
+            {/* Employment Distribution Chart */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
               <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Employment Distribution</h2>
-              {chartData.employmentData.length > 0 ? (
+              {chartData.employmentData && chartData.employmentData.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
                   <PieChart>
                     <Pie
@@ -497,23 +811,63 @@ export default function NAPSDemo() {
               )}
             </div>
 
+            {/* Preferred Product Chart */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">All Skills</h2>
-              {chartData.skillsData.length > 0 ? (
+              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Preferred Product Distribution</h2>
+              {chartData.productsData && chartData.productsData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart
+                    data={chartData.productsData}
+                    margin={{ top: 20, right: 30, left: 0, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="name"
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                      interval={0}
+                      tick={{ fontSize: 11 }}
+                    />
+                    <YAxis />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px', color: '#fff' }}
+                      labelStyle={{ color: '#fff' }}
+                    />
+                    <Bar
+                      dataKey="value"
+                      fill="#3B82F6"
+                      name="Count"
+                      radius={[8, 8, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
+              )}
+            </div>
+          </div>
+
+          {/* Charts - Row 2 */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Skills Distribution Chart */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Skills Distribution</h2>
+              {chartData.skillsData && chartData.skillsData.length > 0 ? (
                 <div className="overflow-x-auto">
-                  <ResponsiveContainer width="100%" height={Math.max(300, chartData.skillsData.length * 40)} minWidth={500}>
+                  <ResponsiveContainer width="100%" height={Math.max(250, chartData.skillsData.length * 35)} minWidth={500}>
                     <BarChart
                       data={chartData.skillsData}
-                      margin={{ top: 20, right: 30, left: 0, bottom: 120 }}
+                      margin={{ top: 20, right: 30, left: 0, bottom: 100 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
                         dataKey="name"
                         angle={-45}
                         textAnchor="end"
-                        height={120}
+                        height={100}
                         interval={0}
-                        tick={{ fontSize: 12 }}
+                        tick={{ fontSize: 11 }}
                       />
                       <YAxis />
                       <Tooltip
@@ -529,6 +883,33 @@ export default function NAPSDemo() {
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
+              )}
+            </div>
+
+            {/* Funding Support Needed Chart */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Funding Support Needed</h2>
+              {chartData.fundingData && chartData.fundingData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={chartData.fundingData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      label={({name, value}: any) => `${name} ${value}`}
+                    >
+                      {chartData.fundingData.map((_: any, i: number) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
               ) : (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
               )}
