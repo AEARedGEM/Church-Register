@@ -442,7 +442,6 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
           </div>
         </div>
       </nav>
-
       {/* Sidebar */}
       <aside className={`
         fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] w-64
