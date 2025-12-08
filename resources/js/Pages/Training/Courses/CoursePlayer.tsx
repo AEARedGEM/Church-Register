@@ -1,0 +1,564 @@
+// resources/js/Pages/Training/Courses/CoursePlayer.tsx
+import React, { useState, useEffect, useMemo } from 'react';
+import { usePage, router, Link, Head } from '@inertiajs/react';
+import { PageProps as InertiaPageProps } from '@inertiajs/core';
+import {
+  Play, ChevronLeft, ChevronRight, CheckCircle, Lock, Menu, X,
+  BookOpen, FileText, Download, MessageSquare,
+  BarChart, ArrowLeft, AlertCircle
+} from 'lucide-react';
+import EnhancedMediaPlayer from '@/Components/Training/EnhancedMediaPlayer';
+import ModernLayout from '@/Layouts/Training/TrainingLayout';
+
+// Type Definitions
+type LectureType = 'video' | 'youtube' | 'slide' | 'text' | 'reading' | 'quiz' | 'assignment' | 'document';
+type MediaType = 'video' | 'youtube' | 'slide' | 'text';
+type TabType = 'curriculum' | 'overview' | 'notes' | 'resources';
+
+interface Lecture {
+  id: number;
+  title: string;
+  type: LectureType;
+  duration: string;
+  video_url?: string;
+  content?: string;
+  slides?: string[];
+  resources?: Record<string, any>;
+  is_completed: boolean;
+  is_locked: boolean;
+  is_preview: boolean;
+  order: number;
+}
+
+interface Section {
+  id: number;
+  title: string;
+  description?: string;
+  order: number;
+  lectures: Lecture[];
+}
+
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  thumbnail: string | null;
+  duration_hours: number;
+  duration_minutes: number;
+  course_category: {
+    id: number;
+    name: string;
+  };
+  instructor: {
+    id: number;
+    name: string;
+    bio?: string;
+  };
+}
+
+interface Enrollment {
+  id: number;
+  progress_percentage: number;
+  current_lecture_id?: number;
+  status: 'not_started' | 'in_progress' | 'completed' | 'dropped';
+  enrolled_at: string;
+  last_accessed_at?: string;
+}
+
+interface PageProps extends InertiaPageProps {
+  auth: {
+    user: {
+      id: number;
+      name: string;
+      email: string;
+    };
+  };
+  course: Course;
+  enrollment: Enrollment;
+  sections: Section[];
+  currentLecture?: Lecture;
+}
+
+export default function CoursePlayer() {
+  const { auth, course, enrollment, sections, currentLecture } = usePage<PageProps>().props;
+
+  // State Management
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<TabType>('curriculum');
+  const [progress, setProgress] = useState<number>(0);
+  const [expandedSections, setExpandedSections] = useState<number[]>([]);
+
+  // Memoized values for performance
+  const sectionsData = useMemo(() => sections || [], [sections]);
+
+  const firstSection = useMemo(() => sectionsData[0], [sectionsData]);
+
+  const firstLecture = useMemo(() =>
+    firstSection?.lectures?.[0],
+    [firstSection]
+  );
+
+  const currentLectureData = useMemo(() =>
+    currentLecture || firstLecture,
+    [currentLecture, firstLecture]
+  );
+
+  const { totalLectures, completedLectures } = useMemo(() => {
+    const total = sectionsData.reduce((sum, section) =>
+      sum + (section.lectures?.length || 0), 0
+    );
+    const completed = sectionsData.reduce((sum, section) =>
+      sum + (section.lectures?.filter(l => l.is_completed).length || 0), 0
+    );
+    return { totalLectures: total, completedLectures: completed };
+  }, [sectionsData]);
+
+  // Initialize expanded sections
+  useEffect(() => {
+    if (firstSection && expandedSections.length === 0) {
+      setExpandedSections([firstSection.id]);
+    }
+  }, [firstSection]);
+
+  // Expand section containing current lecture
+  useEffect(() => {
+    if (currentLectureData) {
+      const currentSection = sectionsData.find(section =>
+        section.lectures.some(lecture => lecture.id === currentLectureData.id)
+      );
+      if (currentSection && !expandedSections.includes(currentSection.id)) {
+        setExpandedSections(prev => [...prev, currentSection.id]);
+      }
+    }
+  }, [currentLectureData, sectionsData]);
+
+  const toggleSection = (sectionId: number): void => {
+    setExpandedSections(prev =>
+      prev.includes(sectionId)
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  const handleLectureClick = (lecture: Lecture): void => {
+    if (lecture.is_locked) return;
+
+    router.get(
+      route('training.course.player', {
+        course: course.id,
+        lecture: lecture.id
+      }),
+      {},
+      {
+        preserveScroll: true,
+        preserveState: true
+      }
+    );
+  };
+
+  const handleMarkComplete = (): void => {
+    if (!currentLectureData) return;
+
+    router.post(
+      route('training.course.lecture.complete', {
+        course: course.id,
+        lecture: currentLectureData.id
+      }),
+      {},
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          const nextLecture = getNextLecture();
+          if (nextLecture) {
+            handleLectureClick(nextLecture);
+          }
+        }
+      }
+    );
+  };
+
+  const getNextLecture = (): Lecture | null => {
+    if (!currentLectureData || !sectionsData.length) return null;
+
+    let foundCurrent = false;
+    for (const section of sectionsData) {
+      if (!section.lectures) continue;
+
+      for (const lecture of section.lectures) {
+        if (foundCurrent && !lecture.is_locked) {
+          return lecture;
+        }
+        if (lecture.id === currentLectureData.id) {
+          foundCurrent = true;
+        }
+      }
+    }
+    return null;
+  };
+
+  const getPreviousLecture = (): Lecture | null => {
+    if (!currentLectureData || !sectionsData.length) return null;
+
+    let previousLecture: Lecture | null = null;
+    for (const section of sectionsData) {
+      if (!section.lectures) continue;
+
+      for (const lecture of section.lectures) {
+        if (lecture.id === currentLectureData.id) {
+          return previousLecture;
+        }
+        if (!lecture.is_locked) {
+          previousLecture = lecture;
+        }
+      }
+    }
+    return null;
+  };
+
+  const getMediaType = (lecture: Lecture): MediaType => {
+    if (!lecture) return 'text';
+
+    // YouTube videos
+    if (lecture.type === 'youtube' ||
+        (lecture.video_url && (
+          lecture.video_url.includes('youtube.com') ||
+          lecture.video_url.includes('youtu.be')
+        ))) {
+      return 'youtube';
+    }
+
+    // Slides/Presentations
+    if (lecture.type === 'slide' && lecture.slides && lecture.slides.length > 0) {
+      return 'slide';
+    }
+
+    // Text content (reading, text, quiz, assignment)
+    if (['reading', 'text', 'quiz', 'assignment', 'document'].includes(lecture.type) && lecture.content) {
+      return 'text';
+    }
+
+    // Regular video
+    if (lecture.type === 'video' && lecture.video_url) {
+      return 'video';
+    }
+
+    return 'text';
+  };
+
+  const handleMediaProgress = (progressPercent: number): void => {
+    setProgress(progressPercent);
+  };
+
+  const tabConfig = [
+    { id: 'curriculum' as const, label: 'Curriculum', icon: BookOpen },
+    { id: 'overview' as const, label: 'Overview', icon: FileText },
+    { id: 'notes' as const, label: 'Notes', icon: MessageSquare },
+    { id: 'resources' as const, label: 'Resources', icon: Download }
+  ];
+
+  return (
+    <ModernLayout>
+      <Head title={`${course.title} - Course Player`} />
+
+      {/* Course Player Container - Fixed positioning that works on mobile and desktop */}
+      <div className="fixed inset-0 top-16 left-0 lg:left-64 bg-gray-50 dark:bg-gray-900 flex flex-col z-10">
+        {/* Top Navigation Bar */}
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
+            <Link
+              href={route('training.course.detail', course.id)}
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors flex-shrink-0"
+              aria-label="Back to course details"
+            >
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </Link>
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors flex-shrink-0"
+              aria-label="Toggle sidebar"
+            >
+              {sidebarOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
+            </button>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-gray-900 dark:text-white font-semibold text-sm sm:text-base lg:text-lg line-clamp-1">
+                {course.title}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm line-clamp-1">
+                {currentLectureData?.title || 'No lecture selected'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
+            <div className="hidden lg:flex items-center space-x-2 text-sm">
+              <BarChart className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <span className="text-gray-600 dark:text-gray-400">Progress:</span>
+              <span className="text-gray-900 dark:text-white font-semibold">{enrollment.progress_percentage}%</span>
+            </div>
+            <Link
+              href={route('training.my-courses')}
+              className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors"
+            >
+              <span className="hidden sm:inline">Exit Course</span>
+              <span className="sm:hidden">Exit</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Video/Content Area */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Media Player */}
+            <div className="flex-1 bg-black flex items-center justify-center relative overflow-hidden">
+              {currentLectureData ? (
+                <EnhancedMediaPlayer
+                  type={getMediaType(currentLectureData)}
+                  url={currentLectureData.video_url}
+                  content={currentLectureData.content}
+                  slides={currentLectureData.slides}
+                  title={currentLectureData.title}
+                  onComplete={handleMarkComplete}
+                  onProgress={handleMediaProgress}
+                />
+              ) : (
+                <div className="text-white text-center p-8">
+                  <BookOpen className="w-12 lg:w-16 h-12 lg:h-16 mx-auto mb-4 text-gray-400" />
+                  <h3 className="text-lg lg:text-xl font-semibold mb-2">No Content Available</h3>
+                  <p className="text-gray-400 text-sm lg:text-base">Please select a lecture from the curriculum</p>
+                </div>
+              )}
+            </div>
+
+            {/* Controls Bar */}
+            <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-3 lg:p-4 flex-shrink-0">
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  onClick={() => {
+                    const prev = getPreviousLecture();
+                    if (prev) handleLectureClick(prev);
+                  }}
+                  disabled={!getPreviousLecture()}
+                  className="flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:hover:bg-gray-600 dark:disabled:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-colors text-sm lg:text-base"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline">Previous</span>
+                </button>
+
+                <button
+                  onClick={handleMarkComplete}
+                  disabled={currentLectureData?.is_completed || !currentLectureData}
+                  className="px-4 lg:px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center space-x-2 text-sm lg:text-base"
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  <span className="hidden sm:inline">
+                    {currentLectureData?.is_completed ? 'Completed' : 'Mark as Complete'}
+                  </span>
+                  <span className="sm:hidden">
+                    {currentLectureData?.is_completed ? 'Done' : 'Complete'}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    const next = getNextLecture();
+                    if (next) handleLectureClick(next);
+                  }}
+                  disabled={!getNextLecture()}
+                  className="flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm lg:text-base"
+                >
+                  <span className="hidden sm:inline">Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div
+            className={`${
+              sidebarOpen ? 'translate-x-0' : 'translate-x-full'
+            } fixed lg:relative inset-y-0 right-0 w-full sm:w-96 lg:w-96 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col transition-transform duration-300 z-20 lg:translate-x-0`}
+          >
+            {/* Tabs */}
+            <div className="border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+              <div className="flex">
+                {tabConfig.map(tab => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex-1 flex items-center justify-center space-x-2 px-2 lg:px-4 py-3 text-xs lg:text-sm font-medium transition-colors ${
+                        activeTab === tab.id
+                          ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="hidden sm:inline">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            <div className="flex-1 overflow-y-auto">
+              {activeTab === 'curriculum' && (
+                <div className="p-4 space-y-2">
+                  {/* Progress Summary */}
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-gray-600 dark:text-gray-400 text-sm">Course Progress</span>
+                      <span className="text-gray-900 dark:text-white font-semibold">{enrollment.progress_percentage}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${enrollment.progress_percentage}%` }}
+                      />
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-2">
+                      {completedLectures} of {totalLectures} lectures completed
+                    </p>
+                  </div>
+
+                  {/* Sections */}
+                  {sectionsData.length > 0 ? (
+                    sectionsData.map((section) => (
+                      <div key={section.id} className="bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden">
+                        <button
+                          onClick={() => toggleSection(section.id)}
+                          className="w-full p-4 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        >
+                          <div className="flex-1 text-left">
+                            <h3 className="text-gray-900 dark:text-white font-medium text-sm mb-1">
+                              {section.title}
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400 text-xs">
+                              {section.lectures?.length || 0} lectures
+                            </p>
+                          </div>
+                          <ChevronRight
+                            className={`w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform ${
+                              expandedSections.includes(section.id) ? 'rotate-90' : ''
+                            }`}
+                          />
+                        </button>
+
+                        {expandedSections.includes(section.id) && section.lectures && (
+                          <div className="border-t border-gray-200 dark:border-gray-800">
+                            {section.lectures.map((lecture) => {
+                              const isCurrentLecture = currentLectureData?.id === lecture.id;
+                              return (
+                                <button
+                                  key={lecture.id}
+                                  onClick={() => handleLectureClick(lecture)}
+                                  disabled={lecture.is_locked}
+                                  className={`w-full p-3 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border-b border-gray-200 dark:border-gray-800 last:border-b-0 ${
+                                    isCurrentLecture ? 'bg-gray-100 dark:bg-gray-800' : ''
+                                  } ${lecture.is_locked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                >
+                                  <div className="flex-shrink-0">
+                                    {lecture.is_completed ? (
+                                      <CheckCircle className="w-5 h-5 text-green-600" />
+                                    ) : lecture.is_locked ? (
+                                      <Lock className="w-5 h-5 text-gray-400 dark:text-gray-600" />
+                                    ) : isCurrentLecture ? (
+                                      <Play className="w-5 h-5 text-blue-600" />
+                                    ) : (
+                                      <div className="w-5 h-5 border-2 border-gray-400 dark:border-gray-600 rounded-full" />
+                                    )}
+                                  </div>
+                                  <div className="flex-1 text-left min-w-0">
+                                    <p className="text-gray-900 dark:text-white text-sm font-medium truncate">
+                                      {lecture.title}
+                                    </p>
+                                    <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                      <span className="capitalize">{lecture.type}</span>
+                                      <span>•</span>
+                                      <span>{lecture.duration}</span>
+                                    </div>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <BookOpen className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-3" />
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">No curriculum available</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'overview' && (
+                <div className="p-4">
+                  <h3 className="text-gray-900 dark:text-white font-semibold mb-4">About This Course</h3>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-6">
+                    {course.description}
+                  </p>
+
+                  <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Instructor</h3>
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-semibold">
+                          {course.instructor.name.split(' ').map(n => n[0]).join('')}
+                        </span>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-gray-900 dark:text-white font-medium">{course.instructor.name}</p>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">{course.course_category.name}</p>
+                      </div>
+                    </div>
+                    {course.instructor.bio && (
+                      <p className="text-gray-700 dark:text-gray-300 text-sm">{course.instructor.bio}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'notes' && (
+                <div className="p-4">
+                  <div className="text-center py-12">
+                    <MessageSquare className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-gray-900 dark:text-white font-semibold mb-2">No notes yet</h3>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      Take notes while watching lectures to remember important points
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'resources' && (
+                <div className="p-4">
+                  <div className="text-center py-12">
+                    <Download className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-gray-900 dark:text-white font-semibold mb-2">No resources available</h3>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      Downloadable resources will appear here
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Sidebar Overlay */}
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 z-10 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+        </div>
+      </div>
+    </ModernLayout>
+  );
+}

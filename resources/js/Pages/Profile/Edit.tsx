@@ -1,0 +1,406 @@
+import React from 'react';
+import { Head } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import DeleteUserForm from './Partials/DeleteUserForm';
+import UpdatePasswordForm from './Partials/UpdatePasswordForm';
+import UpdateBusinessProfileForm from './Partials/UpdateBusinessProfileForm';
+import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
+import RoleApplicationForm from './Partials/RoleApplicationForm';
+import { PageProps } from '@/types';
+
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string;
+    address?: string;
+    sector?: string;
+    primary_role: string;
+    registration_status: string;
+    date_of_birth?: string;
+    education_level?: string;
+    skills_of_interest?: string[];
+    state?: string;
+    lga?: string;
+    nin?: string;
+    passport_number?: string;
+    community_rank?: number;
+    active_roles?: string[];
+    email_verified_at?: string;
+    created_at: string;
+    updated_at: string;
+    profile?: UserProfile;
+}
+
+interface UserProfile {
+    id: number;
+    user_id: number;
+    business_name?: string;
+    cac_registration?: string;
+    business_type?: string;
+    business_stage?: string;
+    years_in_business?: number;
+    employee_count?: number;
+    annual_revenue?: number;
+    annual_turnover?: number;
+    description?: string;
+    website?: string;
+    founded_date?: string;
+    logo_path?: string;
+    pitch_deck_path?: string;
+    funding_needs?: number;
+    funding_history?: any[];
+    market_reach?: string;
+    loan_request_details?: any[];
+    investor_type?: string;
+    preferred_sectors?: string[];
+    ticket_sizes?: string[];
+    accreditation_status?: string;
+    kyc_documents?: any[];
+    district?: string;
+    office_address?: string;
+    official_id?: string;
+    contact_channels?: any[];
+    institution_name?: string;
+    institution_registration?: string;
+    institution_sector?: string;
+    contact_persons?: any[];
+    commitment_areas?: string[];
+    bio?: string;
+    cv_path?: string;
+    linkedin_profile?: string;
+    expertise_areas?: string[];
+    certifications?: any[];
+    references?: any[];
+    training_mode?: string;
+    title?: string;
+    specialization?: string[];
+    profile_complete?: boolean;
+    profile_completed_at?: string;
+}
+
+interface DashboardContext {
+    current_role: string;
+    role_label: string;
+    available_roles: string[];
+    can_switch_roles: boolean;
+    active_roles: string[];
+    has_cpd_access: boolean;
+}
+
+interface SelectOption {
+    id: string;
+    name: string;
+    description?: string;
+}
+
+interface EditProps extends PageProps {
+    auth: {
+        user: User;
+    };
+    mustVerifyEmail: boolean;
+    status?: string;
+    user: User;
+    dashboardContext: DashboardContext;
+    sectors: SelectOption[];
+    businessTypes: string[];
+    businessStages: SelectOption[];
+    investorTypes: SelectOption[];
+    institutionSectors: SelectOption[];
+    trainingModes: SelectOption[];
+    educationLevels: SelectOption[];
+    states: SelectOption[];
+    availableRoles: SelectOption[];
+}
+
+export default function Edit({
+    auth,
+    mustVerifyEmail,
+    status,
+    user,
+    dashboardContext,
+    sectors,
+    businessTypes,
+    businessStages,
+    investorTypes,
+    institutionSectors,
+    trainingModes,
+    educationLevels,
+    states,
+    availableRoles
+}: EditProps) {
+    const [activeSection, setActiveSection] = React.useState<string>('profile');
+
+    const sections = [
+        {
+            id: 'profile',
+            name: 'Profile Information',
+            description: 'Update your personal information and contact details'
+        },
+        {
+            id: 'business',
+            name: 'Business Profile',
+            description: 'Manage your business or professional information'
+        },
+        {
+            id: 'roles',
+            name: 'Role Applications',
+            description: 'Apply for additional roles and manage permissions'
+        },
+        {
+            id: 'security',
+            name: 'Security',
+            description: 'Update your password and security settings'
+        },
+        {
+            id: 'account',
+            name: 'Account Management',
+            description: 'Export data or delete your account'
+        }
+    ];
+
+    const getProfileCompletion = () => {
+        if (!user.profile) return { percentage: 0, isComplete: false };
+
+        const requiredFields = getRequiredFieldsForRole(user.primary_role);
+        const completedFields = requiredFields.filter(field => {
+            const value = user.profile?.[field as keyof UserProfile] || user[field as keyof User];
+            return value !== null && value !== undefined && value !== '';
+        });
+
+        const percentage = requiredFields.length > 0 ? Math.round((completedFields.length / requiredFields.length) * 100) : 100;
+        return { percentage, isComplete: percentage === 100 };
+    };
+
+    const getRequiredFieldsForRole = (role: string): string[] => {
+        switch (role) {
+            case 'startup':
+                return ['business_name', 'business_stage', 'business_type', 'funding_needs', 'description'];
+            case 'sme_owner':
+                return ['business_name', 'cac_registration', 'business_type', 'employee_count', 'annual_turnover'];
+            case 'investor':
+                return ['investor_type', 'preferred_sectors', 'ticket_sizes', 'kyc_documents'];
+            case 'nyp_senator':
+                return ['district', 'office_address', 'official_id', 'contact_channels'];
+            case 'institutional_partner':
+                return ['institution_name', 'institution_registration', 'institution_sector', 'contact_persons'];
+            case 'trainer_mentor_expert':
+                return ['bio', 'expertise_areas', 'certifications', 'training_mode'];
+            default:
+                return ['name', 'email', 'phone'];
+        }
+    };
+
+    const completion = getProfileCompletion();
+
+    return (
+        <AuthenticatedLayout
+            header={
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                            Profile Settings
+                        </h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Manage your account settings and preferences
+                        </p>
+                    </div>
+
+                    {/* Profile Completion Indicator */}
+                    <div className="flex items-center gap-3">
+                        <div className="text-right">
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                Profile {completion.percentage}% Complete
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                {dashboardContext.role_label}
+                            </div>
+                        </div>
+                        <div className="relative w-12 h-12">
+                            <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                                <path
+                                    className="stroke-gray-300 dark:stroke-gray-700"
+                                    strokeWidth="3"
+                                    fill="transparent"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                                <path
+                                    className={`${completion.isComplete ? 'stroke-green-500' : 'stroke-emerald-500'}`}
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    fill="transparent"
+                                    strokeDasharray={`${completion.percentage}, 100`}
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                {completion.isComplete ? (
+                                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                ) : (
+                                    <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                                        {completion.percentage}%
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        >
+            <Head title="Profile Settings" />
+
+            <div className="py-6">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-6">
+                        {/* Sidebar Navigation */}
+                        <div className="lg:col-span-3">
+                            <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+                                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                                        Settings
+                                    </h3>
+                                </div>
+                                <nav className="space-y-1 p-2">
+                                    {sections.map((section) => (
+                                        <button
+                                            key={section.id}
+                                            onClick={() => setActiveSection(section.id)}
+                                            className={`${
+                                                activeSection === section.id
+                                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-200'
+                                                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
+                                            } group w-full flex items-start px-3 py-2 text-sm font-medium border rounded-md transition-colors`}
+                                        >
+                                            <div className="flex-1 text-left">
+                                                <div className="font-medium">{section.name}</div>
+                                                <div className="text-xs opacity-75 mt-1">{section.description}</div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </nav>
+                            </div>
+
+                            {/* Role Status Card */}
+                            {dashboardContext.available_roles.length > 0 && (
+                                <div className="mt-6 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                                Additional Roles Available
+                                            </div>
+                                            <div className="text-xs text-gray-600 dark:text-gray-300">
+                                                {dashboardContext.available_roles.length} roles to explore
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => setActiveSection('roles')}
+                                        className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium"
+                                    >
+                                        Apply for Additional Roles →
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Main Content */}
+                        <div className="mt-6 lg:mt-0 lg:col-span-9">
+                            <div className="space-y-6">
+                                {/* Profile Information Section */}
+                                {activeSection === 'profile' && (
+                                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+                                        <UpdateProfileInformationForm
+                                            mustVerifyEmail={mustVerifyEmail}
+                                            status={status}
+                                            className="p-6"
+                                            user={user}
+                                            sectors={sectors}
+                                            educationLevels={educationLevels}
+                                            states={states}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Business Profile Section */}
+                                {activeSection === 'business' && (
+                                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+                                        <UpdateBusinessProfileForm
+                                            className="p-6"
+                                            user={user}
+                                            sectors={sectors}
+                                            businessTypes={businessTypes}
+                                            businessStages={businessStages}
+                                            investorTypes={investorTypes}
+                                            institutionSectors={institutionSectors}
+                                            trainingModes={trainingModes}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Role Applications Section */}
+                                {activeSection === 'roles' && (
+                                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+                                        <RoleApplicationForm
+                                            className="p-6"
+                                            user={user}
+                                            dashboardContext={dashboardContext}
+                                            availableRoles={availableRoles}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Security Section */}
+                                {activeSection === 'security' && (
+                                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+                                        <UpdatePasswordForm className="p-6" />
+                                    </div>
+                                )}
+
+                                {/* Account Management Section */}
+                                {activeSection === 'account' && (
+                                    <div className="space-y-6">
+                                        {/* Data Export */}
+                                        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+                                            <header className="mb-6">
+                                                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                                    Export Your Data
+                                                </h2>
+                                                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                                    Download all your data from the NYP-IP platform.
+                                                </p>
+                                            </header>
+
+                                            <form action={route('profile.edit')} method="post" className="inline">
+                                                <button
+                                                    type="submit"
+                                                    className="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
+                                                >
+                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    Export Data
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        {/* Delete Account */}
+                                        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+                                            <DeleteUserForm className="p-6" />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}

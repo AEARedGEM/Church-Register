@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class LectureProgress extends Model
+{
+    protected $table = 'lecture_progress';
+
+    protected $fillable = [
+        'user_id',
+        'course_lecture_id',
+        'is_completed',
+        'progress_percentage',
+        'completed_at',
+        'time_spent_seconds',
+        'last_position_seconds'
+    ];
+
+    protected $casts = [
+        'is_completed' => 'boolean',
+        'progress_percentage' => 'integer',
+        'time_spent_seconds' => 'integer',
+        'last_position_seconds' => 'integer',
+        'completed_at' => 'datetime'
+    ];
+
+    /**
+     * Relationship: Progress belongs to a user
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relationship: Progress belongs to a lecture
+     */
+    public function lecture(): BelongsTo
+    {
+        return $this->belongsTo(CourseLecture::class, 'course_lecture_id');
+    }
+
+    /**
+     * Mark lecture as completed
+     */
+    public function markAsCompleted(): void
+    {
+        $this->update([
+            'is_completed' => true,
+            'progress_percentage' => 100,
+            'completed_at' => now()
+        ]);
+    }
+
+    /**
+     * Update progress percentage
+     */
+    public function updateProgress(int $percentage): void
+    {
+        $this->update([
+            'progress_percentage' => min(100, max(0, $percentage)),
+            'is_completed' => $percentage >= 100,
+            'completed_at' => $percentage >= 100 ? now() : null
+        ]);
+    }
+
+    /**
+     * Scope: Get completed progress records
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('is_completed', true);
+    }
+
+    /**
+     * Scope: Get progress for a specific user
+     */
+    public function scopeForUser($query, int $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+}
