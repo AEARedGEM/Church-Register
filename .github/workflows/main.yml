@@ -1,0 +1,112 @@
+name: Production NYP-IP Portal Deployment
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.2
+
+      # Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, openssl, tokenizer, pdo_mysql
+          coverage: none
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # # Create .env file from secrets
+      # - name: Create .env file
+      #   run: |
+      #     cat << EOF > .env
+      #     APP_NAME="NYP-IP Portal"
+      #     APP_ENV=production
+      #     APP_KEY=${{ secrets.APP_KEY }}
+      #     APP_DEBUG=false
+      #     APP_URL=${{ secrets.APP_URL }}
+
+      #     # Database Configuration
+      #     DB_CONNECTION=mysql
+      #     DB_HOST=${{ secrets.DB_HOST }}
+      #     DB_PORT=${{ secrets.DB_PORT }}
+      #     DB_DATABASE=${{ secrets.DB_DATABASE }}
+      #     DB_USERNAME=${{ secrets.DB_USERNAME }}
+      #     DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+
+      #     # Mail Configuration
+      #     MAIL_MAILER=${{ secrets.MAIL_MAILER }}
+      #     MAIL_HOST=${{ secrets.MAIL_HOST }}
+      #     MAIL_PORT=${{ secrets.MAIL_PORT }}
+      #     MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+      #     MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+      #     MAIL_ENCRYPTION=${{ secrets.MAIL_ENCRYPTION }}
+      #     MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}
+      #     MAIL_FROM_NAME="${{ secrets.MAIL_FROM_NAME }}"
+      #     EOF
+
+      # Install Composer dependencies
+      - name: Install Composer dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+
+      # Install and build frontend assets
+      - name: Install and build frontend assets
+        run: |
+          npm ci
+          npm run build
+
+      # Create storage link (non-database operation)
+      - name: Create storage link
+        run: php artisan storage:link
+
+      # Remove files not needed in production
+      - name: Cleanup for deployment
+        run: |
+          rm -rf node_modules/
+          rm -rf tests/
+          rm -rf .github/
+          rm -rf .git/
+          rm -f .gitignore
+          rm -f .editorconfig
+          find . -type d -name ".git" -exec rm -rf {} +
+
+      # Deploy via FTP
+      - name: 📂 Deploy files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ${{ secrets.FTP_SERVER_PRODUCTION }}
+          username: ${{ secrets.FTP_USERNAME_PRODUCTION }}
+          password: ${{ secrets.FTP_PASSWORD_PRODUCTION }}
+          server-dir: /
+          exclude: |
+            *.md
+            *.txt
+            *.log
+            /storage/framework/views/*
+          # dangerous-clean-slate: false
+
+      # Run database migrations and optimization on server via SSH
+      # - name: 🚀 Run post-deployment commands
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USERNAME }}
+      #     password: ${{ secrets.SSH_PASSWORD }}
+      #     script: |
+      #       cd /path/to/your/project
+      #       php artisan migrate --force
+      #       php artisan config:cache
+      #       php artisan route:cache
+      #       php artisan view:cache
+      #       chmod -R 755 storage bootstrap/cache
