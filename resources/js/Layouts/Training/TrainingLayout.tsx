@@ -466,7 +466,6 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
           ))}
         </nav>
       </aside>
-
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
