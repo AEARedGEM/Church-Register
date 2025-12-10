@@ -4,7 +4,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
 import { Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 
 interface User {
     id: number;
@@ -61,6 +61,56 @@ export default function UpdateProfileInformationForm({
         nin: user.nin || '',
         passport_number: user.passport_number || '',
     });
+
+    const [statesList, setStatesList] = useState<string[]>([]);
+    const [lgasList, setLgasList] = useState<string[]>([]);
+    const [loadingStates, setLoadingStates] = useState(false);
+    const [loadingLgas, setLoadingLgas] = useState(false);
+
+    useEffect(() => {
+        fetchStates();
+    }, []);
+
+    useEffect(() => {
+        if (data.state) {
+            fetchLGAs(data.state);
+        }
+    }, [data.state]);
+
+    const fetchStates = async () => {
+        setLoadingStates(true);
+        try {
+            const response = await fetch('/api/states');
+            const result = await response.json();
+            setStatesList(result);
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        } finally {
+            setLoadingStates(false);
+        }
+    };
+
+    const fetchLGAs = async (selectedState: string) => {
+        if (!selectedState) {
+            setLgasList([]);
+            return;
+        }
+        setLoadingLgas(true);
+        try {
+            const response = await fetch(`/api/lgas?state=${selectedState}`);
+            const result = await response.json();
+            setLgasList(result);
+        } catch (error) {
+            console.error('Error fetching LGAs:', error);
+        } finally {
+            setLoadingLgas(false);
+        }
+    };
+
+    const handleStateChange = (value: string) => {
+        setData('state', value);
+        setData('lga', '');
+    };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -169,11 +219,12 @@ export default function UpdateProfileInformationForm({
                             id="state"
                             className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm"
                             value={data.state}
-                            onChange={(e) => setData('state', e.target.value)}
+                            onChange={(e) => handleStateChange(e.target.value)}
+                            disabled={loadingStates}
                         >
-                            <option value="">Select state</option>
-                            {states.map((state) => (
-                                <option key={state.id} value={state.id}>{state.name}</option>
+                            <option value="">{loadingStates ? 'Loading states...' : 'Select state'}</option>
+                            {statesList.map((state) => (
+                                <option key={state} value={state}>{state}</option>
                             ))}
                         </select>
                         <InputError className="mt-2" message={errors.state} />
@@ -181,13 +232,20 @@ export default function UpdateProfileInformationForm({
 
                     <div>
                         <InputLabel htmlFor="lga" value="Local Government Area (LGA)" />
-                        <TextInput
+                        <select
                             id="lga"
-                            className="mt-1 block w-full"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm disabled:opacity-50"
                             value={data.lga}
                             onChange={(e) => setData('lga', e.target.value)}
-                            placeholder="Enter your LGA"
-                        />
+                            disabled={!data.state || loadingLgas || lgasList.length === 0}
+                        >
+                            <option value="">
+                                {!data.state ? 'Select a state first' : loadingLgas ? 'Loading LGAs...' : 'Select LGA'}
+                            </option>
+                            {lgasList.map((lga) => (
+                                <option key={lga} value={lga}>{lga}</option>
+                            ))}
+                        </select>
                         <InputError className="mt-2" message={errors.lga} />
                     </div>
                 </div>

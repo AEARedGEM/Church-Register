@@ -3,7 +3,7 @@ import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm } from '@inertiajs/react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface RegistrationFormData {
     firstName: string;
@@ -28,6 +28,51 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
         lga: '',
         ward: '',
     });
+
+    const [statesList, setStatesList] = useState<string[]>([]);
+    const [lgasList, setLgasList] = useState<string[]>([]);
+    const [loadingStates, setLoadingStates] = useState(false);
+    const [loadingLgas, setLoadingLgas] = useState(false);
+
+    useEffect(() => {
+        fetchStates();
+    }, []);
+
+    const fetchStates = async () => {
+        setLoadingStates(true);
+        try {
+            const response = await fetch('/api/states');
+            const result = await response.json();
+            setStatesList(result);
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        } finally {
+            setLoadingStates(false);
+        }
+    };
+
+    const fetchLGAs = async (selectedState: string) => {
+        if (!selectedState) {
+            setLgasList([]);
+            setData('lga', '');
+            return;
+        }
+        setLoadingLgas(true);
+        try {
+            const response = await fetch(`/api/lgas?state=${selectedState}`);
+            const result = await response.json();
+            setLgasList(result);
+        } catch (error) {
+            console.error('Error fetching LGAs:', error);
+        } finally {
+            setLoadingLgas(false);
+        }
+    };
+
+    const handleStateChange = (value: string) => {
+        setData('state', value);
+        fetchLGAs(value);
+    };
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -118,12 +163,13 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
                             id="state"
                             name="state"
                             value={data.state}
-                            onChange={(e) => setData('state', e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white"
+                            onChange={(e) => handleStateChange(e.target.value)}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                            disabled={loadingStates}
                             required
                         >
-                            <option value="">Select State</option>
-                            {states.map(state => (
+                            <option value="">{loadingStates ? 'Loading states...' : 'Select State'}</option>
+                            {statesList.map(state => (
                                 <option key={state} value={state}>{state}</option>
                             ))}
                         </select>
@@ -133,16 +179,22 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
                     {/* LGA */}
                     <div>
                         <InputLabel htmlFor="lga" value="Local Government Area" />
-                        <TextInput
+                        <select
                             id="lga"
-                            type="text"
                             name="lga"
                             value={data.lga}
                             onChange={(e) => setData('lga', e.target.value)}
-                            placeholder="LGA"
-                            className="mt-1 block w-full"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                            disabled={!data.state || loadingLgas || lgasList.length === 0}
                             required
-                        />
+                        >
+                            <option value="">
+                                {!data.state ? 'Select state first' : loadingLgas ? 'Loading LGAs...' : 'Select LGA'}
+                            </option>
+                            {lgasList.map(lga => (
+                                <option key={lga} value={lga}>{lga}</option>
+                            ))}
+                        </select>
                         <InputError message={errors.lga} className="mt-2" />
                     </div>
 

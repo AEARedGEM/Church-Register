@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Enum\RolesEnum;
 use App\Enum\PermissionsEnum;
+use App\Services\LocationService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -91,8 +92,13 @@ class ProfileController extends Controller
             ['id' => 'phd', 'name' => 'PhD'],
         ];
 
-        // Nigerian states
-        $states = $this->getNigerianStates();
+        // Get location data (countries, states, LGAs)
+        $countries = LocationService::getCountries();
+        $states = LocationService::getStatesByCountry('NG'); // Default to Nigeria
+        $lgas = $user->state ? LocationService::getLGAsByState($user->state) : [];
+
+        // Nigerian states (legacy - can be removed if using LocationService)
+        $nigerianStates = $this->getNigerianStates();
 
         // Get available roles to apply for
         $availableRoles = collect($user->getAvailableRolesToApply())
@@ -117,7 +123,10 @@ class ProfileController extends Controller
             'institutionSectors' => $institutionSectors,
             'trainingModes' => $trainingModes,
             'educationLevels' => $educationLevels,
+            'countries' => $countries,
             'states' => $states,
+            'lgas' => $lgas,
+            'nigerianStates' => $nigerianStates,
             'availableRoles' => $availableRoles,
         ]);
     }

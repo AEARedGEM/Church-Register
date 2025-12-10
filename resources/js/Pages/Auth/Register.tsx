@@ -4,9 +4,8 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 import { Eye, EyeOff, Building2, TrendingUp, Users, Shield } from 'lucide-react';
-import { useState } from 'react';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -15,10 +14,56 @@ export default function Register() {
         password: '',
         password_confirmation: '',
         user_type: 'entrepreneur',
+        state: '',
+        lga: '',
     });
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [states, setStates] = useState<string[]>([]);
+    const [lgas, setLgas] = useState<string[]>([]);
+    const [loadingStates, setLoadingStates] = useState(false);
+    const [loadingLgas, setLoadingLgas] = useState(false);
+
+    useEffect(() => {
+        fetchStates();
+    }, []);
+
+    const fetchStates = async () => {
+        setLoadingStates(true);
+        try {
+            const response = await fetch('/api/states');
+            const result = await response.json();
+            setStates(result);
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        } finally {
+            setLoadingStates(false);
+        }
+    };
+
+    const fetchLGAs = async (selectedState: string) => {
+        if (!selectedState) {
+            setLgas([]);
+            return;
+        }
+        setLoadingLgas(true);
+        try {
+            const response = await fetch(`/api/lgas?state=${selectedState}`);
+            const result = await response.json();
+            setLgas(result);
+        } catch (error) {
+            console.error('Error fetching LGAs:', error);
+        } finally {
+            setLoadingLgas(false);
+        }
+    };
+
+    const handleStateChange = (value: string) => {
+        setData('state', value);
+        setData('lga', '');
+        fetchLGAs(value);
+    };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -152,6 +197,60 @@ export default function Register() {
                                     />
 
                                     <InputError message={errors.email} className="mt-2 text-red-600 dark:text-red-400 text-sm" />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="state"
+                                        value="State"
+                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                    />
+
+                                    <select
+                                        id="state"
+                                        name="state"
+                                        value={data.state}
+                                        onChange={(e) => handleStateChange(e.target.value)}
+                                        disabled={loadingStates || states.length === 0}
+                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 disabled:opacity-50"
+                                    >
+                                        <option value="">{loadingStates ? 'Loading states...' : 'Select a state'}</option>
+                                        {states.map((state) => (
+                                            <option key={state} value={state}>
+                                                {state}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <InputError message={errors.state} className="mt-2 text-red-600 dark:text-red-400 text-sm" />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="lga"
+                                        value="Local Government / Ward"
+                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                    />
+
+                                    <select
+                                        id="lga"
+                                        name="lga"
+                                        value={data.lga}
+                                        onChange={(e) => setData('lga', e.target.value)}
+                                        disabled={!data.state || loadingLgas || lgas.length === 0}
+                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 disabled:opacity-50"
+                                    >
+                                        <option value="">
+                                            {!data.state ? 'Select a state first' : loadingLgas ? 'Loading LGAs...' : 'Select a Local Government'}
+                                        </option>
+                                        {lgas.map((lga) => (
+                                            <option key={lga} value={lga}>
+                                                {lga}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <InputError message={errors.lga} className="mt-2 text-red-600 dark:text-red-400 text-sm" />
                                 </div>
 
                                 <div>

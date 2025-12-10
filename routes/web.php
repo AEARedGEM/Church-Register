@@ -11,6 +11,7 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LocationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -111,6 +112,11 @@ Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
 
 Route::get('/naps', [NapsController::class, 'dashboard'])->middleware('auth')->name('naps.index');
 
+// Location API routes
+Route::prefix('api')->group(function () {
+    Route::get('/states', [LocationController::class, 'getStates'])->name('api.states');
+    Route::get('/lgas', [LocationController::class, 'getLGAs'])->name('api.lgas');
+});
 
 });
 
