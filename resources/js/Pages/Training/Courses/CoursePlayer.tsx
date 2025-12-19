@@ -87,6 +87,9 @@ export default function CoursePlayer() {
   const [activeTab, setActiveTab] = useState<TabType>('curriculum');
   const [progress, setProgress] = useState<number>(0);
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
+  const [completingLecture, setCompletingLecture] = useState<number | null>(null);
+  const [navigatingLecture, setNavigatingLecture] = useState<number | null>(null);
+  const [lectureCompletionStatus, setLectureCompletionStatus] = useState<Record<number, boolean>>({});
 
   // Memoized values for performance
   const sectionsData = useMemo(() => sections || [], [sections]);
@@ -102,6 +105,12 @@ export default function CoursePlayer() {
     currentLecture || firstLecture,
     [currentLecture, firstLecture]
   );
+
+  // Check if lecture is completed (from API or local state)
+  const isCurrentLectureCompleted = useMemo(() => {
+    if (!currentLectureData) return false;
+    return currentLectureData.is_completed || lectureCompletionStatus[currentLectureData.id] === true;
+  }, [currentLectureData, lectureCompletionStatus]);
 
   const { totalLectures, completedLectures } = useMemo(() => {
     const total = sectionsData.reduce((sum, section) =>
@@ -157,7 +166,9 @@ export default function CoursePlayer() {
   };
 
   const handleMarkComplete = (): void => {
-    if (!currentLectureData) return;
+    if (!currentLectureData || isCurrentLectureCompleted) return;
+
+    setCompletingLecture(currentLectureData.id);
 
     router.post(
       route('training.course.lecture.complete', {
@@ -167,32 +178,70 @@ export default function CoursePlayer() {
       {},
       {
         preserveScroll: true,
-        onSuccess: () => {
-          const nextLecture = getNextLecture();
-          if (nextLecture) {
-            handleLectureClick(nextLecture);
-          }
+        preserveState: true,
+        onSuccess: (page: any) => {
+          // Update local completion status immediately
+          setLectureCompletionStatus(prev => ({
+            ...prev,
+            [currentLectureData.id]: true
+          }));
+
+          console.log('Lecture marked as complete:', currentLectureData.id);
+
+          // Clear the completing state after a short delay to show the animation
+          setTimeout(() => {
+            setCompletingLecture(null);
+            // Reload page data to get updated enrollment progress
+            router.reload();
+          }, 800);
+        },
+        onError: (errors: any) => {
+          setCompletingLecture(null);
+          console.error('Failed to mark lecture complete:', errors);
+          alert('Failed to mark lecture as complete. Please try again.');
         }
       }
     );
   };
 
+  const isLectureCompleted = (lectureId: number): boolean => {
+    return lectureCompletionStatus[lectureId] === true;
+  };
+
   const getNextLecture = (): Lecture | null => {
     if (!currentLectureData || !sectionsData.length) return null;
 
-    let foundCurrent = false;
-    for (const section of sectionsData) {
-      if (!section.lectures) continue;
+    // Find the current section
+    const currentSection = sectionsData.find(section =>
+      section.lectures.some(lecture => lecture.id === currentLectureData.id)
+    );
 
-      for (const lecture of section.lectures) {
-        if (foundCurrent && !lecture.is_locked) {
-          return lecture;
-        }
-        if (lecture.id === currentLectureData.id) {
-          foundCurrent = true;
-        }
+    if (!currentSection) return null;
+
+    // Find the next lecture in the current section (regardless of lock status)
+    const currentLectureIndex = currentSection.lectures.findIndex(
+      lecture => lecture.id === currentLectureData.id
+    );
+
+    if (currentLectureIndex !== -1) {
+      // Look for the next lecture in the current section
+      for (let i = currentLectureIndex + 1; i < currentSection.lectures.length; i++) {
+        const lecture = currentSection.lectures[i];
+        // Return the next lecture even if it's locked
+        return lecture;
       }
     }
+
+    // If no more lectures in current section, find the first lecture in next section
+    const currentSectionIndex = sectionsData.indexOf(currentSection);
+    for (let i = currentSectionIndex + 1; i < sectionsData.length; i++) {
+      const section = sectionsData[i];
+      if (section.lectures && section.lectures.length > 0) {
+        // Return first lecture of next section
+        return section.lectures[0];
+      }
+    }
+
     return null;
   };
 
@@ -336,10 +385,13 @@ export default function CoursePlayer() {
                 <button
                   onClick={() => {
                     const prev = getPreviousLecture();
-                    if (prev) handleLectureClick(prev);
+                    if (prev) {
+                      setNavigatingLecture(prev.id);
+                      handleLectureClick(prev);
+                    }
                   }}
                   disabled={!getPreviousLecture()}
-                  className="flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:hover:bg-gray-600 dark:disabled:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-colors text-sm lg:text-base"
+                  className="flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:hover:bg-gray-600 dark:disabled:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-all duration-200 text-sm lg:text-base"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">Previous</span>
@@ -347,28 +399,57 @@ export default function CoursePlayer() {
 
                 <button
                   onClick={handleMarkComplete}
-                  disabled={currentLectureData?.is_completed || !currentLectureData}
-                  className="px-4 lg:px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center space-x-2 text-sm lg:text-base"
+                  disabled={isCurrentLectureCompleted || !currentLectureData || completingLecture === currentLectureData?.id}
+                  className={`px-4 lg:px-6 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 text-sm lg:text-base ${
+                    completingLecture === currentLectureData?.id
+                      ? 'bg-green-500 text-white shadow-lg scale-105'
+                      : isCurrentLectureCompleted
+                      ? 'bg-green-600 text-white cursor-default'
+                      : 'bg-green-600 hover:bg-green-700 text-white'
+                  } ${
+                    !currentLectureData || (isCurrentLectureCompleted && completingLecture !== currentLectureData?.id)
+                      ? 'disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:cursor-not-allowed'
+                      : ''
+                  }`}
                 >
-                  <CheckCircle className="w-4 h-4" />
+                  <CheckCircle className={`w-4 h-4 transition-transform duration-300 ${completingLecture === currentLectureData?.id ? 'scale-125' : ''}`} />
                   <span className="hidden sm:inline">
-                    {currentLectureData?.is_completed ? 'Completed' : 'Mark as Complete'}
+                    {completingLecture === currentLectureData?.id
+                      ? 'Completing...'
+                      : isCurrentLectureCompleted
+                      ? 'Completed'
+                      : 'Mark as Complete'}
                   </span>
                   <span className="sm:hidden">
-                    {currentLectureData?.is_completed ? 'Done' : 'Complete'}
+                    {completingLecture === currentLectureData?.id
+                      ? '...'
+                      : isCurrentLectureCompleted
+                      ? 'Done'
+                      : 'Complete'}
                   </span>
                 </button>
 
                 <button
                   onClick={() => {
                     const next = getNextLecture();
-                    if (next) handleLectureClick(next);
+                    if (next) {
+                      setNavigatingLecture(next.id);
+                      handleLectureClick(next);
+                    }
                   }}
                   disabled={!getNextLecture()}
-                  className="flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm lg:text-base"
+                  className={`flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 text-sm lg:text-base ${
+                    navigatingLecture === getNextLecture()?.id
+                      ? 'bg-blue-500 text-white shadow-lg scale-105'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  } ${
+                    !getNextLecture()
+                      ? 'disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed'
+                      : ''
+                  }`}
                 >
                   <span className="hidden sm:inline">Next</span>
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${navigatingLecture === getNextLecture()?.id ? 'scale-125' : ''}`} />
                 </button>
               </div>
             </div>
@@ -447,10 +528,10 @@ export default function CoursePlayer() {
                           />
                         </button>
 
-                        {expandedSections.includes(section.id) && section.lectures && (
                           <div className="border-t border-gray-200 dark:border-gray-800">
                             {section.lectures.map((lecture) => {
                               const isCurrentLecture = currentLectureData?.id === lecture.id;
+                              const isCompleted = lecture.is_completed || lectureCompletionStatus[lecture.id];
                               return (
                                 <button
                                   key={lecture.id}
@@ -461,8 +542,8 @@ export default function CoursePlayer() {
                                   } ${lecture.is_locked ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
                                   <div className="flex-shrink-0">
-                                    {lecture.is_completed ? (
-                                      <CheckCircle className="w-5 h-5 text-green-600" />
+                                    {isCompleted ? (
+                                      <CheckCircle className="w-5 h-5 text-green-600 animate-pulse" />
                                     ) : lecture.is_locked ? (
                                       <Lock className="w-5 h-5 text-gray-400 dark:text-gray-600" />
                                     ) : isCurrentLecture ? (
@@ -472,7 +553,7 @@ export default function CoursePlayer() {
                                     )}
                                   </div>
                                   <div className="flex-1 text-left min-w-0">
-                                    <p className="text-gray-900 dark:text-white text-sm font-medium truncate">
+                                    <p className={`text-sm font-medium truncate ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>
                                       {lecture.title}
                                     </p>
                                     <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -485,7 +566,6 @@ export default function CoursePlayer() {
                               );
                             })}
                           </div>
-                        )}
                       </div>
                     ))
                   ) : (

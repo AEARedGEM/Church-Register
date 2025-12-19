@@ -705,7 +705,7 @@ export default function EditCourse({ course, categories, skillTypes, instructors
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 w-full sm:w-auto">
             <button
               type="button"
-              onClick={() => window.open(route('training.show', course.slug), '_blank')}
+              onClick={() => router.visit(route('training.course.detail', course.id))}
               className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors text-sm sm:text-base font-medium"
             >
               <Eye className="w-4 h-4 sm:w-5 sm:h-5" />

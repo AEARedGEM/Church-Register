@@ -195,7 +195,10 @@ export default function CourseDetailPage({
                         className="w-full h-full object-cover"
                         />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                      <button className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                      <button
+                        onClick={() => window.scrollTo({ top: 400, behavior: 'smooth' })}
+                        className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
+                      >
                         <PlayCircle className="w-10 h-10 text-blue-600" />
                       </button>
                     </div>
@@ -207,7 +210,7 @@ export default function CourseDetailPage({
                       <div className="mb-6">
                         <div className="flex items-baseline space-x-3 mb-2">
                           <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                            ${course.effective_price || course.price || 0}
+                            ₦{course.effective_price || course.price || 0}
                           </span>
                           {course.has_discount && (
                             <>

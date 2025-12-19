@@ -469,18 +469,21 @@ class CourseController extends Controller
     /**
      * Complete lecture (for all types including slides/docs)
      */
-    public function completeLecture(Course $course, Request $request)
+    public function completeLecture(Course $course, CourseLecture $lecture, Request $request)
     {
-        $request->validate([
-            'lecture' => 'required|exists:course_lectures,id'
-        ]);
-
-        $lectureId = $request->lecture;
-        $lecture = CourseLecture::findOrFail($lectureId);
-
+        // Validate that the lecture belongs to this course
         $section = $lecture->section;
         if ($section->course_id !== $course->id) {
             abort(403, 'Invalid lecture for this course');
+        }
+
+        // Check if user is enrolled in the course
+        $enrollment = CourseEnrollment::where('user_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->first();
+
+        if (!$enrollment) {
+            abort(403, 'Not enrolled in this course');
         }
 
         try {
@@ -489,7 +492,7 @@ class CourseController extends Controller
             $progress = LectureProgress::updateOrCreate(
                 [
                     'user_id' => Auth::id(),
-                    'course_lecture_id' => $lectureId
+                    'course_lecture_id' => $lecture->id
                 ],
                 [
                     'is_completed' => true,
@@ -502,13 +505,14 @@ class CourseController extends Controller
 
             DB::commit();
 
+            // Return Inertia response (not plain JSON)
             return back()->with('success', 'Lecture marked as complete');
 
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Failed to mark lecture complete', [
                 'error' => $e->getMessage(),
-                'lecture_id' => $lectureId,
+                'lecture_id' => $lecture->id,
                 'user_id' => Auth::id()
             ]);
             return back()->with('error', 'Failed to update progress');

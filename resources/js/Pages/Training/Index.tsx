@@ -11,7 +11,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import ModernLayout from '@/Layouts/Training/TrainingLayout';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, Link } from '@inertiajs/react';
 
 // Type definitions
 interface Stats {
@@ -303,7 +303,7 @@ export default function TrainingDashboard({
               </div>
             </div>
           </div>
-          
+
           <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             <StatCard
               icon={BookOpen}
@@ -354,10 +354,13 @@ export default function TrainingDashboard({
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                   Continue Learning
                 </h2>
-                <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1">
+                <Link
+                  href={route('training.my-courses')}
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1"
+                >
                   View All
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
 
               <div className="space-y-3 sm:space-y-4">
@@ -369,9 +372,12 @@ export default function TrainingDashboard({
                   <div className="text-center py-8">
                     <BookOpen className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
                     <p className="text-gray-500 dark:text-gray-400">No enrolled courses yet</p>
-                    <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium mt-2 inline-block">
+                    <Link
+                      href={route('training.courses')}
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium mt-2 inline-block"
+                    >
                       Browse courses to get started
-                    </button>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -383,10 +389,13 @@ export default function TrainingDashboard({
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                   Featured Courses
                 </h2>
-                <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1">
+                <Link
+                  href={route('training.courses')}
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1"
+                >
                   View All
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -467,9 +476,12 @@ export default function TrainingDashboard({
                   </button>
                 ))}
               </div>
-              <button className="w-full mt-4 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-center block">
+              <Link
+                href={route('training.courses')}
+                className="w-full mt-4 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-center block"
+              >
                 View All Categories
-              </button>
+              </Link>
             </div>
 
             {/* Recent Achievements */}

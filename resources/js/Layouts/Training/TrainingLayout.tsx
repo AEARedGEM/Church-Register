@@ -3,7 +3,7 @@ import {
   Home, BookOpen, Search, Bell, Settings,
   ChevronDown, ChevronRight, Menu, X, Award, User, LogOut,
   Moon, Sun, CreditCard, Wallet, Users, TrendingUp, DollarSign,
-  Brain, BrainCircuit, Shield
+  Brain, BrainCircuit, Shield, Calendar
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 import { Link, router, usePage } from '@inertiajs/react';
@@ -97,48 +97,39 @@ const getNavigationGroups = (userRole: UserRole): NavigationGroup[] => {
       label: 'Training',
       items: [
         {
-          id: 'training',
-          label: 'Training',
+          id: 'training.dashboard',
+          label: 'Dashboard',
           icon: BookOpen,
           route: 'training.dashboard',
           badge: null,
-          subItems: [
-            { id: 'training.my-courses', label: 'My Courses', route: 'training.my-courses' },
-            { id: 'training.events', label: 'Events', route: 'training.events' },
-            { id: 'training.courses', label: 'Browse Courses', route: 'training.courses' },
-            { id: 'training.certificates', label: 'My Certificates', route: 'training.certificates' },
-          ]
-        }
-      ]
-    },
-    {
-      label: 'Finance',
-      items: [
+        },
         {
-          id: 'wallet',
-          label: 'Wallet',
-          icon: Wallet,
-          route: 'wallet.index',
+          id: 'training.my-courses',
+          label: 'My Courses',
+          icon: BookOpen,
+          route: 'training.my-courses',
           badge: null,
         },
         {
-          id: 'funding',
-          label: 'Funding',
-          icon: NairaIcon,
-          route: 'funding.index',
+          id: 'training.events',
+          label: 'Events',
+          icon: Calendar,
+          route: 'training.events',
           badge: null,
         },
-      ]
-    },
-    {
-      label: 'Community',
-      items: [
         {
-          id: 'community',
-          label: 'Community',
-          icon: Users,
-          route: 'community.index',
-          badge: '0'
+          id: 'training.courses',
+          label: 'Browse Courses',
+          icon: Search,
+          route: 'training.courses',
+          badge: null,
+        },
+        {
+          id: 'training.certificates',
+          label: 'My Certificates',
+          icon: Award,
+          route: 'training.certificates',
+          badge: null,
         },
       ]
     },
@@ -203,7 +194,17 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
   const userRole: UserRole = user?.roles?.[0] || 'individual';
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme-mode');
+      if (saved !== null) {
+        return saved === 'dark';
+      }
+      // Check system preference if no saved preference
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
   const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
 
@@ -213,8 +214,10 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
+      localStorage.setItem('theme-mode', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme-mode', 'light');
     }
   }, [darkMode]);
 
