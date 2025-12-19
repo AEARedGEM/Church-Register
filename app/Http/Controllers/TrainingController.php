@@ -91,12 +91,14 @@ class TrainingController extends Controller
 
 public function dashboard(Request $request)
 {
-    // Get user's enrolled courses
+    // Get user's enrolled courses (including completed)
     $enrollments = CourseEnrollment::with(['course.courseCategory', 'course.instructor'])
         ->byUser(Auth::id())
-        ->active()
         ->orderBy('updated_at', 'desc')
         ->get();
+
+    // Get only active courses for the display list
+    $activeEnrollments = $enrollments->whereIn('status', ['not_started', 'in_progress'])->values();
 
     // Get available courses (not enrolled)
     $availableCourses = Course::published()
@@ -136,7 +138,7 @@ public function dashboard(Request $request)
             'certificatesEarned' => $enrollments->where('certificate_issued_at', '!=', null)->count(),
             'currentStreak' => $this->calculateStreak(Auth::id())
         ],
-        'enrolledCourses' => $enrollments->take(3)->map(function($enrollment) {
+        'enrolledCourses' => $activeEnrollments->take(3)->map(function($enrollment) {
             return [
                 'id' => $enrollment->course->id,
                 'title' => $enrollment->course->title,
@@ -184,12 +186,13 @@ public function dashboard(Request $request)
 // Add these helper methods to TrainingController
 private function calculateHoursLearned($enrollments)
 {
-    return $enrollments->sum(function($enrollment) {
+    $hours = $enrollments->sum(function($enrollment) {
         // Calculate based on progress and course duration
         $courseDuration = ($enrollment->course->duration_hours ?? 0) +
                          (($enrollment->course->duration_minutes ?? 0) / 60);
         return ($courseDuration * $enrollment->progress_percentage) / 100;
     });
+    return round($hours, 2);
 }
 
 private function calculateStreak($userId)

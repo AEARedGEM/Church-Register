@@ -3,7 +3,7 @@ import React from 'react';
 import { usePage, router, Link, Head } from '@inertiajs/react';
 import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import ModernLayout from '@/Layouts/Training/TrainingLayout';
-import { BookOpen, Clock, PlayCircle } from 'lucide-react';
+import { BookOpen, Clock, PlayCircle, Download } from 'lucide-react';
 
 interface Enrollment {
   id: number;
@@ -169,22 +169,31 @@ export default function MyCoursesPage() {
                     </div>
 
                     <button
-                    onClick={() => handleCourseClick(enrollment.course.id)}
-                    disabled={enrollment.status === 'completed'}
-                    className={`w-full font-medium py-2 px-4 rounded-lg transition-colors
-                        ${
-                        enrollment.status === 'completed'
-                            ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700 text-white'
-                        }`}
+                      onClick={() => handleCourseClick(enrollment.course.id)}
+                      disabled={enrollment.status === 'completed'}
+                      className={`w-full font-medium py-2 px-4 rounded-lg transition-colors
+                          ${
+                          enrollment.status === 'completed'
+                              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                              : 'bg-blue-600 hover:bg-blue-700 text-white'
+                          }`}
                     >
-                    {enrollment.status === 'in_progress'
-                        ? 'Continue'
-                        : enrollment.status === 'completed'
-                        ? 'Completed'
-                        : 'Start'} Learning
+                      {enrollment.status === 'in_progress'
+                          ? 'Continue'
+                          : enrollment.status === 'completed'
+                          ? 'Completed'
+                          : 'Start'} Learning
                     </button>
 
+                    {enrollment.status === 'completed' && (
+                      <Link
+                        href={route('training.certificates', enrollment.id)}
+                        className="w-full flex items-center justify-center space-x-2 mt-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>Download Certificate</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}

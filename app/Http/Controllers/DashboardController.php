@@ -265,7 +265,17 @@ class DashboardController extends Controller
 
         // Get role switching activities
         $roleActivities = collect([]);
-        if (count($user->active_roles ?? []) > 1) {
+        $activeRoles = $user->active_roles;
+
+        // Ensure active_roles is an array
+        if (is_string($activeRoles)) {
+            $activeRoles = json_decode($activeRoles, true) ?? [];
+        }
+        if (!is_array($activeRoles)) {
+            $activeRoles = [];
+        }
+
+        if (count($activeRoles) > 1) {
             $roleActivities = collect([
                 [
                     'type' => 'role',

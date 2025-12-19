@@ -44,18 +44,22 @@ export default function CertificateDetail() {
   const { auth, enrollment, certificateData } = usePage<PageProps>().props;
   const certificateRef = useRef<HTMLDivElement>(null);
 
-    const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async () => {
     const element = certificateRef.current;
     if (!element) return;
 
     try {
+      // Simply use html2canvas directly on the visible element
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        logging: false,
+        allowTaint: true,
+        logging: true,
         backgroundColor: '#ffffff',
+        imageTimeout: 10000,
       });
 
+      // Convert canvas to PDF
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('landscape', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -63,6 +67,7 @@ export default function CertificateDetail() {
 
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Certificate-${certificateData.certificate_id}.pdf`);
+      
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Failed to generate PDF. Please try again.');
@@ -118,7 +123,83 @@ export default function CertificateDetail() {
               <span>Share</span>
             </button>
             <button
-              onClick={() => window.print()}
+              onClick={() => {
+                // Create comprehensive print styles with better selectors
+                const printStyles = document.createElement('style');
+                printStyles.id = 'print-styles';
+                printStyles.textContent = `
+                  @media print {
+                    * {
+                      margin: 0 !important;
+                      padding: 0 !important;
+                      box-shadow: none !important;
+                    }
+                    html, body {
+                      background: white !important;
+                      color: black !important;
+                      height: auto !important;
+                      width: 100% !important;
+                    }
+                    body > * {
+                      display: none !important;
+                    }
+                    [data-print-certificate] {
+                      display: block !important;
+                      position: static !important;
+                      width: 100% !important;
+                      margin: 0 !important;
+                      padding: 20px !important;
+                      background: white !important;
+                      color: black !important;
+                      page-break-after: avoid;
+                    }
+                    [data-print-certificate],
+                    [data-print-certificate] * {
+                      background: white !important;
+                      color: black !important;
+                      opacity: 1 !important;
+                      visibility: visible !important;
+                      display: inherit !important;
+                      border-color: #333 !important;
+                    }
+                    [data-print-certificate] h1,
+                    [data-print-certificate] h2,
+                    [data-print-certificate] h3,
+                    [data-print-certificate] p,
+                    [data-print-certificate] span {
+                      color: black !important;
+                      background: white !important;
+                    }
+                    [data-print-certificate] svg {
+                      filter: grayscale(100%);
+                    }
+                    [data-print-certificate] img {
+                      max-width: 100%;
+                      display: block !important;
+                    }
+                    .dark\\:bg-gray-800,
+                    .dark\\:text-white,
+                    [class*="dark:"] {
+                      background-color: white !important;
+                      color: black !important;
+                      border-color: #ccc !important;
+                    }
+                  }
+                `;
+                document.head.appendChild(printStyles);
+
+                // Delay print to ensure styles are applied
+                setTimeout(() => {
+                  window.print();
+                  // Cleanup after print dialog closes
+                  setTimeout(() => {
+                    const styles = document.getElementById('print-styles');
+                    if (styles) {
+                      document.head.removeChild(styles);
+                    }
+                  }, 1000);
+                }, 100);
+              }}
               className="flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
             >
               <Printer className="w-5 h-5" />
@@ -129,6 +210,7 @@ export default function CertificateDetail() {
           {/* Certificate Preview */}
           <div
             ref={certificateRef}
+            data-print-certificate
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border-4 border-yellow-400 dark:border-yellow-500 mb-8 print:border-8"
           >
             {/* Ornamental Border */}
