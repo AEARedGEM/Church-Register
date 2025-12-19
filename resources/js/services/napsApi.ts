@@ -205,6 +205,42 @@ export const napsApi = {
             throw error.response?.data || error.message;
         }
     },
+
+    /**
+     * Get LGA products linkage (One Ward One Product)
+     */
+    getLgaProductsLinkage: async (): Promise<any> => {
+        try {
+            const response = await axios.get('/api/naps/lgas/products/linkage');
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    /**
+     * Get products for specific LGA
+     */
+    getLgaProducts: async (lgaId: number): Promise<any> => {
+        try {
+            const response = await axios.get(`/api/naps/lgas/${lgaId}/products`);
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    /**
+     * Get charts summary (compact data for pie charts)
+     */
+    getChartsSummary: async (): Promise<any> => {
+        try {
+            const response = await axios.get('/api/naps/charts-summary');
+            return response.data;
+        } catch (error: any) {
+            throw error.response?.data || error.message;
+        }
+    },
 };
 
 export default napsApi;

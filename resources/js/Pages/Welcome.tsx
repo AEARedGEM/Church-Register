@@ -196,16 +196,18 @@ export default function Welcome({
                         {[
                             { name: 'LuxuryX Technologies & TradeFi Limited', logo: '/img/luxuryx-logo.png' },
                             { name: 'The Nigerian Youth Parliament', logo: '/img/nyp-logo.png' },
+                            { name: 'AfaraHub Ensemble Company', logo: '/img/afarahub-logo.png' },
                             { name: 'Federal Ministry Of Youth Development', logo: '/img/fmyd-logo.png' },
                             { name: 'Remonode Technologies Limited', logo: '/img/remonode-logo.png' },
-                            { name: 'AfaraHub Ensemble Company', logo: '/img/afarahub-logo.png' },
+                            { name: 'Able GOD Engineering & Technologies Ltd.', logo: '/img/ableGOD-logo.png' },
                             { name: 'Gockan Builders & Contractor Ltd. ', logo: '/img/gockan-logo.png' },
                             // Duplicate for seamless loop
                             { name: 'LuxuryX Technologies & TradeFi Limited', logo: '/img/luxuryx-logo.png' },
                             { name: 'The Nigerian Youth Parliament', logo: '/img/nyp-logo.png' },
+                            { name: 'AfaraHub Ensemble Company', logo: '/img/afarahub-logo.png' },
                             { name: 'Federal Ministry Of Youth Development', logo: '/img/fmyd-logo.png' },
                             { name: 'Remonode Technologies Limited', logo: '/img/remonode-logo.png' },
-                            { name: 'AfaraHub Ensemble Company', logo: '/img/afarahub-logo.png' },
+                            { name: 'Able GOD Engineering & Technologies Ltd.', logo: '/img/ableGOD-logo.png' },
                             { name: 'Gockan Builders & Contractor Ltd. ', logo: '/img/gockan-logo.png' },
                         ].map((partner, index) => (
                             <div key={index} className="flex-shrink-0 w-[280px] group">

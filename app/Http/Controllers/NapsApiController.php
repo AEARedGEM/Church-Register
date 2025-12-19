@@ -829,22 +829,269 @@ class NapsApiController extends Controller
     }
 
     /**
-     * Get states list
+     * Get states list from database
      */
     public function getStates()
     {
-        $states = [
-            'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
-            'Benue', 'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo',
-            'Ekiti', 'Enugu', 'Gombe', 'Imo', 'Jigawa', 'Kaduna',
-            'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara', 'Lagos',
-            'Lasg', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun',
-            'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
-        ];
+        try {
+            $states = \App\Models\State::orderBy('name')->get(['id', 'name', 'abbreviation']);
 
-        return response()->json([
-            'success' => true,
-            'states' => $states
-        ]);
+            return response()->json([
+                'success' => true,
+                'states' => $states
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching states: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load states'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get LGAs by state
+     */
+    public function getLgasByState($stateId)
+    {
+        try {
+            $lgas = \App\Models\LGA::where('state_id', $stateId)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get(['id', 'name', 'sort_order']);
+
+            return response()->json([
+                'success' => true,
+                'lgas' => $lgas
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching LGAs: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load LGAs'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get wards by LGA
+     */
+    public function getWardsByLga($lgaId)
+    {
+        try {
+            $wards = \App\Models\Ward::where('lga_id', $lgaId)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get(['id', 'name', 'sort_order']);
+
+            return response()->json([
+                'success' => true,
+                'wards' => $wards
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching wards: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load wards'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get top products for all LGAs (One Ward One Product Linkage)
+     */
+    public function getLgaProductsLinkage()
+    {
+        try {
+            $lgas = \App\Models\LGA::with('state')
+                ->get(['id', 'state_id', 'name']);
+
+            $lgaProducts = [];
+
+            foreach ($lgas as $lga) {
+                // Get all respondents from wards in this LGA
+                $wardIds = \App\Models\Ward::where('lga_id', $lga->id)->pluck('id');
+
+                // Count products voted for in all wards of this LGA
+                $respondents = NapsRespondent::whereIn('ward', $wardIds)
+                    ->whereNotNull('products_interest')
+                    ->get();
+
+                $productCounts = [];
+                foreach ($respondents as $respondent) {
+                    if (is_array($respondent->products_interest)) {
+                        foreach ($respondent->products_interest as $product) {
+                            if (!empty($product)) {
+                                $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+                            }
+                        }
+                    }
+                }
+
+                // Get top 5 products for this LGA
+                arsort($productCounts);
+                $topProducts = array_slice($productCounts, 0, 5, true);
+
+                $lgaProducts[] = [
+                    'lga_id' => $lga->id,
+                    'lga_name' => $lga->name,
+                    'state_id' => $lga->state_id,
+                    'state_name' => $lga->state->name ?? 'Unknown',
+                    'total_wards' => $wardIds->count(),
+                    'total_respondents' => $respondents->count(),
+                    'top_products' => collect($topProducts)->map(function($count, $product) {
+                        return ['name' => $product, 'votes' => $count];
+                    })->values()->all()
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $lgaProducts,
+                'total_lgas' => count($lgaProducts)
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching LGA products linkage: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load LGA products data'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get products for a specific LGA
+     */
+    public function getLgaProducts($lgaId)
+    {
+        try {
+            $lga = \App\Models\LGA::find($lgaId);
+            if (!$lga) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'LGA not found'
+                ], 404);
+            }
+
+            // Get all wards in this LGA
+            $wardIds = \App\Models\Ward::where('lga_id', $lgaId)->pluck('id');
+
+            // Get all respondents from these wards
+            $respondents = NapsRespondent::whereIn('ward', $wardIds)
+                ->whereNotNull('products_interest')
+                ->get();
+
+            $productCounts = [];
+            $wardProductData = [];
+
+            foreach ($respondents as $respondent) {
+                $wardName = \App\Models\Ward::find($respondent->ward)->name ?? 'Unknown';
+
+                if (is_array($respondent->products_interest)) {
+                    foreach ($respondent->products_interest as $product) {
+                        if (!empty($product)) {
+                            $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+
+                            if (!isset($wardProductData[$wardName])) {
+                                $wardProductData[$wardName] = [];
+                            }
+                            $wardProductData[$wardName][$product] = ($wardProductData[$wardName][$product] ?? 0) + 1;
+                        }
+                    }
+                }
+            }
+
+            arsort($productCounts);
+
+            return response()->json([
+                'success' => true,
+                'lga_name' => $lga->name,
+                'state_name' => $lga->state->name ?? 'Unknown',
+                'total_wards' => $wardIds->count(),
+                'total_respondents' => $respondents->count(),
+                'all_products' => collect($productCounts)->map(function($count, $product) {
+                    return ['name' => $product, 'votes' => $count];
+                })->values()->all(),
+                'ward_breakdown' => $wardProductData
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching LGA products: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load LGA products'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get statistics summary for charts
+     */
+    public function getChartsSummary()
+    {
+        try {
+            $respondents = NapsRespondent::all();
+
+            // Skills data for compact display
+            $skillsData = [];
+            $skillCounts = [];
+            $respondents = NapsRespondent::whereNotNull('skills')->get();
+
+            foreach ($respondents as $respondent) {
+                if (is_array($respondent->skills)) {
+                    foreach ($respondent->skills as $skillId) {
+                        $skillCounts[$skillId] = ($skillCounts[$skillId] ?? 0) + 1;
+                    }
+                }
+            }
+
+            arsort($skillCounts);
+            $topSkills = array_slice($skillCounts, 0, 10, true);
+
+            foreach ($topSkills as $skillId => $count) {
+                $skillsData[] = [
+                    'id' => $skillId,
+                    'count' => $count,
+                    'percentage' => round(($count / NapsRespondent::count()) * 100, 1)
+                ];
+            }
+
+            // Products data for compact display
+            $productsData = [];
+            $productCounts = [];
+            $respondents = NapsRespondent::whereNotNull('products_interest')->get();
+
+            foreach ($respondents as $respondent) {
+                if (is_array($respondent->products_interest)) {
+                    foreach ($respondent->products_interest as $product) {
+                        if (!empty($product)) {
+                            $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+                        }
+                    }
+                }
+            }
+
+            arsort($productCounts);
+            $topProducts = array_slice($productCounts, 0, 10, true);
+
+            foreach ($topProducts as $product => $count) {
+                $productsData[] = [
+                    'name' => $product,
+                    'count' => $count,
+                    'percentage' => round(($count / NapsRespondent::count()) * 100, 1)
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'skills' => $skillsData,
+                'products' => $productsData
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching charts summary: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load charts data'
+            ], 500);
+        }
     }
 }

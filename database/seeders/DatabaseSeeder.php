@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             CourseCategoriesSeeder::class,
             SkillTypesSeeder::class,
+            NapsSkillGroupSeeder::class,
             // CourseSeeder::class,
             // CourseSectionSeeder::class,
 

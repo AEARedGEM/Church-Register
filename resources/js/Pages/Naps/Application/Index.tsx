@@ -4,6 +4,7 @@ import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Toolti
 import { Head } from '@inertiajs/react';
 import napsApi from '@/services/napsApi';
 import RegistrationFormComponent from './Partials/RegistrationFormComponent';
+import LgaProductsLinkage from '../Dashboard/LgaProductsLinkage';
 
 const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6'];
 type ViewType = 'landing' | 'register' | 'survey' | 'complete' | 'admin';
@@ -72,6 +73,7 @@ export default function NAPSDemo() {
   const [surveyStep, setSurveyStep] = useState(1);
   const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [states, setStates] = useState<string[]>([]);
   const [sectors, setSectors] = useState<Sector[]>([]);
@@ -232,7 +234,23 @@ export default function NAPSDemo() {
     if (surveyStep < 5) {
       setSurveyStep(surveyStep + 1);
     } else {
+      setIsSubmitting(true);
+      setError(null);
       try {
+        console.log('Submitting survey with data:', {
+          first_name: surveyData.firstName,
+          last_name: surveyData.lastName,
+          phone: surveyData.phone,
+          state: surveyData.state,
+          lga: surveyData.lga,
+          ward: surveyData.ward,
+          employment_status: surveyData.employmentStatus,
+          selected_skills: selectedSkills,
+          selected_product: surveyData.selectedProduct,
+          funding_needs: surveyData.fundingNeeds,
+          governance_rating: surveyData.governanceRating,
+        });
+
         const response = await napsApi.submitSurvey({
           first_name: surveyData.firstName,
           last_name: surveyData.lastName,
@@ -247,6 +265,8 @@ export default function NAPSDemo() {
           governance_rating: surveyData.governanceRating,
         });
 
+        console.log('Submit response:', response);
+
         if (response.success) {
           const updatedStats = await napsApi.getDashboardStats();
           if (updatedStats && updatedStats.success) {
@@ -259,7 +279,9 @@ export default function NAPSDemo() {
         }
       } catch (err: any) {
         console.error('Survey submission error:', err);
-        setError(err.message || 'An error occurred while submitting the survey');
+        setError(err.message || err?.error || 'An error occurred while submitting the survey');
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -288,18 +310,84 @@ export default function NAPSDemo() {
             </button>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mt-16 mb-16">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-lg transition-all">
-              <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Share Your Skills</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Tell us about your skills, employment status, and training needs</p>
+          {/* Consolidated 6 Cards - Intelligence Dashboard */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16 mb-16">
+            {/* Card 1: Skills Assessment */}
+            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800 hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-blue-900 dark:text-blue-300 mb-2">Skills Assessment</h3>
+                  <p className="text-sm text-blue-800 dark:text-blue-400">Share your expertise, employment status & training needs to unlock opportunities</p>
+                </div>
+                <span className="text-3xl">🎓</span>
+              </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-lg transition-all">
-              <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">One Ward One Product</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Vote for products your ward should focus on producing and exporting</p>
+
+            {/* Card 2: Local Product Voting */}
+            <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200 dark:border-emerald-800 hover:border-emerald-400 dark:hover:border-emerald-600 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-emerald-900 dark:text-emerald-300 mb-2">One Ward One Product</h3>
+                  <p className="text-sm text-emerald-800 dark:text-emerald-400">Vote for products your ward should produce & export for economic growth</p>
+                </div>
+                <span className="text-3xl">🏭</span>
+              </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-lg transition-all">
-              <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Earn Rewards</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Get points, badges, and recognition for participation</p>
+
+            {/* Card 3: Rewards & Recognition */}
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-6 border border-amber-200 dark:border-amber-800 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-amber-900 dark:text-amber-300 mb-2">Earn 100 Points</h3>
+                  <p className="text-sm text-amber-800 dark:text-amber-400">Get badges & recognition for participation - Redeemable for exclusive benefits</p>
+                </div>
+                <span className="text-3xl">🎁</span>
+              </div>
+            </div>
+
+            {/* Card 4: Respondent Impact */}
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800 hover:border-purple-400 dark:hover:border-purple-600 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-purple-900 dark:text-purple-300 mb-2">Your Impact</h3>
+                  <p className="text-sm text-purple-800 dark:text-purple-400 mb-3">Join {stats.totalRespondents.toLocaleString()} respondents shaping Nigeria's future</p>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <p className="font-semibold text-purple-900 dark:text-purple-300">{stats.surveysCompleted.toLocaleString()}</p>
+                      <p className="text-purple-700 dark:text-purple-400">Surveys</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-purple-900 dark:text-purple-300">{stats.statesReached}</p>
+                      <p className="text-purple-700 dark:text-purple-400">States</p>
+                    </div>
+                  </div>
+                </div>
+                <span className="text-3xl">📊</span>
+              </div>
+            </div>
+
+            {/* Card 5: Verification Status */}
+            <div className="bg-gradient-to-br from-rose-50 to-red-50 dark:from-rose-900/20 dark:to-red-900/20 rounded-xl p-6 border border-rose-200 dark:border-rose-800 hover:border-rose-400 dark:hover:border-rose-600 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-rose-900 dark:text-rose-300 mb-2">Trust & Security</h3>
+                  <p className="text-sm text-rose-800 dark:text-rose-400 mb-3">Verified users ensuring data integrity</p>
+                  <div className="text-lg font-bold text-rose-900 dark:text-rose-300">{stats.verifiedUsers.toLocaleString()}</div>
+                  <p className="text-xs text-rose-700 dark:text-rose-400">Verified Participants</p>
+                </div>
+                <span className="text-3xl">✓</span>
+              </div>
+            </div>
+
+            {/* Card 6: Development Goals */}
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-xl p-6 border border-indigo-200 dark:border-indigo-800 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-2">SDG Aligned</h3>
+                  <p className="text-sm text-indigo-800 dark:text-indigo-400">Contributing to sustainable economic development & decent work for all</p>
+                </div>
+                <span className="text-3xl">🌍</span>
+              </div>
             </div>
           </div>
         </div>
@@ -326,17 +414,16 @@ export default function NAPSDemo() {
           </div>
 
           <RegistrationFormComponent
-            states={states}
             onSuccess={(formData) => {
-              // Store the registration data
+              // Store the registration data with correct field mapping
               setSurveyData({
                 ...surveyData,
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 phone: formData.phone,
-                state: formData.state,
-                lga: formData.lga,
-                ward: formData.ward,
+                state: formData.state_id?.toString() || '',
+                lga: formData.lga_id?.toString() || '',
+                ward: formData.ward_id?.toString() || '',
               });
               setCurrentView('survey');
               setSurveyStep(1);
@@ -357,6 +444,18 @@ export default function NAPSDemo() {
         >
           ← Back
         </button>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-red-700 dark:text-red-300 font-medium">{error}</p>
+            <button
+              onClick={() => setError(null)}
+              className="mt-2 text-sm text-red-600 dark:text-red-400 hover:underline"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <div className="mb-8">
@@ -708,9 +807,21 @@ export default function NAPSDemo() {
             ) : (
               <button
                 onClick={handleSurveyStepSubmit}
-                className="flex-1 py-3 bg-emerald-600 dark:bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl"
+                disabled={isSubmitting}
+                className={`flex-1 py-3 text-white rounded-lg transition-all shadow-lg hover:shadow-xl ${
+                  isSubmitting
+                    ? 'bg-gray-400 cursor-not-allowed opacity-75'
+                    : 'bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600'
+                }`}
               >
-                Submit Survey
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="inline-block animate-spin">⏳</span>
+                    Submitting...
+                  </span>
+                ) : (
+                  'Submit Survey'
+                )}
               </button>
             )}
           </div>
@@ -762,25 +873,10 @@ export default function NAPSDemo() {
     return (
       <div className="min-h-auto bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
         <div className="p-6 space-y-6">
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Total Respondents</p>
-              <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{stats.totalRespondents.toLocaleString()}</p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Completed Surveys</p>
-              <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{stats.surveysCompleted.toLocaleString()}</p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Verified Users</p>
-              <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{stats.verifiedUsers.toLocaleString()}</p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">States Reached</p>
-              <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{stats.statesReached}</p>
-            </div>
-          </div>
+          {/* Stats consolidated into landing page cards */}
+
+          {/* One Ward One Product Section */}
+          <LgaProductsLinkage />
 
           {/* Charts - Row 1 */}
           <div className="grid md:grid-cols-2 gap-6">
@@ -811,37 +907,45 @@ export default function NAPSDemo() {
               )}
             </div>
 
-            {/* Preferred Product Chart */}
+            {/* Preferred Product Chart - COMPACT PIE CHART */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
               <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Preferred Product Distribution</h2>
               {chartData.productsData && chartData.productsData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    data={chartData.productsData}
-                    margin={{ top: 20, right: 30, left: 0, bottom: 60 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="name"
-                      angle={-45}
-                      textAnchor="end"
-                      height={80}
-                      interval={0}
-                      tick={{ fontSize: 11 }}
-                    />
-                    <YAxis />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px', color: '#fff' }}
-                      labelStyle={{ color: '#fff' }}
-                    />
-                    <Bar
-                      dataKey="value"
-                      fill="#3B82F6"
-                      name="Count"
-                      radius={[8, 8, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="flex items-center justify-center gap-6">
+                  <div className="flex-1">
+                    <ResponsiveContainer width="100%" height={220}>
+                      <PieChart>
+                        <Pie
+                          data={chartData.productsData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={50}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="value"
+                        >
+                          {chartData.productsData.map((_: any, i: number) => (
+                            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="flex-1 max-h-56 overflow-y-auto">
+                    <div className="space-y-2">
+                      {chartData.productsData.slice(0, 8).map((item: any, i: number) => (
+                        <div key={i} className="flex items-center gap-2 text-sm">
+                          <div
+                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                          />
+                          <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
+                          <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
               )}
@@ -850,38 +954,44 @@ export default function NAPSDemo() {
 
           {/* Charts - Row 2 */}
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Skills Distribution Chart */}
+            {/* Skills Distribution Chart - COMPACT PIE CHART */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Skills Distribution</h2>
+              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Top Skills Distribution</h2>
               {chartData.skillsData && chartData.skillsData.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <ResponsiveContainer width="100%" height={Math.max(250, chartData.skillsData.length * 35)} minWidth={500}>
-                    <BarChart
-                      data={chartData.skillsData}
-                      margin={{ top: 20, right: 30, left: 0, bottom: 100 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
-                        dataKey="name"
-                        angle={-45}
-                        textAnchor="end"
-                        height={100}
-                        interval={0}
-                        tick={{ fontSize: 11 }}
-                      />
-                      <YAxis />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px', color: '#fff' }}
-                        labelStyle={{ color: '#fff' }}
-                      />
-                      <Bar
-                        dataKey="count"
-                        fill="#10B981"
-                        name="Count"
-                        radius={[8, 8, 0, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+                <div className="flex items-center justify-center gap-6">
+                  <div className="flex-1">
+                    <ResponsiveContainer width="100%" height={220}>
+                      <PieChart>
+                        <Pie
+                          data={chartData.skillsData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={50}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="count"
+                        >
+                          {chartData.skillsData.map((_: any, i: number) => (
+                            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="flex-1 max-h-56 overflow-y-auto">
+                    <div className="space-y-2">
+                      {chartData.skillsData.slice(0, 8).map((item: any, i: number) => (
+                        <div key={i} className="flex items-center gap-2 text-sm">
+                          <div
+                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                          />
+                          <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name || `Skill ${item.id}`}</span>
+                          <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>

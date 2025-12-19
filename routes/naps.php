@@ -6,6 +6,11 @@ use App\Http\Controllers\NapsApiController;
 Route::prefix('api')->group(function () {
     Route::get('/naps/survey-questions', [NapsApiController::class, 'getSurveyQuestions']);
     Route::get('/naps/states', [NapsApiController::class, 'getStates']);
+    Route::get('/naps/states/{stateId}/lgas', [NapsApiController::class, 'getLgasByState']);
+    Route::get('/naps/lgas/{lgaId}/wards', [NapsApiController::class, 'getWardsByLga']);
+    Route::get('/naps/lgas/products/linkage', [NapsApiController::class, 'getLgaProductsLinkage']);
+    Route::get('/naps/lgas/{lgaId}/products', [NapsApiController::class, 'getLgaProducts']);
+    Route::get('/naps/charts-summary', [NapsApiController::class, 'getChartsSummary']);
     Route::get('/naps/skill-groups', [NapsApiController::class, 'getSkillGroups']);
     Route::get('/naps/skills-distribution', [NapsApiController::class, 'getSkillsDistribution']);
     Route::get('/naps/sectors', [NapsApiController::class, 'getOwopSectors']);

@@ -5,34 +5,54 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { useForm } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 
+interface State {
+    id: number;
+    name: string;
+    abbreviation: string;
+}
+
+interface LGA {
+    id: number;
+    name: string;
+    sort_order: number;
+}
+
+interface Ward {
+    id: number;
+    name: string;
+    sort_order: number;
+}
+
 interface RegistrationFormData {
     firstName: string;
     lastName: string;
     phone: string;
-    state: string;
-    lga: string;
-    ward: string;
+    state_id: number | string;
+    lga_id: number | string;
+    ward_id: number | string;
 }
 
 interface RegistrationFormComponentProps {
-    states: string[];
+    states?: State[];
     onSuccess: (formData: RegistrationFormData) => void;
 }
 
-export default function RegistrationFormComponent({ states, onSuccess }: RegistrationFormComponentProps) {
+export default function RegistrationFormComponent({ onSuccess }: RegistrationFormComponentProps) {
     const { data, setData, errors } = useForm({
         firstName: '',
         lastName: '',
         phone: '',
-        state: '',
-        lga: '',
-        ward: '',
+        state_id: '',
+        lga_id: '',
+        ward_id: '',
     });
 
-    const [statesList, setStatesList] = useState<string[]>([]);
-    const [lgasList, setLgasList] = useState<string[]>([]);
+    const [statesList, setStatesList] = useState<State[]>([]);
+    const [lgasList, setLgasList] = useState<LGA[]>([]);
+    const [wardsList, setWardsList] = useState<Ward[]>([]);
     const [loadingStates, setLoadingStates] = useState(false);
     const [loadingLgas, setLoadingLgas] = useState(false);
+    const [loadingWards, setLoadingWards] = useState(false);
 
     useEffect(() => {
         fetchStates();
@@ -41,9 +61,11 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
     const fetchStates = async () => {
         setLoadingStates(true);
         try {
-            const response = await fetch('/api/states');
+            const response = await fetch('/api/naps/states');
             const result = await response.json();
-            setStatesList(result);
+            if (result.success) {
+                setStatesList(result.states);
+            }
         } catch (error) {
             console.error('Error fetching states:', error);
         } finally {
@@ -51,27 +73,63 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
         }
     };
 
-    const fetchLGAs = async (selectedState: string) => {
-        if (!selectedState) {
+    const fetchLGAs = async (stateId: number | string) => {
+        if (!stateId) {
             setLgasList([]);
-            setData('lga', '');
+            setWardsList([]);
+            setData('lga_id', '');
+            setData('ward_id', '');
             return;
         }
         setLoadingLgas(true);
         try {
-            const response = await fetch(`/api/lgas?state=${selectedState}`);
+            const response = await fetch(`/api/naps/states/${stateId}/lgas`);
             const result = await response.json();
-            setLgasList(result);
+            if (result.success) {
+                setLgasList(result.lgas);
+            }
         } catch (error) {
             console.error('Error fetching LGAs:', error);
+            setLgasList([]);
         } finally {
             setLoadingLgas(false);
         }
     };
 
+    const fetchWards = async (lgaId: number | string) => {
+        if (!lgaId) {
+            setWardsList([]);
+            setData('ward_id', '');
+            return;
+        }
+        setLoadingWards(true);
+        try {
+            const response = await fetch(`/api/naps/lgas/${lgaId}/wards`);
+            const result = await response.json();
+            if (result.success) {
+                setWardsList(result.wards);
+            }
+        } catch (error) {
+            console.error('Error fetching wards:', error);
+            setWardsList([]);
+        } finally {
+            setLoadingWards(false);
+        }
+    };
+
     const handleStateChange = (value: string) => {
-        setData('state', value);
-        fetchLGAs(value);
+        const stateId = value ? parseInt(value) : '';
+        setData('state_id', stateId as any);
+        setData('lga_id', '');
+        setData('ward_id', '');
+        fetchLGAs(stateId as any);
+    };
+
+    const handleLgaChange = (value: string) => {
+        const lgaId = value ? parseInt(value) : '';
+        setData('lga_id', lgaId as any);
+        setData('ward_id', '');
+        fetchWards(lgaId as any);
     };
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,11 +137,11 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
 
         // Just call onSuccess with form data - no server request needed
         if (isFormValid) {
-            onSuccess(data);
+            onSuccess(data as RegistrationFormData);
         }
     };
 
-    const isFormValid = data.firstName.trim() && data.lastName.trim() && data.phone.trim() && data.state && data.lga.trim() && data.ward.trim();
+    const isFormValid = data.firstName.trim() && data.lastName.trim() && data.phone.trim() && data.state_id && data.lga_id && data.ward_id;
 
     return (
         <form onSubmit={submit} className="space-y-6">
@@ -158,11 +216,11 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
                 <div className="grid md:grid-cols-3 gap-4">
                     {/* State */}
                     <div>
-                        <InputLabel htmlFor="state" value="State" />
+                        <InputLabel htmlFor="state_id" value="State" />
                         <select
-                            id="state"
-                            name="state"
-                            value={data.state}
+                            id="state_id"
+                            name="state_id"
+                            value={data.state_id}
                             onChange={(e) => handleStateChange(e.target.value)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
                             disabled={loadingStates}
@@ -170,48 +228,54 @@ export default function RegistrationFormComponent({ states, onSuccess }: Registr
                         >
                             <option value="">{loadingStates ? 'Loading states...' : 'Select State'}</option>
                             {statesList.map(state => (
-                                <option key={state} value={state}>{state}</option>
+                                <option key={state.id} value={state.id}>{state.name}</option>
                             ))}
                         </select>
-                        <InputError message={errors.state} className="mt-2" />
+                        <InputError message={errors.state_id} className="mt-2" />
                     </div>
 
                     {/* LGA */}
                     <div>
-                        <InputLabel htmlFor="lga" value="Local Government Area" />
+                        <InputLabel htmlFor="lga_id" value="Local Government Area" />
                         <select
-                            id="lga"
-                            name="lga"
-                            value={data.lga}
-                            onChange={(e) => setData('lga', e.target.value)}
+                            id="lga_id"
+                            name="lga_id"
+                            value={data.lga_id}
+                            onChange={(e) => handleLgaChange(e.target.value)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
-                            disabled={!data.state || loadingLgas || lgasList.length === 0}
+                            disabled={!data.state_id || loadingLgas}
                             required
                         >
                             <option value="">
-                                {!data.state ? 'Select state first' : loadingLgas ? 'Loading LGAs...' : 'Select LGA'}
+                                {!data.state_id ? 'Select state first' : loadingLgas ? 'Loading LGAs...' : lgasList.length === 0 ? 'No LGAs found' : 'Select LGA'}
                             </option>
                             {lgasList.map(lga => (
-                                <option key={lga} value={lga}>{lga}</option>
+                                <option key={lga.id} value={lga.id}>{lga.name}</option>
                             ))}
                         </select>
-                        <InputError message={errors.lga} className="mt-2" />
+                        <InputError message={errors.lga_id} className="mt-2" />
                     </div>
 
                     {/* Ward */}
                     <div>
-                        <InputLabel htmlFor="ward" value="Ward" />
-                        <TextInput
-                            id="ward"
-                            type="text"
-                            name="ward"
-                            value={data.ward}
-                            onChange={(e) => setData('ward', e.target.value)}
-                            placeholder="Ward"
-                            className="mt-1 block w-full"
+                        <InputLabel htmlFor="ward_id" value="Ward" />
+                        <select
+                            id="ward_id"
+                            name="ward_id"
+                            value={data.ward_id}
+                            onChange={(e) => setData('ward_id', e.target.value ? parseInt(e.target.value) : '' as any)}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                            disabled={!data.lga_id || loadingWards}
                             required
-                        />
-                        <InputError message={errors.ward} className="mt-2" />
+                        >
+                            <option value="">
+                                {!data.lga_id ? 'Select LGA first' : loadingWards ? 'Loading wards...' : wardsList.length === 0 ? 'No wards found' : 'Select Ward'}
+                            </option>
+                            {wardsList.map(ward => (
+                                <option key={ward.id} value={ward.id}>{ward.name}</option>
+                            ))}
+                        </select>
+                        <InputError message={errors.ward_id} className="mt-2" />
                     </div>
                 </div>
             </div>
