@@ -68,33 +68,21 @@ Route::middleware(['auth'])->group(function () {
         // Courses
         Route::get('/courses', [TrainingController::class, 'coursesPage'])->name('courses');
         Route::get('/courses/my-courses', [TrainingController::class, 'myCourses'])->name('my-courses');
-        Route::get('/course/player/{course}', [CourseController::class, 'coursePlayer'])->name('course.player');
         Route::post('/courses/{course}/enroll', [TrainingController::class, 'enroll'])->name('courses.enroll');
         Route::get('/course/detail/{id}', [CourseController::class, 'courseDetail'])->name('course.detail');
-
-        Route::post('/course/lecture/{lecture}/upload-slides',
-    [CourseController::class, 'uploadSlides'])->name('lecture.upload-slides');
-
-        Route::get('/course/player/{course}', [CourseController::class, 'coursePlayer'])
-        ->name('course.player');
-
-        // Route::post('/course/{course}/lecture/complete', [CourseController::class, 'completelecture'])
-        //     ->name('course.lecture.complete');
-        Route::post('/courses/{course}/lectures/{lecture}/complete', [CourseController::class, 'completeLecture'])
-       ->name('course.lecture.complete');
+        Route::get('/course/player/{course}', [CourseController::class, 'coursePlayer'])->name('course.player');
+        Route::post('/course/lecture/{lecture}/upload-slides', [CourseController::class, 'uploadSlides'])->name('lecture.upload-slides');
+        Route::post('/courses/{course}/lectures/{lecture}/complete', [CourseController::class, 'completeLecture'])->name('course.lecture.complete');
 
         // Events
         Route::get('/events', [TrainingController::class, 'events'])->name('events');
         Route::post('/events/{event}/register', [TrainingController::class, 'registerEvent'])->name('events.register');
 
         // Certificates
-        Route::get('/certificates', [TrainingController::class, 'certificates'])
-            ->name('certificates');
-        Route::get('/certificates/{enrollment}', [TrainingController::class, 'showCertificate'])
-            ->name('certificate.show');
-        Route::get('/certificates/{enrollment}/verify', [TrainingController::class, 'verifyCertificate'])
-            ->name('certificate.verify');
-        });
+        Route::get('/certificates', [TrainingController::class, 'certificates'])->name('certificates');
+        Route::get('/certificates/{enrollment}', [TrainingController::class, 'showCertificate'])->name('certificate.show');
+        Route::get('/certificates/{enrollment}/verify', [TrainingController::class, 'verifyCertificate'])->name('certificate.verify');
+    });
 
 Route::middleware(['auth', 'role:super_admin|admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/training', [AdminTrainingController::class, 'index'])->name('training.index');
