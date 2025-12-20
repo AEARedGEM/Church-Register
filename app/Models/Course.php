@@ -307,10 +307,10 @@ class Course extends Model
     }
 
     // Route key name for model binding
-    // public function getRouteKeyName(): string
-    // {
-    //     return 'slug';
-    // }
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function reviews(): HasMany
     {

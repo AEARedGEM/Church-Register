@@ -33,7 +33,7 @@ export default function CourseDetailPage({
   onBack
 }: CourseDetailPageProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'curriculum' | 'instructor' | 'reviews'>('overview');
-  const [expandedSections, setExpandedSections] = useState<number[]>([0]);
+  const [expandedSections, setExpandedSections] = useState<number[]>([]);
   const { auth } = usePage().props;
 
   const toggleSection = (sectionId: number) => {
@@ -42,6 +42,16 @@ export default function CourseDetailPage({
         ? prev.filter(id => id !== sectionId)
         : [...prev, sectionId]
     );
+  };
+
+  const toggleExpandAll = () => {
+    if (expandedSections.length === (course.sections?.length || 0)) {
+      // Collapse all
+      setExpandedSections([]);
+    } else {
+      // Expand all
+      setExpandedSections((course.sections || []).map((s: any) => s.id));
+    }
   };
 
   const handleEnroll = () => {
@@ -71,32 +81,10 @@ export default function CourseDetailPage({
 
   // Mock curriculum data - replace with actual course curriculum
   const mockCurriculum = {
-    total_sections: 5,
-    total_lectures: 32,
-    total_hours: "10",
-    sections: [
-      {
-        id: 1,
-        title: "Introduction to the Course",
-        lectures_count: 3,
-        duration: "45m",
-        lectures: [
-          { id: 1, title: "Welcome to the Course", type: "video", duration: "10m", is_preview: true, is_completed: false },
-          { id: 2, title: "Course Overview", type: "video", duration: "15m", is_preview: true, is_completed: false },
-          { id: 3, title: "Setting Up Your Environment", type: "reading", duration: "20m", is_preview: false, is_completed: false }
-        ]
-      },
-      {
-        id: 2,
-        title: "Fundamentals",
-        lectures_count: 8,
-        duration: "2h 30m",
-        lectures: [
-          { id: 4, title: "Basic Concepts", type: "video", duration: "25m", is_preview: false, is_completed: false },
-          { id: 5, title: "Core Principles", type: "video", duration: "35m", is_preview: false, is_completed: false }
-        ]
-      }
-    ]
+    total_sections: course.sections?.length || 0,
+    total_lectures: course.sections?.reduce((sum: number, section: any) => sum + (section.lectures?.length || 0), 0) || 0,
+    total_hours: course.duration_hours || "0",
+    sections: course.sections || []
   };
 
   return (
@@ -189,11 +177,17 @@ export default function CourseDetailPage({
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden sticky top-4">
                   {/* Preview Image */}
                   <div className="relative aspect-video bg-gray-800">
-                    <img
-                        src={course.thumbnail ? `/storage/${course.thumbnail}` : `https://picsum.photos/400/225?random=${course.id}`}
+                    {course.thumbnail ? (
+                      <img
+                        src={`/storage/${course.thumbnail}`}
                         alt={course.title}
                         className="w-full h-full object-cover"
-                        />
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                        <span className="text-gray-500 dark:text-gray-400">No Image</span>
+                      </div>
+                    )}
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                       <button
                         onClick={() => window.scrollTo({ top: 400, behavior: 'smooth' })}
@@ -390,8 +384,10 @@ export default function CourseDetailPage({
                         {mockCurriculum.total_sections} sections • {mockCurriculum.total_lectures} lectures • {course.duration_hours || 0}h {course.duration_minutes || 0}m total length
                       </p>
                     </div>
-                    <button className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors text-sm">
-                      Expand All
+                    <button
+                      onClick={toggleExpandAll}
+                      className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors text-sm">
+                      {expandedSections.length === (course.sections?.length || 0) && course.sections?.length > 0 ? 'Collapse All' : 'Expand All'}
                     </button>
                   </div>
 
@@ -409,10 +405,10 @@ export default function CourseDetailPage({
                           )}
                           <div className="text-left">
                             <h3 className="font-semibold text-gray-900 dark:text-white">
-                              Section {section.id}: {section.title}
+                              {section.title}
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {section.lectures_count} lectures • {section.duration}
+                              {section.lectures?.length || 0} lectures
                             </p>
                           </div>
                         </div>
@@ -451,7 +447,7 @@ export default function CourseDetailPage({
                                   {lecture.type === 'video' && <Video className="w-4 h-4" />}
                                   {lecture.type === 'reading' && <Book className="w-4 h-4" />}
                                   {lecture.type === 'quiz' && <FileText className="w-4 h-4" />}
-                                  <span className="text-sm">{lecture.duration}</span>
+                                  <span className="text-sm">{lecture.duration_minutes || 0}m</span>
                                 </div>
                               </div>
                             </div>
@@ -466,17 +462,17 @@ export default function CourseDetailPage({
               {activeTab === 'instructor' && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                   <div className="flex items-start space-x-6">
-                    <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-white text-xl font-semibold">
-                        {course.instructor?.name?.split(' ').map((n: string) => n[0]).join('') || 'AI'}
+                        {course.instructor?.name?.split(' ').map((n: string) => n[0]).join('') || 'IN'}
                       </span>
                     </div>
                     <div className="flex-1">
                       <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
-                        {course.instructor?.name || 'AI Instructor'}
+                        {course.instructor?.name || 'Unknown Instructor'}
                       </h2>
                       <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {course.instructor?.bio || 'Experienced instructor with years of industry knowledge.'}
+                        {course.instructor?.bio || course.instructor?.email || 'Professional instructor with expertise in this field.'}
                       </p>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -484,16 +480,16 @@ export default function CourseDetailPage({
                           <div className="flex items-center justify-center space-x-1 mb-1">
                             <Star className="w-5 h-5 text-yellow-400 fill-current" />
                             <span className="font-bold text-gray-900 dark:text-white">
-                              {course.instructor?.rating || '4.8'}
+                              {(course.instructor?.rating || 0).toFixed(1)}
                             </span>
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Instructor Rating
+                            Rating
                           </p>
                         </div>
                         <div className="text-center">
                           <div className="font-bold text-gray-900 dark:text-white mb-1">
-                            {(course.instructor?.students || 1000).toLocaleString()}
+                            {(course.instructor?.enrollments_count || 0).toLocaleString()}
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
                             Students
@@ -501,7 +497,7 @@ export default function CourseDetailPage({
                         </div>
                         <div className="text-center">
                           <div className="font-bold text-gray-900 dark:text-white mb-1">
-                            {course.instructor?.courses || 5}
+                            {(course.instructor?.courses_count || 1).toLocaleString()}
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
                             Courses
@@ -532,14 +528,14 @@ export default function CourseDetailPage({
                     <div className="flex items-start space-x-8">
                       <div className="text-center">
                         <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">
-                          {course.rating || '4.5'}
+                          {(course.rating || 0).toFixed(1)}
                         </div>
                         <div className="flex items-center justify-center mb-2">
                           {[1, 2, 3, 4, 5].map(star => (
                             <Star
                               key={star}
                               className={`w-5 h-5 ${
-                                star <= Math.round(course.rating || 4.5)
+                                star <= Math.round(course.rating || 0)
                                   ? 'text-yellow-400 fill-current'
                                   : 'text-gray-300'
                               }`}
@@ -547,13 +543,15 @@ export default function CourseDetailPage({
                           ))}
                         </div>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Course Rating
+                          {course.reviews_count || 0} reviews
                         </p>
                       </div>
 
                       <div className="flex-1">
                         {[5, 4, 3, 2, 1].map(rating => {
-                          const percentage = rating === 5 ? 75 : rating === 4 ? 18 : rating === 3 ? 5 : 2;
+                          const ratingCount = (course.review_distribution?.[rating] || 0);
+                          const totalReviews = course.reviews_count || 0;
+                          const percentage = totalReviews > 0 ? Math.round((ratingCount / totalReviews) * 100) : 0;
                           return (
                             <div key={rating} className="flex items-center space-x-3 mb-2">
                               <div className="flex items-center space-x-1 w-20">
@@ -581,10 +579,43 @@ export default function CourseDetailPage({
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                       Student Reviews
                     </h3>
-                    {/* Reviews would be mapped from course.reviews */}
-                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                      No reviews yet. Be the first to review this course!
-                    </div>
+                    {course.reviews && course.reviews.length > 0 ? (
+                      course.reviews.map((review: any) => (
+                        <div key={review.id} className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <p className="font-semibold text-gray-900 dark:text-white">
+                                {review.user?.name || 'Anonymous'}
+                              </p>
+                              <div className="flex items-center space-x-2">
+                                <div className="flex">
+                                  {[1, 2, 3, 4, 5].map(star => (
+                                    <Star
+                                      key={star}
+                                      className={`w-3 h-3 ${
+                                        star <= (review.rating || 0)
+                                          ? 'text-yellow-400 fill-current'
+                                          : 'text-gray-300'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                  {new Date(review.created_at).toLocaleDateString()}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-gray-700 dark:text-gray-300 text-sm">
+                            {review.comment}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                        No reviews yet. Be the first to review this course!
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -599,11 +630,17 @@ export default function CourseDetailPage({
                 {/* Related courses would be rendered here */}
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
                   <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg mb-3">
-                    <img
-                        src={course.thumbnail ? `/storage/${course.thumbnail}` : `https://picsum.photos/400/225?random=${course.id+1}`}
+                    {course.thumbnail ? (
+                      <img
+                        src={`/storage/${course.thumbnail}`}
                         alt={course.title}
                         className="w-full h-full object-cover"
-                        />
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center rounded-lg">
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">No Image</span>
+                      </div>
+                    )}
                   </div>
                   <h4 className="font-semibold text-sm mb-2 text-gray-900 dark:text-white">
                     Advanced Course

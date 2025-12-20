@@ -108,6 +108,16 @@ Route::prefix('api')->group(function () {
 
 });
 
+// Debug route for cache clearing (remove after use)
+Route::get('/debug/clear-cache', function () {
+    if (auth()->check() && auth()->user()->hasRole('super_admin|admin')) {
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        return 'Routes and caches cleared successfully';
+    }
+    return 'Unauthorized';
+});
+
 // Include NAPS routes
 require __DIR__.'/naps.php';
 

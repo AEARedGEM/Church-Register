@@ -147,7 +147,8 @@ public function dashboard(Request $request)
                 'thumbnail' => $enrollment->course->thumbnail,
                 'nextLesson' => 'Continue Learning', // You can implement this based on course modules
                 'timeRemaining' => $this->calculateTimeRemaining($enrollment),
-                'instructor' => $enrollment->course->instructor->name ?? 'Platform Instructor'
+                'instructor' => $enrollment->course->instructor->name ?? 'Platform Instructor',
+                'slug' => $enrollment->course->slug
             ];
         }),
         'upcomingEvents' => $events->map(function($event) {

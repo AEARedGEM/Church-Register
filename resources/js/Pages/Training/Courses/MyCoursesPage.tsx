@@ -106,11 +106,17 @@ export default function MyCoursesPage() {
                 >
                   {/* Course Image */}
                   <div className="relative aspect-video bg-gray-200 dark:bg-gray-700">
-                    <img
-                      src={enrollment.course.thumbnail ? `/storage/${enrollment.course.thumbnail}` : `https://picsum.photos/400/225?random=${enrollment.course.id}`}
-                      alt={enrollment.course.title}
-                      className="w-full h-full object-cover"
-                    />
+                    {enrollment.course.thumbnail ? (
+                      <img
+                        src={`/storage/${enrollment.course.thumbnail}`}
+                        alt={enrollment.course.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                        <span className="text-gray-500 dark:text-gray-400">No Image</span>
+                      </div>
+                    )}
                     <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
                       <button
                         onClick={() => handleCourseClick(enrollment.course.id)}

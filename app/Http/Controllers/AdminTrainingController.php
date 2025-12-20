@@ -97,10 +97,10 @@ public function store(Request $request)
         'discount_price' => 'nullable|numeric|min:0|lt:price',
         'status' => 'required|in:draft,published,archived',
         'is_featured' => 'boolean',
-        'learning_objectives' => 'nullable|json',  // Keep as json validation
-        'prerequisites' => 'nullable|json',
-        'skills_gained' => 'nullable|json',
-        'thumbnail' => 'nullable|image|max:5120',
+        'learning_objectives' => 'required',
+        'prerequisites' => 'required',
+        'skills_gained' => 'required',
+        'thumbnail' => 'nullable|image|dimensions:min_width=300,min_height=225|max:2048',
         'sections' => 'nullable|array',
         'sections.*.title' => 'required|string',
         'sections.*.description' => 'nullable|string',
@@ -118,21 +118,49 @@ public function store(Request $request)
     try {
         DB::beginTransaction();
 
-        // Decode JSON strings - they're already strings from frontend
-        $validated['learning_objectives'] = json_decode($validated['learning_objectives'], true);
-        $validated['prerequisites'] = json_decode($validated['prerequisites'], true);
-        $validated['skills_gained'] = json_decode($validated['skills_gained'], true);
+        // Convert to arrays - handle both JSON strings and arrays
+        $learning_objectives = $validated['learning_objectives'] ?? [];
+        if (is_string($learning_objectives)) {
+            $learning_objectives = json_decode($learning_objectives, true) ?? [];
+        }
+        if (!is_array($learning_objectives)) {
+            $learning_objectives = [];
+        }
+        // Filter out empty strings
+        $learning_objectives = array_filter($learning_objectives, fn($item) => trim($item ?? '') !== '');
 
-        // Validate decoded data is actually an array
-        if (!is_array($validated['learning_objectives'])) {
-            $validated['learning_objectives'] = [];
+        $prerequisites = $validated['prerequisites'] ?? [];
+        if (is_string($prerequisites)) {
+            $prerequisites = json_decode($prerequisites, true) ?? [];
         }
-        if (!is_array($validated['prerequisites'])) {
-            $validated['prerequisites'] = [];
+        if (!is_array($prerequisites)) {
+            $prerequisites = [];
         }
-        if (!is_array($validated['skills_gained'])) {
-            $validated['skills_gained'] = [];
+        $prerequisites = array_filter($prerequisites, fn($item) => trim($item ?? '') !== '');
+
+        $skills_gained = $validated['skills_gained'] ?? [];
+        if (is_string($skills_gained)) {
+            $skills_gained = json_decode($skills_gained, true) ?? [];
         }
+        if (!is_array($skills_gained)) {
+            $skills_gained = [];
+        }
+        $skills_gained = array_filter($skills_gained, fn($item) => trim($item ?? '') !== '');
+
+        // Validate at least one objective exists
+        if (empty($learning_objectives)) {
+            return redirect()->back()->withErrors(['learning_objectives' => 'At least one learning objective is required']);
+        }
+        if (empty($prerequisites)) {
+            return redirect()->back()->withErrors(['prerequisites' => 'At least one prerequisite is required']);
+        }
+        if (empty($skills_gained)) {
+            return redirect()->back()->withErrors(['skills_gained' => 'At least one skill is required']);
+        }
+
+        $validated['learning_objectives'] = array_values($learning_objectives);
+        $validated['prerequisites'] = array_values($prerequisites);
+        $validated['skills_gained'] = array_values($skills_gained);
 
         // Generate slug
         $validated['slug'] = Str::slug($validated['title']);
@@ -263,14 +291,10 @@ public function update(Request $request, Course $course)
         'discount_price' => 'nullable|numeric|min:0|lt:price',
         'status' => 'required|in:draft,published,archived',
         'is_featured' => 'boolean',
-        // CHANGED: Accept as array instead of JSON string
-        'learning_objectives' => 'required|array|min:1',
-        'learning_objectives.*' => 'required|string',
-        'prerequisites' => 'required|array|min:1',
-        'prerequisites.*' => 'required|string',
-        'skills_gained' => 'required|array|min:1',
-        'skills_gained.*' => 'required|string',
-        'thumbnail' => 'nullable|image|max:5120',
+        'learning_objectives' => 'required',
+        'prerequisites' => 'required',
+        'skills_gained' => 'required',
+        'thumbnail' => 'nullable|image|dimensions:min_width=300,min_height=225|max:2048',
         'sections' => 'nullable|array',
         'sections.*.title' => 'required|string',
         'sections.*.description' => 'nullable|string',
@@ -288,16 +312,46 @@ public function update(Request $request, Course $course)
     try {
         DB::beginTransaction();
 
-        // Decode JSON strings if they exist
-        if (isset($validated['learning_objectives']) && is_string($validated['learning_objectives'])) {
-            $validated['learning_objectives'] = json_decode($validated['learning_objectives'], true);
+        // Convert to arrays - handle both JSON strings and arrays
+        $learning_objectives = $validated['learning_objectives'] ?? [];
+        if (is_string($learning_objectives)) {
+            $learning_objectives = json_decode($learning_objectives, true) ?? [];
         }
-        if (isset($validated['prerequisites']) && is_string($validated['prerequisites'])) {
-            $validated['prerequisites'] = json_decode($validated['prerequisites'], true);
+        if (!is_array($learning_objectives)) {
+            $learning_objectives = [];
         }
-        if (isset($validated['skills_gained']) && is_string($validated['skills_gained'])) {
-            $validated['skills_gained'] = json_decode($validated['skills_gained'], true);
+        $learning_objectives = array_filter($learning_objectives, fn($item) => trim($item ?? '') !== '');
+
+        $prerequisites = $validated['prerequisites'] ?? [];
+        if (is_string($prerequisites)) {
+            $prerequisites = json_decode($prerequisites, true) ?? [];
         }
+        if (!is_array($prerequisites)) {
+            $prerequisites = [];
+        }
+        $prerequisites = array_filter($prerequisites, fn($item) => trim($item ?? '') !== '');
+
+        $skills_gained = $validated['skills_gained'] ?? [];
+        if (is_string($skills_gained)) {
+            $skills_gained = json_decode($skills_gained, true) ?? [];
+        }
+        if (!is_array($skills_gained)) {
+            $skills_gained = [];
+        }
+        $skills_gained = array_filter($skills_gained, fn($item) => trim($item ?? '') !== '');
+
+        // Validate at least one exists
+        if (empty($learning_objectives) || empty($prerequisites) || empty($skills_gained)) {
+            return redirect()->back()->withErrors([
+                'learning_objectives' => empty($learning_objectives) ? 'At least one learning objective is required' : null,
+                'prerequisites' => empty($prerequisites) ? 'At least one prerequisite is required' : null,
+                'skills_gained' => empty($skills_gained) ? 'At least one skill is required' : null,
+            ]);
+        }
+
+        $validated['learning_objectives'] = array_values($learning_objectives);
+        $validated['prerequisites'] = array_values($prerequisites);
+        $validated['skills_gained'] = array_values($skills_gained);
 
         // Update slug if title changed
         if ($validated['title'] !== $course->title) {

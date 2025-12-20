@@ -225,10 +225,16 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
     formData.append('status', String(data.status));
     formData.append('is_featured', data.is_featured ? '1' : '0');
 
-    // REQUIRED: send lists as JSON strings to satisfy store() validation
-    formData.append('learning_objectives', JSON.stringify(filteredObjectives));
-    formData.append('prerequisites', JSON.stringify(filteredPrerequisites));
-    formData.append('skills_gained', JSON.stringify(filteredSkills));
+    // Send arrays directly - let FormData handle them
+    filteredObjectives.forEach((obj, index) => {
+      formData.append(`learning_objectives[${index}]`, obj);
+    });
+    filteredPrerequisites.forEach((pre, index) => {
+      formData.append(`prerequisites[${index}]`, pre);
+    });
+    filteredSkills.forEach((skill, index) => {
+      formData.append(`skills_gained[${index}]`, skill);
+    });
 
     // Append thumbnail file if present
     if (data.thumbnail) {
@@ -309,9 +315,9 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
         return;
       }
 
-      // Validate file size (e.g., max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image size should be less than 5MB', {
+      // Validate file size (2MB max)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Image size should be less than 2MB', {
           duration: 3000,
           position: 'top-right',
         });
@@ -870,6 +876,9 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Course Thumbnail
               </label>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                Recommended size: 400 × 300 pixels (4:3 aspect ratio). Max file size: 2MB
+              </p>
               <div className="flex items-center gap-4">
                 {thumbnailPreview && (
                   <div className="relative">

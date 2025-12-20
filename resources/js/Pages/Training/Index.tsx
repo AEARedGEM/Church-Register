@@ -11,7 +11,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import ModernLayout from '@/Layouts/Training/TrainingLayout';
-import { Head, usePage, Link } from '@inertiajs/react';
+import { Head, usePage, Link, router } from '@inertiajs/react';
 
 // Type definitions
 interface Stats {
@@ -32,6 +32,7 @@ interface Course {
   nextLesson: string;
   timeRemaining: string;
   instructor: string;
+  slug?: string;
 }
 
 interface Event {
@@ -87,6 +88,8 @@ interface StatCardProps {
 
 interface CourseCardProps {
   course: Course;
+  onCardClick?: () => void;
+  onAction?: () => void;
 }
 
 interface FeaturedCourseCardProps {
@@ -238,6 +241,14 @@ export default function TrainingDashboard({
 }: TrainingDashboardProps) {
   const auth = usePage().props.auth;
 
+  const handleCourseClick = (course: Course) => {
+    if (course.slug) {
+      router.visit(route('training.course.player', course.slug));
+    } else if (course.id) {
+      router.visit(route('training.course.player', course.id));
+    }
+  };
+
   return (
     <ModernLayout>
         <Head title="Dashboard"/>
@@ -366,7 +377,12 @@ export default function TrainingDashboard({
               <div className="space-y-3 sm:space-y-4">
                 {enrolledCourses.length > 0 ? (
                   enrolledCourses.map((course) => (
-                    <CourseCard key={course.id} course={course} />
+                    <CourseCard
+                      key={course.id}
+                      course={course}
+                      onCardClick={() => handleCourseClick(course)}
+                      onAction={() => handleCourseClick(course)}
+                    />
                   ))
                 ) : (
                   <div className="text-center py-8">
@@ -582,9 +598,12 @@ function StatCard({ icon: Icon, label, value, iconColor, bgColor, darkBgColor, d
   );
 }
 
-function CourseCard({ course }: CourseCardProps) {
+function CourseCard({ course, onCardClick, onAction }: CourseCardProps) {
   return (
-    <button className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-colors group text-left">
+    <button
+      className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-colors group text-left"
+      onClick={onCardClick}
+    >
       <ImageWithFallback
         src={course.thumbnail ? `/storage/${course.thumbnail}` : ''}
         alt={course.title}
@@ -614,9 +633,15 @@ function CourseCard({ course }: CourseCardProps) {
             <PlayCircle className="w-3 h-3" />
             <span className="truncate">{course.nextLesson}</span>
           </div>
-          <span className="text-xs font-medium text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 self-start sm:self-auto">
+          <button
+            className="text-xs font-medium text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 self-start sm:self-auto"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction?.();
+            }}
+          >
             Continue
-          </span>
+          </button>
         </div>
       </div>
     </button>

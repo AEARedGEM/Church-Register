@@ -195,11 +195,17 @@ export default function CoursesPage() {
       >
         {/* Course Image */}
         <div className="relative aspect-video bg-gray-200 dark:bg-gray-700">
-          <img
-            src={course.thumbnail ? `/storage/${course.thumbnail}` : `https://picsum.photos/400/225?random=${course.id}`}
-            alt={course.title}
-            className="w-full h-full object-cover"
-          />
+          {course.thumbnail ? (
+            <img
+              src={`/storage/${course.thumbnail}`}
+              alt={course.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">No Image</span>
+            </div>
+          )}
           <div className="absolute top-3 left-3">
             <span className={`px-2 py-1 text-xs font-medium rounded-full ${getDifficultyColor(course.difficulty_level)}`}>
               {course.difficulty_level}
@@ -304,11 +310,17 @@ export default function CoursesPage() {
         <div className="flex space-x-4">
           {/* Course Image */}
           <div className="flex-shrink-0 w-48 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-            <img
-              src={course.thumbnail ? `/storage/${course.thumbnail}` : `https://picsum.photos/400/225?random=${course.id}`}
-              alt={course.title}
-              className="w-full h-full object-cover"
-            />
+            {course.thumbnail ? (
+              <img
+                src={`/storage/${course.thumbnail}`}
+                alt={course.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                <span className="text-gray-400 dark:text-gray-500 text-xs">No Image</span>
+              </div>
+            )}
           </div>
 
           {/* Course Content */}

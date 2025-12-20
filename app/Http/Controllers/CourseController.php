@@ -82,8 +82,12 @@ class CourseController extends Controller
      */
     public function courseDetail($id)
     {
-        $course = Course::with(['courseCategory', 'instructor', 'sections.lectures'])
-            ->findOrFail($id);
+        $course = Course::with([
+            'courseCategory',
+            'instructor',
+            'sections.lectures',
+            'reviews.user'
+        ])->findOrFail($id);
 
         $userId = Auth::id();
         $enrollment = $userId ? CourseEnrollment::where('user_id', $userId)
@@ -91,13 +95,28 @@ class CourseController extends Controller
             ->first() : null;
 
         $isEnrolled = (bool) $enrollment;
-        $userProgress = $enrollment->progress_percentage ?? 0;
+        $userProgress = $enrollment?->progress_percentage ?? 0;
+
+        // Calculate rating and review statistics
+        $reviews = $course->reviews ?? [];
+        $reviewCount = count($reviews);
+        $averageRating = $reviewCount > 0 ? $reviews->avg('rating') : 0;
+        $reviewDistribution = [
+            5 => $reviews->where('rating', 5)->count(),
+            4 => $reviews->where('rating', 4)->count(),
+            3 => $reviews->where('rating', 3)->count(),
+            2 => $reviews->where('rating', 2)->count(),
+            1 => $reviews->where('rating', 1)->count(),
+        ];
 
         return Inertia::render('Training/Courses/CourseDetailPage', [
-            'course' => $course,
+            'course' => array_merge($course->toArray(), [
+                'rating' => $averageRating,
+                'reviews_count' => $reviewCount,
+                'review_distribution' => $reviewDistribution,
+            ]),
             'isEnrolled' => $isEnrolled,
             'userProgress' => $userProgress,
-            // optional back route for UI convenience
             'backUrl' => route('training.courses'),
         ]);
     }
