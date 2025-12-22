@@ -55,7 +55,7 @@ export default function CourseDetailPage({
   };
 
   const handleEnroll = () => {
-    router.post(route('training.courses.enroll', course.id), {}, {
+    router.post(route('training.courses.enroll', course.slug), {}, {
       preserveScroll: true,
       onSuccess: () => {
         router.visit(route('training.course.player', course.slug));
