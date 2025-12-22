@@ -92,13 +92,9 @@ class ProfileController extends Controller
             ['id' => 'phd', 'name' => 'PhD'],
         ];
 
-        // Get location data (countries, states, LGAs)
-        $countries = LocationService::getCountries();
-        $states = LocationService::getStatesByCountry('NG'); // Default to Nigeria
+        // Get location data (states and LGAs)
+        $states = LocationService::getStates(); // Get all Nigerian states
         $lgas = $user->state ? LocationService::getLGAsByState($user->state) : [];
-
-        // Nigerian states (legacy - can be removed if using LocationService)
-        $nigerianStates = $this->getNigerianStates();
 
         // Get available roles to apply for
         $availableRoles = collect($user->getAvailableRolesToApply())
@@ -123,10 +119,8 @@ class ProfileController extends Controller
             'institutionSectors' => $institutionSectors,
             'trainingModes' => $trainingModes,
             'educationLevels' => $educationLevels,
-            'countries' => $countries,
             'states' => $states,
             'lgas' => $lgas,
-            'nigerianStates' => $nigerianStates,
             'availableRoles' => $availableRoles,
         ]);
     }
@@ -283,31 +277,15 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
+     * NOTE: Account deletion is DISABLED for security and financial audit trail purposes.
+     * Users with account issues must contact support administration.
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
+        // Account deletion is disabled for security reasons
+        return Redirect::route('profile.edit')->withErrors([
+            'account' => 'Account deletion is not permitted. Please contact support for assistance.'
         ]);
-
-        $user = $request->user();
-
-        // Delete associated files
-        if ($user->profile) {
-            $this->cleanupUserFiles($user->profile);
-        }
-
-        // Soft delete related records or handle cascading deletes
-        $this->cleanupUserData($user);
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/')->with('status', 'account-deleted');
     }
 
     /**

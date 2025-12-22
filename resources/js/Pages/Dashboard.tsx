@@ -35,6 +35,7 @@ interface Stats {
     totalFunding: string;
     activeFunds: number;
     trainingCompleted: number;
+    napsCompleted: number;
     communityRank: number;
     [key: string]: any;
 }
@@ -289,7 +290,7 @@ export default function Dashboard({
 
     {/* Quick Stats Cards - Horizontal Scroll on Mobile */}
     <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div className="flex gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 min-w-max sm:min-w-0">
+        <div className="flex gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-6 min-w-max sm:min-w-0">
             {/* Total Funding Card */}
             <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-72 sm:w-auto flex-shrink-0 sm:flex-shrink">
                 <div className="flex items-center">
@@ -337,6 +338,23 @@ export default function Dashboard({
                     <div className="ml-3 md:ml-4 flex-1 min-w-0">
                         <div className="text-sm md:text-base font-medium text-gray-500 dark:text-gray-400">Training Completed</div>
                         <div className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">{stats.trainingCompleted}</div>
+                    </div>
+                </div>
+            </div>
+
+            {/* NAP Survey Completed Card */}
+            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-72 sm:w-auto flex-shrink-0 sm:flex-shrink">
+                <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                        <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                            <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12L11 14.5L21 4.5M3 3H21V21H3V3Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div className="ml-3 md:ml-4 flex-1 min-w-0">
+                        <div className="text-sm md:text-base font-medium text-gray-500 dark:text-gray-400">NAP Surveys Completed</div>
+                        <div className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">{stats.napsCompleted}</div>
                     </div>
                 </div>
             </div>

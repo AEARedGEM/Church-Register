@@ -363,16 +363,27 @@ class User extends Authenticatable
      */
     public function calculateCommunityRank(): int
     {
-        $score = $this->activities()->count() +
-                $this->enrollments()->where('status', 'completed')->count() * 2 +
-                $this->fundingApplications()->where('status', 'approved')->count() * 5;
+        // Calculate score based on multiple interactions
+        $activitiesScore = $this->activities()->count();
+        $trainingScore = $this->enrollments()->where('status', 'completed')->count() * 2;
+        $fundingScore = $this->fundingApplications()->where('status', 'approved')->count() * 5;
+        $napsScore = \App\Models\NapsRespondent::where('user_id', $this->id)
+            ->whereNotNull('survey_completed_at')
+            ->count() * 3; // NAP/S completion is worth 3 points
+        $communityScore = $this->communityMemberships()->count();
+        $eventScore = \App\Models\EventRegistration::where('user_id', $this->id)->count();
+
+        $score = $activitiesScore + $trainingScore + $fundingScore + $napsScore + $communityScore + $eventScore;
 
         // Get users with higher scores
         $higherRankedCount = self::selectRaw('
             users.id,
             (SELECT COUNT(*) FROM activities WHERE activities.user_id = users.id) +
             (SELECT COUNT(*) FROM course_enrollments WHERE course_enrollments.user_id = users.id AND status = "completed") * 2 +
-            (SELECT COUNT(*) FROM funding_applications WHERE funding_applications.user_id = users.id AND status = "approved") * 5 as score
+            (SELECT COUNT(*) FROM funding_applications WHERE funding_applications.user_id = users.id AND status = "approved") * 5 +
+            (SELECT COUNT(*) FROM naps_respondents WHERE naps_respondents.user_id = users.id AND survey_completed_at IS NOT NULL) * 3 +
+            (SELECT COUNT(*) FROM community_memberships WHERE community_memberships.user_id = users.id) +
+            (SELECT COUNT(*) FROM event_registrations WHERE event_registrations.user_id = users.id) as score
         ')
         ->havingRaw('score > ?', [$score])
         ->count();

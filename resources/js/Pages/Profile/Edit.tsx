@@ -1,7 +1,6 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateBusinessProfileForm from './Partials/UpdateBusinessProfileForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
@@ -390,10 +389,6 @@ export default function Edit({
                                             </form>
                                         </div>
 
-                                        {/* Delete Account */}
-                                        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-                                            <DeleteUserForm className="p-6" />
-                                        </div>
                                     </div>
                                 )}
                             </div>

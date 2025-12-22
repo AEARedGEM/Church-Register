@@ -108,6 +108,9 @@ class DashboardController extends Controller
             'trainingCompleted' => $user->enrollments()
                 ->where('status', 'completed')
                 ->count(),
+            'napsCompleted' => \App\Models\NapsRespondent::where('user_id', $user->id)
+                ->whereNotNull('survey_completed_at')
+                ->count(),
             'communityRank' => $user->calculateCommunityRank(),
         ];
 
@@ -286,12 +289,28 @@ class DashboardController extends Controller
             ]);
         }
 
+        // Get recent NAP/S survey activities
+        $napsActivities = \App\Models\NapsRespondent::where('user_id', $user->id)
+            ->whereNotNull('survey_completed_at')
+            ->latest('survey_completed_at')
+            ->take(1)
+            ->get()
+            ->map(function ($respondent) {
+                return [
+                    'type' => 'naps',
+                    'message' => 'Successfully completed NAP/S survey',
+                    'time' => $respondent->survey_completed_at->diffForHumans(),
+                    'status' => 'success',
+                ];
+            });
+
         // Merge and sort all activities
         return $activities
             ->merge($fundingActivities)
             ->merge($trainingActivities)
             ->merge($communityActivities)
             ->merge($roleActivities)
+            ->merge($napsActivities)
             ->sortByDesc('time')
             ->take(5)
             ->values()

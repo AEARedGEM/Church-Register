@@ -100,12 +100,12 @@ Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
 
 Route::get('/naps', [NapsController::class, 'dashboard'])->middleware('auth')->name('naps.index');
 
-// Location API routes
+});
+
+// Location API routes (Public - no authentication required)
 Route::prefix('api')->group(function () {
     Route::get('/states', [LocationController::class, 'getStates'])->name('api.states');
     Route::get('/lgas', [LocationController::class, 'getLGAs'])->name('api.lgas');
-});
-
 });
 
 // Debug route for cache clearing (remove after use)

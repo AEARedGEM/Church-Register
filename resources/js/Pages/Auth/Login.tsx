@@ -6,7 +6,7 @@ import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
-import { Eye, EyeOff, Building2, Users, TrendingUp, Shield } from 'lucide-react';
+import { Eye, EyeOff, Building2, Users, TrendingUp, Shield, BarChart3, Zap, Coins, Users2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Login({
@@ -46,42 +46,76 @@ export default function Login({
                             <div className="mb-8">
                                 <h1 className="text-4xl font-bold mb-2">Welcome to NYP-IP</h1>
                                 <p className="text-xl opacity-90">NYP Industrialization Portal</p>
-                                <p className="text-sm opacity-75 mt-2">Powered by LuxuryX Technologies</p>
+                                <p className="text-sm opacity-75 mt-2">Complete Digital Ecosystem for Industrial Growth</p>
                             </div>
 
-                            <div className="space-y-6">
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-12 h-12 bg-white bg-opacity-20 dark:bg-white dark:bg-opacity-25 rounded-lg flex items-center justify-center">
-                                        <Building2 className="w-6 h-6" />
+                            <div className="grid grid-cols-2 gap-4 mb-8">
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <BarChart3 className="w-5 h-5" />
                                     </div>
-                                    <div>
-                                        <h3 className="font-semibold">Business Incubation</h3>
-                                        <p className="text-sm opacity-75">Onboard your Startup or SME</p>
-                                    </div>
+                                    <h3 className="font-semibold text-sm">Needs Assessment</h3>
+                                    <p className="text-xs opacity-75">NAP/S Survey</p>
                                 </div>
 
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-12 h-12 bg-white bg-opacity-20 dark:bg-white dark:bg-opacity-25 rounded-lg flex items-center justify-center">
-                                        <TrendingUp className="w-6 h-6" />
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <Users className="w-5 h-5" />
                                     </div>
-                                    <div>
-                                        <h3 className="font-semibold">TradeFi Funding</h3>
-                                        <p className="text-sm opacity-75">Access Industrial funding</p>
-                                    </div>
+                                    <h3 className="font-semibold text-sm">Skill Development</h3>
+                                    <p className="text-xs opacity-75">Training Programs</p>
                                 </div>
 
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-12 h-12 bg-white bg-opacity-20 dark:bg-white dark:bg-opacity-25 rounded-lg flex items-center justify-center">
-                                        <Users className="w-6 h-6" />
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <Coins className="w-5 h-5" />
                                     </div>
-                                    <div>
-                                        <h3 className="font-semibold">Skill Development</h3>
-                                        <p className="text-sm opacity-75">Enhance your capabilities</p>
+                                    <h3 className="font-semibold text-sm">Tokenized Funding</h3>
+                                    <p className="text-xs opacity-75">Capital & Liquidity</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <TrendingUp className="w-5 h-5" />
                                     </div>
+                                    <h3 className="font-semibold text-sm">TradeFi Funding</h3>
+                                    <p className="text-xs opacity-75">Working Capital</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <Building2 className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="font-semibold text-sm">Equity Funding</h3>
+                                    <p className="text-xs opacity-75">VC Matching</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <Zap className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="font-semibold text-sm">StartUp Incubation</h3>
+                                    <p className="text-xs opacity-75">Business Setup</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <Shield className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="font-semibold text-sm">Web3 Dashboard</h3>
+                                    <p className="text-xs opacity-75">Digital Wallets</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
+                                        <Users2 className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="font-semibold text-sm">Community Hub</h3>
+                                    <p className="text-xs opacity-75">Networking</p>
                                 </div>
                             </div>
 
-                            <div className="mt-12 p-4 bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 rounded-lg">
+                            <div className="p-4 bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 rounded-lg">
                                 <p className="text-sm font-medium">"We Believe in You — We Empower Builders"</p>
                             </div>
                         </div>

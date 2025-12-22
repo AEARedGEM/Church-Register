@@ -6,7 +6,7 @@ import napsApi from '@/services/napsApi';
 import RegistrationFormComponent from './Partials/RegistrationFormComponent';
 import LgaProductsLinkage from '../Dashboard/LgaProductsLinkage';
 
-const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6'];
+const COLORS = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
 type ViewType = 'landing' | 'register' | 'survey' | 'complete' | 'admin';
 
 interface SurveyData {
@@ -289,18 +289,18 @@ export default function NAPSDemo() {
   // Landing Page
   const LandingPage = () => (
     <>
-      <div className="min-h-auto bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+      <div className="min-h-auto bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 border-b border-gray-200 dark:border-gray-700 pb-12">
             <h1 className="text-6xl font-bold pt-8 mb-4 text-emerald-700 dark:text-emerald-400">NAP/S</h1>
-            <p className="text-3xl mb-2 text-gray-800 dark:text-gray-100">Needs Assessment Poll/System</p>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">Nigeria Youth Parliament Industrialization Program</p>
+            <p className="text-3xl mb-2 text-gray-900 dark:text-gray-100 font-semibold">Needs Assessment Poll/System</p>
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">Nigeria Youth Parliament Industrialization Program</p>
           </div>
 
-          <div className="max-w-2xl mx-auto text-center mb-12">
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-              Help shape Nigeria's future by participating in the national youth needs assessment.
-              Your voice matters in building policies that serve you.
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+              Help shape Nigeria's industrial future by participating in the national youth needs assessment.
+              Your insights are crucial in building evidence-based policies that drive economic growth and create opportunities.
             </p>
             <button
               onClick={() => setCurrentView('register')}
@@ -310,84 +310,72 @@ export default function NAPSDemo() {
             </button>
           </div>
 
-          {/* Consolidated 6 Cards - Intelligence Dashboard */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16 mb-16">
+          {/* Consolidated 6 Cards - Professional Intelligence Dashboard */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16 mb-8 pb-8 border-b border-gray-100 dark:border-gray-800">
             {/* Card 1: Skills Assessment */}
-            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800 hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-lg transition-all">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-blue-900 dark:text-blue-300 mb-2">Skills Assessment</h3>
-                  <p className="text-sm text-blue-800 dark:text-blue-400">Share your expertise, employment status & training needs to unlock opportunities</p>
-                </div>
-                <span className="text-3xl">🎓</span>
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Skills Assessment</h3>
+                <span className="text-2xl">🎓</span>
               </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Document your expertise and training needs to unlock opportunities aligned with your goals.</p>
             </div>
 
-            {/* Card 2: Local Product Voting */}
-            <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200 dark:border-emerald-800 hover:border-emerald-400 dark:hover:border-emerald-600 hover:shadow-lg transition-all">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-emerald-900 dark:text-emerald-300 mb-2">One Ward One Product</h3>
-                  <p className="text-sm text-emerald-800 dark:text-emerald-400">Vote for products your ward should produce & export for economic growth</p>
-                </div>
-                <span className="text-3xl">🏭</span>
+            {/* Card 2: One Ward One Product */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Local Production</h3>
+                <span className="text-2xl">🏭</span>
               </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Vote for products your ward should produce and export to strengthen economic development.</p>
             </div>
 
             {/* Card 3: Rewards & Recognition */}
-            <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-6 border border-amber-200 dark:border-amber-800 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-lg transition-all">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-amber-900 dark:text-amber-300 mb-2">Earn 100 Points</h3>
-                  <p className="text-sm text-amber-800 dark:text-amber-400">Get badges & recognition for participation - Redeemable for exclusive benefits</p>
-                </div>
-                <span className="text-3xl">🎁</span>
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Earn Recognition</h3>
+                <span className="text-2xl">🏆</span>
               </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Gain 100 points for participation with badges and recognition for your contributions.</p>
             </div>
 
             {/* Card 4: Respondent Impact */}
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800 hover:border-purple-400 dark:hover:border-purple-600 hover:shadow-lg transition-all">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-purple-900 dark:text-purple-300 mb-2">Your Impact</h3>
-                  <p className="text-sm text-purple-800 dark:text-purple-400 mb-3">Join {stats.totalRespondents.toLocaleString()} respondents shaping Nigeria's future</p>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <p className="font-semibold text-purple-900 dark:text-purple-300">{stats.surveysCompleted.toLocaleString()}</p>
-                      <p className="text-purple-700 dark:text-purple-400">Surveys</p>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-purple-900 dark:text-purple-300">{stats.statesReached}</p>
-                      <p className="text-purple-700 dark:text-purple-400">States</p>
-                    </div>
-                  </div>
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-200 dark:border-emerald-800">
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="text-lg font-bold text-emerald-900 dark:text-emerald-100">National Impact</h3>
+                <span className="text-2xl">📊</span>
+              </div>
+              <p className="text-sm text-emerald-800 dark:text-emerald-200 mb-4">Join thousands of respondents nationwide shaping Nigeria's industrialization agenda.</p>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="bg-white dark:bg-gray-800 rounded p-2">
+                  <p className="font-bold text-emerald-700 dark:text-emerald-400">{stats.totalRespondents.toLocaleString()}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs">Total Respondents</p>
                 </div>
-                <span className="text-3xl">📊</span>
+                <div className="bg-white dark:bg-gray-800 rounded p-2">
+                  <p className="font-bold text-emerald-700 dark:text-emerald-400">{stats.statesReached}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs">States Reached</p>
+                </div>
               </div>
             </div>
 
-            {/* Card 5: Verification Status */}
-            <div className="bg-gradient-to-br from-rose-50 to-red-50 dark:from-rose-900/20 dark:to-red-900/20 rounded-xl p-6 border border-rose-200 dark:border-rose-800 hover:border-rose-400 dark:hover:border-rose-600 hover:shadow-lg transition-all">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-rose-900 dark:text-rose-300 mb-2">Trust & Security</h3>
-                  <p className="text-sm text-rose-800 dark:text-rose-400 mb-3">Verified users ensuring data integrity</p>
-                  <div className="text-lg font-bold text-rose-900 dark:text-rose-300">{stats.verifiedUsers.toLocaleString()}</div>
-                  <p className="text-xs text-rose-700 dark:text-rose-400">Verified Participants</p>
-                </div>
-                <span className="text-3xl">✓</span>
+            {/* Card 5: Data Integrity */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Trust & Security</h3>
+                <span className="text-2xl">✓</span>
               </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">All responses verified and secured for data integrity and policy effectiveness.</p>
+              <p className="text-base font-bold text-emerald-700 dark:text-emerald-400">{stats.verifiedUsers.toLocaleString()}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Verified Respondents</p>
             </div>
 
-            {/* Card 6: Development Goals */}
-            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-xl p-6 border border-indigo-200 dark:border-indigo-800 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-lg transition-all">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-2">SDG Aligned</h3>
-                  <p className="text-sm text-indigo-800 dark:text-indigo-400">Contributing to sustainable economic development & decent work for all</p>
-                </div>
-                <span className="text-3xl">🌍</span>
+            {/* Card 6: National Development */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-lg transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">SDG Aligned</h3>
+                <span className="text-2xl">🇳🇬</span>
               </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Contributing to sustainable economic development and decent work for all Nigerians.</p>
             </div>
           </div>
         </div>
@@ -871,7 +859,7 @@ export default function NAPSDemo() {
     }
 
     return (
-      <div className="min-h-auto bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+      <div className="min-h-auto bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="p-6 space-y-6">
           {/* Stats consolidated into landing page cards */}
 

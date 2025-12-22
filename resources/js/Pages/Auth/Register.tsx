@@ -5,7 +5,7 @@ import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState, useEffect } from 'react';
-import { Eye, EyeOff, Building2, TrendingUp, Users, Shield } from 'lucide-react';
+import { Eye, EyeOff, Building2, TrendingUp, Users, Shield, BarChart3, Zap, Coins, Users2 } from 'lucide-react';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -13,7 +13,6 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        user_type: 'entrepreneur',
         state: '',
         lga: '',
     });
@@ -84,40 +83,78 @@ export default function Register() {
                         <div className="absolute inset-0 bg-black opacity-10 dark:opacity-20"></div>
                         <div className="relative z-10">
                             <div className="mb-8">
-                                <h1 className="text-4xl font-bold mb-2">Join NYP-P Today</h1>
+                                <h1 className="text-4xl font-bold mb-2">Join NYP-IP Today</h1>
                                 <p className="text-xl opacity-90">Start Your Industrial Journey</p>
-                                <p className="text-sm opacity-75 mt-2">Powered by LuxuryX Technologies</p>
+                                <p className="text-sm opacity-75 mt-2">Complete Digital Ecosystem for Growth</p>
                             </div>
 
-                            <div className="space-y-4">
-                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg">
-                                    <h3 className="font-semibold mb-2">What you get:</h3>
-                                    <ul className="space-y-2 text-sm">
-                                        <li className="flex items-center space-x-2">
-                                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                                            <span>Access to TradeFi Funding</span>
-                                        </li>
-                                        <li className="flex items-center space-x-2">
-                                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                                            <span>Business Incubation & Equity Funding</span>
-                                        </li>
-                                        <li className="flex items-center space-x-2">
-                                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                                            <span>Skill Development Programs</span>
-                                        </li>
-                                        <li className="flex items-center space-x-2">
-                                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                                            <span>Investor Matching Platform</span>
-                                        </li>
-                                        <li className="flex items-center space-x-2">
-                                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                                            <span>Community and Mentorship</span>
-                                        </li>
-                                    </ul>
+                            <div className="grid grid-cols-2 gap-3 mb-8">
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <BarChart3 className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">Needs Assessment</h3>
+                                    <p className="text-xs opacity-75">Survey</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <Users className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">Skill Development</h3>
+                                    <p className="text-xs opacity-75">Training</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <Coins className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">Tokenized Funding</h3>
+                                    <p className="text-xs opacity-75">Capital</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <TrendingUp className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">TradeFi Funding</h3>
+                                    <p className="text-xs opacity-75">Working Capital</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <Building2 className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">Equity Funding</h3>
+                                    <p className="text-xs opacity-75">VC Matching</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <Zap className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">StartUp Incubation</h3>
+                                    <p className="text-xs opacity-75">Onboarding</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <Shield className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">Web3 Dashboard</h3>
+                                    <p className="text-xs opacity-75">Wallets</p>
+                                </div>
+
+                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-3 rounded-lg hover:bg-opacity-20 transition-all">
+                                    <div className="w-9 h-9 bg-white bg-opacity-20 rounded flex items-center justify-center mb-2">
+                                        <Users2 className="w-4 h-4" />
+                                    </div>
+                                    <h3 className="font-semibold text-xs">Community Hub</h3>
+                                    <p className="text-xs opacity-75">Network</p>
                                 </div>
                             </div>
 
-                            <div className="mt-8 p-4 bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 rounded-lg">
+                            <div className="p-4 bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 rounded-lg">
                                 <p className="text-sm font-medium">"Catalyzing Innovation & Financial Empowerment Nationwide"</p>
                             </div>
                         </div>
@@ -132,29 +169,6 @@ export default function Register() {
                             </div>
 
                             <form onSubmit={submit} className="space-y-6">
-                                <div>
-                                    <InputLabel
-                                        htmlFor="user_type"
-                                        value="I am a/an"
-                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                                    />
-
-                                    <select
-                                        id="user_type"
-                                        name="user_type"
-                                        value={data.user_type}
-                                        onChange={(e) => setData('user_type', e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
-                                    >
-                                        <option value="entrepreneur">Startup</option>
-                                        <option value="sme">SME Owner</option>
-                                        <option value="investor">Investor</option>
-                                        <option value="individual">Individual</option>
-                                    </select>
-
-                                    <InputError message={errors.user_type} className="mt-2 text-red-600 dark:text-red-400 text-sm" />
-                                </div>
-
                                 <div>
                                     <InputLabel
                                         htmlFor="name"
@@ -202,7 +216,7 @@ export default function Register() {
                                 <div>
                                     <InputLabel
                                         htmlFor="state"
-                                        value="State"
+                                        value="State (Optional)"
                                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                                     />
 
@@ -211,8 +225,7 @@ export default function Register() {
                                         name="state"
                                         value={data.state}
                                         onChange={(e) => handleStateChange(e.target.value)}
-                                        disabled={loadingStates || states.length === 0}
-                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 disabled:opacity-50"
+                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
                                     >
                                         <option value="">{loadingStates ? 'Loading states...' : 'Select a state'}</option>
                                         {states.map((state) => (
@@ -228,7 +241,7 @@ export default function Register() {
                                 <div>
                                     <InputLabel
                                         htmlFor="lga"
-                                        value="Local Government / Ward"
+                                        value="Local Government / Ward (Optional)"
                                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                                     />
 
@@ -237,8 +250,8 @@ export default function Register() {
                                         name="lga"
                                         value={data.lga}
                                         onChange={(e) => setData('lga', e.target.value)}
-                                        disabled={!data.state || loadingLgas || lgas.length === 0}
-                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 disabled:opacity-50"
+                                        disabled={!data.state || loadingLgas}
+                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <option value="">
                                             {!data.state ? 'Select a state first' : loadingLgas ? 'Loading LGAs...' : 'Select a Local Government'}
