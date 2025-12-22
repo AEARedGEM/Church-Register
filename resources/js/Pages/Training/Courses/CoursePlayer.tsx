@@ -40,6 +40,7 @@ interface Section {
 
 interface Course {
   id: number;
+  slug: string;
   title: string;
   description: string;
   thumbnail: string | null;
@@ -153,10 +154,7 @@ export default function CoursePlayer() {
     if (lecture.is_locked) return;
 
     router.get(
-      route('training.course.player', {
-        course: course.id,
-        lecture: lecture.id
-      }),
+      route('training.course.player', course.slug) + `?lecture=${lecture.id}`,
       {},
       {
         preserveScroll: true,
@@ -171,10 +169,7 @@ export default function CoursePlayer() {
     setCompletingLecture(currentLectureData.id);
 
     router.post(
-      route('training.course.lecture.complete', {
-        course: course.id,
-        lecture: currentLectureData.id
-      }),
+      route('training.course.lecture.complete', { course: course.slug, lecture: currentLectureData.id }),
       {},
       {
         preserveScroll: true,

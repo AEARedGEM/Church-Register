@@ -6,7 +6,7 @@ import {
   ArrowLeft, Home, BookOpen, Wallet, DollarSign, Users as UsersIcon
 } from 'lucide-react';
 import ModernLayout from '@/Layouts/Training/TrainingLayout';
-import { router, usePage } from '@inertiajs/react';
+import { router, usePage, Link } from '@inertiajs/react';
 
 interface CourseDetailPageProps {
   course: any;
@@ -58,16 +58,12 @@ export default function CourseDetailPage({
     router.post(route('training.courses.enroll', course.id), {}, {
       preserveScroll: true,
       onSuccess: () => {
-        router.visit(route('training.course.player', course.id));
+        router.visit(route('training.course.player', course.slug));
       },
       onError: (errors) => {
         console.error('Enrollment failed:', errors);
       }
     });
-  };
-
-  const handleContinueLearning = () => {
-    router.visit(route('training.course.player', course.id));
   };
 
   const getDifficultyColor = (level: string) => {
@@ -242,12 +238,21 @@ export default function CourseDetailPage({
                     )}
 
                     {/* CTA Button */}
-                    <button
-                        onClick={isEnrolled ? handleContinueLearning : handleEnroll}
+                    {isEnrolled ? (
+                      <Link
+                        href={route('training.course.player', course.slug)}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4 inline-block text-center"
+                      >
+                        Continue Learning
+                      </Link>
+                    ) : (
+                      <button
+                        onClick={handleEnroll}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4"
-                    >
-                        {isEnrolled ? 'Continue Learning' : 'Enroll Now'}
-                    </button>
+                      >
+                        Enroll Now
+                      </button>
+                    )}
 
                     {!isEnrolled && (
                       <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">

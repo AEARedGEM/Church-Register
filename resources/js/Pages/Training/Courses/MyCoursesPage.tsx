@@ -12,6 +12,7 @@ interface Enrollment {
   status: string;
   course: {
     id: number;
+    slug: string;
     title: string;
     description: string;
     thumbnail: string | null;
@@ -57,10 +58,6 @@ export default function MyCoursesPage() {
     if (progress >= 50) return 'bg-blue-600';
     if (progress >= 25) return 'bg-yellow-600';
     return 'bg-gray-600';
-  };
-
-  const handleCourseClick = (courseId: number) => {
-    router.visit(route('training.course.player', courseId));
   };
 
   const enrollmentsData = enrolledCourses?.data || [];
@@ -118,12 +115,12 @@ export default function MyCoursesPage() {
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
-                      <button
-                        onClick={() => handleCourseClick(enrollment.course.id)}
+                      <Link
+                        href={route('training.course.player', enrollment.course.slug)}
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
                       >
                         <PlayCircle className="w-6 h-6 text-blue-600" />
-                      </button>
+                      </Link>
                     </div>
                   </div>
 
@@ -174,10 +171,10 @@ export default function MyCoursesPage() {
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => handleCourseClick(enrollment.course.id)}
+                    <Link
+                      href={route('training.course.player', enrollment.course.slug)}
                       disabled={enrollment.status === 'completed'}
-                      className={`w-full font-medium py-2 px-4 rounded-lg transition-colors
+                      className={`w-full font-medium py-2 px-4 rounded-lg transition-colors inline-block text-center
                           ${
                           enrollment.status === 'completed'
                               ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
@@ -189,11 +186,11 @@ export default function MyCoursesPage() {
                           : enrollment.status === 'completed'
                           ? 'Completed'
                           : 'Start'} Learning
-                    </button>
+                    </Link>
 
                     {enrollment.status === 'completed' && (
                       <Link
-                        href={route('training.certificates', enrollment.id)}
+                        href={route('training.certificate.show', enrollment.id)}
                         className="w-full flex items-center justify-center space-x-2 mt-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                       >
                         <Download className="w-4 h-4" />
