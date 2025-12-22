@@ -148,7 +148,6 @@ const getNavigationGroups = (userRole: UserRole): NavigationGroup[] => {
         subItems: [
           { id: 'admin.training', label: 'Training Management', route: 'admin.training.index' },
           { id: 'admin.users', label: 'User Management', route: 'users.index' },
-          { id: 'admin.settings', label: 'Settings', route: 'admin.training.index' },
         ]
       }
     ]
