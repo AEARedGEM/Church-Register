@@ -13,15 +13,15 @@
         <meta name="twitter:title" content="NYP-IP Portal | Industrialization" />
         <meta name="twitter:description" content="NYP-IP Is A National-Scale, Youth-Driven Industrialization & Entrepreneurship
          Platform Enabling Nigerian Youths To Become Builders Of Real Industry. Powered by LuxuryX Technologies
-          & TradeFi Limited X The Nigerian Youth Parliament." />
+         & TradeFi Limited X The Nigerian Youth Parliament." />
         <meta name="twitter:image" content="{{asset('images/nyp-logo.png')}}" />
         <meta name="twitter:card" content="summary" />
 
         <!-- Open Graph Meta Tags -->
         <meta property="og:title" content="NYP-IP Portal | Industrialization" />
-        <meta property="og:description" content="NYP-IP Is A National-Scale, Youth-Driven Industrialization & Entrepreneurshi
+        <meta property="og:description" content="NYP-IP Is A National-Scale, Youth-Driven Industrialization & Entrepreneurship
         Platform Enabling Nigerian Youths To Become Builders Of Real Industry. Powered by LuxuryX Technologies
-        & TradeFi Limited X The Nigerian Youth Parliament." />
+         & TradeFi Limited X The Nigerian Youth Parliament." />
         <meta property="og:image" content="{{asset('images/nyp-logo.png')}}" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://nypipportal.luxuryxtech.org.ng" />
