@@ -105,7 +105,9 @@ class ProfileController extends Controller
                     'name' => $roleEnum->label(),
                     'description' => $this->getRoleDescription($roleEnum),
                 ];
-            });
+            })
+            ->values()
+            ->toArray();
 
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
@@ -150,6 +152,14 @@ class ProfileController extends Controller
 
         // Update or create user profile based on current role
         $this->updateProfileForRole($user, $request);
+
+        // Ensure profile exists even if empty (for "individual" role users)
+        if (!$user->profile) {
+            $user->profile()->create();
+        }
+
+        // Refresh user data to get latest state
+        $user->refresh();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -346,6 +356,14 @@ class ProfileController extends Controller
         return response()->json($data)
             ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
             ->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Export user data - alias for exportData.
+     */
+    public function export(Request $request)
+    {
+        return $this->exportData($request);
     }
 
     /**

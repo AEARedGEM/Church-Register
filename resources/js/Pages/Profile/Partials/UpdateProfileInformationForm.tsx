@@ -55,7 +55,7 @@ export default function UpdateProfileInformationForm({
         sector: user.sector || '',
         date_of_birth: user.date_of_birth || '',
         education_level: user.education_level || '',
-        skills_of_interest: user.skills_of_interest?.join(', ') || '',
+        skills_of_interest: Array.isArray(user.skills_of_interest) ? user.skills_of_interest.join(', ') : (typeof user.skills_of_interest === 'string' ? user.skills_of_interest : ''),
         state: user.state || '',
         lga: user.lga || '',
         nin: user.nin || '',

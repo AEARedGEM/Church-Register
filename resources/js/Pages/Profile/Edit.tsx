@@ -1,10 +1,11 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateBusinessProfileForm from './Partials/UpdateBusinessProfileForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import RoleApplicationForm from './Partials/RoleApplicationForm';
+import ErrorBoundary from '@/Components/ErrorBoundary';
 import { PageProps } from '@/types';
 
 interface User {
@@ -129,6 +130,68 @@ export default function Edit({
     availableRoles
 }: EditProps) {
     const [activeSection, setActiveSection] = React.useState<string>('profile');
+    const [pageLoaded, setPageLoaded] = React.useState<boolean>(false);
+
+    // Ensure user has a profile object (for rendering safety)
+    const safeUser = React.useMemo(() => ({
+        ...user,
+        profile: user.profile || {
+            id: 0,
+            user_id: user.id,
+            business_name: undefined,
+            cac_registration: undefined,
+            business_type: undefined,
+            business_stage: undefined,
+            years_in_business: undefined,
+            employee_count: undefined,
+            annual_revenue: undefined,
+            annual_turnover: undefined,
+            description: undefined,
+            website: undefined,
+            founded_date: undefined,
+            logo_path: undefined,
+            pitch_deck_path: undefined,
+            funding_needs: undefined,
+            funding_history: undefined,
+            market_reach: undefined,
+            loan_request_details: undefined,
+            investor_type: undefined,
+            preferred_sectors: undefined,
+            ticket_sizes: undefined,
+            accreditation_status: undefined,
+            kyc_documents: undefined,
+            district: undefined,
+            office_address: undefined,
+            official_id: undefined,
+            contact_channels: undefined,
+            institution_name: undefined,
+            institution_registration: undefined,
+            institution_sector: undefined,
+            contact_persons: undefined,
+            commitment_areas: undefined,
+            bio: undefined,
+            cv_path: undefined,
+            linkedin_profile: undefined,
+            expertise_areas: undefined,
+            certifications: undefined,
+            references: undefined,
+            training_mode: undefined,
+            title: undefined,
+            specialization: undefined,
+            profile_complete: false,
+            profile_completed_at: undefined,
+        }
+    }), [user]);
+
+    // Debug logging
+    React.useEffect(() => {
+        console.log('Profile Edit page mounted');
+        console.log('Available Roles:', availableRoles);
+        console.log('Dashboard Context:', dashboardContext);
+        console.log('User Profile:', safeUser.profile);
+        console.log('User object:', user);
+        setPageLoaded(true);
+    }, [availableRoles, dashboardContext, safeUser, user]);
 
     const sections = [
         {
@@ -193,59 +256,12 @@ export default function Edit({
     const completion = getProfileCompletion();
 
     return (
-        <AuthenticatedLayout
+        <ErrorBoundary>
+            <AuthenticatedLayout
             header={
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                            Profile Settings
-                        </h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            Manage your account settings and preferences
-                        </p>
-                    </div>
-
-                    {/* Profile Completion Indicator */}
-                    <div className="flex items-center gap-3">
-                        <div className="text-right">
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                Profile {completion.percentage}% Complete
-                            </div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                                {dashboardContext.role_label}
-                            </div>
-                        </div>
-                        <div className="relative w-12 h-12">
-                            <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-                                <path
-                                    className="stroke-gray-300 dark:stroke-gray-700"
-                                    strokeWidth="3"
-                                    fill="transparent"
-                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                />
-                                <path
-                                    className={`${completion.isComplete ? 'stroke-green-500' : 'stroke-emerald-500'}`}
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                    fill="transparent"
-                                    strokeDasharray={`${completion.percentage}, 100`}
-                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                />
-                            </svg>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                {completion.isComplete ? (
-                                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                ) : (
-                                    <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                                        {completion.percentage}%
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Profile Settings
+                </h2>
             }
         >
             <Head title="Profile Settings" />
@@ -311,15 +327,27 @@ export default function Edit({
 
                         {/* Main Content */}
                         <div className="mt-6 lg:mt-0 lg:col-span-9">
+                            {!pageLoaded && (
+                                <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+                                    <div className="text-center">
+                                        <div className="inline-block">
+                                            <div className="inline-flex items-center gap-2">
+                                                <div className="w-4 h-4 bg-emerald-500 rounded-full animate-pulse"></div>
+                                                <span className="text-gray-600 dark:text-gray-400">Loading profile...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="space-y-6">
                                 {/* Profile Information Section */}
-                                {activeSection === 'profile' && (
+                                {activeSection === 'profile' && pageLoaded && (
                                     <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
                                         <UpdateProfileInformationForm
                                             mustVerifyEmail={mustVerifyEmail}
                                             status={status}
                                             className="p-6"
-                                            user={user}
+                                            user={safeUser}
                                             sectors={sectors}
                                             educationLevels={educationLevels}
                                             states={states}
@@ -328,11 +356,11 @@ export default function Edit({
                                 )}
 
                                 {/* Business Profile Section */}
-                                {activeSection === 'business' && (
+                                {activeSection === 'business' && pageLoaded && (
                                     <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
                                         <UpdateBusinessProfileForm
                                             className="p-6"
-                                            user={user}
+                                            user={safeUser}
                                             sectors={sectors}
                                             businessTypes={businessTypes}
                                             businessStages={businessStages}
@@ -344,11 +372,11 @@ export default function Edit({
                                 )}
 
                                 {/* Role Applications Section */}
-                                {activeSection === 'roles' && (
+                                {activeSection === 'roles' && pageLoaded && (
                                     <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
                                         <RoleApplicationForm
                                             className="p-6"
-                                            user={user}
+                                            user={safeUser}
                                             dashboardContext={dashboardContext}
                                             availableRoles={availableRoles}
                                         />
@@ -356,14 +384,14 @@ export default function Edit({
                                 )}
 
                                 {/* Security Section */}
-                                {activeSection === 'security' && (
+                                {activeSection === 'security' && pageLoaded && (
                                     <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
                                         <UpdatePasswordForm className="p-6" />
                                     </div>
                                 )}
 
                                 {/* Account Management Section */}
-                                {activeSection === 'account' && (
+                                {activeSection === 'account' && pageLoaded && (
                                     <div className="space-y-6">
                                         {/* Data Export */}
                                         <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
@@ -376,17 +404,15 @@ export default function Edit({
                                                 </p>
                                             </header>
 
-                                            <form action={route('profile.edit')} method="post" className="inline">
-                                                <button
-                                                    type="submit"
-                                                    className="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
-                                                >
-                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                    </svg>
-                                                    Export Data
-                                                </button>
-                                            </form>
+                                            <button
+                                                onClick={() => router.get(route('profile.export-data'))}
+                                                className="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
+                                            >
+                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                Export Data
+                                            </button>
                                         </div>
 
                                     </div>
@@ -396,6 +422,7 @@ export default function Edit({
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+            </AuthenticatedLayout>
+        </ErrorBoundary>
     );
 }

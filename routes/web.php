@@ -37,6 +37,8 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
         Route::get('/export-data', [ProfileController::class, 'export'])->name('export-data');
+        Route::post('/apply-for-role', [ProfileController::class, 'applyForRole'])->name('apply-for-role');
+        Route::post('/switch-role', [ProfileController::class, 'switchRole'])->name('switch-role');
     });
 
     // Wallet routes
