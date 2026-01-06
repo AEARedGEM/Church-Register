@@ -54,7 +54,7 @@ class ProfileUpdateRequest extends FormRequest
     /**
      * Get role-specific validation rules
      */
-    private function getRoleSpecificRules(string $role): array
+    private function getRoleSpecificRules(?string $role): array
     {
         return match($role) {
             'startup' => [

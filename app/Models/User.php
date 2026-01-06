@@ -168,7 +168,7 @@ class User extends Authenticatable
     public function applyForRole(RolesEnum $newRole): bool
     {
         // Check if user can apply for additional roles
-        $currentRole = RolesEnum::from($this->primary_role);
+        $currentRole = $this->primary_role ? RolesEnum::from($this->primary_role) : RolesEnum::Individual;
         if (!$currentRole->canApplyForAdditionalRoles()) {
             return false;
         }
@@ -212,7 +212,7 @@ class User extends Authenticatable
      */
     public function getAvailableRolesToApply(): array
     {
-        $currentRole = RolesEnum::from($this->primary_role);
+        $currentRole = $this->primary_role ? RolesEnum::from($this->primary_role) : RolesEnum::Individual;
         if (!$currentRole->canApplyForAdditionalRoles()) {
             return [];
         }
@@ -249,7 +249,7 @@ class User extends Authenticatable
      */
     public function getDashboardContext(): array
     {
-        $currentRole = RolesEnum::from($this->primary_role);
+        $currentRole = $this->primary_role ? RolesEnum::from($this->primary_role) : RolesEnum::Individual;
 
         return [
             'current_role' => $currentRole->value,
@@ -346,7 +346,8 @@ class User extends Authenticatable
      */
     public function getUserTypeLabel(): string
     {
-        return RolesEnum::from($this->primary_role)->label();
+        $role = $this->primary_role ? RolesEnum::from($this->primary_role) : RolesEnum::Individual;
+        return $role->label();
     }
 
     /**

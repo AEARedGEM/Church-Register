@@ -37,7 +37,7 @@ export default function CertificatesIndex() {
   const { auth, certificates } = usePage<PageProps>().props;
 
   const handleViewCertificate = (certificateId: number) => {
-    router.visit(route('training.certificate.show', certificateId));
+    router.visit(route('training.certificates.show', certificateId));
   };
 
   const getCertificateId = (id: number) => {

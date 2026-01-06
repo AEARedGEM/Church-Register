@@ -387,7 +387,7 @@ export default function Welcome({
                                         <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z"/>
                                     </svg>
                                 </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">Skills Development</h3>
+                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">Skills & Upskilling Development</h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                                     Access training programs in Soft Skills, Tech Skills, and Vocational Skills with mentorship and certification.
                                 </p>
@@ -928,6 +928,12 @@ export default function Welcome({
                         <div className="hidden md:grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
                             {[
                                 {
+                                    quote: "At AfaraHub, we believe in the power of innovation to create opportunities. The NYP-IP Portal aligns perfectly with our mission to empower young entrepreneurs. We're proud to support this initiative because it provides the ecosystem young Nigerians need to turn their ideas into impactful, scalable ventures that benefit our communities.",
+                                    name: "Mr. Oluwasegun Omoworare",
+                                    title: "CEO, AfaraHub Ensemble Company",
+                                    gradient: "from-purple-400 to-pink-400"
+                                },
+                                {
                                     quote: "The NYP-IP Portal is instrumental in connecting startups with the right funding, and providing the training and tools needed to scale their businesses. NYP truly believes in empowering nation builders.",
                                     name: "Adesanmi Emmanuel Adebukola",
                                     title: "CEO, LuxuryX Technologies & TradeFi Limited",
@@ -938,12 +944,6 @@ export default function Welcome({
                                     name: "Rt. Hon. Aliyu Idris Zakari",
                                     title: "Speaker, Nigerian Youth Parliament (6th Session)",
                                     gradient: "from-blue-400 to-purple-400"
-                                },
-                                {
-                                    quote: "At AfaraHub, we believe in the power of innovation to create opportunities. The NYP-IP Portal aligns perfectly with our mission to empower young entrepreneurs. We're proud to support this initiative because it provides the ecosystem young Nigerians need to turn their ideas into impactful, scalable ventures that benefit our communities.",
-                                    name: "Mr. Oluwasegun Omoworare",
-                                    title: "CEO, AfaraHub Ensemble Company",
-                                    gradient: "from-purple-400 to-pink-400"
                                 }
                             ].map((testimonial, index) => (
                                 <div key={index} className="backdrop-blur-sm bg-white/80 dark:bg-white/5 border border-emerald-200 dark:border-white/10 rounded-2xl p-8 shadow-2xl hover:shadow-emerald-300 dark:hover:shadow-emerald-500/20 transition-all duration-300 group hover:bg-white/90 dark:hover:bg-white/10 hover:-translate-y-2">
@@ -968,6 +968,12 @@ export default function Welcome({
                                 <div className="flex space-x-6 px-6">
                                     {[
                                         {
+                                            quote: "At AfaraHub, we believe in the power of innovation to create opportunities. The NYP-IP Portal aligns perfectly with our mission to empower young entrepreneurs. We're proud to support this initiative because it provides the ecosystem young Nigerians need to turn their ideas into impactful, scalable ventures that benefit our communities.",
+                                            name: "Mr. Oluwasegun Omoworare",
+                                            title: "CEO, AfaraHub Ensemble Company",
+                                            gradient: "from-purple-400 to-pink-400"
+                                        },
+                                        {
                                             quote: "The NYP-IP Portal is instrumental in connecting startups with the right funding, and providing the training and tools needed to scale their businesses. NYP truly believes in empowering nation builders.",
                                             name: "Adesanmi Emmanuel Adebukola",
                                             title: "CEO, LuxuryX Technologies & TradeFi Limited",
@@ -978,12 +984,6 @@ export default function Welcome({
                                             name: "Rt. Hon. Aliyu Idris Zakari",
                                             title: "Speaker, Nigerian Youth Parliament (6th Session)",
                                             gradient: "from-blue-400 to-purple-400"
-                                        },
-                                        {
-                                            quote: "At AfaraHub, we believe in the power of innovation to create opportunities. The NYP-IP Portal aligns perfectly with our mission to empower young entrepreneurs. We're proud to support this initiative because it provides the ecosystem young Nigerians need to turn their ideas into impactful, scalable ventures that benefit our communities.",
-                                            name: "Mr. Oluwasegun Omoworare",
-                                            title: "CEO, AfaraHub Ensemble Company",
-                                            gradient: "from-purple-400 to-pink-400"
                                         }
                                     ].map((testimonial, index) => (
                                         <div key={index} className="flex-shrink-0 w-[85vw] snap-center">

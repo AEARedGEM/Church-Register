@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BookOpen,
   Clock,
@@ -240,6 +240,31 @@ export default function TrainingDashboard({
   ]
 }: TrainingDashboardProps) {
   const auth = usePage().props.auth;
+  const page = usePage().props as any;
+
+  const [activityRange, setActivityRange] = useState<number>(7);
+  const [activityData, setActivityData] = useState<any[]>(Array.isArray(page.learningActivity) ? page.learningActivity : (page.learningActivity?.data || []));
+  const [activitySource, setActivitySource] = useState<string | null>(page.learningActivity?.source || null);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchData = async (days: number) => {
+      try {
+        const res = await fetch(`/training/activity?days=${days}`);
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted) {
+          setActivityData(json.data || []);
+          setActivitySource(json.source || null);
+        }
+      } catch (e) {
+        // ignore network errors for now
+      }
+    };
+
+    fetchData(activityRange);
+    return () => { mounted = false; };
+  }, [activityRange]);
 
   const handleCourseClick = (course: Course) => {
     if (course.slug) {
@@ -366,7 +391,7 @@ export default function TrainingDashboard({
                   Continue Learning
                 </h2>
                 <Link
-                  href={route('training.my-courses')}
+                  href={route('training.courses')}
                   className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1"
                 >
                   View All
@@ -427,13 +452,18 @@ export default function TrainingDashboard({
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                   Learning Activity
                 </h2>
-                <select className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-3 py-1.5 w-full sm:w-auto">
-                  <option>Last 7 days</option>
-                  <option>Last 30 days</option>
-                  <option>Last 3 months</option>
+                <select
+                  value={activityRange}
+                  onChange={(e) => setActivityRange(Number(e.target.value))}
+                  className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-3 py-1.5 w-full sm:w-auto"
+                >
+                  <option value={7}>Last 7 days</option>
+                  <option value={14}>Last 14 days</option>
+                  <option value={30}>Last 30 days</option>
+                  <option value={90}>Last 3 months</option>
                 </select>
               </div>
-              <ActivityChart />
+              <ActivityChart activityData={activityData} activitySource={activitySource} activityRange={activityRange} />
             </div>
           </div>
 
@@ -600,9 +630,17 @@ function StatCard({ icon: Icon, label, value, iconColor, bgColor, darkBgColor, d
 
 function CourseCard({ course, onCardClick, onAction }: CourseCardProps) {
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-colors group text-left"
       onClick={onCardClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onCardClick?.();
+        }
+      }}
     >
       <ImageWithFallback
         src={course.thumbnail ? `/storage/${course.thumbnail}` : ''}
@@ -644,7 +682,7 @@ function CourseCard({ course, onCardClick, onAction }: CourseCardProps) {
           </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -676,32 +714,132 @@ function FeaturedCourseCard({ course }: FeaturedCourseCardProps) {
   );
 }
 
-function ActivityChart() {
-  const days: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const hours: number[] = [2, 3.5, 1.5, 4, 2.5, 1, 3];
-  const maxHours: number = Math.max(...hours);
+function ActivityChart({ activityData, activitySource, activityRange }: { activityData?: any[]; activitySource?: string | null; activityRange?: number }) {
+  const page: any = usePage().props;
+
+  // Prefer provided prop, then server-provided page props
+  const rawActivity: Array<any> | undefined = activityData || page.learningActivity || page.activityData || null;
+
+  // Helper to build last N days labels if no data provided
+  const buildLastNDays = (n: number) => {
+    const now = new Date();
+    const daysArr: string[] = [];
+    const hoursArr: number[] = [];
+    for (let i = n - 1; i >= 0; i -= 1) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      daysArr.push(d.toLocaleDateString(undefined, { weekday: 'short' }));
+      hoursArr.push(0);
+    }
+    return { daysArr, hoursArr };
+  };
+
+  // Helper to build Monday..Sunday labels for current week
+  const buildWeekMonToSun = () => {
+    const now = new Date();
+    // get Monday of current week
+    const day = now.getDay(); // 0 (Sun) .. 6 (Sat)
+    const diffToMonday = (day === 0) ? -6 : (1 - day);
+    const monday = new Date(now);
+    monday.setDate(now.getDate() + diffToMonday);
+    const daysArr: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      daysArr.push(d.toLocaleDateString(undefined, { weekday: 'short' }));
+    }
+    return daysArr;
+  };
+
+  let days: string[] = [];
+  let hours: number[] = [];
+
+  if (rawActivity && Array.isArray(rawActivity) && rawActivity.length > 0) {
+    // Normalize data: group by weekday order for last 7 days if dates provided
+    const mapped = rawActivity.map((item: any) => {
+      const d = item.date ? new Date(item.date) : new Date();
+      return { date: d, hours: Number(item.hours) || 0 };
+    });
+
+    // If range is exactly 7 prefer Mon-Sun week labels and map dates into that week (fill zeros)
+    if (activityRange === 7) {
+      const weekLabels = buildWeekMonToSun();
+      const mapByWeekday: Record<string, number> = {};
+      mapped.forEach((m: any) => {
+        const w = m.date.toLocaleDateString(undefined, { weekday: 'short' });
+        mapByWeekday[w] = (mapByWeekday[w] || 0) + Number(m.hours || 0);
+      });
+      days = weekLabels;
+      hours = weekLabels.map((w) => Number((mapByWeekday[w] || 0)));
+    } else {
+      // If length is 7 or less, map directly to labels in order
+      if (mapped.length <= 7) {
+        days = mapped.map((m: any) => m.date.toLocaleDateString(undefined, { weekday: 'short' }));
+        hours = mapped.map((m: any) => m.hours);
+      } else {
+        // If more than 7 points, take the last 7
+        const last7 = mapped.slice(-7);
+        days = last7.map((m: any) => m.date.toLocaleDateString(undefined, { weekday: 'short' }));
+        hours = last7.map((m: any) => m.hours);
+      }
+    }
+  } else {
+    // Fallback: try to infer from page.stats.hoursLearned distributed across 7 days
+    const stats: any = page.stats || {};
+    if (stats.hoursLearned) {
+      const avg = Number(stats.hoursLearned) / 7;
+      const last = buildLastNDays(7);
+      days = last.daysArr;
+      hours = last.hoursArr.map(() => Number(avg.toFixed(2)));
+    } else {
+      // Final fallback: static sample (kept for UX until real data exists)
+      const sample = buildLastNDays(7);
+      days = sample.daysArr;
+      hours = [2, 3.5, 1.5, 4, 2.5, 1, 3];
+    }
+  }
+
+  const total = hours.reduce((s, v) => s + v, 0);
+  const maxHours = Math.max(...hours, 1);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-end justify-between gap-1 sm:gap-2 h-40 sm:h-48">
-        {days.map((day, idx) => (
-          <div key={day} className="flex-1 flex flex-col items-center gap-2">
-            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-t-lg relative flex-1 flex items-end">
-              <div
-                className="w-full bg-blue-600 dark:bg-blue-500 rounded-t-lg transition-all"
-                style={{ height: `${(hours[idx] / maxHours) * 100}%` }}
-              ></div>
+    <div className="space-y-3">
+      {activityRange === 7 && (
+        <div className="flex items-center justify-between mb-1">
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Last 7 days</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">Mon — Sun</div>
+        </div>
+      )}
+      <div className="overflow-x-auto -mx-2 px-2">
+        <div className="flex items-end gap-2 h-36 sm:h-48 min-w-full">
+          {days.map((day, idx) => (
+            <div key={`${day}-${idx}`} className="flex flex-col items-center w-8 sm:w-12">
+              <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-t-lg flex items-end" style={{ height: '100%' }}>
+                <div
+                  className="w-full bg-blue-600 dark:bg-blue-500 rounded-t-lg transition-all flex items-end justify-center"
+                  style={{ height: `${(hours[idx] / maxHours) * 100}%`, minHeight: '6px' }}
+                  title={`${hours[idx]} hrs`}
+                >
+                </div>
+              </div>
+              <span className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-2 truncate">{day}</span>
+              <span className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400">{hours[idx]}h</span>
             </div>
-            <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">{day}</span>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+
+      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-1">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-blue-600 dark:bg-blue-500 rounded"></div>
+          <div className="w-3 h-3 bg-blue-600 dark:bg-blue-500 rounded" />
           <span>Hours Studied</span>
         </div>
-        <span className="font-medium">Total: 17.5 hrs</span>
+        <div className="flex items-center gap-3">
+          {activitySource && (
+            <span className="text-xs text-gray-500 dark:text-gray-400">Source: {activitySource === 'time_spent' ? 'Real Time' : 'Duration Fallback'}</span>
+          )}
+          <span className="font-medium">Total: {Number(total.toFixed(2))} hrs</span>
+        </div>
       </div>
     </div>
   );

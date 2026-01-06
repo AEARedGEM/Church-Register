@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 class LectureProgress extends Model
 {
@@ -81,5 +82,29 @@ class LectureProgress extends Model
     public function scopeForUser($query, int $userId)
     {
         return $query->where('user_id', $userId);
+    }
+
+    protected static function booted()
+    {
+        static::saved(function ($model) {
+            self::clearLearningActivityCacheForUser($model->user_id);
+        });
+
+        static::deleted(function ($model) {
+            self::clearLearningActivityCacheForUser($model->user_id);
+        });
+    }
+
+    public static function clearLearningActivityCacheForUser(int $userId)
+    {
+        // Known ranges we cache: 7,14,30,90,365
+        $ranges = [7, 14, 30, 90, 365];
+        foreach ($ranges as $r) {
+            try {
+                Cache::forget("learning_activity:{$userId}:{$r}");
+            } catch (\Exception $e) {
+                // ignore cache driver errors
+            }
+        }
     }
 }

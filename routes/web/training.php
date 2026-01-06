@@ -26,8 +26,11 @@ Route::middleware(['auth'])->prefix('training')->name('training.')->group(functi
     Route::post('/events/{event}/register', [TrainingController::class, 'registerEvent'])->name('events.register');
 
     // Certificates
-
     Route::get('/certificates/{certificate}', [TrainingController::class, 'showCertificate'])->name('certificates.show');
+
+    // Course Favourite
+    Route::get('/courses/api/favourites', [CourseController::class, 'getFavourites'])->name('courses.api.favourites');
+    Route::post('/courses/{course}/favourite', [CourseController::class, 'toggleFavourite'])->name('courses.favourite');
 
     // Settings
     Route::get('/settings', [TrainingController::class, 'settings'])->name('settings');

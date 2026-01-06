@@ -12,8 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // For MySQL, modify the enum
-        DB::statement("ALTER TABLE users MODIFY primary_role ENUM('individual', 'startup', 'sme_owner', 'investor', 'nyp_senator', 'institutional_partner', 'trainer_mentor_expert', 'super_admin', 'admin', 'manager', 'support') DEFAULT 'individual'");
+        // Only run raw ALTER statements on MySQL (SQLite in-memory used for tests doesn't support MODIFY)
+        if (Schema::getConnection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE users MODIFY primary_role ENUM('individual', 'startup', 'sme_owner', 'investor', 'nyp_senator', 'institutional_partner', 'trainer_mentor_expert', 'super_admin', 'admin', 'manager', 'support') DEFAULT 'individual'");
+        }
     }
 
     /**
@@ -21,7 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Restore to original enum
-        DB::statement("ALTER TABLE users MODIFY primary_role ENUM('individual', 'startup', 'sme_owner', 'investor', 'nyp_senator', 'institutional_partner', 'trainer_mentor_expert') DEFAULT 'individual'");
+        // Restore to original enum only on MySQL
+        if (Schema::getConnection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE users MODIFY primary_role ENUM('individual', 'startup', 'sme_owner', 'investor', 'nyp_senator', 'institutional_partner', 'trainer_mentor_expert') DEFAULT 'individual'");
+        }
     }
 };

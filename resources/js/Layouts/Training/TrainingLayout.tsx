@@ -93,46 +93,39 @@ const getNavigationGroups = (userRole: UserRole): NavigationGroup[] => {
         },
       ]
     },
-    {
-      label: 'Training',
-      items: [
         {
-          id: 'training.dashboard',
-          label: 'Dashboard',
-          icon: BookOpen,
-          route: 'training.dashboard',
-          badge: null,
+          label: 'Training',
+          items: [
+            {
+              id: 'training.dashboard',
+              label: 'Dashboard',
+              icon: BookOpen,
+              route: 'training.dashboard',
+              badge: null,
+            },
+            {
+              id: 'training.courses',
+              label: 'Browse Courses',
+              icon: Search,
+              route: 'training.courses',
+              badge: null,
+            },
+            {
+              id: 'training.events',
+              label: 'Events',
+              icon: Calendar,
+              route: 'training.events',
+              badge: null,
+            },
+            {
+              id: 'training.certificates',
+              label: 'My Certificates',
+              icon: Award,
+              route: 'training.certificates',
+              badge: null,
+            },
+          ]
         },
-        {
-          id: 'training.my-courses',
-          label: 'My Courses',
-          icon: BookOpen,
-          route: 'training.my-courses',
-          badge: null,
-        },
-        {
-          id: 'training.events',
-          label: 'Events',
-          icon: Calendar,
-          route: 'training.events',
-          badge: null,
-        },
-        {
-          id: 'training.courses',
-          label: 'Browse Courses',
-          icon: Search,
-          route: 'training.courses',
-          badge: null,
-        },
-        {
-          id: 'training.certificates',
-          label: 'My Certificates',
-          icon: Award,
-          route: 'training.certificates',
-          badge: null,
-        },
-      ]
-    },
   ];
 
   // Admin-specific navigation

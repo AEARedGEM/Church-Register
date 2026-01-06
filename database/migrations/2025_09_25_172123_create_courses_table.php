@@ -85,7 +85,10 @@ return new class extends Migration
             $table->index('slug');
             $table->index('published_at');
             $table->index(['price', 'is_active']);
-            $table->fullText(['title', 'description']); // For search functionality
+            // Only create fulltext index on drivers that support it (e.g., MySQL)
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->fullText(['title', 'description']); // For search functionality
+            }
         });
     }
 

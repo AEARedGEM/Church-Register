@@ -583,4 +583,53 @@ class CourseController extends Controller
             ]);
         }
     }
+
+    /**
+     * Toggle course as favourite
+     */
+    public function toggleFavourite(Course $course)
+    {
+        $userId = Auth::id();
+
+        $favourite = \App\Models\CourseFavourite::where('user_id', $userId)
+            ->where('course_id', $course->id)
+            ->first();
+
+        if ($favourite) {
+            // Remove from favourites
+            $favourite->delete();
+            $isFavourited = false;
+        } else {
+            // Add to favourites
+            \App\Models\CourseFavourite::create([
+                'user_id' => $userId,
+                'course_id' => $course->id,
+            ]);
+            $isFavourited = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'is_favourited' => $isFavourited,
+            'message' => $isFavourited ? 'Added to favourites' : 'Removed from favourites'
+        ]);
+    }
+
+    /**
+     * Get user's favourite courses
+     */
+    public function getFavourites()
+    {
+        $userId = Auth::id();
+
+        $favourites = \App\Models\CourseFavourite::where('user_id', $userId)
+            ->pluck('course_id')
+            ->toArray();
+
+        return response()->json([
+            'success' => true,
+            'favourites' => $favourites
+        ]);
+    }
 }
+

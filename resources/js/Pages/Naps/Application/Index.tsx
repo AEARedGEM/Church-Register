@@ -724,24 +724,34 @@ export default function NAPSDemo() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Funding Support Needed</label>
                 <div className="grid grid-cols-2 gap-3">
-                  {['Traditional Loan', 'TradeFi Funding', 'Tokenization', 'Equity Funding'].map((type, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => {
-                        const needs = surveyData.fundingNeeds.includes(type)
-                          ? surveyData.fundingNeeds.filter(t => t !== type)
-                          : [...surveyData.fundingNeeds, type];
-                        setSurveyData({...surveyData, fundingNeeds: needs});
-                      }}
-                      className={`p-4 border rounded-lg transition-all ${
-                        surveyData.fundingNeeds.includes(type)
-                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-700'
-                      }`}
-                    >
-                      <span className="text-gray-900 dark:text-gray-100">{type}</span>
-                    </button>
+                  {[
+                    { name: 'Traditional Loan', tooltip: 'Conventional bank loans with fixed terms and interest rates' },
+                    { name: 'TradeFi Funding', tooltip: 'Traditional finance solutions including invoice factoring and trade credit' },
+                    { name: 'Tokenization', tooltip: 'Blockchain-based funding through digital asset creation and token sales' },
+                    { name: 'Equity Funding', tooltip: 'Investment capital in exchange for ownership stake in your business' }
+                  ].map((item, i) => (
+                    <div key={i} className="relative group">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const needs = surveyData.fundingNeeds.includes(item.name)
+                            ? surveyData.fundingNeeds.filter(t => t !== item.name)
+                            : [...surveyData.fundingNeeds, item.name];
+                          setSurveyData({...surveyData, fundingNeeds: needs});
+                        }}
+                        className={`w-full p-4 border rounded-lg transition-all relative ${
+                          surveyData.fundingNeeds.includes(item.name)
+                            ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-700'
+                        }`}
+                      >
+                        <span className="text-gray-900 dark:text-gray-100 font-medium">{item.name}</span>
+                      </button>
+                      <div className="absolute top-full left-0 right-0 mt-2 px-4 py-3 bg-gradient-to-br from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-20 shadow-xl">
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-emerald-500 dark:border-b-emerald-600"></div>
+                        <p className="text-center leading-relaxed">{item.tooltip}</p>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>

@@ -4,7 +4,6 @@ import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import ModernLayout from '@/Layouts/Training/TrainingLayout';
 import { Award, Download, Share2, Shield, ArrowLeft, Printer, Mail } from 'lucide-react';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 interface CertificateData {
   certificate_id: string;
   student_name: string;
@@ -45,29 +44,89 @@ export default function CertificateDetail() {
   const certificateRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPDF = async () => {
-    const element = certificateRef.current;
-    if (!element) return;
-
     try {
-      // Simply use html2canvas directly on the visible element
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: true,
-        backgroundColor: '#ffffff',
-        imageTimeout: 10000,
+      // Create a simple PDF with certificate content (avoid html2canvas issues)
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
       });
 
-      // Convert canvas to PDF
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('landscape', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      // Get the width and height
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      // Add white background
+      pdf.setFillColor(255, 255, 255);
+      pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+
+      // Add golden border
+      pdf.setDrawColor(218, 165, 32);
+      pdf.setLineWidth(3);
+      pdf.rect(5, 5, pageWidth - 10, pageHeight - 10);
+
+      // Set text properties
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFont('helvetica', 'bold');
+
+      // Add certificate title
+      pdf.setFontSize(48);
+      pdf.text('Certificate of Completion', pageWidth / 2, 40, { align: 'center' });
+
+      // Add certificate number
+      pdf.setFontSize(10);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(`Certificate ID: ${certificateData.certificate_id}`, pageWidth / 2, 50, { align: 'center' });
+
+      // Add "This is to certify that" text
+      pdf.setFontSize(14);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text('This is to certify that', pageWidth / 2, 65, { align: 'center' });
+
+      // Add student name
+      pdf.setFontSize(28);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(certificateData.student_name, pageWidth / 2, 85, { align: 'center' });
+
+      // Add "has successfully completed" text
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('has successfully completed', pageWidth / 2, 100, { align: 'center' });
+
+      // Add course name
+      pdf.setFontSize(18);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(25, 103, 210); // Blue color
+      pdf.text(certificateData.course_name, pageWidth / 2, 115, { align: 'center' });
+
+      // Add course description
+      pdf.setFontSize(11);
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`A ${certificateData.course_hours}-hour comprehensive training course`, pageWidth / 2, 125, { align: 'center' });
+
+      // Add completion date
+      pdf.setFontSize(11);
+      pdf.text(`Completion Date: ${certificateData.completion_date}`, pageWidth / 2, 145, { align: 'center' });
+
+      // Add instructor name
+      pdf.text(`Instructor: ${certificateData.instructor_name}`, pageWidth / 2, 155, { align: 'center' });
+
+      // Add signature line
+      pdf.setDrawColor(0, 0, 0);
+      pdf.line(30, 170, 70, 170);
+      pdf.setFontSize(9);
+      pdf.text('Authorized Signature', 50, 175, { align: 'center' });
+
+      // Add verification URL
+      pdf.setFontSize(8);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(`Verify: ${certificateData.verification_url}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+
+      // Save the PDF
       pdf.save(`Certificate-${certificateData.certificate_id}.pdf`);
-      
+
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Failed to generate PDF. Please try again.');

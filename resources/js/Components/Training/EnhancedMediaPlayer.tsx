@@ -14,6 +14,7 @@ interface EnhancedMediaPlayerProps {
   title: string;
   onComplete?: () => void;
   onProgress?: (progress: number) => void;
+  onReportTime?: (seconds: number) => void;
 }
 
 export default function EnhancedMediaPlayer({
@@ -23,12 +24,13 @@ export default function EnhancedMediaPlayer({
   slides,
   title,
   onComplete,
-  onProgress
+  onProgress,
+  onReportTime
 }: EnhancedMediaPlayerProps) {
   const renderPlayer = () => {
     switch (type) {
       case 'youtube':
-        return url ? <YouTubePlayer url={url} onProgress={onProgress} /> : <NoContent />;
+        return url ? <YouTubePlayer url={url} onProgress={onProgress} onReportTime={onReportTime} /> : <NoContent />;
 
       case 'video':
         return url ? (
@@ -36,12 +38,13 @@ export default function EnhancedMediaPlayer({
             url={url}
             onComplete={onComplete}
             onProgress={onProgress}
+            onReportTime={onReportTime}
           />
         ) : <NoContent />;
 
       case 'slide':
         return slides && slides.length > 0 ? (
-          <SlideViewer slides={slides} onProgress={onProgress} />
+          <SlideViewer slides={slides} onProgress={onProgress} onReportTime={onReportTime} />
         ) : <NoContent message="No slides available" />;
 
       case 'text':
@@ -55,7 +58,7 @@ export default function EnhancedMediaPlayer({
   };
 
   return (
-    <div className="w-full h-full bg-black">
+    <div className="w-full h-full bg-black min-h-0">
       {renderPlayer()}
     </div>
   );
@@ -74,7 +77,7 @@ function NoContent({ message = 'No content available' }: { message?: string }) {
 }
 
 // YouTube Player Component
-function YouTubePlayer({ url, onProgress }: { url: string; onProgress?: (progress: number) => void }) {
+function YouTubePlayer({ url, onProgress, onReportTime }: { url: string; onProgress?: (progress: number) => void; onReportTime?: (seconds: number) => void }) {
   const getYouTubeId = (url: string): string | null => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
@@ -89,6 +92,9 @@ function YouTubePlayer({ url, onProgress }: { url: string; onProgress?: (progres
       if (onProgress) {
         // Note: Accurate YouTube progress tracking requires YouTube IFrame API
         onProgress(50); // Placeholder
+      }
+      if (onReportTime) {
+        onReportTime(15);
       }
     }, 30000);
 
@@ -109,7 +115,7 @@ function YouTubePlayer({ url, onProgress }: { url: string; onProgress?: (progres
 
   return (
     <iframe
-      className="w-full h-full"
+      className="w-full h-full block"
       src={`https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&modestbranding=1&enablejsapi=1`}
       title="YouTube video player"
       frameBorder="0"
@@ -123,11 +129,13 @@ function YouTubePlayer({ url, onProgress }: { url: string; onProgress?: (progres
 function VideoPlayer({
   url,
   onComplete,
-  onProgress
+  onProgress,
+  onReportTime
 }: {
   url: string;
   onComplete?: () => void;
   onProgress?: (progress: number) => void;
+  onReportTime?: (seconds: number) => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -143,6 +151,7 @@ function VideoPlayer({
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const reportIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const togglePlay = useCallback(() => {
     if (videoRef.current) {
@@ -243,12 +252,28 @@ function VideoPlayer({
   }, [isPlaying]);
 
   useEffect(() => {
+    // set up periodic reporting while playing
+    if (isPlaying) {
+      if (reportIntervalRef.current) clearInterval(reportIntervalRef.current);
+      reportIntervalRef.current = setInterval(() => {
+        if (onReportTime) onReportTime(15);
+      }, 15000);
+    } else {
+      if (reportIntervalRef.current) {
+        clearInterval(reportIntervalRef.current);
+        reportIntervalRef.current = null;
+      }
+    }
     return () => {
       if (controlsTimeoutRef.current) {
         clearTimeout(controlsTimeoutRef.current);
       }
+      if (reportIntervalRef.current) {
+        clearInterval(reportIntervalRef.current);
+        reportIntervalRef.current = null;
+      }
     };
-  }, []);
+  }, [isPlaying, onReportTime]);
 
   return (
     <div
@@ -380,10 +405,12 @@ function VideoPlayer({
 }
 
 // Slide Viewer Component
-function SlideViewer({ slides, onProgress }: { slides: string[]; onProgress?: (progress: number) => void }) {
+function SlideViewer({ slides, onProgress, onReportTime }: { slides: string[]; onProgress?: (progress: number) => void; onReportTime?: (seconds: number) => void }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
+  const reportIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  // onReportTime passed via props
 
   useEffect(() => {
     if (onProgress) {
@@ -391,6 +418,19 @@ function SlideViewer({ slides, onProgress }: { slides: string[]; onProgress?: (p
       onProgress(progress);
     }
   }, [currentSlide, slides.length, onProgress]);
+
+  useEffect(() => {
+    if (onReportTime) {
+      if (reportIntervalRef.current) clearInterval(reportIntervalRef.current);
+      reportIntervalRef.current = setInterval(() => onReportTime(10), 10000);
+    }
+    return () => {
+      if (reportIntervalRef.current) {
+        clearInterval(reportIntervalRef.current);
+        reportIntervalRef.current = null;
+      }
+    };
+  }, [onReportTime]);
 
   const nextSlide = () => {
     setCurrentSlide(prev => Math.min(prev + 1, slides.length - 1));

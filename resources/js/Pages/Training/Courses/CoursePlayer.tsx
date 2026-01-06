@@ -84,13 +84,14 @@ export default function CoursePlayer() {
   const { auth, course, enrollment, sections, currentLecture } = usePage<PageProps>().props;
 
   // State Management
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(window.innerWidth >= 1024); // Default: open only on lg screens and above
   const [activeTab, setActiveTab] = useState<TabType>('curriculum');
   const [progress, setProgress] = useState<number>(0);
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
   const [completingLecture, setCompletingLecture] = useState<number | null>(null);
   const [navigatingLecture, setNavigatingLecture] = useState<number | null>(null);
   const [lectureCompletionStatus, setLectureCompletionStatus] = useState<Record<number, boolean>>({});
+  const [mobilePlayerHeight, setMobilePlayerHeight] = useState<number | null>(null);
 
   // Memoized values for performance
   const sectionsData = useMemo(() => sections || [], [sections]);
@@ -152,6 +153,11 @@ export default function CoursePlayer() {
 
   const handleLectureClick = (lecture: Lecture): void => {
     if (lecture.is_locked) return;
+
+    // Close sidebar on mobile after selecting a lecture
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
 
     router.get(
       route('training.course.player', course.slug) + `?lecture=${lecture.id}`,
@@ -293,6 +299,45 @@ export default function CoursePlayer() {
     setProgress(progressPercent);
   };
 
+  // Compute mobile player height dynamically to avoid flex compression on small screens
+  useEffect(() => {
+    const compute = () => {
+      try {
+        if (typeof window === 'undefined') return;
+        if (window.innerWidth >= 1024) {
+          setMobilePlayerHeight(null);
+          return;
+        }
+        // For very small iPhone widths we rely on stylesheet rules instead of computed inline height
+        if (window.innerWidth <= 414) {
+          setMobilePlayerHeight(null);
+          return;
+        }
+        const topEl = document.querySelector('.course-player-top') as HTMLElement | null;
+        const controlsEl = document.querySelector('.course-player-controls') as HTMLElement | null;
+        const tabsEl = document.querySelector('.course-player-tabs') as HTMLElement | null;
+
+        const topH = topEl ? topEl.getBoundingClientRect().height : 0;
+        const controlsH = controlsEl ? controlsEl.getBoundingClientRect().height : 0;
+        const tabsH = tabsEl ? tabsEl.getBoundingClientRect().height : 0;
+
+        const extra = 8; // small margin
+        const available = Math.max(220, window.innerHeight - topH - controlsH - tabsH - extra);
+        // cap to 90% of viewport to give more room to player on small screens
+        const cap = Math.floor(window.innerHeight * 0.9);
+        const finalH = Math.min(available, cap);
+        setMobilePlayerHeight(finalH);
+      } catch (e) {
+        // fallback
+        setMobilePlayerHeight(Math.floor(window.innerHeight * 0.45));
+      }
+    };
+
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, []);
+
   const tabConfig = [
     { id: 'curriculum' as const, label: 'Curriculum', icon: BookOpen },
     { id: 'overview' as const, label: 'Overview', icon: FileText },
@@ -303,11 +348,27 @@ export default function CoursePlayer() {
   return (
     <ModernLayout>
       <Head title={`${course.title} - Course Player`} />
+      <style>{`
+        /* Device-specific fixes for small iPhones - increased heights */
+        .course-player-media { }
+        @media (max-width: 320px) {
+          /* iPhone SE */
+          .course-player-media { height: 70vh !important; }
+        }
+        @media (min-width: 321px) and (max-width: 375px) {
+          /* iPhone 6/7/8 */
+          .course-player-media { height: 74vh !important; }
+        }
+        @media (min-width: 376px) and (max-width: 414px) {
+          /* iPhone 6/7/8 Plus */
+          .course-player-media { height: 78vh !important; }
+        }
+      `}</style>
 
       {/* Course Player Container - Fixed positioning that works on mobile and desktop */}
       <div className="fixed inset-0 top-16 left-0 lg:left-64 bg-gray-50 dark:bg-gray-900 flex flex-col z-10">
-        {/* Top Navigation Bar */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between flex-shrink-0">
+          {/* Top Navigation Bar */}
+          <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-2 sm:px-4 py-1.5 sm:py-3 flex items-center justify-between flex-shrink-0 course-player-top">
           <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
             <Link
               href={route('training.course.detail', course.id)}
@@ -340,7 +401,7 @@ export default function CoursePlayer() {
               <span className="text-gray-900 dark:text-white font-semibold">{enrollment.progress_percentage}%</span>
             </div>
             <Link
-              href={route('training.my-courses')}
+              href={route('training.courses')}
               className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors"
             >
               <span className="hidden sm:inline">Exit Course</span>
@@ -350,11 +411,14 @@ export default function CoursePlayer() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden min-h-0">
           {/* Video/Content Area */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Media Player */}
-            <div className="flex-1 bg-black flex items-center justify-center relative overflow-hidden">
+          <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+            {/* Media Player (fixed height on small screens, flexible on lg+) */}
+            <div
+              className="course-player-media bg-black flex items-center justify-center relative overflow-hidden h-[65vh] sm:h-[70vh] md:h-[75vh] lg:h-auto lg:flex-1 min-h-0"
+              style={mobilePlayerHeight ? { height: `${mobilePlayerHeight}px` } : undefined}
+            >
               {currentLectureData ? (
                 <EnhancedMediaPlayer
                   type={getMediaType(currentLectureData)}
@@ -363,7 +427,26 @@ export default function CoursePlayer() {
                   slides={currentLectureData.slides}
                   title={currentLectureData.title}
                   onComplete={handleMarkComplete}
-                  onProgress={handleMediaProgress}
+                    onProgress={handleMediaProgress}
+                    onReportTime={(seconds: number) => {
+                      try {
+                        // Use fetch instead of router.post for JSON endpoints
+                        const url = (route as any)('training.activity.record');
+                        try {
+                          // Use Inertia router.post which handles CSRF and cookies automatically
+                          const urlStr = (route as any)('training.activity.record').toString();
+                          router.post(urlStr, { lecture_id: currentLectureData.id, seconds }, {
+                            preserveState: true,
+                            preserveScroll: true,
+                            onError: (err: any) => console.error('Failed to report time', err),
+                          });
+                        } catch (e) {
+                          console.error('Failed to report time', e);
+                        }
+                      } catch (e) {
+                        console.error('Failed to report time', e);
+                      }
+                    }}
                 />
               ) : (
                 <div className="text-white text-center p-8">
@@ -375,7 +458,7 @@ export default function CoursePlayer() {
             </div>
 
             {/* Controls Bar */}
-            <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-3 lg:p-4 flex-shrink-0">
+            <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-2 lg:p-4 flex-shrink-0 course-player-controls">
               <div className="flex items-center justify-between gap-2">
                 <button
                   onClick={() => {
@@ -448,6 +531,150 @@ export default function CoursePlayer() {
                 </button>
               </div>
             </div>
+
+            {/* Mobile Tabs - Visible on all devices, collapsible on lg+ */}
+            <div className="lg:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 course-player-tabs">
+              <div className="flex border-b border-gray-200 dark:border-gray-700">
+                {tabConfig.map(tab => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex-1 flex items-center justify-center space-x-1.5 px-2 py-3 text-xs sm:text-sm font-medium transition-colors ${
+                        activeTab === tab.id
+                          ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Mobile Tab Content */}
+              <div className="overflow-y-auto max-h-96 sm:max-h-80">
+                {activeTab === 'curriculum' && (
+                  <div className="p-4 space-y-3">
+                    {/* Progress Summary */}
+                    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 mb-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Course Progress</span>
+                        <span className="text-gray-900 dark:text-white font-semibold text-xs sm:text-sm">{enrollment.progress_percentage}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${enrollment.progress_percentage}%` }}
+                        />
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-400 text-xs mt-2">
+                        {completedLectures} of {totalLectures} lectures completed
+                      </p>
+                    </div>
+
+                    {/* Sections - Simplified for mobile */}
+                    {sectionsData.length > 0 ? (
+                      sectionsData.map((section) => (
+                        <div key={section.id} className="bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden">
+                          <button
+                            type="button"
+                            onClick={() => toggleSection(section.id)}
+                            aria-expanded={expandedSections.includes(section.id)}
+                            className="w-full p-3 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                          >
+                            <div className="flex-1 text-left">
+                              <h3 className="text-gray-900 dark:text-white font-medium text-xs sm:text-sm mb-1">
+                                {section.title}
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                                {section.lectures?.length || 0} lectures
+                              </p>
+                            </div>
+                            <ChevronRight
+                              className={`w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform ${
+                                expandedSections.includes(section.id) ? 'rotate-90' : ''
+                              }`}
+                            />
+                          </button>
+
+                          {expandedSections.includes(section.id) && (
+                            <div className="border-t border-gray-200 dark:border-gray-800">
+                              {section.lectures.map((lecture) => {
+                                const isCurrentLecture = currentLectureData?.id === lecture.id;
+                                const isCompleted = lecture.is_completed || lectureCompletionStatus[lecture.id];
+                                return (
+                                  <button
+                                    key={lecture.id}
+                                    onClick={() => handleLectureClick(lecture)}
+                                    disabled={lecture.is_locked}
+                                    className={`w-full p-3 flex items-start space-x-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left text-xs sm:text-sm ${
+                                      isCurrentLecture
+                                        ? 'bg-blue-50 dark:bg-blue-900/20 border-l-2 border-blue-600'
+                                        : ''
+                                    } ${lecture.is_locked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                  >
+                                    {isCompleted ? (
+                                      <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                                    ) : lecture.is_locked ? (
+                                      <Lock className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                                    ) : (
+                                      <Play className="w-4 h-4 text-gray-600 dark:text-gray-400 flex-shrink-0 mt-0.5" />
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-gray-900 dark:text-white font-medium line-clamp-1">
+                                        {lecture.title}
+                                      </p>
+                                      <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs">
+                                        {lecture.type} • {lecture.duration}
+                                      </p>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-6 text-gray-600 dark:text-gray-400 text-sm">
+                        No sections available
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === 'overview' && (
+                  <div className="p-4 space-y-4 text-sm">
+                    <div>
+                      <h3 className="text-gray-900 dark:text-white font-semibold mb-2">About This Course</h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">{course.description}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-gray-900 dark:text-white font-semibold mb-2">Course Details</h3>
+                      <div className="space-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                        <p><span className="font-medium">Duration:</span> {course.duration_hours}h {course.duration_minutes}m</p>
+                        <p><span className="font-medium">Category:</span> {course.course_category.name}</p>
+                        <p><span className="font-medium">Instructor:</span> {course.instructor.name}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'notes' && (
+                  <div className="p-4 text-sm">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-center">
+                      <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
+                        Notes feature coming soon
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Sidebar */}
@@ -505,8 +732,10 @@ export default function CoursePlayer() {
                     sectionsData.map((section) => (
                       <div key={section.id} className="bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden">
                         <button
+                          type="button"
                           onClick={() => toggleSection(section.id)}
-                          className="w-full p-4 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          aria-expanded={expandedSections.includes(section.id)}
+                          className="w-full p-4 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
                         >
                           <div className="flex-1 text-left">
                             <h3 className="text-gray-900 dark:text-white font-medium text-sm mb-1">
@@ -523,8 +752,9 @@ export default function CoursePlayer() {
                           />
                         </button>
 
-                          <div className="border-t border-gray-200 dark:border-gray-800">
-                            {section.lectures.map((lecture) => {
+                          {expandedSections.includes(section.id) && (
+                            <div className="border-t border-gray-200 dark:border-gray-800">
+                              {section.lectures.map((lecture) => {
                               const isCurrentLecture = currentLectureData?.id === lecture.id;
                               const isCompleted = lecture.is_completed || lectureCompletionStatus[lecture.id];
                               return (
@@ -561,6 +791,7 @@ export default function CoursePlayer() {
                               );
                             })}
                           </div>
+                        )}
                       </div>
                     ))
                   ) : (

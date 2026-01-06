@@ -12,6 +12,8 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\JsonResponse;
 
 class TrainingController extends Controller
 {
@@ -181,7 +183,114 @@ public function dashboard(Request $request)
                 'enrolled_count' => $course->enrolled_count
             ];
         }),
+        // Provide default learning activity (last 7 days) for initial render
+        'learningActivity' => $this->getLearningActivityData(Auth::id(), 7),
     ]);
+}
+
+/**
+ * Return aggregated learning activity for a user over the last N days.
+ * Responds with JSON for frontend fetches.
+ */
+public function learningActivity(Request $request)
+{
+    // Basic validation
+    $validated = $request->validate([
+        'days' => 'nullable|integer|min:1|max:365'
+    ]);
+
+    $days = (int) ($validated['days'] ?? 7);
+
+    // Ensure authenticated
+    if (!Auth::check()) {
+        return response()->json(['message' => 'Unauthenticated'], 401);
+    }
+
+
+    $userId = Auth::id();
+
+    // Use cache to avoid repeated DB aggregation for short intervals
+    $cacheKey = "learning_activity:{$userId}:{$days}";
+    $ttlSeconds = 60 * 5; // cache for 5 minutes
+
+    // Determine whether time_spent_seconds exists for range (to report source)
+    $start = now()->subDays($days - 1)->startOfDay();
+    $end = now()->endOfDay();
+    $hasSeconds = DB::table('lecture_progress')
+        ->where('user_id', $userId)
+        ->whereBetween('updated_at', [$start, $end])
+        ->where('time_spent_seconds', '>', 0)
+        ->exists();
+
+    $data = Cache::remember($cacheKey, $ttlSeconds, function () use ($userId, $days) {
+        return $this->getLearningActivityData($userId, $days);
+    });
+
+    $source = $hasSeconds ? 'time_spent' : 'duration_fallback';
+
+    return response()->json(['data' => $data, 'source' => $source]);
+}
+
+/**
+ * Helper: aggregate lecture_progress.time_spent_seconds per day for user
+ */
+private function getLearningActivityData($userId, $days = 7)
+{
+    $start = now()->subDays($days - 1)->startOfDay();
+    $end = now()->endOfDay();
+
+    $rows = \DB::table('lecture_progress')
+        ->selectRaw('DATE(updated_at) as date, SUM(time_spent_seconds) as seconds')
+        ->where('user_id', $userId)
+        ->whereBetween('updated_at', [$start, $end])
+        ->groupBy('date')
+        ->orderBy('date')
+        ->get();
+
+        // If all seconds are zero (no time_spent recorded), fall back to summing lecture durations
+        $hasNonZero = $rows->contains(function ($r) {
+            return ($r->seconds ?? 0) > 0;
+        });
+
+        if (!$hasNonZero) {
+            // Sum lecture duration_minutes for lectures updated/completed in range
+            $rows = \DB::table('lecture_progress as lp')
+                ->join('course_lectures as cl', 'lp.course_lecture_id', '=', 'cl.id')
+                ->selectRaw('DATE(lp.updated_at) as date, SUM(cl.duration_minutes) as minutes')
+                ->where('lp.user_id', $userId)
+                ->whereBetween('lp.updated_at', [$start, $end])
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get()
+                ->map(function ($r) {
+                    // convert minutes -> seconds for compatibility
+                    $r->seconds = ($r->minutes ?? 0) * 60;
+                    return $r;
+                });
+        }
+
+    // Build full list of days in the range and merge results
+    $result = [];
+    for ($i = $days - 1; $i >= 0; $i--) {
+        $d = now()->subDays($i)->startOfDay();
+        $key = $d->toDateString();
+        $result[$key] = 0;
+    }
+
+    foreach ($rows as $r) {
+        $result[$r->date] = ($r->seconds ?? 0) / 3600; // convert to hours
+    }
+
+    // Map to array of objects ordered by date
+    $out = [];
+    foreach ($result as $date => $hours) {
+        $out[] = [
+            'date' => $date,
+            'hours' => round((float) $hours, 2),
+        ];
+    }
+
+    return $out;
 }
 
 // Add these helper methods to TrainingController
@@ -195,6 +304,42 @@ private function calculateHoursLearned($enrollments)
     });
     return round($hours, 2);
 }
+
+    /**
+     * Record time spent on a lecture (called from the player periodically).
+     */
+    public function recordTime(Request $request)
+    {
+        $validated = $request->validate([
+            'lecture_id' => 'required|integer|exists:course_lectures,id',
+            'seconds' => 'required|integer|min:1',
+            'last_position' => 'nullable|integer|min:0'
+        ]);
+
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
+        $userId = Auth::id();
+        $lectureId = $validated['lecture_id'];
+        $seconds = (int) $validated['seconds'];
+
+        // Update or create lecture progress row and increment time
+        $progress = \App\Models\LectureProgress::firstOrNew([
+            'user_id' => $userId,
+            'course_lecture_id' => $lectureId
+        ]);
+
+        $progress->time_spent_seconds = ($progress->time_spent_seconds ?? 0) + $seconds;
+        if (isset($validated['last_position'])) {
+            $progress->last_position_seconds = $validated['last_position'];
+        }
+        // touch updated_at
+        $progress->updated_at = now();
+        $progress->save();
+
+        return response()->json(['success' => true, 'time' => $progress->time_spent_seconds]);
+    }
 
 private function calculateStreak($userId)
 {
@@ -373,7 +518,7 @@ private function getRecentAchievements($userId)
             DB::commit();
 
             return redirect()
-                ->route('training.course.player', $course->id)
+                ->route('training.course.player', $course->slug)
                 ->with('success', 'Successfully enrolled in ' . $course->title);
 
         } catch (\Exception $e) {
@@ -506,10 +651,40 @@ private function getRecentAchievements($userId)
         ->paginate(12);
         // dd($enrollments);
 
-        return Inertia::render('Training/Courses/MyCoursesPage', [
-            'enrolledCourses' => $enrollments,
+        // Render the unified CoursesPage and instruct it to show My Courses tab
+        // Provide a minimal courses payload so the CoursesPage toolbar can render safely
+        $emptyCourses = (object) [
+            'data' => [],
+            'current_page' => 1,
+            'last_page' => 1,
+            'total' => 0,
+            'per_page' => 12,
+        ];
+
+        return Inertia::render('Training/Courses/CoursesPage', [
+            'courses' => $emptyCourses,
+            'enrolled_courses' => $enrollments,
+            'initial_mode' => 'my',
             'filters' => $request->only(['status']),
         ]);
+    }
+
+    /**
+     * Return JSON list of enrolled courses for the current user.
+     * Used by the unified CoursesPage when selecting the My Courses tab.
+     */
+    public function myCoursesData(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['data' => []], 401);
+        }
+
+        $enrollments = CourseEnrollment::with(['course.courseCategory', 'course.instructor'])
+            ->byUser(Auth::id())
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return response()->json(['data' => $enrollments]);
     }
 
 
@@ -610,15 +785,34 @@ private function getRecentAchievements($userId)
 
   public function certificates()
 {
+    // Show enrollments that are EITHER completed OR have 100% progress
     $certificates = CourseEnrollment::with(['course.courseCategory', 'course.instructor'])
         ->byUser(Auth::id())
-        ->completed()
+        ->where(function ($query) {
+            $query->where('status', 'completed')
+                  ->orWhere('progress_percentage', 100);
+        })
         ->orderBy('completed_at', 'desc')
         ->get();
 
     return Inertia::render('Training/Certificates/Index', [ // Changed from Detail
         'certificates' => $certificates,
     ]);
+}
+
+public function certificatesJson()
+{
+    // Dedicated JSON endpoint for Completed Courses tab (no page redirect)
+    $certificates = CourseEnrollment::with(['course.courseCategory', 'course.instructor'])
+        ->byUser(Auth::id())
+        ->where(function ($query) {
+            $query->where('status', 'completed')
+                  ->orWhere('progress_percentage', 100);
+        })
+        ->orderBy('completed_at', 'desc')
+        ->get();
+
+    return response()->json(['certificates' => $certificates]);
 }
 
 public function showCertificate($enrollmentId)

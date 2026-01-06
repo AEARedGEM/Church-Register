@@ -67,9 +67,12 @@ Route::middleware(['auth'])->group(function () {
         // Training dashboard
         Route::get('/', [TrainingController::class, 'dashboard'])->name('dashboard');
 
-        // Courses
+        // Courses - unified page with Browse/My Courses tabs
         Route::get('/courses', [TrainingController::class, 'coursesPage'])->name('courses');
-        Route::get('/courses/my-courses', [TrainingController::class, 'myCourses'])->name('my-courses');
+        // Keep my-courses as an alias to courses (for backward compatibility with named routes)
+        Route::get('/courses/my-courses', [TrainingController::class, 'coursesPage'])->name('my-courses');
+        // AJAX endpoint for enrolled courses (used by unified courses UI)
+        Route::get('/courses/my-courses-data', [TrainingController::class, 'myCoursesData'])->name('my-courses.data');
         Route::post('/courses/{course}/enroll', [TrainingController::class, 'enroll'])->name('courses.enroll');
         Route::get('/course/detail/{id}', [CourseController::class, 'courseDetail'])->name('course.detail');
         Route::get('/course/player/{course}', [CourseController::class, 'coursePlayer'])->name('course.player');
@@ -82,8 +85,17 @@ Route::middleware(['auth'])->group(function () {
 
         // Certificates
         Route::get('/certificates', [TrainingController::class, 'certificates'])->name('certificates');
-        Route::get('/certificates/{enrollment}', [TrainingController::class, 'showCertificate'])->name('certificate.show');
+        Route::get('/certificates/api/list', [TrainingController::class, 'certificatesJson'])->name('certificates.api.list');
+        Route::get('/certificates/{enrollment}', [TrainingController::class, 'showCertificate'])->name('certificates.show');
         Route::get('/certificates/{enrollment}/verify', [TrainingController::class, 'verifyCertificate'])->name('certificate.verify');
+
+        // Course Favourite
+        Route::get('/courses/api/favourites', [CourseController::class, 'getFavourites'])->name('courses.api.favourites');
+        Route::post('/courses/{course}/favourite', [CourseController::class, 'toggleFavourite'])->name('courses.favourite');
+
+        // Learning activity API
+        Route::get('/activity', [TrainingController::class, 'learningActivity'])->name('activity');
+        Route::post('/activity/record', [TrainingController::class, 'recordTime'])->name('activity.record');
     });
 
 Route::middleware(['auth', 'role:super_admin|admin'])->prefix('admin')->name('admin.')->group(function () {

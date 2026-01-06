@@ -7,7 +7,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link rel="icon" href="{{asset('img/favicon.ico')}}" type="image/x-icon" />
+        <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <meta name="twitter:title" content="NYP-IP Portal | Industrialization" />
@@ -24,6 +24,9 @@
         <meta property="og:image:alt" content="NYP-IP Portal" />
         <meta property="og:image:width" content="400">
         <meta property="og:image:height" content="400">
+
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Scripts -->
         @routes

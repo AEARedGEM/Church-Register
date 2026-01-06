@@ -138,6 +138,16 @@ class Course extends Model
         return $this->enrollments()->where('status', 'completed');
     }
 
+    public function favourites()
+    {
+        return $this->hasMany(CourseFavourite::class);
+    }
+
+    public function isFavouredBy($userId)
+    {
+        return $this->favourites()->where('user_id', $userId)->exists();
+    }
+
     // Scopes
     public function scopeActive(Builder $query): Builder
     {

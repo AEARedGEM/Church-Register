@@ -6,7 +6,7 @@ import {
   ArrowLeft, Home, BookOpen, Wallet, DollarSign, Users as UsersIcon
 } from 'lucide-react';
 import ModernLayout from '@/Layouts/Training/TrainingLayout';
-import { router, usePage, Link } from '@inertiajs/react';
+import { router, usePage, Link, Head } from '@inertiajs/react';
 
 interface CourseDetailPageProps {
   course: any;
@@ -34,6 +34,7 @@ export default function CourseDetailPage({
 }: CourseDetailPageProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'curriculum' | 'instructor' | 'reviews'>('overview');
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
+  const [enrolling, setEnrolling] = useState(false);
   const { auth } = usePage().props;
 
   const toggleSection = (sectionId: number) => {
@@ -54,16 +55,19 @@ export default function CourseDetailPage({
     }
   };
 
-  const handleEnroll = () => {
-    router.post(route('training.courses.enroll', course.slug), {}, {
-      preserveScroll: true,
-      onSuccess: () => {
-        router.visit(route('training.course.player', course.slug));
-      },
-      onError: (errors) => {
-        console.error('Enrollment failed:', errors);
-      }
-    });
+  const handleEnroll = async () => {
+    if (enrolling) return;
+    setEnrolling(true);
+
+    try {
+      await router.post(route('training.courses.enroll', course.slug), {}, { preserveScroll: true });
+      // After successful post, explicitly navigate to the player using the slug
+      router.visit(route('training.course.player', course.slug));
+    } catch (err) {
+      console.error('Enrollment failed:', err);
+    } finally {
+      setEnrolling(false);
+    }
   };
 
   const getDifficultyColor = (level: string) => {
@@ -85,6 +89,7 @@ export default function CourseDetailPage({
 
   return (
     <ModernLayout>
+      <Head title={`${course.title} - NYP-IP Portal`} />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Back Button */}
         {onBack && (
@@ -248,9 +253,20 @@ export default function CourseDetailPage({
                     ) : (
                       <button
                         onClick={handleEnroll}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4"
+                        disabled={enrolling}
+                        aria-busy={enrolling}
+                        aria-disabled={enrolling}
+                        className={`w-full text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4 ${enrolling ? 'bg-blue-500 opacity-70 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
                       >
-                        Enroll Now
+                        {enrolling ? (
+                          <span className="flex items-center justify-center space-x-2">
+                            <svg className="w-5 h-5 animate-spin text-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                            </svg>
+                            <span>Enrolling...</span>
+                          </span>
+                        ) : 'Enroll Now'}
                       </button>
                     )}
 
