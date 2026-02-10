@@ -76,26 +76,26 @@ export default function LgaProductsLinkage() {
         <div className="space-y-6">
             {/* Global Stats Overview */}
             {!selectedState && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-sm font-medium">Total LGAs</p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{lgaProducts.length}</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
+                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Total LGAs</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{lgaProducts.length}</p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-sm font-medium">Total Respondents</p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
+                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Total Respondents</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {lgaProducts.reduce((sum, item) => sum + item.total_respondents, 0).toLocaleString()}
                         </p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-sm font-medium">Total Wards</p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
+                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Total Wards</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {lgaProducts.reduce((sum, item) => sum + item.total_wards, 0).toLocaleString()}
                         </p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-sm font-medium">Unique Products</p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
+                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Unique Products</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {new Set(lgaProducts.flatMap(item => item.top_products.map(p => p.name))).size}
                         </p>
                     </div>
@@ -104,26 +104,26 @@ export default function LgaProductsLinkage() {
 
             {/* State Stats Overview (when state selected) */}
             {selectedStateData && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <p className="text-blue-600 dark:text-blue-400 text-sm font-medium">LGAs in {selectedState}</p>
-                        <p className="text-3xl font-bold text-blue-700 dark:text-blue-300">{selectedStateData.lgaCount}</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <p className="text-blue-600 dark:text-blue-400 text-xs font-medium">LGAs in {selectedState}</p>
+                        <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{selectedStateData.lgaCount}</p>
                     </div>
-                    <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
-                        <p className="text-green-600 dark:text-green-400 text-sm font-medium">Total Respondents</p>
-                        <p className="text-3xl font-bold text-green-700 dark:text-green-300">
+                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                        <p className="text-green-600 dark:text-green-400 text-xs font-medium">Total Respondents</p>
+                        <p className="text-2xl font-bold text-green-700 dark:text-green-300">
                             {selectedStateData.totalRespondents.toLocaleString()}
                         </p>
                     </div>
-                    <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
-                        <p className="text-purple-600 dark:text-purple-400 text-sm font-medium">Total Wards</p>
-                        <p className="text-3xl font-bold text-purple-700 dark:text-purple-300">
+                    <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
+                        <p className="text-purple-600 dark:text-purple-400 text-xs font-medium">Total Wards</p>
+                        <p className="text-2xl font-bold text-purple-700 dark:text-purple-300">
                             {selectedStateData.totalWards.toLocaleString()}
                         </p>
                     </div>
-                    <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg border border-orange-200 dark:border-orange-800">
-                        <p className="text-orange-600 dark:text-orange-400 text-sm font-medium">Unique Products</p>
-                        <p className="text-3xl font-bold text-orange-700 dark:text-orange-300">
+                    <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg border border-orange-200 dark:border-orange-800">
+                        <p className="text-orange-600 dark:text-orange-400 text-xs font-medium">Unique Products</p>
+                        <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">
                             {new Set(selectedStateData.lgaProducts.flatMap(item => item.top_products.map(p => p.name))).size}
                         </p>
                     </div>
