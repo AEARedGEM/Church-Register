@@ -9,6 +9,7 @@ export default function Welcome({
     phpVersion,
 }: PageProps<{ laravelVersion: string; phpVersion: string }>) {
     const [isDark, setIsDark] = useState(true);
+    const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
     useEffect(() => {
         // Check for saved theme preference or default to dark
@@ -648,7 +649,7 @@ export default function Welcome({
                                                 "Tax Exemption Incentives",
                                                 "StartUp Tokenization",
                                                 "PPPs Partnerships & Expansion"
-                                            ].map((item, i) => (
+                                            ].slice(0, expandedCard === 'startups' ? undefined : 6).map((item, i) => (
                                                 <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
                                                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
                                                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -660,6 +661,26 @@ export default function Welcome({
                                             ))}
                                         </ul>
                                     </div>
+                                    <button
+                                        onClick={() => setExpandedCard(expandedCard === 'startups' ? null : 'startups')}
+                                        className="mt-6 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+                                    >
+                                        {expandedCard === 'startups' ? (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H5V11H19V13Z"/>
+                                                </svg>
+                                                Show Less
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                                                </svg>
+                                                Show All
+                                            </>
+                                        )}
+                                    </button>
                                 </div>
                             </div>
 
@@ -688,7 +709,7 @@ export default function Welcome({
                                                 "Critical Thinking",
                                                 "Personal Branding",
                                                 "Time Management"
-                                            ].map((item, i) => (
+                                            ].slice(0, expandedCard === 'webinar' ? undefined : 6).map((item, i) => (
                                                 <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
                                                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-cyan-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
                                                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -700,6 +721,26 @@ export default function Welcome({
                                             ))}
                                         </ul>
                                     </div>
+                                    <button
+                                        onClick={() => setExpandedCard(expandedCard === 'webinar' ? null : 'webinar')}
+                                        className="mt-6 w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+                                    >
+                                        {expandedCard === 'webinar' ? (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H5V11H19V13Z"/>
+                                                </svg>
+                                                Show Less
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                                                </svg>
+                                                Show All
+                                            </>
+                                        )}
+                                    </button>
                                 </div>
                             </div>
 
@@ -728,7 +769,7 @@ export default function Welcome({
                                                 "Data Analytics",
                                                 "Digital Marketing",
                                                 "Video Editing & Motion Graphics"
-                                            ].map((item, i) => (
+                                            ].slice(0, expandedCard === 'tech' ? undefined : 6).map((item, i) => (
                                                 <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
                                                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
                                                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -740,6 +781,26 @@ export default function Welcome({
                                             ))}
                                         </ul>
                                     </div>
+                                    <button
+                                        onClick={() => setExpandedCard(expandedCard === 'tech' ? null : 'tech')}
+                                        className="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+                                    >
+                                        {expandedCard === 'tech' ? (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H5V11H19V13Z"/>
+                                                </svg>
+                                                Show Less
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                                                </svg>
+                                                Show All
+                                            </>
+                                        )}
+                                    </button>
                                 </div>
                             </div>
 
@@ -768,7 +829,7 @@ export default function Welcome({
                                                 "Plumbing & Electrical Works",
                                                 "Carpentry & Furniture Making",
                                                 "Auto Mechanics"
-                                            ].map((item, i) => (
+                                            ].slice(0, expandedCard === 'vocational' ? undefined : 6).map((item, i) => (
                                                 <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
                                                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
                                                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -780,6 +841,26 @@ export default function Welcome({
                                             ))}
                                         </ul>
                                     </div>
+                                    <button
+                                        onClick={() => setExpandedCard(expandedCard === 'vocational' ? null : 'vocational')}
+                                        className="mt-6 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+                                    >
+                                        {expandedCard === 'vocational' ? (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H5V11H19V13Z"/>
+                                                </svg>
+                                                Show Less
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                                                </svg>
+                                                Show All
+                                            </>
+                                        )}
+                                    </button>
                                 </div>
                             </div>
                         </div>

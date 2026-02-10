@@ -139,7 +139,7 @@ export default function CoursesPage(): JSX.Element {
       try {
         const res = await fetch('/training/courses/api/favourites');
         if (!res.ok) return;
-        
+
         const data = await res.json();
         if (mounted && data.success && Array.isArray(data.favourites)) {
           const favMap: { [courseId: number]: boolean } = {};
