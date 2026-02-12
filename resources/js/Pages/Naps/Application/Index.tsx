@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import NapsLayout from '@/Layouts/Naps/NapsLayout';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Head } from '@inertiajs/react';
@@ -7,7 +7,7 @@ import RegistrationFormComponent from './Partials/RegistrationFormComponent';
 import LgaProductsLinkage from '../Dashboard/LgaProductsLinkage';
 
 const COLORS = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
-type ViewType = 'landing' | 'register' | 'survey' | 'complete' | 'admin';
+type ViewType = 'landing' | 'register' | 'survey' | 'complete' | 'admin' | 'analytics-employment' | 'analytics-products' | 'analytics-skills' | 'analytics-funding';
 
 interface SurveyData {
   firstName: string;
@@ -111,6 +111,84 @@ export default function NAPSDemo() {
     fundingNeeds: [],
     governanceRating: 3
   });
+
+  // Refs for chart downloads
+  const chartRefs = {
+    employment: useRef<HTMLDivElement>(null),
+    products: useRef<HTMLDivElement>(null),
+    skills: useRef<HTMLDivElement>(null),
+    funding: useRef<HTMLDivElement>(null),
+  };
+
+  // State for showing all data modals
+  const [expandedDataModal, setExpandedDataModal] = useState<string | null>(null);
+
+  // Download chart as image
+  const downloadChartAsImage = async (chartRef: React.RefObject<HTMLDivElement>, fileName: string) => {
+    if (!chartRef.current) return;
+
+    try {
+      // Use browser's canvas API through SVG rendering
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(chartRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+      });
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `${fileName}.png`;
+      link.click();
+    } catch (error) {
+      console.error('Failed to download chart:', error);
+      alert('Failed to download chart. Please try again.');
+    }
+  };
+
+  // Download chart as PDF
+  const downloadChartAsPDF = async (chartRef: React.RefObject<HTMLDivElement>, fileName: string) => {
+    if (!chartRef.current) return;
+
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const jsPDF = (await import('jspdf')).jsPDF;
+
+      const canvas = await html2canvas(chartRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const imgWidth = 280;
+      const pageHeight = 190;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`${fileName}.pdf`);
+    } catch (error) {
+      console.error('Failed to download PDF:', error);
+      alert('Failed to download PDF. Please try again.');
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -844,18 +922,247 @@ export default function NAPSDemo() {
     return (
       <div className="min-h-auto bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="p-6 space-y-6">
-          {/* Stats consolidated into landing page cards */}
+          {/* Charts - Single Row - All 4 Charts */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Employment Distribution Chart */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+              <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Employment Distribution</h2>
+              {chartData.employmentData && chartData.employmentData.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={140}>
+                    <PieChart>
+                      <Pie
+                        data={chartData.employmentData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={55}
+                        isAnimationActive={false}
+                      >
+                        {chartData.employmentData.map((_: any, i: number) => (
+                          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="mt-2 space-y-1">
+                    {chartData.employmentData.slice(0, 4).map((item: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2 text-xs">
+                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                        <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
+                        <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {chartData.employmentData.length > 4 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedDataModal('employment');
+                      }}
+                      className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                    >
+                      Visualize All {chartData.employmentData.length} Items
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+              )}
+            </div>
+
+            {/* Preferred Product Chart */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+              <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Product Distribution</h2>
+              {chartData.productsData && chartData.productsData.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={140}>
+                    <PieChart>
+                      <Pie
+                        data={chartData.productsData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={35}
+                        outerRadius={55}
+                        paddingAngle={1}
+                        dataKey="value"
+                        isAnimationActive={false}
+                      >
+                        {chartData.productsData.map((_: any, i: number) => (
+                          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="mt-2 space-y-1">
+                    {chartData.productsData.slice(0, 4).map((item: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2 text-xs">
+                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                        <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
+                        <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {chartData.productsData.length > 4 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedDataModal('products');
+                      }}
+                      className="mt-2 w-full text-center text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 py-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                    >
+                      Visualize All {chartData.productsData.length} Items
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+              )}
+            </div>
+
+            {/* Skills Distribution Chart */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+              <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Skills Distribution</h2>
+              {chartData.skillsData && chartData.skillsData.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={140}>
+                    <PieChart>
+                      <Pie
+                        data={chartData.skillsData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={35}
+                        outerRadius={55}
+                        paddingAngle={1}
+                        dataKey="count"
+                        isAnimationActive={false}
+                      >
+                        {chartData.skillsData.map((_: any, i: number) => (
+                          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="mt-2 space-y-1">
+                    {chartData.skillsData.slice(0, 4).map((item: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2 text-xs">
+                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                        <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name || `Skill ${item.id}`}</span>
+                        <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {chartData.skillsData.length > 4 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedDataModal('skills');
+                      }}
+                      className="mt-2 w-full text-center text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 py-1 rounded hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors"
+                    >
+                      Visualize All {chartData.skillsData.length} Items
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+              )}
+            </div>
+
+            {/* Funding Support Needed Chart */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+              <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Funding Support</h2>
+              {chartData.fundingData && chartData.fundingData.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={140}>
+                    <PieChart>
+                      <Pie
+                        data={chartData.fundingData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={55}
+                        isAnimationActive={false}
+                      >
+                        {chartData.fundingData.map((_: any, i: number) => (
+                          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="mt-2 space-y-1">
+                    {chartData.fundingData.slice(0, 4).map((item: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2 text-xs">
+                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                        <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
+                        <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {chartData.fundingData.length > 4 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedDataModal('funding');
+                      }}
+                      className="mt-2 w-full text-center text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 py-1 rounded hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                    >
+                      Visualize All {chartData.fundingData.length} Items
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+              )}
+            </div>
+          </div>
 
           {/* One Ward One Product Section */}
           <LgaProductsLinkage />
+        </div>
+      </div>
+    );
+  };
 
-          {/* Charts - Row 1 */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Employment Distribution Chart */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Employment Distribution</h2>
+  // Analytics Detail Pages
+  const EmploymentAnalytics = () => (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto">
+        <button
+          onClick={() => setCurrentView('landing')}
+          className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2"
+        >
+          ← Back to Dashboard
+        </button>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Employment Distribution Analytics</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">Total Respondents: {stats.totalRespondents}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => downloadChartAsImage(chartRefs.employment, 'employment-distribution')}
+                className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📥</span> PNG Export
+              </button>
+              <button
+                onClick={() => downloadChartAsPDF(chartRefs.employment, 'employment-distribution')}
+                className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📄</span> PDF Export
+              </button>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-6" ref={chartRefs.employment}>
+            <div className="lg:col-span-2">
               {chartData.employmentData && chartData.employmentData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
+                <ResponsiveContainer width="100%" height={400}>
                   <PieChart>
                     <Pie
                       data={chartData.employmentData}
@@ -863,117 +1170,233 @@ export default function NAPSDemo() {
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      outerRadius={80}
-                      label={({name, value}: any) => `${name} ${value}`}
+                      outerRadius={120}
+                      label={({name, value, percent}: any) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
                     >
                       {chartData.employmentData.map((_: any, i: number) => (
                         <Cell key={i} fill={COLORS[i % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip formatter={(value: any) => `${value} respondents`} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
+                <p className="text-gray-500 dark:text-gray-400 text-center py-12">No data available</p>
               )}
             </div>
 
-            {/* Preferred Product Chart - COMPACT PIE CHART */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Preferred Product Distribution</h2>
-              {chartData.productsData && chartData.productsData.length > 0 ? (
-                <div className="flex items-center justify-center gap-6">
-                  <div className="flex-1">
-                    <ResponsiveContainer width="100%" height={220}>
-                      <PieChart>
-                        <Pie
-                          data={chartData.productsData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={50}
-                          outerRadius={80}
-                          paddingAngle={2}
-                          dataKey="value"
-                        >
-                          {chartData.productsData.map((_: any, i: number) => (
-                            <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="flex-1 max-h-56 overflow-y-auto">
-                    <div className="space-y-2">
-                      {chartData.productsData.slice(0, 8).map((item: any, i: number) => (
-                        <div key={i} className="flex items-center gap-2 text-sm">
-                          <div
-                            className="w-2 h-2 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                          />
-                          <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
-                          <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
-                        </div>
-                      ))}
+            <div className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Summary</h2>
+              <div className="space-y-3">
+                {chartData.employmentData && chartData.employmentData.map((item: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                      <span className="text-gray-700 dark:text-gray-300">{item.name}</span>
                     </div>
+                    <span className="font-semibold text-gray-900 dark:text-white">{item.value}</span>
                   </div>
-                </div>
-              ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
-              )}
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ProductsAnalytics = () => (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto">
+        <button
+          onClick={() => setCurrentView('landing')}
+          className="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-2"
+        >
+          ← Back to Dashboard
+        </button>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Preferred Product Distribution Analytics</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">Total Respondents: {stats.totalRespondents}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => downloadChartAsImage(chartRefs.products, 'product-distribution')}
+                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📥</span> PNG Export
+              </button>
+              <button
+                onClick={() => downloadChartAsPDF(chartRefs.products, 'product-distribution')}
+                className="px-6 py-3 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📄</span> PDF Export
+              </button>
             </div>
           </div>
 
-          {/* Charts - Row 2 */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Skills Distribution Chart - COMPACT PIE CHART */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Top Skills Distribution</h2>
-              {chartData.skillsData && chartData.skillsData.length > 0 ? (
-                <div className="flex items-center justify-center gap-6">
-                  <div className="flex-1">
-                    <ResponsiveContainer width="100%" height={220}>
-                      <PieChart>
-                        <Pie
-                          data={chartData.skillsData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={50}
-                          outerRadius={80}
-                          paddingAngle={2}
-                          dataKey="count"
-                        >
-                          {chartData.skillsData.map((_: any, i: number) => (
-                            <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="flex-1 max-h-56 overflow-y-auto">
-                    <div className="space-y-2">
-                      {chartData.skillsData.slice(0, 8).map((item: any, i: number) => (
-                        <div key={i} className="flex items-center gap-2 text-sm">
-                          <div
-                            className="w-2 h-2 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                          />
-                          <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name || `Skill ${item.id}`}</span>
-                          <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.count}</span>
-                        </div>
+          <div className="grid lg:grid-cols-3 gap-6" ref={chartRefs.products}>
+            <div className="lg:col-span-2">
+              {chartData.productsData && chartData.productsData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={400}>
+                  <PieChart>
+                    <Pie
+                      data={chartData.productsData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={120}
+                      label={({name, value, percent}: any) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                    >
+                      {chartData.productsData.map((_: any, i: number) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
                       ))}
-                    </div>
-                  </div>
-                </div>
+                    </Pie>
+                    <Tooltip formatter={(value: any) => `${value} preferences`} />
+                  </PieChart>
+                </ResponsiveContainer>
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
+                <p className="text-gray-500 dark:text-gray-400 text-center py-12">No data available</p>
               )}
             </div>
 
-            {/* Funding Support Needed Chart */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Funding Support Needed</h2>
+            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-96">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white sticky top-0 bg-white dark:bg-gray-800 pb-2">Summary</h2>
+              <div className="space-y-3">
+                {chartData.productsData && chartData.productsData.map((item: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                      <span className="text-gray-700 dark:text-gray-300 truncate">{item.name}</span>
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-white flex-shrink-0">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SkillsAnalytics = () => (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto">
+        <button
+          onClick={() => setCurrentView('landing')}
+          className="mb-4 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors flex items-center gap-2"
+        >
+          ← Back to Dashboard
+        </button>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Top Skills Distribution Analytics</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">Total Respondents: {stats.totalRespondents}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => downloadChartAsImage(chartRefs.skills, 'skills-distribution')}
+                className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📥</span> PNG Export
+              </button>
+              <button
+                onClick={() => downloadChartAsPDF(chartRefs.skills, 'skills-distribution')}
+                className="px-6 py-3 bg-cyan-700 hover:bg-cyan-800 active:bg-cyan-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📄</span> PDF Export
+              </button>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-6" ref={chartRefs.skills}>
+            <div className="lg:col-span-2">
+              {chartData.skillsData && chartData.skillsData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={400}>
+                  <PieChart>
+                    <Pie
+                      data={chartData.skillsData}
+                      dataKey="count"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={120}
+                      label={({name, value, percent}: any) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                    >
+                      {chartData.skillsData.map((_: any, i: number) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value: any) => `${value} respondents`} />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 text-center py-12">No data available</p>
+              )}
+            </div>
+
+            <div className="bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-96">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white sticky top-0 bg-white dark:bg-gray-800 pb-2">Top Skills</h2>
+              <div className="space-y-3">
+                {chartData.skillsData && chartData.skillsData.map((item: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                      <span className="text-gray-700 dark:text-gray-300 truncate">{item.name || `Skill ${item.id}`}</span>
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-white flex-shrink-0">{item.count}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const FundingAnalytics = () => (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto">
+        <button
+          onClick={() => setCurrentView('landing')}
+          className="mb-4 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors flex items-center gap-2"
+        >
+          ← Back to Dashboard
+        </button>
+
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Funding Support Needed Analytics</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">Total Respondents: {stats.totalRespondents}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => downloadChartAsImage(chartRefs.funding, 'funding-support')}
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📥</span> PNG Export
+              </button>
+              <button
+                onClick={() => downloadChartAsPDF(chartRefs.funding, 'funding-support')}
+                className="px-6 py-3 bg-purple-700 hover:bg-purple-800 active:bg-purple-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                <span>📄</span> PDF Export
+              </button>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-6" ref={chartRefs.funding}>
+            <div className="lg:col-span-2">
               {chartData.fundingData && chartData.fundingData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
+                <ResponsiveContainer width="100%" height={400}>
                   <PieChart>
                     <Pie
                       data={chartData.fundingData}
@@ -981,19 +1404,114 @@ export default function NAPSDemo() {
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      outerRadius={80}
-                      label={({name, value}: any) => `${name} ${value}`}
+                      outerRadius={120}
+                      label={({name, value, percent}: any) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
                     >
                       {chartData.fundingData.map((_: any, i: number) => (
                         <Cell key={i} fill={COLORS[i % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip formatter={(value: any) => `${value} respondents`} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-8">No data available yet</p>
+                <p className="text-gray-500 dark:text-gray-400 text-center py-12">No data available</p>
               )}
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-96">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white sticky top-0 bg-white dark:bg-gray-800 pb-2">Funding Needs</h2>
+              <div className="space-y-3">
+                {chartData.fundingData && chartData.fundingData.map((item: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                      <span className="text-gray-700 dark:text-gray-300 truncate">{item.name}</span>
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-white flex-shrink-0">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Modal for viewing all data
+  const AllDataModal = () => {
+    if (!expandedDataModal) return null;
+
+    let data: any[] = [];
+    let title = '';
+    let bgColor = '';
+    let borderColor = '';
+    let textColor = '';
+
+    if (expandedDataModal === 'employment') {
+      data = chartData.employmentData;
+      title = 'Employment Distribution - All Data';
+      bgColor = 'from-emerald-500 to-emerald-600';
+      borderColor = 'border-emerald-200 dark:border-emerald-700';
+      textColor = 'text-emerald-600 dark:text-emerald-400';
+    } else if (expandedDataModal === 'products') {
+      data = chartData.productsData;
+      title = 'Product Distribution - All Data';
+      bgColor = 'from-blue-500 to-blue-600';
+      borderColor = 'border-blue-200 dark:border-blue-700';
+      textColor = 'text-blue-600 dark:text-blue-400';
+    } else if (expandedDataModal === 'skills') {
+      data = chartData.skillsData;
+      title = 'Skills Distribution - All Data';
+      bgColor = 'from-cyan-500 to-cyan-600';
+      borderColor = 'border-cyan-200 dark:border-cyan-700';
+      textColor = 'text-cyan-600 dark:text-cyan-400';
+    } else if (expandedDataModal === 'funding') {
+      data = chartData.fundingData;
+      title = 'Funding Support - All Data';
+      bgColor = 'from-purple-500 to-purple-600';
+      borderColor = 'border-purple-200 dark:border-purple-700';
+      textColor = 'text-purple-600 dark:text-purple-400';
+    }
+
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
+          <div className={`bg-gradient-to-r ${bgColor} p-6 flex justify-between items-center sticky top-0 z-10`}>
+            <h2 className="text-xl font-bold text-white">{title}</h2>
+            <button
+              onClick={() => setExpandedDataModal(null)}
+              className="text-white hover:bg-white/20 p-1 rounded transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="p-6">
+            <div className="space-y-2">
+              {data.map((item: any, i: number) => (
+                <div key={i} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                  <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-900 dark:text-white truncate">
+                      {item.name || `${expandedDataModal === 'skills' ? 'Skill' : 'Item'} ${item.id}`}
+                    </p>
+                  </div>
+                  <div className={`text-xl font-bold ${textColor}`}>
+                    {expandedDataModal === 'skills' ? item.count : item.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className={`mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg ${borderColor} border`}>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="font-semibold">Total Items:</span> {data.length}
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                <span className="font-semibold">Total Count:</span> {data.reduce((sum: number, item: any) => sum + (item.count || item.value || 0), 0)}
+              </p>
             </div>
           </div>
         </div>
@@ -1009,6 +1527,11 @@ export default function NAPSDemo() {
         {currentView === 'register' && <RegistrationPage />}
         {currentView === 'survey' && <SurveyPage />}
         {currentView === 'complete' && <CompletePage />}
+        {currentView === 'analytics-employment' && <EmploymentAnalytics />}
+        {currentView === 'analytics-products' && <ProductsAnalytics />}
+        {currentView === 'analytics-skills' && <SkillsAnalytics />}
+        {currentView === 'analytics-funding' && <FundingAnalytics />}
+        <AllDataModal />
       </div>
     </NapsLayout>
   );

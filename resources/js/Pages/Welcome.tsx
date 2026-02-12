@@ -118,9 +118,9 @@ export default function Welcome({
 
                     <div className="container mx-auto px-6 relative z-10">
                         <div className="max-w-4xl mx-auto text-center">
-                            <div className="inline-flex items-center bg-emerald-100 dark:from-emerald-500/20 dark:to-blue-500/20 backdrop-blur-xl border border-emerald-300 dark:border-emerald-400/30 px-5 py-2 mb-6 rounded-full hover:border-emerald-400 dark:hover:border-emerald-400/60 transition-all duration-300">
-                                <div className="w-2 h-2 bg-emerald-500 dark:bg-emerald-400 rounded-full mr-2 animate-pulse"></div>
-                                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">NYP Industrialization Programme (NYP-IP)</span>
+                            <div className="inline-flex items-center bg-emerald-100 dark:bg-gradient-to-r dark:from-emerald-600/40 dark:to-blue-600/40 backdrop-blur-xl border border-emerald-300 dark:border-emerald-400/50 px-5 py-2 mb-6 rounded-full hover:border-emerald-400 dark:hover:border-emerald-300/80 transition-all duration-300">
+                                <div className="w-2 h-2 bg-emerald-500 dark:bg-emerald-200 rounded-full mr-2 animate-pulse"></div>
+                                <span className="text-xs font-bold text-emerald-700 dark:text-white">NYP Industrialization Programme (NYP-IP)</span>
                             </div>
                             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-900 dark:text-white drop-shadow-2xl leading-tight">
                                 Powering Nigeria's
