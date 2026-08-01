@@ -1,82 +1,104 @@
 import { Head, Link } from '@inertiajs/react';
 
+const highlights = [
+    {
+        title: 'Vision',
+        text: 'A national blueprint for youth-led industrialization, enterprise growth, and economic diversification.',
+    },
+    {
+        title: 'Execution',
+        text: 'A practical delivery model that links training, capital, infrastructure, and market access.',
+    },
+    {
+        title: 'Impact',
+        text: 'A measurable pathway to jobs, innovation, and stronger regional participation in industry.',
+    },
+];
+
+const otherFrameworks = [
+    { title: 'Policy & Governance', href: '/downloads/policy-framework.pdf' },
+    { title: 'Funding & Engineering', href: '/downloads/funding-framework.pdf' },
+    { title: 'Infrastructure & Technology', href: '/downloads/infrastructure-framework.pdf' },
+    { title: 'Technical Specifications', href: '/downloads/specs-framework.pdf' },
+];
+
 export default function Whitepaper() {
     return (
         <>
-            <Head title="Project Whitepaper - NYP-IP" />
+            <Head title="Project Whitepaper Framework - NYP-IP" />
 
-            <div className="min-h-screen bg-white dark:bg-gray-900">
-                <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-                    <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+                <nav className="border-b border-emerald-100 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-900/80">
+                    <div className="container mx-auto flex items-center justify-between px-6 py-4">
                         <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                             NYP-IP
                         </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">
+                        <Link href="/" className="text-gray-600 transition-colors hover:text-emerald-600 dark:text-gray-300">
                             Back to Home
                         </Link>
                     </div>
                 </nav>
 
-                <div className="container mx-auto px-6 py-16 max-w-4xl">
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Project Whitepaper</h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-                        Nigerian Youth Parliament Industrialization Programme (NYP-IP)
-                    </p>
-
-                    <div className="prose prose-lg dark:prose-invert max-w-none">
-                        <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-900 rounded-lg p-6 mb-8">
-                            <p className="text-blue-900 dark:text-blue-100 font-semibold">
-                                This whitepaper outlines the strategic framework, objectives, implementation approach, and expected outcomes of the Nigerian Youth Parliament Industrialization Programme.
+                <main className="container mx-auto max-w-6xl px-6 py-12 lg:py-16">
+                    <div className="flex flex-col gap-8 rounded-3xl border border-emerald-100 bg-white/90 p-8 shadow-lg shadow-emerald-100/60 dark:border-gray-800 dark:bg-gray-900/80 dark:shadow-none lg:flex-row lg:items-start lg:justify-between">
+                        <div className="max-w-3xl">
+                            <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                                Framework 01
+                            </span>
+                            <h1 className="mt-4 text-4xl font-bold text-gray-900 dark:text-white">Project Whitepaper</h1>
+                            <p className="mt-4 text-lg leading-8 text-gray-700 dark:text-gray-300">
+                                This framework outlines the strategic direction of the NYP-IP programme and the pathways through which youth-led industrialization can scale across Nigeria.
                             </p>
                         </div>
 
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Executive Summary</h2>
-                        <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            The Nigerian Youth Parliament Industrialization Programme (NYP-IP) represents a comprehensive national initiative to catalyze industrial development, create employment opportunities, and empower youth economically across all regions of Nigeria. By combining institutional support, capital mobilization, skills development, and market linkages, the program creates a sustainable ecosystem for youth-led industrialization.
-                        </p>
-
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Strategic Pillars</h2>
-                        <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-4">
-                            <li>Economic Empowerment through Industrialization</li>
-                            <li>Skills Development and Capacity Building</li>
-                            <li>Capital Mobilization and Financing</li>
-                            <li>Market Development and Linkages</li>
-                            <li>Institutional Coordination and Policy Alignment</li>
-                        </ol>
-
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Implementation Framework</h2>
-                        <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            The program is implemented through a coordinated approach involving:
-                        </p>
-                        <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-8">
-                            <li>Regional industrial development hubs</li>
-                            <li>Needs Assessment and Skills Training (NAP/S) programs</li>
-                            <li>Digital financing mechanisms and tokenization</li>
-                            <li>Strategic partnerships with government and private sector</li>
-                            <li>Monitoring, evaluation, and learning systems</li>
-                        </ul>
-
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Expected Outcomes</h2>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            By 2030, the NYP-IP aims to have directly engaged 10,000+ youth in industrialization activities, supported 5,000+ new enterprises, and facilitated the creation of 100,000+ jobs across sectors and regions. This will contribute to Nigeria's broader economic diversification and development goals.
-                        </p>
+                        <a
+                            href="/downloads/whitepaper-framework.pdf"
+                            download
+                            className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-3 font-semibold text-white transition hover:bg-emerald-700"
+                        >
+                            Download PDF
+                        </a>
                     </div>
 
-                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 rounded-lg p-8">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Full Documentation</h3>
-                        <p className="text-gray-700 dark:text-gray-300 mb-6">
-                            Access the complete whitepaper and related documentation frameworks.
-                        </p>
-                        <div className="flex gap-4 flex-wrap">
-                            <Link href="/documentation/policy" className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
-                                Policy Framework
-                            </Link>
-                            <Link href="/documentation/infrastructure" className="px-6 py-2 border border-emerald-600 text-emerald-600 dark:text-emerald-400 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors">
-                                Technical Infrastructure
-                            </Link>
+                    <div className="mt-8 grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
+                        <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">What this framework covers</h2>
+                            <div className="mt-6 grid gap-4 md:grid-cols-2">
+                                {highlights.map((item) => (
+                                    <div key={item.title} className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800">
+                                        <h3 className="font-semibold text-gray-900 dark:text-white">{item.title}</h3>
+                                        <p className="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-300">{item.text}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8 dark:border-emerald-900 dark:bg-emerald-950/40">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Key outcomes</h2>
+                            <ul className="mt-4 space-y-3 text-sm leading-6 text-gray-700 dark:text-gray-300">
+                                <li>• Stronger youth participation in industrial value chains</li>
+                                <li>• Increased access to skills, finance, and market networks</li>
+                                <li>• Better coordination across public, private, and community stakeholders</li>
+                            </ul>
+                        </aside>
+                    </div>
+
+                    <section className="mt-8 rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Download other frameworks</h2>
+                        <div className="mt-6 flex flex-wrap justify-center gap-3">
+                            {otherFrameworks.map((item) => (
+                                <a
+                                    key={item.title}
+                                    href={item.href}
+                                    download
+                                    className="rounded-full border border-emerald-200 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-300 dark:hover:bg-emerald-950"
+                                >
+                                    {item.title}
+                                </a>
+                            ))}
                         </div>
-                    </div>
-                </div>
+                    </section>
+                </main>
             </div>
         </>
     );

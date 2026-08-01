@@ -2,21 +2,29 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
+
+interface MobileNavItem {
+    id: string;
+    label: string;
+    type: string;
+    route?: string;
+}
 
 export default function Authenticated({
     header,
     children,
-}: PropsWithChildren<{ header?: ReactNode }>) {
+    mobileNavItems,
+}: PropsWithChildren<{ header?: ReactNode; mobileNavItems?: MobileNavItem[] }>) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-[132px] lg:pt-[132px]">
+            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur dark:border-gray-700 dark:bg-slate-900/95">
                 <div className="mx-auto  px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
@@ -131,13 +139,32 @@ export default function Authenticated({
                     }
                 >
                     <div className="space-y-1 pb-3 pt-2">
+                    {mobileNavItems ? (
+                        mobileNavItems.map((item) => (
+                            <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => {
+                                    if (item.type === 'route' && item.route) {
+                                        router.visit(route(item.route));
+                                    } else {
+                                        router.visit(route('dashboard'));
+                                    }
+                                }}
+                                className="block w-full text-left rounded-lg px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-900"
+                            >
+                                {item.label}
+                            </button>
+                        ))
+                    ) : (
                         <ResponsiveNavLink
                             href={route('dashboard')}
                             active={route().current('dashboard')}
                         >
                             Dashboard
                         </ResponsiveNavLink>
-                    </div>
+                    )}
+                </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600">
                         <div className="px-4">
@@ -166,7 +193,7 @@ export default function Authenticated({
             </nav>
 
             {header && (
-                <header className="bg-white shadow dark:bg-gray-800">
+                <header className="fixed top-16 left-0 right-0 z-40 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-slate-900/95">
                     <div className="mx-auto  px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>

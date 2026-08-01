@@ -319,177 +319,6 @@ export default function Welcome({
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 dark:via-gray-400/50 to-transparent"></div>
                 </section>
 
-                {/* Featured Ecosystem Tabs */}
-                <section className="relative py-24 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-white dark:from-black dark:via-gray-950 dark:to-black"></div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 via-blue-100/10 to-emerald-100/20 dark:from-emerald-600/15 dark:via-blue-600/10 dark:to-emerald-600/15 animate-pulse"></div>
-                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{ animationDelay: '1s' }}></div>
-                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-emerald-200 dark:bg-emerald-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
-                    <div className="absolute top-1/2 right-0 w-80 h-80 bg-blue-200 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{ animationDelay: '3s' }}></div>
-
-                    <div className="absolute inset-0 opacity-5">
-                        <div className="absolute inset-0" style={{
-                            backgroundImage: 'linear-gradient(0deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)',
-                            backgroundSize: '50px 50px'
-                        }}></div>
-                    </div>
-
-                    <div className="relative z-10 container mx-auto px-6 lg:px-12">
-                        <div className="text-center mb-10">
-                            <div className="inline-flex items-center justify-center">
-                                <div className="flex items-center space-x-2 px-4 py-2 bg-emerald-100/50 dark:bg-emerald-900/50 border border-emerald-200/50 dark:border-emerald-800 rounded-full backdrop-blur-sm">
-                                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Explore the Ecosystem</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mb-8 flex flex-wrap justify-center gap-3">
-                            {[
-                                { id: 'industrial', label: 'Industrial Development Hub' },
-                                { id: 'documentation', label: 'Documentation' },
-                                { id: 'learning', label: 'Learning Programs' },
-                            ].map((tab) => {
-                                const isActive = activeTab === tab.id;
-                                return (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => setActiveTab(tab.id as 'industrial' | 'documentation' | 'learning')}
-                                        className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${
-                                            isActive
-                                                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
-                                                : 'bg-white/80 text-gray-700 hover:bg-emerald-50 dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-gray-700'
-                                        }`}
-                                    >
-                                        {tab.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        <div className="rounded-3xl border border-gray-200/70 bg-white/80 p-6 shadow-xl shadow-gray-200/50 backdrop-blur dark:border-gray-700/80 dark:bg-gray-900/70 dark:shadow-none">
-                            {activeTab === 'industrial' && (
-                                <div className="space-y-6">
-                                    <div className="text-center">
-                                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">NYP-IP Industrialization Ecosystem</h3>
-                                        <p className="mt-2 text-gray-600 dark:text-gray-300">
-                                            A Unified Industrial Development Suite Connecting Policy, Skills, Capital, Technology, and Markets Across Nigeria
-                                        </p>
-                                    </div>
-                                    <div className="grid gap-4 md:grid-cols-2">
-                                        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-5 dark:border-emerald-900/50 dark:bg-emerald-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">NAP/S & O.W.O.P Mandate</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Participate in the National Needs Assessment. Your voice matters in building policies that serve you.</p>
-                                            <a href="https://nypipportal.luxuryxtech.org.ng/naps" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex font-semibold text-emerald-700 dark:text-emerald-300">Register & Participate →</a>
-                                        </div>
-                                        <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-5 dark:border-blue-900/50 dark:bg-blue-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Skills & Upskilling Development</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Access training programs in Soft Skills, Tech Skills, and Vocational Skills with mentorship and certification.</p>
-                                            <a href="https://nypipportal.luxuryxtech.org.ng/training" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex font-semibold text-blue-700 dark:text-blue-300">Browse Courses →</a>
-                                        </div>
-                                        <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-5 dark:border-sky-900/50 dark:bg-sky-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">StartUps Tokenization</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Tokenize & Transform Your Company, Invoice, or Projects into Capital & Liquidity Opportunities.</p>
-                                            <a href="https://luxuryxtech.org.ng/tokenization" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex font-semibold text-sky-700 dark:text-sky-300">Apply for Funding →</a>
-                                        </div>
-                                        <div className="rounded-2xl border border-violet-100 bg-violet-50/80 p-5 dark:border-violet-900/50 dark:bg-violet-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Community Hub</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Join sector-based clusters, participate in forums, and connect with mentors & peers in your industry.</p>
-                                            <button className="mt-4 font-semibold text-violet-700 dark:text-violet-300">Join Community →</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {activeTab === 'documentation' && (
-                                <div className="space-y-6">
-                                    <div className="text-center">
-                                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Project Documentation</h3>
-                                        <p className="mt-2 text-gray-600 dark:text-gray-300">Download our whitepaper and framework documents to understand the vision and implementation strategy.</p>
-                                    </div>
-                                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Project Whitepaper</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Comprehensive document outlining the NYP-IP vision, objectives, and implementation roadmap.</p>
-                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
-                                        </div>
-                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Policy & Governance Framework</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Detailed framework document for policy implementation.</p>
-                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
-                                        </div>
-                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Funding & Financial Engineering Framework</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Detailed framework document for funding implementation.</p>
-                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
-                                        </div>
-                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Infrastructure & Technology Framework</h4>
-                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Detailed framework document for infrastructure implementation.</p>
-                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {activeTab === 'learning' && (
-                                <div className="space-y-6">
-                                    <div className="text-center">
-                                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Program Activities</h3>
-                                        <p className="mt-2 text-gray-600 dark:text-gray-300">Comprehensive activities across all program categories.</p>
-                                    </div>
-                                    <div className="grid gap-4 lg:grid-cols-2">
-                                        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-5 dark:border-emerald-900/50 dark:bg-emerald-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Startups Incubation</h4>
-                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                                <li>• Idea Validation & Merging</li>
-                                                <li>• Concept Development & Testing</li>
-                                                <li>• Marketing Strategy Development</li>
-                                                <li>• Business/Project Analysis</li>
-                                                <li>• Product Development</li>
-                                                <li>• Test Marketing/Branding</li>
-                                            </ul>
-                                        </div>
-                                        <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-5 dark:border-blue-900/50 dark:bg-blue-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Webinar & Soft Skills</h4>
-                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                                <li>• Startup Success</li>
-                                                <li>• Finance & Wealth Creation</li>
-                                                <li>• Digital Transformation</li>
-                                                <li>• Public Speaking Mastery</li>
-                                                <li>• Career Growth & Employability</li>
-                                                <li>• Women in Tech & Business</li>
-                                            </ul>
-                                        </div>
-                                        <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-5 dark:border-sky-900/50 dark:bg-sky-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Tech Skills & Web4</h4>
-                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                                <li>• Website Development</li>
-                                                <li>• Mobile App Development</li>
-                                                <li>• Blockchain Development</li>
-                                                <li>• Cybersecurity</li>
-                                                <li>• AI & Machine Learning</li>
-                                                <li>• Cloud Computing</li>
-                                            </ul>
-                                        </div>
-                                        <div className="rounded-2xl border border-violet-100 bg-violet-50/80 p-5 dark:border-violet-900/50 dark:bg-violet-950/30">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white">Vocational Skills</h4>
-                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                                <li>• Paint Production</li>
-                                                <li>• Fashion Designing</li>
-                                                <li>• Makeup Artistry</li>
-                                                <li>• Photography & Videography</li>
-                                                <li>• Shoe & Bag Making</li>
-                                                <li>• Event Planning & Decoration</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </section>
 
                 <section className="relative py-24 overflow-hidden bg-gradient-to-br from-white via-slate-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
                     {/* Premium gradient background */}
@@ -647,7 +476,7 @@ export default function Welcome({
 
                     <div className="container mx-auto px-6 relative z-10">
                         {/* Main Footer Columns */}
-                        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                        <div className="py-16 grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
                             {/* Column 1: About NYP - Institution */}
                             <div>
                                 <div className="flex items-center space-x-2 mb-6">
@@ -697,7 +526,7 @@ export default function Welcome({
 
                             {/* Column 3: Documentation */}
                             <div>
-                                <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">Documentation</h3>
+                                <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">Framework</h3>
                                 <ul className="space-y-3 text-sm">
                                     <li>
                                         <a href="/documentation/whitepaper" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">Project Whitepaper</a>
@@ -739,7 +568,29 @@ export default function Welcome({
                                 </ul>
                             </div>
 
-                            {/* Column 5: Funding & Capital */}
+                            {/* Column 5: Socials */}
+                            <div>
+                                <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">Socials</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li>
+                                        <a href="https://x.com/Official_NYP1" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">X</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.facebook.com/OfficialNYP" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Facebook</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.instagram.com/official_nyp1/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Instagram</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://t.me/nypipcommunity" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Telegram</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.linkedin.com/company/the-nigerian-youth-parliament/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Column 6: Funding & Capital */}
                             <div>
                                 <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">Funding & Capital</h3>
                                 <ul className="space-y-3 text-sm">
