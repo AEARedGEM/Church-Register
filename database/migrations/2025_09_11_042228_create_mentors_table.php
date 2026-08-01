@@ -30,7 +30,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['is_active', 'rating']);
-            $table->index('specialization');
+            // JSON columns cannot be indexed directly in MySQL without a generated column.
+            // Remove the invalid index to allow migrations to run successfully.
         });
     }
 

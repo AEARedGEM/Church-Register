@@ -607,112 +607,24 @@ export default function Dashboard({
         )}
             {activeTab === 'funding' && (
                 <div className="space-y-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">TradeFi Funding</h3>
-                            <div className="space-y-3">
-                                {[
-                                    { title: 'Working Capital Fund', amount: '₦0.00', status: 'Available', date: '' },
-                                    { title: 'Expansion Fund', amount: '₦0.00', status: 'Availalbe', date: '' }
-                                ].map((app, index) => (
-                                    <div key={index} className="p-3 md:p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                                        <div className="flex items-start justify-between mb-2">
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-white">{app.title}</h4>
-                                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                                                app.status === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                                app.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                                                'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                                            }`}>
-                                                {app.status.replace('_', ' ')}
-                                            </span>
-                                        </div>
-                                        <div className="text-base md:text-lg font-semibold text-emerald-600 dark:text-emerald-400 mb-1">{app.amount}</div>
-                                        <div className="text-xs text-gray-500 dark:text-gray-400">{app.date}</div>
-                                    </div>
-                                ))}
-                            </div>
-                            <a
-                                href="https://luxuryxtech.org.ng/#financing"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full block"
-                            >
-                                <button className="w-full py-2 md:py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors">
-                                    Apply for New TradeFi Fund
-                                </button>
-                            </a>
-                        </div>
-
+                    <div className="grid grid-cols-1 gap-6">
                         <div className="space-y-4">
                             <h3 className="text-lg font-medium text-gray-900 dark:text-white">Tokenization Funding</h3>
-                            <div className="space-y-3">
-                                {[
-                                    { title: 'StartUp Funding', amount: '₦0.00', status: 'Available', date: '' },
-                                    { title: 'Expansion Fund', amount: '₦0.00', status: 'Available', date: '' }
-                                ].map((app, index) => (
-                                    <div key={index} className="p-3 md:p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                                        <div className="flex items-start justify-between mb-2">
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-white">{app.title}</h4>
-                                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                                                app.status === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                                app.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                                                'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                                            }`}>
-                                                {app.status.replace('_', ' ')}
-                                            </span>
-                                        </div>
-                                        <div className="text-base md:text-lg font-semibold text-emerald-600 dark:text-emerald-400 mb-1">{app.amount}</div>
-                                        <div className="text-xs text-gray-500 dark:text-gray-400">{app.date}</div>
-                                    </div>
-                                ))}
+                            <div className="p-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/5 dark:bg-transparent text-center">
+                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
+                                    Tokenize your company, invoices, or projects to unlock capital and liquidity opportunities on our platform.
+                                </p>
+                                <a
+                                    href="https://luxuryxtech.org.ng/tokenization"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block"
+                                >
+                                    <button className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                                        Kickstart Tokenization Application
+                                    </button>
+                                </a>
                             </div>
-                            <a
-                                href="https://luxuryxtech.org.ng/tokenization"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full block"
-                            >
-                                <button className="w-full py-2 md:py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors">
-                                    Kickstart Tokenization Application
-                                </button>
-                            </a>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">Equity & VC Funding</h3>
-                            <div className="space-y-3">
-                                {[
-                                    { investor: 'NYP Industrialization Fund', stage: 'Series A', amount: '₦0.00', status: '', match: '0%' },
-                                    { investor: 'Other VC Funds', stage: 'Series A', amount: '₦0.00', status: '', match: '0%' },
-
-                                ].map((vc, index) => (
-                                    <div key={index} className="p-3 md:p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                                        <div className="flex items-start justify-between mb-2">
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-white">{vc.investor}</h4>
-                                            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{vc.match} match</span>
-                                        </div>
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">{vc.stage}</span>
-                                            <span className="text-sm font-semibold text-gray-900 dark:text-white">{vc.amount}</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                                                vc.status === 'matched' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                                vc.status === 'interested' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
-                                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                                            }`}>
-                                                {vc.status}
-                                            </span>
-                                            {/* <button className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium">
-                                                View Details →
-                                            </button> */}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <button className="w-full py-2 md:py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors">
-                                Apply for VC Funding
-                            </button>
                         </div>
                     </div>
                 </div>

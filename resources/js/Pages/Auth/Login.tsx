@@ -76,38 +76,6 @@ export default function Login({
 
                                 <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
                                     <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
-                                        <TrendingUp className="w-5 h-5" />
-                                    </div>
-                                    <h3 className="font-semibold text-sm">TradeFi Funding</h3>
-                                    <p className="text-xs opacity-75">Working Capital</p>
-                                </div>
-
-                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
-                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
-                                        <Building2 className="w-5 h-5" />
-                                    </div>
-                                    <h3 className="font-semibold text-sm">Equity Funding</h3>
-                                    <p className="text-xs opacity-75">VC Matching</p>
-                                </div>
-
-                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
-                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
-                                        <Zap className="w-5 h-5" />
-                                    </div>
-                                    <h3 className="font-semibold text-sm">StartUp Incubation</h3>
-                                    <p className="text-xs opacity-75">Business Setup</p>
-                                </div>
-
-                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
-                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
-                                        <Shield className="w-5 h-5" />
-                                    </div>
-                                    <h3 className="font-semibold text-sm">Web3 Dashboard</h3>
-                                    <p className="text-xs opacity-75">Digital Wallets</p>
-                                </div>
-
-                                <div className="bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 p-4 rounded-lg hover:bg-opacity-20 transition-all">
-                                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-2">
                                         <Users2 className="w-5 h-5" />
                                     </div>
                                     <h3 className="font-semibold text-sm">Community Hub</h3>

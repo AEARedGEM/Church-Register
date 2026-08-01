@@ -12,6 +12,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PublicPageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +26,43 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+// Public Footer Pages - About NYP
+Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+Route::get('/leadership', [PublicPageController::class, 'leadership'])->name('leadership');
+Route::get('/governance', [PublicPageController::class, 'governance'])->name('governance');
+Route::get('/zones', [PublicPageController::class, 'zones'])->name('zones');
+Route::get('/mission', [PublicPageController::class, 'mission'])->name('mission');
+
+// Public Footer Pages - NYP-IP Program
+Route::get('/program', [PublicPageController::class, 'program'])->name('program');
+Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
+Route::get('/funding', [PublicPageController::class, 'funding'])->name('funding');
+Route::get('/owop-mandate', [PublicPageController::class, 'owopMandate'])->name('owop-mandate');
+Route::get('/ecosystem', [PublicPageController::class, 'ecosystem'])->name('ecosystem');
+Route::get('/impact', [PublicPageController::class, 'impact'])->name('impact');
+
+// Public Footer Pages - Documentation
+Route::prefix('documentation')->name('documentation.')->group(function () {
+    Route::get('/whitepaper', [PublicPageController::class, 'whitepaper'])->name('whitepaper');
+    Route::get('/policy', [PublicPageController::class, 'policy'])->name('policy');
+    Route::get('/funding-framework', [PublicPageController::class, 'fundingFramework'])->name('funding-framework');
+    Route::get('/infrastructure', [PublicPageController::class, 'infrastructure'])->name('infrastructure');
+    Route::get('/specs', [PublicPageController::class, 'specs'])->name('specs');
+});
+
+// Public Footer Pages - Resources
+Route::get('/community', [PublicPageController::class, 'community'])->name('community');
+Route::get('/knowledge-base', [PublicPageController::class, 'knowledgeBase'])->name('knowledge-base');
+Route::get('/support', [PublicPageController::class, 'support'])->name('support');
+Route::get('/faq', [PublicPageController::class, 'faq'])->name('faq');
+Route::get('/feedback', [PublicPageController::class, 'feedback'])->name('feedback');
+
+// Public Footer Pages - Legal
+Route::get('/privacy', [PublicPageController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [PublicPageController::class, 'terms'])->name('terms');
+Route::get('/cookies', [PublicPageController::class, 'cookies'])->name('cookies');
+Route::get('/disclaimer', [PublicPageController::class, 'disclaimer'])->name('disclaimer');
 
 // Authenticated routes
 Route::middleware(['auth'])->group(function () {

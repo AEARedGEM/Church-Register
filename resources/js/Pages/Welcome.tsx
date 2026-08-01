@@ -1,6 +1,6 @@
 import { logo } from '@/images';
 import { PageProps } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 
 export default function Welcome({
@@ -9,7 +9,7 @@ export default function Welcome({
     phpVersion,
 }: PageProps<{ laravelVersion: string; phpVersion: string }>) {
     const [isDark, setIsDark] = useState(true);
-    const [expandedCard, setExpandedCard] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<'industrial' | 'documentation' | 'learning'>('industrial');
 
     useEffect(() => {
         // Check for saved theme preference or default to dark
@@ -192,14 +192,14 @@ export default function Welcome({
                                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                                 <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/10">
                                     <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">₦0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Equity Investment</div>
+                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Tokenization Value</div>
                                 </div>
                             </div>
                             <div className="group relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                                 <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/10">
                                     <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">₦0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">TradeFi Fund Disbursed</div>
+                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Stablecoin Issued</div>
                                 </div>
                             </div>
                             <div className="group relative">
@@ -319,21 +319,15 @@ export default function Welcome({
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 dark:via-gray-400/50 to-transparent"></div>
                 </section>
 
-                {/* Features Section */}
+                {/* Featured Ecosystem Tabs */}
                 <section className="relative py-24 overflow-hidden">
-                    {/* Premium gradient background */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-white dark:from-black dark:via-gray-950 dark:to-black"></div>
-
-                    {/* Animated gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 via-blue-100/10 to-emerald-100/20 dark:from-emerald-600/15 dark:via-blue-600/10 dark:to-emerald-600/15 animate-pulse"></div>
-
-                    {/* Decorative blurred shapes */}
                     <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{animationDelay: '1s'}}></div>
-                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-emerald-200 dark:bg-emerald-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
-                    <div className="absolute top-1/2 right-0 w-80 h-80 bg-blue-200 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '3s'}}></div>
+                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-emerald-200 dark:bg-emerald-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+                    <div className="absolute top-1/2 right-0 w-80 h-80 bg-blue-200 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{ animationDelay: '3s' }}></div>
 
-                    {/* Grid pattern overlay */}
                     <div className="absolute inset-0 opacity-5">
                         <div className="absolute inset-0" style={{
                             backgroundImage: 'linear-gradient(0deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)',
@@ -341,613 +335,162 @@ export default function Welcome({
                         }}></div>
                     </div>
 
-                    {/* Content */}
                     <div className="relative z-10 container mx-auto px-6 lg:px-12">
-                        <div className="text-center mb-16">
-                            <div className="inline-flex items-center justify-center mb-4">
+                        <div className="text-center mb-10">
+                            <div className="inline-flex items-center justify-center">
                                 <div className="flex items-center space-x-2 px-4 py-2 bg-emerald-100/50 dark:bg-emerald-900/50 border border-emerald-200/50 dark:border-emerald-800 rounded-full backdrop-blur-sm">
                                     <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Industrial Development Hub</span>
+                                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Explore the Ecosystem</span>
                                 </div>
                             </div>
-                            <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">NYP-IP Industrialization Ecosystem</h2>
-                            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-                                A Unified Industrial Development Suite Connecting Policy, Skills, Capital, Technology, and Markets Across Nigeria
-                            </p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-                            {/* NAP/S Survey */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 hover:shadow-emerald-200 dark:hover:shadow-none transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-green-500 dark:bg-green-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">NAP/S & O.W.O.P Mandate</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Participate in the National Needs Assessment. Your voice matters in building policies that serve you.
-                                </p>
-                                <a
-                                                href="https://nypipportal.luxuryxtech.org.ng/naps"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full block"
-                                            >
-                                <button className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors">
-                                    Register & Participate →
-                                </button>
-                                </a>
-                            </div>
-
-                            {/* Skills Training */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-blue-500 dark:bg-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">Skills & Upskilling Development</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Access training programs in Soft Skills, Tech Skills, and Vocational Skills with mentorship and certification.
-                                </p>
-                                <a
-                                                href="https://nypipportal.luxuryxtech.org.ng/training"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full block"
-                                            >
-                                <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors">
-                                    Browse Courses →
-                                </button>
-                                </a>
-                            </div>
-
-                            {/* Tokenization Funding */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-blue-500 dark:bg-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">StartUps Tokenization</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Tokenize & Transform Your Company, Invoice, or Projects into Capital & Liquidity Opportunities.
-                                </p>
-                                <a
-                                                href="https://luxuryxtech.org.ng/tokenization"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full block"
-                                            >
-                                <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors">
-                                    Apply for Funding →
-                                </button>
-                                </a>
-                            </div>
-
-                            {/* TradeFi Funding */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-green-500 dark:bg-green-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">TradeFi Funding</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Access (Working Capital, Export & Import Financing) through our Global Tokenized & TradeFi system.
-                                </p>
-                                <a
-                                                href="https://luxuryxtech.org.ng/#financing"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full block"
-                                            >
-                                <button className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors">
-                                    Apply for Funding →
-                                </button>
-                                </a>
-                            </div>
-
-                            {/* VC Matching */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-emerald-500 dark:bg-emerald-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M16 4C18.2 4 20 5.8 20 8C20 10.2 18.2 12 16 12C13.8 12 12 10.2 12 8C12 5.8 13.8 4 16 4ZM8 6C9.1 6 10 6.9 10 8C10 9.1 9.1 10 8 10C6.9 10 6 9.1 6 8C6 6.9 6.9 6 8 6ZM8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12ZM16 14C18.7 14 24 15.3 24 18V20H18V18C18 16.9 17.6 15.4 16 14Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">Equity Funding</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Connect with NYP Special Fund, VCs and Strategic Partners looking to invest in Nigeria's growing economy.
-                                </p>
-                                <button className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold transition-colors">
-                                    Find Investors →
-                                </button>
-                            </div>
-
-                            {/* Business Registration */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-blue-500 dark:bg-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">StartUp Incubation</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Streamlined business onboarding with Incorporation (CAC, USA, UK), development toolkit & funding access.
-                                </p>
-                                <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors">
-                                    Register Now →
-                                </button>
-                            </div>
-
-                            {/* Web3 Integration */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-blue-500 dark:bg-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 7C13.4 7 14.8 8.6 14.8 10V14H15.5C16.3 14 17 14.4 17 15V19C17 19.6 16.6 20 16 20H8C7.4 20 7 19.6 7 19V15C7 14.4 7.4 14 8 14H8.5V10C8.5 8.6 9.6 7 12 7ZM12 8.2C10.2 8.2 9.2 9.2 9.2 10V14H14.8V10C14.8 9.2 13.8 8.2 12 8.2Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">Web3 Dashboard</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Access Wallets for cross-border B2B & B2C transactions, and track your portfolio performance.
-                                </p>
-                                <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors">
-                                    Access Wallet →
-                                </button>
-                            </div>
-
-                            {/* Community Hub */}
-                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-5 hover:shadow-lg dark:hover:bg-gray-600 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-emerald-500 dark:bg-emerald-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M16 4C18.2 4 20 5.8 20 8S18.2 12 16 12 12 10.2 12 8 13.8 4 16 4M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M8 6C9.1 6 10 6.9 10 8S9.1 10 8 10 6 9.1 6 8 6.9 6 8 6M8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">Community Hub</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Join sector-based clusters, participate in forums, and connect with mentors & peers in your industry.
-                                </p>
-                                <button className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold transition-colors">
-                                    Join Community →
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Whitepaper & Frameworks Section */}
-                <section className="relative py-24 overflow-hidden">
-                    {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-800 dark:to-gray-950"></div>
-
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-emerald-100/20 via-transparent to-blue-100/20 dark:from-emerald-500/10 dark:via-transparent dark:to-blue-500/10 animate-pulse"></div>
-
-                    {/* Decorative blurred shapes */}
-                    <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-400 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-20 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-blue-200 dark:bg-blue-400 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '1.5s'}}></div>
-
-                    {/* Content */}
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="text-center mb-16">
-                            <div className="inline-flex items-center justify-center mb-4">
-                                <div className="flex items-center space-x-2 px-4 py-2 bg-emerald-100/50 dark:bg-emerald-900/50 border border-emerald-200/50 dark:border-emerald-800 rounded-full backdrop-blur-sm">
-                                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Documentation</span>
-                                </div>
-                            </div>
-                            <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Project Documentation</h2>
-                            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-                                Download our whitepaper and framework documents to understand our vision and implementation strategy
-                            </p>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {/* Whitepaper */}
-                            <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg dark:hover:bg-gray-700 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-blue-500 dark:bg-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20ZM8 13H16V15H8V13ZM8 17H16V19H8V17ZM8 9H10V11H8V9Z"/>
-                                    </svg>
-                                </div>
-                                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Project Whitepaper</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                    Comprehensive document outlining the NYP-IP vision, objectives, and implementation roadmap.
-                                </p>
-                                <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors">
-                                    Download PDF →
-                                </button>
-                            </div>
-
-                            {/* Framework Documents */}
+                        <div className="mb-8 flex flex-wrap justify-center gap-3">
                             {[
-                                "Policy & Governance Framework",
-                                "Funding & Financial Engineering Framework",
-                                "Infrastructure & Technology Framework"
-                            ].map((framework, index) => (
-                                <div key={index} className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg dark:hover:bg-gray-700 transition-all duration-300 group">
-                                    <div className="w-12 h-12 bg-blue-500 dark:bg-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM7 12H9V17H7V12ZM11 7H13V17H11V7ZM15 10H17V17H15V10Z"/>
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">{framework}</h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                                        Detailed framework document for {framework.split(' ')[0]} implementation.
-                                    </p>
-                                    <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors">
-                                        Download PDF →
+                                { id: 'industrial', label: 'Industrial Development Hub' },
+                                { id: 'documentation', label: 'Documentation' },
+                                { id: 'learning', label: 'Learning Programs' },
+                            ].map((tab) => {
+                                const isActive = activeTab === tab.id;
+                                return (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id as 'industrial' | 'documentation' | 'learning')}
+                                        className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${
+                                            isActive
+                                                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
+                                                : 'bg-white/80 text-gray-700 hover:bg-emerald-50 dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-gray-700'
+                                        }`}
+                                    >
+                                        {tab.label}
                                     </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Program Activities Section */}
-                <section className="relative py-24 overflow-hidden">
-                    {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-blue-950 dark:to-gray-950"></div>
-
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 via-blue-100/10 to-emerald-100/20 dark:from-emerald-600/15 dark:via-blue-600/10 dark:to-emerald-600/15 animate-pulse"></div>
-
-                    {/* Decorative blurred shapes */}
-                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
-                    <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{animationDelay: '1s'}}></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
-                    <div className="absolute top-1/2 left-0 w-80 h-80 bg-blue-200 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '3s'}}></div>
-
-                    {/* Grid pattern overlay */}
-                    <div className="absolute inset-0 opacity-5">
-                        <div className="absolute inset-0" style={{
-                            backgroundImage: 'linear-gradient(0deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)',
-                            backgroundSize: '50px 50px'
-                        }}></div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="text-center mb-20">
-                            <div className="inline-flex items-center justify-center mb-4">
-                                <div className="flex items-center space-x-2 px-4 py-2 bg-emerald-100/50 dark:bg-emerald-900/50 border border-emerald-200/50 dark:border-emerald-800 rounded-full backdrop-blur-sm">
-                                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300\">Learning Programs</span>
-                                </div>
-                            </div>
-                            <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Program Activities</h2>
-                            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                                Comprehensive activities across all our program categories
-                            </p>
+                                );
+                            })}
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                            {/* Startups Incubation */}
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300 transform group-hover:scale-105"></div>
-                                <div className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 hover:border-emerald-500 dark:hover:border-emerald-400 transition-all duration-300 h-full flex flex-col">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2L21 7L12 12L3 7L12 2ZM21 16L12 21L3 16L12 11L21 16Z"/>
-                                        </svg>
+                        <div className="rounded-3xl border border-gray-200/70 bg-white/80 p-6 shadow-xl shadow-gray-200/50 backdrop-blur dark:border-gray-700/80 dark:bg-gray-900/70 dark:shadow-none">
+                            {activeTab === 'industrial' && (
+                                <div className="space-y-6">
+                                    <div className="text-center">
+                                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">NYP-IP Industrialization Ecosystem</h3>
+                                        <p className="mt-2 text-gray-600 dark:text-gray-300">
+                                            A Unified Industrial Development Suite Connecting Policy, Skills, Capital, Technology, and Markets Across Nigeria
+                                        </p>
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Startups Incubation</h3>
-                                    <div className="flex-grow">
-                                        <ul className="space-y-3">
-                                            {[
-                                                "Idea Validation & Merging",
-                                                "Concept Development & Testing",
-                                                "Marketing Strategy Development",
-                                                "Business/Project Analysis",
-                                                "Product Development",
-                                                "Test Marketing/Branding",
-                                                "Commercialization",
-                                                "Quasi-Equity Investment Model",
-                                                "Incorporation (US, UK, Nigeria)",
-                                                "Tax Exemption Incentives",
-                                                "StartUp Tokenization",
-                                                "PPPs Partnerships & Expansion"
-                                            ].slice(0, expandedCard === 'startups' ? undefined : 6).map((item, i) => (
-                                                <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
-                                                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
-                                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                            <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
-                                                        </svg>
-                                                    </div>
-                                                    <span className="group-hover/item:translate-x-1 transition-transform">{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <button
-                                        onClick={() => setExpandedCard(expandedCard === 'startups' ? null : 'startups')}
-                                        className="mt-6 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-                                    >
-                                        {expandedCard === 'startups' ? (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H5V11H19V13Z"/>
-                                                </svg>
-                                                Show Less
-                                            </>
-                                        ) : (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                                                </svg>
-                                                Show All
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Webinar & Soft Skills */}
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300 transform group-hover:scale-105"></div>
-                                <div className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 h-full flex flex-col">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z"/>
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Webinar & Soft Skills</h3>
-                                    <div className="flex-grow">
-                                        <ul className="space-y-3">
-                                            {[
-                                                "Startup Success",
-                                                "Finance & Wealth Creation",
-                                                "Digital Transformation",
-                                                "Public Speaking Mastery",
-                                                "Career Growth & Employability",
-                                                "Women in Tech & Business",
-                                                "Politics & Business Leadership",
-                                                "Entrepreneurial Skills",
-                                                "Emotional Intelligence",
-                                                "Critical Thinking",
-                                                "Personal Branding",
-                                                "Time Management"
-                                            ].slice(0, expandedCard === 'webinar' ? undefined : 6).map((item, i) => (
-                                                <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
-                                                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-cyan-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
-                                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                            <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
-                                                        </svg>
-                                                    </div>
-                                                    <span className="group-hover/item:translate-x-1 transition-transform">{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <button
-                                        onClick={() => setExpandedCard(expandedCard === 'webinar' ? null : 'webinar')}
-                                        className="mt-6 w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-                                    >
-                                        {expandedCard === 'webinar' ? (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H5V11H19V13Z"/>
-                                                </svg>
-                                                Show Less
-                                            </>
-                                        ) : (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                                                </svg>
-                                                Show All
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Tech Skills & Web4 */}
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300 transform group-hover:scale-105"></div>
-                                <div className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 h-full flex flex-col">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M7 2V4H5C3.9 4 3 4.9 3 6V18C3 19.1 3.9 20 5 20H19C20.1 20 21 19.1 21 18V6C21 4.9 20.1 4 19 4H17V2H7ZM19 18H5V8H19V18ZM8 10V16H16V10H8Z"/>
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Tech Skills & Web4</h3>
-                                    <div className="flex-grow">
-                                        <ul className="space-y-3">
-                                            {[
-                                                "Website Development",
-                                                "Mobile App Development",
-                                                "Blockchain Development",
-                                                "Cybersecurity",
-                                                "AI & Machine Learning",
-                                                "Cloud Computing",
-                                                "Mobile Graphics Designing",
-                                                "Social Media Management",
-                                                "UI/UX Design",
-                                                "Data Analytics",
-                                                "Digital Marketing",
-                                                "Video Editing & Motion Graphics"
-                                            ].slice(0, expandedCard === 'tech' ? undefined : 6).map((item, i) => (
-                                                <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
-                                                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
-                                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                            <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
-                                                        </svg>
-                                                    </div>
-                                                    <span className="group-hover/item:translate-x-1 transition-transform">{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <button
-                                        onClick={() => setExpandedCard(expandedCard === 'tech' ? null : 'tech')}
-                                        className="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-                                    >
-                                        {expandedCard === 'tech' ? (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H5V11H19V13Z"/>
-                                                </svg>
-                                                Show Less
-                                            </>
-                                        ) : (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                                                </svg>
-                                                Show All
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Vocational Skills */}
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300 transform group-hover:scale-105"></div>
-                                <div className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 hover:border-emerald-500 dark:hover:border-emerald-400 transition-all duration-300 h-full flex flex-col">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M22 9L12 2L2 9H11V22H13V9H22ZM12 4.16L18.11 8H5.89L12 4.16Z"/>
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Vocational Skills</h3>
-                                    <div className="flex-grow">
-                                        <ul className="space-y-3">
-                                            {[
-                                                "Paint Production",
-                                                "Fashion Designing",
-                                                "Makeup Artistry",
-                                                "Photography & Videography",
-                                                "Shoe & Bag Making",
-                                                "Event Planning & Decoration",
-                                                "Catering & Pastry Making",
-                                                "Hairdressing & Wig Making",
-                                                "Leatherworks & Craftsmanship",
-                                                "Plumbing & Electrical Works",
-                                                "Carpentry & Furniture Making",
-                                                "Auto Mechanics"
-                                            ].slice(0, expandedCard === 'vocational' ? undefined : 6).map((item, i) => (
-                                                <li key={i} className="flex items-start text-gray-700 dark:text-gray-300 text-sm group/item">
-                                                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transform group-hover/item:scale-110 transition-transform">
-                                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                            <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
-                                                        </svg>
-                                                    </div>
-                                                    <span className="group-hover/item:translate-x-1 transition-transform">{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <button
-                                        onClick={() => setExpandedCard(expandedCard === 'vocational' ? null : 'vocational')}
-                                        className="mt-6 w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-                                    >
-                                        {expandedCard === 'vocational' ? (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H5V11H19V13Z"/>
-                                                </svg>
-                                                Show Less
-                                            </>
-                                        ) : (
-                                            <>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-                                                </svg>
-                                                Show All
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Digital Assets Section */}
-                <section className="relative py-24 overflow-hidden">
-                    {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950"></div>
-
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-emerald-100/20 via-blue-100/10 to-emerald-100/20 dark:from-emerald-500/10 dark:via-blue-500/10 dark:to-emerald-500/10 animate-pulse"></div>
-
-                    {/* Decorative blurred shapes */}
-                    <div className="absolute top-1/4 right-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-25 animate-pulse"></div>
-                    <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-20 animate-pulse" style={{animationDelay: '1.5s'}}></div>
-                    <div className="absolute top-1/2 right-1/3 w-96 h-96 bg-emerald-200 dark:bg-emerald-400 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-15 animate-pulse" style={{animationDelay: '1s'}}></div>
-
-                    {/* Content */}
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="text-center mb-16">
-                            <div className="inline-flex items-center justify-center mb-4">
-                                <div className="flex items-center space-x-2 px-4 py-2 bg-emerald-100/50 dark:bg-emerald-900/50 border border-emerald-200/50 dark:border-emerald-800 rounded-full backdrop-blur-sm">
-                                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                    <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Digital Assets</span>
-                                </div>
-                            </div>
-                            <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Digital Assets & Funds</h2>
-                            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-                                SEC-compliant digital assets powering Osun's industrialization
-                            </p>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {[
-                                {
-                                    name: "NYP-IP Fund",
-                                    description: "A Proposed SEC Specialized Industrialization Fund",
-                                    compliance: "SEC COMPLIANT & REGULATED",
-                                    color: "bg-emerald-500 dark:bg-emerald-600"
-                                },
-                                {
-                                    name: "Industrial Fund",
-                                    symbol: "$IND",
-                                    description: "A Global Digital Asset Built For Industrialization - Back Industrial Projects & Startup Incubation",
-                                    compliance: "SEC, NFIU, EFCC COMPLIANT & REGULATED",
-                                    color: "bg-blue-500 dark:bg-blue-600"
-                                },
-                                {
-                                    name: "Industria USD",
-                                    symbol: "USDI",
-                                    description: "A USD-Pegged (Stablecoin) Powering Global Payments, Industrialization & Trade Financing",
-                                    compliance: "SEC, NFIU, EFCC COMPLIANT & REGULATED",
-                                    color: "bg-blue-500 dark:bg-blue-600"
-                                },
-                                {
-                                    name: "Industria NGN",
-                                    symbol: "NGNI",
-                                    description: "A Naira-Pegged Digital Asset for Local Transactions & Industrial Development",
-                                    compliance: "SEC, NFIU, EFCC COMPLIANT & REGULATED",
-                                    color: "bg-emerald-500 dark:bg-emerald-600"
-                                }
-                            ].map((asset, index) => (
-                                <div key={index} className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg dark:hover:bg-gray-700 transition-all duration-300 group">
-                                    <div className={`w-12 h-12 ${asset.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z"/>
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-gray-100">{asset.name}</h3>
-                                    {asset.symbol && (
-                                        <div className="text-sm font-mono bg-gray-100 dark:bg-gray-700 rounded px-2 py-1 inline-block mb-2">
-                                            {asset.symbol}
+                                    <div className="grid gap-4 md:grid-cols-2">
+                                        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-5 dark:border-emerald-900/50 dark:bg-emerald-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">NAP/S & O.W.O.P Mandate</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Participate in the National Needs Assessment. Your voice matters in building policies that serve you.</p>
+                                            <a href="https://nypipportal.luxuryxtech.org.ng/naps" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex font-semibold text-emerald-700 dark:text-emerald-300">Register & Participate →</a>
                                         </div>
-                                    )}
-                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{asset.description}</p>
-                                    <div className="text-xs font-medium bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1 inline-block">
-                                        {asset.compliance}
+                                        <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-5 dark:border-blue-900/50 dark:bg-blue-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Skills & Upskilling Development</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Access training programs in Soft Skills, Tech Skills, and Vocational Skills with mentorship and certification.</p>
+                                            <a href="https://nypipportal.luxuryxtech.org.ng/training" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex font-semibold text-blue-700 dark:text-blue-300">Browse Courses →</a>
+                                        </div>
+                                        <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-5 dark:border-sky-900/50 dark:bg-sky-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">StartUps Tokenization</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Tokenize & Transform Your Company, Invoice, or Projects into Capital & Liquidity Opportunities.</p>
+                                            <a href="https://luxuryxtech.org.ng/tokenization" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex font-semibold text-sky-700 dark:text-sky-300">Apply for Funding →</a>
+                                        </div>
+                                        <div className="rounded-2xl border border-violet-100 bg-violet-50/80 p-5 dark:border-violet-900/50 dark:bg-violet-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Community Hub</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Join sector-based clusters, participate in forums, and connect with mentors & peers in your industry.</p>
+                                            <button className="mt-4 font-semibold text-violet-700 dark:text-violet-300">Join Community →</button>
+                                        </div>
                                     </div>
                                 </div>
-                            ))}
+                            )}
+
+                            {activeTab === 'documentation' && (
+                                <div className="space-y-6">
+                                    <div className="text-center">
+                                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Project Documentation</h3>
+                                        <p className="mt-2 text-gray-600 dark:text-gray-300">Download our whitepaper and framework documents to understand the vision and implementation strategy.</p>
+                                    </div>
+                                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Project Whitepaper</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Comprehensive document outlining the NYP-IP vision, objectives, and implementation roadmap.</p>
+                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
+                                        </div>
+                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Policy & Governance Framework</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Detailed framework document for policy implementation.</p>
+                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
+                                        </div>
+                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Funding & Financial Engineering Framework</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Detailed framework document for funding implementation.</p>
+                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
+                                        </div>
+                                        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Infrastructure & Technology Framework</h4>
+                                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Detailed framework document for infrastructure implementation.</p>
+                                            <button className="mt-4 font-semibold text-blue-700 dark:text-blue-300">Download PDF →</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'learning' && (
+                                <div className="space-y-6">
+                                    <div className="text-center">
+                                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Program Activities</h3>
+                                        <p className="mt-2 text-gray-600 dark:text-gray-300">Comprehensive activities across all program categories.</p>
+                                    </div>
+                                    <div className="grid gap-4 lg:grid-cols-2">
+                                        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-5 dark:border-emerald-900/50 dark:bg-emerald-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Startups Incubation</h4>
+                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                                                <li>• Idea Validation & Merging</li>
+                                                <li>• Concept Development & Testing</li>
+                                                <li>• Marketing Strategy Development</li>
+                                                <li>• Business/Project Analysis</li>
+                                                <li>• Product Development</li>
+                                                <li>• Test Marketing/Branding</li>
+                                            </ul>
+                                        </div>
+                                        <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-5 dark:border-blue-900/50 dark:bg-blue-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Webinar & Soft Skills</h4>
+                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                                                <li>• Startup Success</li>
+                                                <li>• Finance & Wealth Creation</li>
+                                                <li>• Digital Transformation</li>
+                                                <li>• Public Speaking Mastery</li>
+                                                <li>• Career Growth & Employability</li>
+                                                <li>• Women in Tech & Business</li>
+                                            </ul>
+                                        </div>
+                                        <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-5 dark:border-sky-900/50 dark:bg-sky-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Tech Skills & Web4</h4>
+                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                                                <li>• Website Development</li>
+                                                <li>• Mobile App Development</li>
+                                                <li>• Blockchain Development</li>
+                                                <li>• Cybersecurity</li>
+                                                <li>• AI & Machine Learning</li>
+                                                <li>• Cloud Computing</li>
+                                            </ul>
+                                        </div>
+                                        <div className="rounded-2xl border border-violet-100 bg-violet-50/80 p-5 dark:border-violet-900/50 dark:bg-violet-950/30">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white">Vocational Skills</h4>
+                                            <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                                                <li>• Paint Production</li>
+                                                <li>• Fashion Designing</li>
+                                                <li>• Makeup Artistry</li>
+                                                <li>• Photography & Videography</li>
+                                                <li>• Shoe & Bag Making</li>
+                                                <li>• Event Planning & Decoration</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
 
-                {/* CTA Section */}
                 <section className="relative py-24 overflow-hidden bg-gradient-to-br from-white via-slate-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
                     {/* Premium gradient background */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"></div>
@@ -1096,31 +639,153 @@ export default function Welcome({
                 </section>
 
                 {/* Footer */}
-                <footer className="relative py-12 border-t border-emerald-400/20 dark:border-emerald-800/30 overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-gray-950 dark:to-black">
-                    {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white dark:from-gray-950 dark:to-black"></div>
+                <footer className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-gray-900 dark:via-gray-950 dark:to-black border-t border-emerald-400/20 dark:border-emerald-800/30">
+                    {/* Decorative elements */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-blue-500/5 to-emerald-500/5 dark:via-blue-500/3 animate-pulse"></div>
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-900/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-10"></div>
+                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 dark:bg-blue-900/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-10"></div>
 
-                    {/* Subtle accent */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-blue-500/5 to-emerald-500/5 animate-pulse"></div>
-
-                    {/* Content */}
                     <div className="container mx-auto px-6 relative z-10">
-                        <div className="flex flex-col md:flex-row justify-between items-center">
-                            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-                                 <div className="flex items-center space-x-2 text-center justify-center">
-                                    <img src={logo} className="h-10 mx-auto" />
+                        {/* Main Footer Columns */}
+                        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                            {/* Column 1: About NYP - Institution */}
+                            <div>
+                                <div className="flex items-center space-x-2 mb-6">
+                                    <img src={logo} className="h-8" alt="NYP Logo" />
+                                    <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400">About NYP</h3>
                                 </div>
-                                <span className="font-semibold text-emerald-600 dark:text-emerald-400">NYP-IP Portal</span>
+                                <ul className="space-y-3 text-sm">
+                                    <li>
+                                        <a href="/about" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">About NYP</a>
+                                    </li>
+                                    <li>
+                                        <a href="/leadership" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Leadership</a>
+                                    </li>
+                                    <li>
+                                        <a href="/governance" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Committees & Governance</a>
+                                    </li>
+                                    <li>
+                                        <a href="/zones" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Geopolitical Zones</a>
+                                    </li>
+                                    <li>
+                                        <a href="/mission" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Mission & Vision</a>
+                                    </li>
+                                </ul>
                             </div>
-                            <div className="flex space-x-6 text-gray-500 dark:text-gray-400">
-                                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Privacy</a>
-                                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Terms</a>
-                                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Support</a>
-                                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Contact</a>
+
+                            {/* Column 2: NYP-IP Program */}
+                            <div>
+                                <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">NYP-IP Program</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li>
+                                        <a href="/program" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">Program Overview</a>
+                                    </li>
+                                    <li>
+                                        <a href="/partners" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Strategic Partners</a>
+                                    </li>
+                                    <li>
+                                        <a href="/owop-mandate" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">O.W.O.P Mandate</a>
+                                    </li>
+                                    <li>
+                                        <a href="/ecosystem" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Industrialization Ecosystem</a>
+                                    </li>
+                                    <li>
+                                        <a href="/impact" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Impact & Results</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Column 3: Documentation */}
+                            <div>
+                                <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">Documentation</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li>
+                                        <a href="/documentation/whitepaper" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">Project Whitepaper</a>
+                                    </li>
+                                    <li>
+                                        <a href="/documentation/policy" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Policy & Governance Framework</a>
+                                    </li>
+                                    <li>
+                                        <a href="/documentation/funding-framework" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Funding & Financial Engineering</a>
+                                    </li>
+                                    <li>
+                                        <a href="/documentation/infrastructure" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Infrastructure & Technology</a>
+                                    </li>
+                                    <li>
+                                        <a href="/documentation/specs" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Technical Specifications</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Column 4: Resources & Community */}
+                            <div>
+                                <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">Resources</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li>
+                                        <a href="/community" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">Community Hub</a>
+                                    </li>
+                                    <li>
+                                        <a href="/knowledge-base" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Knowledge Base</a>
+                                    </li>
+                                    <li>
+                                        <a href="/support" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Contact & Support</a>
+                                    </li>
+                                    <li>
+                                        <a href="/faq" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">FAQ</a>
+                                    </li>
+                                    <li>
+                                        <a href="/feedback" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Feedback & Suggestions</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Column 5: Funding & Capital */}
+                            <div>
+                                <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-6">Funding & Capital</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li>
+                                        <a href="https://luxuryxtech.org.ng/luxuryxpad/project-owners/dashboard" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">Tokenization</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://luxuryxtech.org.ng/assets/ngni" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Industrial NGN</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://luxuryxtech.org.ng/assets/usdi" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Industrial USD</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://luxuryxtech.org.ng/assets/ind" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Industrial Fund</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://luxuryxtech.org.ng/assets/lidlf" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">$LIDLF</a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
-                        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-gray-500 dark:text-gray-400">
-                            <p>© {new Date().getFullYear()} NYP-IP Portal. Powered by LuxuryX Technologies & TradeFi Limited.</p>
+
+                        {/* Regulatory Disclosure */}
+                        <div className="py-8 border-t border-gray-200 dark:border-gray-800">
+                            <div className="bg-gradient-to-r from-emerald-50/50 to-blue-50/50 dark:from-emerald-950/20 dark:to-blue-950/20 border border-emerald-200/50 dark:border-emerald-900/30 rounded-lg p-6">
+                                <div className="flex items-start gap-3 mb-3">
+                                    <svg className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12.5 7H11V13H17.5V11.5H12.5V7Z"/>
+                                    </svg>
+                                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm">Program Notice & Disclaimer</h4>
+                                </div>
+                                <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                                    The <strong>Nigerian Youth Parliament Industrialization Programme (NYP-IP)</strong> is a national initiative aimed at catalyzing industrialization, skills development, and economic empowerment across Nigeria. This portal and all associated materials are provided for informational purposes. <strong>This is not investment advice.</strong> All participants must review applicable regulations, comply with local and national laws, and consult relevant authorities before participation. Tokenized assets and digital securities carry inherent risks including potential total loss. By using this platform, you acknowledge these risks and agree to our terms.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Bottom Footer */}
+                        <div className="py-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+                            <div className="flex gap-6">
+                                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Privacy Policy</a>
+                                <a href="/terms" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Terms of Service</a>
+                                <a href="/cookies" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Cookie Policy</a>
+                                <a href="/disclaimer" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Disclaimer</a>
+                            </div>
+                            <p>© {new Date().getFullYear()} Nigerian Youth Parliament (NYP). All Rights Reserved.</p>
                         </div>
                     </div>
                 </footer>
