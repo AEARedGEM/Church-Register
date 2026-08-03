@@ -126,7 +126,7 @@ const UsersIndex: React.FC<UsersIndexProps> = ({
           </p>
           <button
             onClick={() => router.visit(route('users.create'))}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm hover:shadow-md"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-sm hover:shadow-md"
           >
             <PlusIcon className="w-5 h-5" />
             Add First User
@@ -167,7 +167,7 @@ const UsersIndex: React.FC<UsersIndexProps> = ({
                       placeholder="Search users..."
                       value={searchTerm}
                       onChange={(e) => handleSearch(e.target.value)}
-                      className="block w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm dark:text-white"
+                      className="block w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm dark:text-white"
                     />
                   </div>
 
@@ -177,14 +177,14 @@ const UsersIndex: React.FC<UsersIndexProps> = ({
                       onClick={() => setShowFilters(!showFilters)}
                       className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border transition-colors font-medium whitespace-nowrap text-sm ${
                         showFilters || hasActiveFilters
-                          ? 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'
+                          ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700'
                           : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                       }`}
                     >
                       <FunnelIcon className="w-4 h-4" />
                       <span className="hidden sm:inline">Filters</span>
                       {hasActiveFilters && (
-                        <span className="bg-white text-blue-600 text-xs px-2 py-0.5 rounded-full font-semibold">
+                        <span className="bg-white text-emerald-600 text-xs px-2 py-0.5 rounded-full font-semibold">
                           {Object.values(filters).filter(v => v && v !== '' && v !== 10).length}
                         </span>
                       )}
@@ -201,7 +201,7 @@ const UsersIndex: React.FC<UsersIndexProps> = ({
 
                     <button
                       onClick={() => router.visit(route('users.create'))}
-                      className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium whitespace-nowrap text-sm shadow-sm hover:shadow-md"
+                      className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors font-medium whitespace-nowrap text-sm shadow-sm hover:shadow-md"
                     >
                       <PlusIcon className="w-4 h-4" />
                       <span className="hidden sm:inline">Add User</span>
@@ -241,7 +241,7 @@ const UsersIndex: React.FC<UsersIndexProps> = ({
                 </p>
                 <button
                   onClick={handleClearFilters}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base font-medium"
+                  className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm sm:text-base font-medium"
                 >
                   Clear Filters
                 </button>

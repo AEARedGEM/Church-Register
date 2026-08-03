@@ -34,7 +34,7 @@ export default function Zones() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                         {zones.map((zone, index) => (
-                            <div key={index} className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-900/30">
+                            <div key={index} className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-900/30">
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{zone.name}</h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">States:</p>
                                 <div className="flex flex-wrap gap-2">

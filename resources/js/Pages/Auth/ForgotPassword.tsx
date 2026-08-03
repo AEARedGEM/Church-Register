@@ -26,7 +26,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 <div className="w-full max-w-6xl flex bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
 
                     {/* Left Side - Info Panel */}
-                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-emerald-600 dark:from-blue-700 dark:to-emerald-700 p-12 flex-col justify-center text-white relative overflow-hidden">
+                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-600 to-emerald-600 dark:from-emerald-700 dark:to-emerald-700 p-12 flex-col justify-center text-white relative overflow-hidden">
                         <div className="absolute inset-0 bg-black opacity-10 dark:opacity-20"></div>
                         <div className="relative z-10">
                             <div className="mb-8">
@@ -92,8 +92,8 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             </div>
 
                             <div className="text-center mb-8">
-                                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                    <Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <Mail className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                                 </div>
                                 <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Reset Password</h2>
                                 <p className="text-gray-600 dark:text-gray-300">
@@ -129,7 +129,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                         type="email"
                                         name="email"
                                         value={data.email}
-                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
+                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
                                         isFocused={true}
                                         onChange={(e) => setData('email', e.target.value)}
                                         placeholder="Enter your email address"
@@ -140,7 +140,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 </div>
 
                                 <PrimaryButton
-                                    className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 dark:from-blue-500 dark:to-emerald-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-emerald-700 dark:hover:from-blue-600 dark:hover:to-emerald-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+                                    className="w-full bg-gradient-to-r from-emerald-600 to-emerald-600 dark:from-emerald-500 dark:to-emerald-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-700 dark:hover:from-emerald-600 dark:hover:to-emerald-600 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
                                     disabled={processing}
                                 >
                                     {processing ? 'Sending Reset Link...' : 'Send Password Reset Link'}
@@ -152,7 +152,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                     Remember your password?{' '}
                                     <Link
                                         href={route('login')}
-                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold focus:outline-none focus:underline transition-colors"
+                                        className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold focus:outline-none focus:underline transition-colors"
                                     >
                                         Sign In
                                     </Link>

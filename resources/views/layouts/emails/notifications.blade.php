@@ -23,8 +23,8 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #333333;
-            background-color: #f7f7f7;
+            color: #000000;
+            background-color: #ffffff;
         }
 
         .email-container {
@@ -49,21 +49,21 @@
             padding: 20px 30px 30px 30px;
             line-height: 1.6;
             font-size: 16px;
-            color: #555555;
+            color: #000000;
         }
 
         .footer {
             padding: 20px;
             text-align: center;
             font-size: 12px;
-            color: #999999;
-            background: #f4f4f4;
+            color: #000000;
+            background: #ffffff;
         }
 
         .button {
             display: inline-block;
             padding: 12px 25px;
-            background-color: #223a5c;
+            background-color: #10b981;
             color: #ffffff !important;
             text-decoration: none;
             border-radius: 4px;
@@ -79,7 +79,7 @@
 
         .info-table td {
             padding: 12px 15px;
-            border-bottom: 1px solid #eaeaea;
+            border-bottom: 1px solid #000000;
             vertical-align: top;
         }
 
@@ -89,7 +89,7 @@
 
         .info-table .label {
             font-weight: 600;
-            color: #333333;
+            color: #000000;
             width: 35%;
         }
 
@@ -130,7 +130,7 @@
                 border-bottom: none !important;
             }
             .info-table tr {
-                border-bottom: 1px solid #eaeaea;
+                border-bottom: 1px solid #000000;
                 padding: 10px 0;
             }
             .info-table tr:last-child {
@@ -144,8 +144,8 @@
         }
     </style>
      @stack('styles')
-</head>
-<body style="margin: 0; padding: 0; background-color: #f7f7f7;">
+    </head>
+<body style="margin: 0; padding: 0; background-color: #ffffff;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;" class="email-container">
         <tr>
             <td class="header" style="padding: 10px 20px; text-align: center;">
@@ -154,20 +154,20 @@
         </tr>
 
         <tr>
-            <td class="content" style="padding: 30px; line-height: 1.6; font-size: 16px; color: #555555;">
+            <td class="content" style="padding: 30px; line-height: 1.6; font-size: 16px; color: #000000;">
                 @yield('content')
             </td>
         </tr>
 
         <tr>
-            <td style="padding: 0 30px 20px 30px; color: #666666; font-size: 16px; line-height: 1.6;">
-                <p style="margin: 0 0 15px 0;">If you have any questions, just reply to this email—we're always happy to help at <a href="mailto:operations@afridata.com.ng" style="color: #223a5c; text-decoration: none;">operations@afridata.com.ng</a></p>
+            <td style="padding: 0 30px 20px 30px; color: #000000; font-size: 16px; line-height: 1.6;">
+                <p style="margin: 0 0 15px 0;">If you have any questions, just reply to this email—we're always happy to help at <a href="mailto:operations@afridata.com.ng" style="color: #10b981; text-decoration: none;">operations@afridata.com.ng</a></p>
                 <p style="margin: 0;">Cheers,<br>The AFRIData Team</p>
             </td>
         </tr>
 
         <tr>
-            <td class="footer" style="padding: 20px; text-align: center; font-size: 12px; color: #999999; background: #f4f4f4;">
+            <td class="footer" style="padding: 20px; text-align: center; font-size: 12px; color: #000000; background: #ffffff;">
                 <div class="social-icons" style="padding: 15px 0;">
                     <a href="/">
                         <img src="{{ asset("whatsapp") }}" class="img-fluid" alt="WhatsApp">
@@ -190,8 +190,8 @@
                 </div>
 
                 <p style="margin: 10px 0 15px 0;">
-                    <a href="{{ url('/unsubscribe') }}" style="color: #666666; text-decoration: underline;">Unsubscribe</a> |
-                    <a href="https://afridata.com.ng/privacy" style="color: #666666; text-decoration: underline;">Privacy Policy</a>
+                    <a href="{{ url('/unsubscribe') }}" style="color: #000000; text-decoration: underline;">Unsubscribe</a> |
+                    <a href="https://afridata.com.ng/privacy" style="color: #000000; text-decoration: underline;">Privacy Policy</a>
                 </p>
 
                 <p style="margin: 0;">&copy; {{ date('Y') }} NYP-IP Portal. All rights reserved.</p>

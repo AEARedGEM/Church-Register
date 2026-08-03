@@ -53,4 +53,39 @@ class LocationService
 
         return $lgas[$state] ?? [];
     }
+
+    public static function getWardsByStateAndLga(string $state, string $lga): array
+    {
+        $allWards = include database_path('seeders/wards_data_complete.php');
+        $stateName = trim($state);
+        $lgaName = trim($lga);
+
+        if (!isset($allWards[$stateName])) {
+            return [];
+        }
+
+        foreach ($allWards[$stateName] as $candidateLga => $wardList) {
+            if (strcasecmp(trim($candidateLga), $lgaName) === 0) {
+                return $wardList;
+            }
+        }
+
+        return [];
+    }
+
+    public static function getWardsByLga(string $lga): array
+    {
+        $allWards = include database_path('seeders/wards_data_complete.php');
+        $lgaName = trim($lga);
+
+        foreach ($allWards as $wardMap) {
+            foreach ($wardMap as $candidateLga => $wardList) {
+                if (strcasecmp(trim($candidateLga), $lgaName) === 0) {
+                    return $wardList;
+                }
+            }
+        }
+
+        return [];
+    }
 }

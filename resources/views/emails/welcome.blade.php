@@ -13,8 +13,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #1a1a1a;
+            background-color: #ffffff;
+            color: #000000;
             line-height: 1.6;
             padding: 20px 0;
         }
@@ -27,9 +27,9 @@
 
         /* Header */
         .email-header {
-            background-color: #1a1a1a;
+            background-color: #10b981;
             padding: 40px 40px 30px;
-            border-bottom: 3px solid #333333;
+            border-bottom: 3px solid #000000;
         }
 
         .logo-section {
@@ -46,18 +46,18 @@
 
         .logo-subtitle {
             font-size: 13px;
-            color: #b3b3b3;
+            color: #ffffff;
             font-weight: 400;
             letter-spacing: 0.3px;
         }
 
         .header-tagline {
             font-size: 15px;
-            color: #e0e0e0;
+            color: #ffffff;
             font-weight: 400;
             line-height: 1.5;
             padding-top: 15px;
-            border-top: 1px solid #333333;
+            border-top: 1px solid #000000;
         }
 
         /* Main Content */
@@ -68,31 +68,31 @@
         .greeting {
             font-size: 24px;
             font-weight: 600;
-            color: #1a1a1a;
+            color: #000000;
             margin-bottom: 24px;
         }
 
         .intro-text {
             font-size: 15px;
-            color: #4a4a4a;
+            color: #000000;
             margin-bottom: 20px;
             line-height: 1.7;
         }
 
         .intro-text strong {
-            color: #1a1a1a;
+            color: #000000;
         }
 
         .highlight-box {
-            background-color: #f8f8f8;
-            border-left: 4px solid #1a1a1a;
+            background-color: #ffffff;
+            border-left: 4px solid #10b981;
             padding: 20px;
             margin: 30px 0;
         }
 
         .highlight-box p {
             font-size: 15px;
-            color: #2a2a2a;
+            color: #000000;
             line-height: 1.6;
         }
 
@@ -100,10 +100,10 @@
         .section-title {
             font-size: 18px;
             font-weight: 600;
-            color: #1a1a1a;
+            color: #000000;
             margin: 35px 0 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e5e5e5;
+            border-bottom: 2px solid #000000;
         }
 
         /* Access Items */
@@ -116,15 +116,15 @@
             align-items: flex-start;
             margin-bottom: 18px;
             padding: 15px;
-            background-color: #fafafa;
-            border-left: 3px solid #666666;
+            background-color: #ffffff;
+            border-left: 3px solid #10b981;
         }
 
         .access-icon {
             flex-shrink: 0;
             width: 32px;
             height: 32px;
-            background-color: #1a1a1a;
+            background-color: #10b981;
             color: #ffffff;
             border-radius: 4px;
             display: flex;
@@ -138,13 +138,13 @@
         .access-content h4 {
             font-size: 15px;
             font-weight: 600;
-            color: #1a1a1a;
+            color: #000000;
             margin-bottom: 4px;
         }
 
         .access-content p {
             font-size: 14px;
-            color: #5a5a5a;
+            color: #000000;
             line-height: 1.5;
         }
 
@@ -153,12 +153,12 @@
             text-align: center;
             margin: 40px 0;
             padding: 30px;
-            background-color: #1a1a1a;
+            background-color: #10b981;
         }
 
         .cta-label {
             font-size: 13px;
-            color: #b3b3b3;
+            color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 15px;
@@ -167,7 +167,7 @@
         .cta-button {
             display: inline-block;
             background-color: #ffffff;
-            color: #1a1a1a;
+            color: #000000;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
@@ -177,13 +177,13 @@
         }
 
         .cta-button:hover {
-            background-color: #1a1a1a;
+            background-color: #10b981;
             color: #ffffff;
         }
 
         .user-email {
             font-size: 14px;
-            color: #b3b3b3;
+            color: #ffffff;
             margin-top: 15px;
         }
 
@@ -200,7 +200,7 @@
             padding-left: 50px;
             margin-bottom: 20px;
             font-size: 14px;
-            color: #4a4a4a;
+            color: #000000;
             line-height: 1.6;
         }
 
@@ -211,7 +211,7 @@
             top: 0;
             width: 32px;
             height: 32px;
-            background-color: #1a1a1a;
+            background-color: #10b981;
             color: #ffffff;
             border-radius: 4px;
             display: flex;
@@ -222,37 +222,37 @@
         }
 
         .steps-list li strong {
-            color: #1a1a1a;
+            color: #000000;
         }
 
         /* Closing */
         .closing-message {
             margin: 35px 0 25px;
             padding: 25px;
-            background-color: #f8f8f8;
-            border-top: 3px solid #1a1a1a;
+            background-color: #ffffff;
+            border-top: 3px solid #10b981;
             font-size: 15px;
-            color: #2a2a2a;
+            color: #000000;
             line-height: 1.7;
         }
 
         .signature {
             margin-top: 30px;
             font-size: 14px;
-            color: #4a4a4a;
+            color: #000000;
         }
 
         .signature-name {
             font-weight: 600;
-            color: #1a1a1a;
+            color: #000000;
             margin-bottom: 3px;
         }
 
         /* Footer */
         .email-footer {
-            background-color: #1a1a1a;
+            background-color: #10b981;
             padding: 35px 40px;
-            color: #b3b3b3;
+            color: #ffffff;
         }
 
         .footer-section {
@@ -274,7 +274,7 @@
         }
 
         .contact-info a {
-            color: #b3b3b3;
+            color: #ffffff;
             text-decoration: none;
             transition: color 0.2s;
         }
@@ -290,26 +290,26 @@
         }
 
         .social-links a {
-            color: #b3b3b3;
+            color: #ffffff;
             text-decoration: none;
             font-size: 13px;
             padding: 8px 16px;
-            border: 1px solid #333333;
+            border: 1px solid #000000;
             transition: all 0.2s;
             display: inline-block;
         }
 
         .social-links a:hover {
             color: #ffffff;
-            border-color: #666666;
+            border-color: #10b981;
         }
 
         .footer-bottom {
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #333333;
+            border-top: 1px solid #000000;
             font-size: 12px;
-            color: #808080;
+            color: #000000;
             text-align: center;
         }
 

@@ -1,50 +1,68 @@
 import { logo } from '@/images';
 import { PageProps } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useTheme } from '@/context/ThemeContext';
+import napsApi from '@/services/napsApi';
 
 export default function Welcome({
     auth,
     laravelVersion,
     phpVersion,
 }: PageProps<{ laravelVersion: string; phpVersion: string }>) {
-    const [isDark, setIsDark] = useState(true);
+    const { theme, toggleTheme } = useTheme();
+    const isDark = theme === 'dark';
     const [activeTab, setActiveTab] = useState<'industrial' | 'documentation' | 'learning'>('industrial');
+    const [napRespondents, setNapRespondents] = useState<number | null>(null);
+    const [highlightFooter, setHighlightFooter] = useState(false);
+    const highlightTimeoutRef = useRef<number | null>(null);
+
+    const scrollToFooter = () => {
+        const footer = document.getElementById('footer-resources');
+        if (footer) {
+            footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setHighlightFooter(true);
+            if (highlightTimeoutRef.current) {
+                window.clearTimeout(highlightTimeoutRef.current);
+            }
+            highlightTimeoutRef.current = window.setTimeout(() => {
+                setHighlightFooter(false);
+                highlightTimeoutRef.current = null;
+            }, 2200);
+        }
+    };
 
     useEffect(() => {
-        // Check for saved theme preference or default to dark
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            setIsDark(savedTheme === 'dark');
-        }
+        // Load live NAP/S respondents count
+        napsApi.getDashboardStats()
+            .then((response) => {
+                setNapRespondents(response.stats?.totalRespondents ?? 0);
+            })
+            .catch(() => {
+                setNapRespondents(0);
+            });
     }, []);
 
     useEffect(() => {
-        // Save theme preference and apply to document
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        if (isDark) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, [isDark]);
-
-    const toggleTheme = () => {
-        setIsDark(!isDark);
-    };
+        return () => {
+            if (highlightTimeoutRef.current) {
+                window.clearTimeout(highlightTimeoutRef.current);
+            }
+        };
+    }, []);
 
     return (
         <>
             <Head title="NYP-IP Portal - Empowering Nigeria Industrial Future" />
-            <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+            <div className="bg-slate-950 text-slate-100 min-h-screen transition-colors duration-300">
                 {/* Header */}
-                <header className="relative z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+                <header className="relative z-50 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800/70">
                     <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                                <div className="flex items-center space-x-2 text-center justify-center">
                             <img src={logo} className="h-10 mx-auto" />
                         </div>
-                            <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">NYP-IP Portal</span>
+                            <span className="text-xl font-bold text-slate-900 dark:text-white">NYP-IP Portal</span>
                         </div>
                         <div className="flex items-center space-x-4">
                             {/* Theme Toggle */}
@@ -94,16 +112,16 @@ export default function Welcome({
                 {/* Hero Section */}
                 <section className="relative min-h-[600px] py-20 overflow-hidden">
                     {/* Main gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950"></div>
+                    <div className="absolute inset-0 bg-slate-950"></div>
 
                     {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/30 via-blue-100/20 to-emerald-100/30 dark:from-emerald-600/20 dark:via-blue-600/10 dark:to-emerald-600/20 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900/30 via-slate-800/10 to-slate-900/30 animate-pulse"></div>
 
                     {/* Decorative blurred shapes */}
-                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{animationDelay: '1s'}}></div>
-                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-emerald-200 dark:bg-emerald-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
-                    <div className="absolute top-1/2 right-0 w-80 h-80 bg-blue-200 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '3s'}}></div>
+                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
+                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{animationDelay: '1s'}}></div>
+                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
+                    <div className="absolute top-1/2 right-0 w-80 h-80 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '3s'}}></div>
 
                     {/* Grid pattern overlay */}
                     <div className="absolute inset-0 opacity-5">
@@ -118,28 +136,31 @@ export default function Welcome({
 
                     <div className="container mx-auto px-6 relative z-10">
                         <div className="max-w-4xl mx-auto text-center">
-                            <div className="inline-flex items-center bg-emerald-100 dark:bg-gradient-to-r dark:from-emerald-600/40 dark:to-blue-600/40 backdrop-blur-xl border border-emerald-300 dark:border-emerald-400/50 px-5 py-2 mb-6 rounded-full hover:border-emerald-400 dark:hover:border-emerald-300/80 transition-all duration-300">
-                                <div className="w-2 h-2 bg-emerald-500 dark:bg-emerald-200 rounded-full mr-2 animate-pulse"></div>
-                                <span className="text-xs font-bold text-emerald-700 dark:text-white">NYP Industrialization Programme (NYP-IP)</span>
+                            <div className="inline-flex items-center bg-slate-800/80 backdrop-blur-xl border border-slate-700/80 px-5 py-2 mb-6 rounded-full hover:border-slate-600 transition-all duration-300">
+                                <div className="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse"></div>
+                                <span className="text-xs font-bold text-slate-100">NYP Industrialization Programme (NYP-IP)</span>
                             </div>
                             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-900 dark:text-white drop-shadow-2xl leading-tight">
                                 Powering Nigeria's
                                 <br />
-                                <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-emerald-400 bg-clip-text text-transparent drop-shadow-lg">Industrial Future</span>
+                                <span className="bg-gradient-to-r from-slate-900 via-emerald-500 to-emerald-500 bg-clip-text text-transparent drop-shadow-lg">Industrial Future</span>
                             </h1>
-                            <p className="text-base md:text-lg text-gray-700 dark:text-gray-100 mb-6 max-w-2xl mx-auto leading-relaxed backdrop-blur-sm bg-white/60 dark:bg-white/5 rounded-lg p-5 border border-emerald-200 dark:border-white/10">
+                            <p className="text-slate-200 mb-6 max-w-2xl mx-auto leading-relaxed backdrop-blur-sm bg-slate-900/70 dark:bg-slate-950/80 rounded-lg p-5 border border-slate-800">
                                 An Industrialization Programme and a Digital Portal connecting Startups, SMEs, Capital, Investments, and Initiatives
                                 to catalyze innovation, Skills Development, and Industrialization Financing across Nigeria.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center">
                                 <Link
                                     href={route('register')}
-                                    className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 dark:from-emerald-500 dark:to-emerald-600 text-white px-7 py-3 rounded-lg font-semibold text-base transition-all transform hover:scale-105 shadow-lg hover:shadow-emerald-500/40 dark:hover:shadow-emerald-500/40 relative group overflow-hidden"
+                                    className="relative overflow-hidden rounded-lg bg-slate-900 px-7 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:bg-slate-800"
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
                                     <span className="relative">Get Onboarded</span>
                                 </Link>
-                                <button className="border-2 border-emerald-500 dark:border-emerald-400/50 text-emerald-600 dark:text-emerald-100 hover:text-emerald-700 dark:hover:text-emerald-100 backdrop-blur-sm bg-white/70 dark:bg-white/5 hover:bg-emerald-50 dark:hover:bg-white/10 px-7 py-3 rounded-lg font-semibold text-base transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/20 dark:hover:shadow-emerald-500/20 group relative overflow-hidden">
+                                <button
+                                    type="button"
+                                    onClick={scrollToFooter}
+                                    className="border-2 border-slate-700 text-slate-100 hover:text-white backdrop-blur-sm bg-slate-900/70 hover:bg-slate-800/90 px-7 py-3 rounded-lg font-semibold text-base transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-slate-900/40 group relative overflow-hidden"
+                                >
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-100/10 dark:via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
                                     <span className="relative">Explore Platform</span>
                                 </button>
@@ -151,16 +172,16 @@ export default function Welcome({
                 {/* Stats Section */}
                 <section className="relative py-20 overflow-hidden">
                     {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-blue-950 dark:to-gray-950"></div>
+                    <div className="absolute inset-0 bg-slate-950"></div>
 
                     {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-emerald-100/20 via-blue-100/10 to-emerald-100/20 dark:from-emerald-600/15 dark:via-blue-600/10 dark:to-emerald-600/15 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-slate-900/20 animate-pulse"></div>
 
                     {/* Decorative blurred shapes for depth */}
-                    <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-25 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-20 animate-pulse" style={{animationDelay: '1.5s'}}></div>
-                    <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '1s'}}></div>
-                    <div className="absolute top-0 left-1/3 w-80 h-80 bg-blue-200 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '2.5s'}}></div>
+                    <div className="absolute top-1/2 left-0 w-96 h-96 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-25 animate-pulse"></div>
+                    <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-20 animate-pulse" style={{animationDelay: '1.5s'}}></div>
+                    <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '1s'}}></div>
+                    <div className="absolute top-0 left-1/3 w-80 h-80 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '2.5s'}}></div>
 
                     {/* Subtle grid pattern */}
                     <div className="absolute inset-0 opacity-5">
@@ -172,48 +193,42 @@ export default function Welcome({
 
                     {/* Content */}
                     <div className="container mx-auto px-6 relative z-10">
-                        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 md:gap-5">
-
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-5">
                             <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/10">
-                                    <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Company Incubated</div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-200/20 to-slate-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-slate-800/70 hover:border-slate-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">0</div>
+                                    <div className="text-xs md:text-sm text-slate-300">Company Incubated</div>
                                 </div>
                             </div>
                             <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/10">
-                                    <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">StartUps Tokenized</div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-200/20 to-slate-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-slate-800/70 hover:border-slate-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">0</div>
+                                    <div className="text-xs md:text-sm text-slate-300">StartUps Tokenized</div>
                                 </div>
                             </div>
                             <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/10">
-                                    <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">₦0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Tokenization Value</div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-200/20 to-slate-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-slate-800/70 hover:border-slate-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                                        {napRespondents !== null ? napRespondents : '0'}
+                                    </div>
+                                    <div className="text-xs md:text-sm text-slate-300">NAP/S Respondents</div>
                                 </div>
                             </div>
                             <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-white/5 border border-white/10 hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/10">
-                                    <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">₦0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Stablecoin Issued</div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-200/20 to-slate-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-slate-800/70 hover:border-slate-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">0</div>
+                                    <div className="text-xs md:text-sm text-slate-300">Jobs Created</div>
                                 </div>
                             </div>
                             <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-emerald-400 dark:hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/90 dark:group-hover:bg-white/10">
-                                    <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Jobs Created</div>
-                                </div>
-                            </div>
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-white/70 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-emerald-400 dark:hover:border-emerald-400/30 rounded-lg p-4 transition-all duration-300 group-hover:bg-white/90 dark:group-hover:bg-white/10">
-                                    <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-1">0</div>
-                                    <div className="text-xs md:text-sm text-gray-700 dark:text-gray-300">Training Programs</div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-200/20 to-slate-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-slate-800/70 hover:border-slate-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">0</div>
+                                    <div className="text-xs md:text-sm text-slate-300">Training Programs</div>
                                 </div>
                             </div>
                         </div>
@@ -221,31 +236,31 @@ export default function Welcome({
                 </section>
 
                 {/* Partnerships Section */}
-                <section className="relative py-24 overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+                <section className="relative py-24 overflow-hidden bg-slate-950">
                     {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950"></div>
+                    <div className="absolute inset-0 bg-slate-950"></div>
 
                     {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 via-blue-100/15 to-emerald-100/20 dark:from-emerald-500/10 dark:via-blue-500/10 dark:to-emerald-500/10 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-slate-900/20 animate-pulse"></div>
 
                     {/* Decorative blurred shapes */}
-                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-200 dark:bg-emerald-400 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-20 animate-pulse"></div>
-                    <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-blue-200 dark:bg-blue-400 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '1s'}}></div>
-                    <div className="absolute top-1/2 right-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
+                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-20 animate-pulse"></div>
+                    <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '1s'}}></div>
+                    <div className="absolute top-1/2 right-0 w-96 h-96 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
 
                     {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 dark:via-gray-400/50 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-300/30 dark:via-gray-400/50 to-transparent"></div>
 
                     {/* Ambient background glow */}
                     <div className="absolute inset-0">
-                        <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-emerald-500/10 dark:bg-gray-500/20 rounded-full blur-[120px] animate-pulse"></div>
-                        <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] bg-blue-500/10 dark:bg-gray-500/20 rounded-full blur-[120px] animate-pulse" style={{animationDelay: '2s'}}></div>
+                        <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-slate-400/10 dark:bg-slate-500/20 rounded-full blur-[120px] animate-pulse"></div>
+                        <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] bg-slate-400/10 dark:bg-slate-500/20 rounded-full blur-[120px] animate-pulse" style={{animationDelay: '2s'}}></div>
                     </div>
 
                     {/* Animated grid lines */}
                     <div className="absolute inset-0 opacity-5 dark:opacity-10">
                         <div className="absolute inset-0" style={{
-                        backgroundImage: 'linear-gradient(to right, rgba(3, 98, 252, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(39, 6, 145, 0.1) 1px, transparent 1px)',
+                        backgroundImage: 'linear-gradient(to right, rgba(148, 163, 184, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px)',
                         backgroundSize: '60px 60px'
                         }}></div>
                     </div>
@@ -254,13 +269,13 @@ export default function Welcome({
                     {/* Header */}
                     <div className="text-center mb-16">
                     <div className="inline-block mb-4">
-                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold tracking-wider uppercase text-sm bg-emerald-100/50 dark:bg-emerald-400/10 px-4 py-2 border border-emerald-200/50 dark:border-emerald-400/20 rounded-full backdrop-blur-sm">
+                        <span className="text-slate-100 font-semibold tracking-wider uppercase text-sm bg-slate-800/70 dark:bg-slate-800/70 px-4 py-2 border border-slate-700 rounded-full backdrop-blur-sm">
                         Strategic Partners
                         Powered By
                         </span>
                     </div>
-                    <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Our Strategic Partners</h2>
-                    <p className="text-gray-700 dark:text-slate-300 text-lg max-w-2xl mx-auto">
+                    <h2 className="text-4xl font-bold mb-4 text-slate-100">Our Strategic Partners</h2>
+                    <p className="text-slate-300 text-lg max-w-2xl mx-auto">
                         Collaborating with leading institutions and innovative companies to empower Nigerian youth
                     </p>
                     </div>
@@ -292,20 +307,20 @@ export default function Welcome({
                             { name: 'Gockan Builders & Contractor Ltd. ', logo: '/images/gockan-logo.png' },
                         ].map((partner, index) => (
                             <div key={index} className="flex-shrink-0 w-[280px] group">
-                            <div className="relative h-48 bg-gradient-to-br from-white to-gray-50 dark:from-slate-800/50 dark:to-slate-900/50 backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-slate-700/50 hover:border-emerald-400 dark:hover:border-gray-400/50 transition-all duration-500 overflow-hidden shadow-md hover:shadow-xl">
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-100/20 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            <div className="relative h-48 bg-slate-900/85 backdrop-blur-xl rounded-2xl border border-slate-800/70 hover:border-slate-700 transition-all duration-500 overflow-hidden shadow-md hover:shadow-xl">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-800/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
                                 <div className="relative h-full flex flex-col items-center justify-center p-6 text-center space-y-4">
-                                <div className="w-20 h-20 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-slate-600/50 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                                <div className="w-20 h-20 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300">
                                     <img src={partner.logo} alt={`${partner.name} logo`} className="w-full h-full object-contain p-2" />
                                 </div>
-                                <div className="text-gray-700 dark:text-slate-300 text-sm leading-relaxed font-medium">
+                                <div className="text-slate-100 text-sm leading-relaxed font-medium">
                                     {partner.name}
                                 </div>
                                 </div>
 
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 dark:from-gray-500/10 dark:to-blue-500/10"></div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-100/5 to-slate-100/5 dark:from-slate-500/10 dark:to-slate-500/10"></div>
                                 </div>
                             </div>
                             </div>
@@ -316,26 +331,26 @@ export default function Welcome({
                 </div>
 
                 {/* Bottom accent line */}
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 dark:via-gray-400/50 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-500/30 dark:via-slate-400/40 to-transparent"></div>
                 </section>
 
 
-                <section className="relative py-24 overflow-hidden bg-gradient-to-br from-white via-slate-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+                <section className="relative py-24 overflow-hidden bg-slate-950">
                     {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"></div>
+                    <div className="absolute inset-0 bg-slate-950"></div>
 
                     {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-emerald-100/20 via-blue-100/10 to-emerald-100/20 dark:from-emerald-600/20 dark:via-blue-600/10 dark:to-emerald-600/20 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-slate-900/20 animate-pulse"></div>
 
                     {/* Decorative blurred shapes */}
                     <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-200 dark:bg-blue-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{animationDelay: '1s'}}></div>
+                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-emerald-200 dark:bg-emerald-500 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{animationDelay: '1s'}}></div>
                     <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-emerald-200 dark:bg-emerald-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
 
                     {/* Content */}
                     <div className="container mx-auto px-6 relative z-10 text-center">
                         <h2 className="text-4xl font-bold mb-6 text-gray-900 dark:text-white drop-shadow-lg">Ready to Transform Your Business?</h2>
-                        <p className="text-lg text-gray-700 dark:text-gray-100 mb-8 max-w-2xl mx-auto backdrop-blur-sm bg-white/60 dark:bg-white/5 rounded-xl p-6 border border-emerald-200 dark:border-white/10">
+                        <p className="text-slate-200 mb-8 max-w-2xl mx-auto backdrop-blur-sm bg-slate-900/70 rounded-xl p-6 border border-slate-800">
                             Join thousands of Youths, Entrepreneurs, Builders, Leaders, and Investors who are already building Nigeria's Industrial Future.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -346,8 +361,8 @@ export default function Welcome({
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
                                 <span className="relative">Start Your Journey</span>
                             </Link>
-                            <button className="border-2 border-emerald-500 dark:border-emerald-400/50 text-emerald-600 dark:text-emerald-100 hover:text-emerald-700 dark:hover:text-emerald-100 backdrop-blur-sm bg-white/70 dark:bg-white/5 hover:bg-emerald-50 dark:hover:bg-white/10 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/20 dark:hover:shadow-emerald-500/20 group relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-100/10 dark:via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
+                            <button className="border-2 border-slate-700 text-slate-100 hover:text-white backdrop-blur-sm bg-slate-900/80 hover:bg-slate-800/90 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-slate-900/40 group relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/10 dark:via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
                                 <span className="relative">Join Community</span>
                             </button>
                         </div>
@@ -355,16 +370,16 @@ export default function Welcome({
                 </section>
 
                 {/* Testimonials */}
-                <section className="relative py-24 overflow-hidden bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+                <section className="relative py-24 overflow-hidden bg-slate-950">
                     {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950"></div>
+                    <div className="absolute inset-0 bg-slate-950"></div>
 
                     {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-emerald-100/20 via-transparent to-blue-100/20 dark:from-emerald-500/10 dark:via-transparent dark:to-blue-500/10 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-slate-900/20 animate-pulse"></div>
 
                     {/* Decorative blurred shapes */}
-                    <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-400 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-20 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-blue-200 dark:bg-blue-400 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '1.5s'}}></div>
+                    <div className="absolute top-1/2 left-0 w-96 h-96 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-20 animate-pulse"></div>
+                    <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-slate-200 dark:bg-slate-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '1.5s'}}></div>
 
                     {/* Content */}
                     <div className="container mx-auto px-6 relative z-10">
@@ -390,25 +405,25 @@ export default function Welcome({
                                     quote: "The NYP-IP Portal is instrumental in connecting startups with the right funding, and providing the training and tools needed to scale their businesses. NYP truly believes in empowering nation builders.",
                                     name: "Adesanmi Emmanuel Adebukola",
                                     title: "CEO, LuxuryX Technologies & TradeFi Limited",
-                                    gradient: "from-emerald-400 to-blue-400"
+                                    gradient: "from-emerald-400 to-emerald-400"
                                 },
                                 {
                                     quote: "The NYP-IP Portal represents our unwavering commitment to youth economic empowerment and nation-building. By bridging the gap between young innovators and critical resources, we're not just supporting businesses—we're cultivating the next generation of leaders who will transform Nigeria's economy and drive sustainable development.",
                                     name: "Rt. Hon. Aliyu Idris Zakari",
                                     title: "Speaker, Nigerian Youth Parliament (6th Session)",
-                                    gradient: "from-blue-400 to-purple-400"
+                                    gradient: "from-emerald-400 to-purple-400"
                                 }
                             ].map((testimonial, index) => (
-                                <div key={index} className="backdrop-blur-sm bg-white/80 dark:bg-white/5 border border-emerald-200 dark:border-white/10 rounded-2xl p-8 shadow-2xl hover:shadow-emerald-300 dark:hover:shadow-emerald-500/20 transition-all duration-300 group hover:bg-white/90 dark:hover:bg-white/10 hover:-translate-y-2">
-                                    <div className="text-5xl text-emerald-400 dark:text-emerald-300 mb-4 drop-shadow-lg group-hover:scale-110 transition-transform">"</div>
-                                    <p className="text-base text-gray-700 dark:text-gray-100 mb-6 italic leading-relaxed min-h-[160px]">
+                                <div key={index} className="backdrop-blur-sm bg-slate-900/85 border border-slate-800/70 rounded-2xl p-8 shadow-2xl transition-all duration-300 group hover:bg-slate-900/95 hover:-translate-y-2">
+                                    <div className="text-5xl text-slate-300 mb-4 drop-shadow-lg group-hover:scale-110 transition-transform">"</div>
+                                    <p className="text-base text-slate-100 mb-6 italic leading-relaxed min-h-[160px]">
                                         {testimonial.quote}
                                     </p>
                                     <div className="flex items-center space-x-4">
                                         <div className={`w-12 h-12 bg-gradient-to-br ${testimonial.gradient} rounded-full shadow-lg`}></div>
                                         <div className="text-left">
-                                            <div className="font-semibold text-gray-900 dark:text-gray-100">{testimonial.name}</div>
-                                            <div className="text-sm text-gray-600 dark:text-gray-400">{testimonial.title}</div>
+                                            <div className="font-semibold text-slate-100">{testimonial.name}</div>
+                                            <div className="text-sm text-slate-300">{testimonial.title}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -430,26 +445,26 @@ export default function Welcome({
                                             quote: "The NYP-IP Portal is instrumental in connecting startups with the right funding, and providing the training and tools needed to scale their businesses. NYP truly believes in empowering nation builders.",
                                             name: "Adesanmi Emmanuel Adebukola",
                                             title: "CEO, LuxuryX Technologies & TradeFi Limited",
-                                            gradient: "from-emerald-400 to-blue-400"
+                                            gradient: "from-emerald-400 to-emerald-400"
                                         },
                                         {
                                             quote: "The NYP-IP Portal represents our unwavering commitment to youth economic empowerment and nation-building. By bridging the gap between young innovators and critical resources, we're not just supporting businesses—we're cultivating the next generation of leaders who will transform Nigeria's economy and drive sustainable development.",
                                             name: "Rt. Hon. Aliyu Idris Zakari",
                                             title: "Speaker, Nigerian Youth Parliament (6th Session)",
-                                            gradient: "from-blue-400 to-purple-400"
+                                            gradient: "from-emerald-400 to-purple-400"
                                         }
                                     ].map((testimonial, index) => (
                                         <div key={index} className="flex-shrink-0 w-[85vw] snap-center">
-                                            <div className="backdrop-blur-sm bg-white/80 dark:bg-white/5 border border-emerald-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 h-full">
-                                                <div className="text-5xl text-emerald-400 dark:text-emerald-300 mb-4 drop-shadow-lg">"</div>
-                                                <p className="text-base text-gray-700 dark:text-gray-100 mb-6 italic leading-relaxed">
+                                            <div className="backdrop-blur-sm bg-slate-900/85 border border-slate-800/70 rounded-2xl p-6 shadow-2xl transition-all duration-300 h-full">
+                                                <div className="text-5xl text-slate-300 mb-4 drop-shadow-lg">"</div>
+                                                <p className="text-base text-slate-100 mb-6 italic leading-relaxed">
                                                     {testimonial.quote}
                                                 </p>
                                                 <div className="flex items-center space-x-4">
                                                     <div className={`w-12 h-12 bg-gradient-to-br ${testimonial.gradient} rounded-full shadow-lg flex-shrink-0`}></div>
                                                     <div className="text-left">
-                                                        <div className="font-semibold text-gray-900 dark:text-gray-100">{testimonial.name}</div>
-                                                        <div className="text-sm text-gray-600 dark:text-gray-400">{testimonial.title}</div>
+                                                        <div className="font-semibold text-slate-100">{testimonial.name}</div>
+                                                        <div className="text-sm text-slate-300">{testimonial.title}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -468,11 +483,14 @@ export default function Welcome({
                 </section>
 
                 {/* Footer */}
-                <footer className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-gray-900 dark:via-gray-950 dark:to-black border-t border-emerald-400/20 dark:border-emerald-800/30">
+                <footer
+                    id="footer-resources"
+                    className={`relative overflow-hidden bg-slate-950 border-t border-slate-800/70 transition-all duration-700 ${highlightFooter ? 'ring-2 ring-emerald-300/80 ring-offset-2 ring-offset-slate-950 shadow-lg shadow-slate-950/30' : ''}`}
+                >
                     {/* Decorative elements */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-blue-500/5 to-emerald-500/5 dark:via-blue-500/3 animate-pulse"></div>
-                    <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-200 dark:bg-emerald-900/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-10"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 dark:bg-blue-900/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-10"></div>
+                    <div className="absolute inset-0 bg-slate-900/40"></div>
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-slate-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-slate-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
 
                     <div className="container mx-auto px-6 relative z-10">
                         {/* Main Footer Columns */}
@@ -510,7 +528,7 @@ export default function Welcome({
                                         <a href="/program" target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium">Program Overview</a>
                                     </li>
                                     <li>
-                                        <a href="/partners" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Strategic Partners</a>
+                                        <a href="/partners" target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-slate-100 transition-colors">Strategic Partners</a>
                                     </li>
                                     <li>
                                         <a href="/owop-mandate" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">O.W.O.P Mandate</a>
@@ -557,7 +575,7 @@ export default function Welcome({
                                         <a href="/knowledge-base" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Knowledge Base</a>
                                     </li>
                                     <li>
-                                        <a href="/support" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Contact & Support</a>
+                                        <a href="/support" target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-slate-100 transition-colors">Contact & Support</a>
                                     </li>
                                     <li>
                                         <a href="/faq" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">FAQ</a>
@@ -614,29 +632,29 @@ export default function Welcome({
                         </div>
 
                         {/* Regulatory Disclosure */}
-                        <div className="py-8 border-t border-gray-200 dark:border-gray-800">
-                            <div className="bg-gradient-to-r from-emerald-50/50 to-blue-50/50 dark:from-emerald-950/20 dark:to-blue-950/20 border border-emerald-200/50 dark:border-emerald-900/30 rounded-lg p-6">
+                        <div className="py-8 border-t border-slate-800/70">
+                            <div className="bg-slate-900/90 border border-slate-800/70 rounded-lg p-6">
                                 <div className="flex items-start gap-3 mb-3">
-                                    <svg className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 text-slate-200 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12.5 7H11V13H17.5V11.5H12.5V7Z"/>
                                     </svg>
-                                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm">Program Notice & Disclaimer</h4>
+                                    <h4 className="font-semibold text-slate-100 text-sm">Program Notice & Disclaimer</h4>
                                 </div>
-                                <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                                <p className="text-xs text-slate-300 leading-relaxed">
                                     The <strong>Nigerian Youth Parliament Industrialization Programme (NYP-IP)</strong> is a national initiative aimed at catalyzing industrialization, skills development, and economic empowerment across Nigeria. This portal and all associated materials are provided for informational purposes. <strong>This is not investment advice.</strong> All participants must review applicable regulations, comply with local and national laws, and consult relevant authorities before participation. Tokenized assets and digital securities carry inherent risks including potential total loss. By using this platform, you acknowledge these risks and agree to our terms.
                                 </p>
                             </div>
                         </div>
 
                         {/* Bottom Footer */}
-                        <div className="py-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+                        <div className="py-8 border-t border-slate-800/70 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
                             <div className="flex gap-6">
-                                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Privacy Policy</a>
-                                <a href="/terms" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Terms of Service</a>
-                                <a href="/cookies" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Cookie Policy</a>
-                                <a href="/disclaimer" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Disclaimer</a>
+                                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-slate-100 transition-colors">Privacy Policy</a>
+                                <a href="/terms" target="_blank" rel="noopener noreferrer" className="hover:text-slate-100 transition-colors">Terms of Service</a>
+                                <a href="/cookies" target="_blank" rel="noopener noreferrer" className="hover:text-slate-100 transition-colors">Cookie Policy</a>
+                                <a href="/disclaimer" target="_blank" rel="noopener noreferrer" className="hover:text-slate-100 transition-colors">Disclaimer</a>
                             </div>
-                            <p>© {new Date().getFullYear()} Nigerian Youth Parliament (NYP). All Rights Reserved.</p>
+                            <p className="text-slate-400">© {new Date().getFullYear()} Nigerian Youth Parliament (NYP). All Rights Reserved.</p>
                         </div>
                     </div>
                 </footer>

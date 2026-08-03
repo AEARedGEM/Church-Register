@@ -691,7 +691,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
               type="button"
               onClick={handleSubmit}
               disabled={processing}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium"
             >
               <Save className="w-4 h-4 sm:w-5 sm:h-5" />
               {processing ? 'Saving...' : (data.status === 'published' ? 'Publish Course' : 'Save Course')}
@@ -712,7 +712,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                 type="text"
                 value={data.title}
                 onChange={e => setData('title', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 placeholder="e.g., Complete Web Development Bootcamp"
               />
               {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
@@ -726,7 +726,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                 type="text"
                 value={data.short_description}
                 onChange={e => setData('short_description', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 placeholder="Brief description for course listings"
                 maxLength={500}
               />
@@ -741,7 +741,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                 value={data.description}
                 onChange={e => setData('description', e.target.value)}
                 rows={6}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 placeholder="Detailed course description"
               />
               {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -755,7 +755,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                 <select
                   value={data.course_category_id}
                   onChange={e => setData('course_category_id', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Select Category</option>
                   {categories.map(cat => (
@@ -772,7 +772,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                 <select
                   value={data.skill_type_id}
                   onChange={e => setData('skill_type_id', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Select Skill Type</option>
                   {skillTypes.map(skill => (
@@ -789,7 +789,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                 <select
                   value={data.instructor_id}
                   onChange={e => setData('instructor_id', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Select Instructor</option>
                   {instructors.map(inst => (
@@ -806,7 +806,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                 <select
                   value={data.difficulty_level}
                   onChange={e => setData('difficulty_level', e.target.value as 'beginner' | 'intermediate' | 'advanced')}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
@@ -825,7 +825,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                   value={data.duration_hours}
                   onChange={e => setData('duration_hours', parseInt(e.target.value) || 0)}
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -839,7 +839,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                   onChange={e => setData('duration_minutes', parseInt(e.target.value) || 0)}
                   min="0"
                   max="59"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -853,7 +853,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                   onChange={e => setData('price', parseFloat(e.target.value) || 0)}
                   min="0"
                   step="0.01"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -867,7 +867,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
                   onChange={e => setData('discount_price', e.target.value ? parseFloat(e.target.value) : null)}
                   min="0"
                   step="0.01"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
             </div>
@@ -1038,7 +1038,7 @@ export default function CreateCourse({ categories, skillTypes, instructors }: Pr
             <button
               type="button"
               onClick={addSection}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
             >
               <Plus className="w-5 h-5" />
               Add Section

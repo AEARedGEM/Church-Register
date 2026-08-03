@@ -8,8 +8,8 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #f8fafc;
-                color: #1e293b;
+                background-color: #ffffff;
+                color: #000000;
                 font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
                 font-weight: 400;
                 height: 100vh;
@@ -46,21 +46,21 @@
                 font-size: 2.5rem;
                 font-weight: 700;
                 margin-bottom: 1rem;
-                color: #0f172a;
+                color: #000000;
             }
 
             .subtitle {
                 font-size: 1.25rem;
                 margin-bottom: 2rem;
-                color: #475569;
+                color: #000000;
                 line-height: 1.5;
             }
 
             .home-button {
                 display: inline-block;
                 padding: 0.75rem 1.5rem;
-                background-color: #03386e;
-                color: white;
+                background-color: #10b981;
+                color: #ffffff;
                 text-decoration: none;
                 border-radius: 45px;
                 font-weight: 500;
@@ -68,13 +68,13 @@
             }
 
             .home-button:hover {
-                background-color: #2563eb;
+                background-color: #065f46;
             }
 
             .error-code {
                 font-size: 6rem;
                 font-weight: 700;
-                color: tomato;
+                color: #10b981;
                 margin-bottom: -1.5rem;
                 z-index: -1;
                 position: relative;

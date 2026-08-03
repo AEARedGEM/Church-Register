@@ -51,7 +51,7 @@ export default function Governance() {
                         </section>
                     </div>
 
-                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 rounded-lg p-8 text-center">
+                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-950 dark:to-emerald-950 rounded-lg p-8 text-center">
                         <Link href="/leadership" className="inline-block px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
                             Meet Our Leaders
                         </Link>

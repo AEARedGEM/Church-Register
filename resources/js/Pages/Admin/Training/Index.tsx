@@ -74,7 +74,7 @@ const statusColors = {
 };
 
 const difficultyColors = {
-  beginner: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  beginner: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
   intermediate: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
   advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
@@ -140,7 +140,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
           </div>
           <Link
             href={route('admin.training.create')}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Create Course
@@ -155,7 +155,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                 icon={BookOpen}
                 label="Total Courses"
                 value={stats.total_courses}
-                color="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                color="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
               />
               <StatCard
                 icon={CheckCircle}
@@ -196,13 +196,13 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                   placeholder="Search courses..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="draft">Draft</option>
@@ -212,7 +212,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
             </div>
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+              className="w-full sm:w-auto px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-sm sm:text-base"
             >
               Search
             </button>
@@ -350,7 +350,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             href={route('admin.training.edit', course.id)}
-                            className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg transition-colors"
+                            className="p-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg transition-colors"
                           >
                             <Edit className="w-4 h-4" />
                           </Link>
@@ -451,7 +451,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                       <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                         <Link
                           href={route('admin.training.edit', course.id)}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg transition-colors text-sm font-medium"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg transition-colors text-sm font-medium"
                         >
                           <Edit className="w-4 h-4" />
                           Edit
@@ -484,7 +484,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                     href={route('admin.training.index', { page })}
                     className={`px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                       page === courses.current_page
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-emerald-600 text-white'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                     }`}
                   >

@@ -169,7 +169,7 @@ export default function CertificateDetail() {
           <div className="flex flex-wrap gap-3 mb-6">
             <button
               onClick={handleDownloadPDF}
-              className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
+              className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
             >
               <Download className="w-5 h-5" />
               <span>Download PDF</span>
@@ -315,7 +315,7 @@ export default function CertificateDetail() {
                     has successfully completed
                   </p>
 
-                  <h3 className="text-3xl md:text-4xl font-semibold text-blue-600 dark:text-blue-400 px-8">
+                  <h3 className="text-3xl md:text-4xl font-semibold text-emerald-600 dark:text-emerald-400 px-8">
                     {certificateData.course_name}
                   </h3>
 
@@ -425,15 +425,15 @@ export default function CertificateDetail() {
                 <p className="font-medium text-gray-900 dark:text-white mb-2">How to share:</p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start space-x-2">
-                    <span className="text-blue-600 dark:text-blue-400">•</span>
+                    <span className="text-emerald-600 dark:text-emerald-400">•</span>
                     <span>Add to your LinkedIn profile to showcase your achievement</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-blue-600 dark:text-blue-400">•</span>
+                    <span className="text-emerald-600 dark:text-emerald-400">•</span>
                     <span>Include in your resume or CV as proof of skill development</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-blue-600 dark:text-blue-400">•</span>
+                    <span className="text-emerald-600 dark:text-emerald-400">•</span>
                     <span>Share the verification link with employers or colleagues</span>
                   </li>
                 </ul>

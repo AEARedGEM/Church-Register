@@ -1,4 +1,5 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, ReactNode } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 import {
   Home, BookOpen, Search, Bell, Settings,
   ChevronDown, ChevronRight, Menu, X, Award, User, LogOut,
@@ -160,9 +161,9 @@ const secondaryNavigation: SecondaryNavigationItem[] = [
 
 // Color mapping for stats (keeping for potential future use)
 const colorClasses = {
-  blue: {
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    text: 'text-blue-600 dark:text-blue-400'
+  emerald: {
+    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
+    text: 'text-emerald-600 dark:text-emerald-400'
   },
   green: {
     bg: 'bg-green-50 dark:bg-green-900/20',
@@ -186,34 +187,15 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
   const userRole: UserRole = user?.roles?.[0] || 'individual';
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme-mode');
-      if (saved !== null) {
-        return saved === 'dark';
-      }
-      // Check system preference if no saved preference
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return false;
-  });
+  const { theme, toggleTheme } = useTheme();
+  const darkMode = theme === 'dark';
   const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
 
   // Get navigation based on user role
   const navigationGroups = getNavigationGroups(userRole);
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme-mode', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme-mode', 'light');
-    }
-  }, [darkMode]);
-
-  const toggleDarkMode = (): void => setDarkMode(!darkMode);
+  const toggleDarkMode = (): void => toggleTheme();
 
   const toggleItem = (itemId: string): void => {
     setExpandedItems(prev => ({
@@ -251,7 +233,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                 flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                 transition-all duration-200
                 ${active
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                  ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }
                 ${depth > 0 ? 'ml-4' : ''}
@@ -260,7 +242,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
               <Icon className="w-5 h-5 flex-shrink-0" />
               <span className="flex-1 text-left">{item.label}</span>
               {item.badge && (
-                <span className="px-2 py-0.5 text-xs font-semibold bg-blue-500 text-white rounded-full">
+                <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500 text-white rounded-full">
                   {item.badge}
                 </span>
               )}
@@ -272,7 +254,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                 flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                 transition-all duration-200
                 ${active
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                  ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }
                 ${depth > 0 ? 'ml-4' : ''}
@@ -281,7 +263,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
               <Icon className="w-5 h-5 flex-shrink-0" />
               <span className="flex-1 text-left">{item.label}</span>
               {item.badge && (
-                <span className="px-2 py-0.5 text-xs font-semibold bg-blue-500 text-white rounded-full">
+                <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500 text-white rounded-full">
                   {item.badge}
                 </span>
               )}
@@ -311,7 +293,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                     w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
                     transition-all duration-200
                     ${isActive(subItem.route)
-                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                      ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
                       : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }
                   `}
@@ -319,7 +301,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                   <span className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 flex-shrink-0"></span>
                   <span className="flex-1 text-left">{subItem.label}</span>
                   {subItem.badge && (
-                    <span className="px-2 py-0.5 text-xs font-semibold bg-blue-500 text-white rounded-full">
+                    <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500 text-white rounded-full">
                       {subItem.badge}
                     </span>
                   )}

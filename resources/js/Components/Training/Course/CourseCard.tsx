@@ -145,7 +145,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       <div className="p-4 space-y-4">
         {/* Course Info */}
         <div>
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
             {course.title}
           </h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
@@ -163,7 +163,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           <ProgressBar
             value={course.progress}
             showLabel
-            color={course.progress === 100 ? 'green' : 'blue'}
+            color={course.progress === 100 ? 'green' : 'emerald'}
           />
         )}
 

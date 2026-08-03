@@ -47,7 +47,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, subtitle, trend
             </div>
           )}
         </div>
-        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+        <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
           {icon}
         </div>
       </div>
@@ -74,7 +74,7 @@ export const UserStats: React.FC<UserStatsProps> = ({ statistics }) => {
       <StatCard
         title="Total Users"
         value={formatNumber(statistics.total_users)}
-        icon={<UsersIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />}
+        icon={<UsersIcon className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />}
         subtitle="All registered users"
       />
 
@@ -109,7 +109,7 @@ export const UserStats: React.FC<UserStatsProps> = ({ statistics }) => {
       <StatCard
         title="Total Roles"
         value={formatNumber(statistics.total_roles)}
-        icon={<UserGroupIcon className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 dark:text-indigo-400" />}
+        icon={<UserGroupIcon className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />}
         subtitle="Available system roles"
       />
     </div>

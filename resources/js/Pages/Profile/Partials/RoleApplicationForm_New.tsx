@@ -153,7 +153,7 @@ export default function RoleApplicationForm({
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
                                         >
                                             {processing ? 'Submitting...' : 'Submit Application'}
                                         </button>

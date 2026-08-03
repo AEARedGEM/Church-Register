@@ -21,7 +21,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                 <div className="w-full max-w-6xl flex bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
 
                     {/* Left Side - Verification Info Panel */}
-                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-green-600 dark:from-blue-700 dark:to-green-700 p-12 flex-col justify-center text-white relative overflow-hidden">
+                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-600 to-green-600 dark:from-emerald-700 dark:to-green-700 p-12 flex-col justify-center text-white relative overflow-hidden">
                         <div className="absolute inset-0 bg-black opacity-10 dark:opacity-20"></div>
                         <div className="relative z-10">
                             <div className="mb-8">
@@ -76,8 +76,8 @@ export default function VerifyEmail({ status }: { status?: string }) {
                         <div className="w-full max-w-md mx-auto">
 
                             <div className="text-center mb-8">
-                                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                    <Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <Mail className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                                 </div>
                                 <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Verify Your Email</h2>
                                 <p className="text-gray-600 dark:text-gray-300">
@@ -86,12 +86,12 @@ export default function VerifyEmail({ status }: { status?: string }) {
                             </div>
 
                             {/* Welcome Message */}
-                            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                            <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
                                 <div className="flex items-start">
-                                    <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5 mr-3" />
+                                    <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5 mr-3" />
                                     <div className="text-sm">
-                                        <p className="font-medium text-blue-800 dark:text-blue-300 mb-1">Welcome to OIP!</p>
-                                        <p className="text-blue-700 dark:text-blue-400">
+                                        <p className="font-medium text-emerald-800 dark:text-emerald-300 mb-1">Welcome to OIP!</p>
+                                        <p className="text-emerald-700 dark:text-emerald-400">
                                             Thanks for signing up! Before getting started, please verify your email address by clicking on the link we just emailed to you.
                                         </p>
                                     </div>
@@ -123,7 +123,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                                     </ul>
 
                                     <PrimaryButton
-                                        className="w-full bg-gradient-to-r from-blue-600 to-green-600 dark:from-blue-500 dark:to-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-green-700 dark:hover:from-blue-600 dark:hover:to-green-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+                                        className="w-full bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-500 dark:to-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-emerald-700 hover:to-green-700 dark:hover:from-emerald-600 dark:hover:to-green-600 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
                                         disabled={processing}
                                     >
                                         {processing ? (

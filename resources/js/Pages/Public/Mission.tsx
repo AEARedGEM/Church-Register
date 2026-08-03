@@ -28,9 +28,9 @@ export default function Mission() {
                             </p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 rounded-lg p-8 border border-blue-200 dark:border-blue-900/50">
-                            <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-100 mb-4">Our Vision</h2>
-                            <p className="text-blue-800 dark:text-blue-200 text-lg">
+                        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 rounded-lg p-8 border border-emerald-200 dark:border-emerald-900/50">
+                            <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mb-4">Our Vision</h2>
+                            <p className="text-emerald-800 dark:text-emerald-200 text-lg">
                                 A Nigeria where youth are active participants in governance, economic development, and nation-building at all levels.
                             </p>
                         </div>

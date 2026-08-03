@@ -108,7 +108,7 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
       case 'super_admin':
         return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'admin':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
       case 'manager':
         return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300';
       case 'investor':
@@ -116,7 +116,7 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
       case 'startup':
         return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300';
       case 'sme_owner':
-        return 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300';
+        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
       default:
         return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }
@@ -241,7 +241,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                     alt={user.name}
                   />
                 ) : (
-                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg ring-2 ring-gray-200 dark:ring-gray-600">
+                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg ring-2 ring-gray-200 dark:ring-gray-600">
                     <span className="text-xl sm:text-2xl font-bold text-white">
                       {getInitials()}
                     </span>
@@ -266,7 +266,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center gap-2">
                     <EnvelopeIcon className="w-4 h-4 flex-shrink-0" />
-                    <a href={`mailto:${user.email}`} className="hover:text-blue-500 break-all">
+                    <a href={`mailto:${user.email}`} className="hover:text-emerald-500 break-all">
                       {user.email}
                     </a>
                   </div>
@@ -274,7 +274,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                   {user.phone && (
                     <div className="flex items-center gap-2">
                       <PhoneIcon className="w-4 h-4 flex-shrink-0" />
-                      <a href={`tel:${user.phone}`} className="hover:text-blue-500">
+                      <a href={`tel:${user.phone}`} className="hover:text-emerald-500">
                         {user.phone}
                       </a>
                     </div>
@@ -330,7 +330,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                 <DetailItem
                   label="Email Address"
                   value={
-                    <a href={`mailto:${user.email}`} className="text-blue-600 dark:text-blue-400 hover:underline break-all">
+                    <a href={`mailto:${user.email}`} className="text-emerald-600 dark:text-emerald-400 hover:underline break-all">
                       {user.email}
                     </a>
                   }
@@ -341,7 +341,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                   label="Phone Number"
                   value={
                     user.phone ? (
-                      <a href={`tel:${user.phone}`} className="text-blue-600 dark:text-blue-400 hover:underline">
+                      <a href={`tel:${user.phone}`} className="text-emerald-600 dark:text-emerald-400 hover:underline">
                         {user.phone}
                       </a>
                     ) : null
@@ -421,7 +421,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                         {user.skills_of_interest.map((skill, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full"
+                            className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs rounded-full"
                           >
                             {skill}
                           </span>
@@ -463,8 +463,8 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                   {user.roles.map((role) => (
                     <div key={role.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex-shrink-0">
-                          <ShieldCheckIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex-shrink-0">
+                          <ShieldCheckIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-900 dark:text-white">
@@ -529,7 +529,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
             <InfoCard title="Timeline">
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-gray-900 dark:text-white text-sm">
                       User Created

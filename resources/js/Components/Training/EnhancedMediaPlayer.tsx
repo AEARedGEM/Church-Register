@@ -302,7 +302,7 @@ function VideoPlayer({
       {/* Loading Indicator */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 
@@ -331,25 +331,25 @@ function VideoPlayer({
           onChange={handleSeek}
           className="w-full h-1 mb-4 rounded-lg appearance-none cursor-pointer"
           style={{
-            background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #4b5563 ${(currentTime / duration) * 100}%, #4b5563 100%)`
+            background: `linear-gradient(to right, #10b981 0%, #10b981 ${(currentTime / duration) * 100}%, #065f46 ${(currentTime / duration) * 100}%, #065f46 100%)`
           }}
         />
 
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center space-x-3">
-            <button onClick={togglePlay} className="hover:text-blue-400 transition-colors">
+            <button onClick={togglePlay} className="hover:text-emerald-400 transition-colors">
               {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
             </button>
 
-            <button onClick={() => skip(-10)} className="hover:text-blue-400 transition-colors">
+            <button onClick={() => skip(-10)} className="hover:text-emerald-400 transition-colors">
               <SkipBack className="w-5 h-5" />
             </button>
-            <button onClick={() => skip(10)} className="hover:text-blue-400 transition-colors">
+            <button onClick={() => skip(10)} className="hover:text-emerald-400 transition-colors">
               <SkipForward className="w-5 h-5" />
             </button>
 
             <div className="flex items-center space-x-2 group/volume">
-              <button onClick={toggleMute} className="hover:text-blue-400 transition-colors">
+              <button onClick={toggleMute} className="hover:text-emerald-400 transition-colors">
                 {isMuted || volume === 0 ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
               </button>
               <input
@@ -373,7 +373,7 @@ function VideoPlayer({
             <div className="relative">
               <button
                 onClick={() => setShowSpeedMenu(!showSpeedMenu)}
-                className="hover:text-blue-400 transition-colors text-sm font-medium"
+                className="hover:text-emerald-400 transition-colors text-sm font-medium"
               >
                 {playbackRate}x
               </button>
@@ -384,7 +384,7 @@ function VideoPlayer({
                       key={rate}
                       onClick={() => changePlaybackRate(rate)}
                       className={`block w-full text-left px-3 py-1 rounded hover:bg-gray-700 ${
-                        playbackRate === rate ? 'text-blue-400' : ''
+                        playbackRate === rate ? 'text-emerald-400' : ''
                       }`}
                     >
                       {rate}x
@@ -394,7 +394,7 @@ function VideoPlayer({
               )}
             </div>
 
-            <button onClick={toggleFullscreen} className="hover:text-blue-400 transition-colors">
+            <button onClick={toggleFullscreen} className="hover:text-emerald-400 transition-colors">
               {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
             </button>
           </div>
@@ -530,7 +530,7 @@ function SlideViewer({ slides, onProgress, onReportTime }: { slides: string[]; o
           <a
             href={slides[currentSlide]}
             download
-            className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
           >
             <Download className="w-5 h-5" />
           </a>

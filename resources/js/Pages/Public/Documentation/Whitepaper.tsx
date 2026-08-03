@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 const highlights = [
     {
         title: 'Vision',
-        text: 'A national blueprint for youth-led industrialization, enterprise growth, and economic diversification.',
+        text: 'A national emeraldprint for youth-led industrialization, enterprise growth, and economic diversification.',
     },
     {
         title: 'Execution',
@@ -27,7 +27,7 @@ export default function Whitepaper() {
         <>
             <Head title="Project Whitepaper Framework - NYP-IP" />
 
-            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
                 <nav className="border-b border-emerald-100 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-900/80">
                     <div className="container mx-auto flex items-center justify-between px-6 py-4">
                         <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">

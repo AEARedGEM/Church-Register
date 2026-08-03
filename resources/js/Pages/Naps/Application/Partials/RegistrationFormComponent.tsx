@@ -6,19 +6,19 @@ import { useForm } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 
 interface State {
-    id: number;
+    id: number | string;
     name: string;
     abbreviation: string;
 }
 
 interface LGA {
-    id: number;
+    id: number | string;
     name: string;
     sort_order: number;
 }
 
 interface Ward {
-    id: number;
+    id: number | string;
     name: string;
     sort_order: number;
 }
@@ -83,7 +83,8 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
         }
         setLoadingLgas(true);
         try {
-            const response = await fetch(`/api/naps/states/${stateId}/lgas`);
+            const encodedStateId = encodeURIComponent(String(stateId));
+            const response = await fetch(`/api/naps/states/${encodedStateId}/lgas`);
             const result = await response.json();
             if (result.success) {
                 setLgasList(result.lgas);
@@ -104,7 +105,9 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
         }
         setLoadingWards(true);
         try {
-            const response = await fetch(`/api/naps/lgas/${lgaId}/wards`);
+            const encodedLgaId = encodeURIComponent(String(lgaId));
+            const stateQuery = typeof data.state_id === 'string' && data.state_id !== '' ? `?state=${encodeURIComponent(data.state_id)}` : '';
+            const response = await fetch(`/api/naps/lgas/${encodedLgaId}/wards${stateQuery}`);
             const result = await response.json();
             if (result.success) {
                 setWardsList(result.wards);
@@ -118,7 +121,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
     };
 
     const handleStateChange = (value: string) => {
-        const stateId = value ? parseInt(value) : '';
+        const stateId = value || '';
         setData('state_id', stateId as any);
         setData('lga_id', '');
         setData('ward_id', '');
@@ -126,7 +129,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
     };
 
     const handleLgaChange = (value: string) => {
-        const lgaId = value ? parseInt(value) : '';
+        const lgaId = value || '';
         setData('lga_id', lgaId as any);
         setData('ward_id', '');
         fetchWards(lgaId as any);
@@ -263,7 +266,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
                             id="ward_id"
                             name="ward_id"
                             value={data.ward_id}
-                            onChange={(e) => setData('ward_id', e.target.value ? parseInt(e.target.value) : '' as any)}
+                            onChange={(e) => setData('ward_id', e.target.value || '' as any)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
                             disabled={!data.lga_id || loadingWards}
                             required

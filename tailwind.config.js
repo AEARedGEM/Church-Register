@@ -15,26 +15,26 @@ export default {
     theme: {
         extend: {
             colors: {
-                // Light mode colors
-                primary: "#03386E",
+                // Light mode colors (green-first)
+                primary: "#10b981", // emerald-500
                 bodyText: "#4B5563",
                 backgroundColor: "#F8F8EE",
-                secondary: "#2563EB",
-                tertiary: "#EFF6FF",
+                secondary: "#059669",
+                tertiary: "#ECFDF5",
 
-                // You can also define custom color variants that work with dark: prefix
+                // Brand palette remapped to green tones (emerald-like)
                 brand: {
-                    50: '#eff6ff',
-                    100: '#dbeafe',
-                    200: '#bfdbfe',
-                    300: '#93c5fd',
-                    400: '#60a5fa',
-                    500: '#3b82f6', // This will be your primary blue
-                    600: '#2563eb',
-                    700: '#1d4ed8',
-                    800: '#1e40af',
-                    900: '#1e3a8a',
-                    950: '#172554',
+                    50: '#ecfdf5',
+                    100: '#d1fae5',
+                    200: '#a7f3d0',
+                    300: '#6ee7b7',
+                    400: '#34d399',
+                    500: '#10b981',
+                    600: '#059669',
+                    700: '#047857',
+                    800: '#065f46',
+                    900: '#064e3b',
+                    950: '#022c22',
                 },
 
                 // Gray scale that works well in both modes
@@ -68,6 +68,35 @@ export default {
                 },
 
                 // Accent colors
+                // Map default `blue` and `purple` names to green variants so existing
+                // `bg-blue-*` or `text-blue-*` utilities become green-themed.
+                blue: {
+                    50: '#ecfdf5',
+                    100: '#d1fae5',
+                    200: '#a7f3d0',
+                    300: '#6ee7b7',
+                    400: '#34d399',
+                    500: '#10b981',
+                    600: '#059669',
+                    700: '#047857',
+                    800: '#065f46',
+                    900: '#064e3b',
+                    950: '#022c22',
+                },
+                purple: {
+                    50: '#ecfdf5',
+                    100: '#d1fae5',
+                    200: '#a7f3d0',
+                    300: '#6ee7b7',
+                    400: '#34d399',
+                    500: '#10b981',
+                    600: '#059669',
+                    700: '#047857',
+                    800: '#065f46',
+                    900: '#064e3b',
+                    950: '#022c22',
+                },
+
                 teal: {
                     50: '#f0fdfa',
                     100: '#ccfbf1',
@@ -94,9 +123,9 @@ export default {
             },
 
             textColor: {
-                'light-primary': '#03386E',
+                'light-primary': '#10b981',
                 'light-body': '#4B5563',
-                'dark-primary': '#3b82f6',
+                'dark-primary': '#10b981',
                 'dark-body': '#e5e7eb',
             },
         },

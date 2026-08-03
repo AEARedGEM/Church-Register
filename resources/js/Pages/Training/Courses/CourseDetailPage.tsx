@@ -194,7 +194,7 @@ export default function CourseDetailPage({
                         onClick={() => window.scrollTo({ top: 400, behavior: 'smooth' })}
                         className="w-16 h-16 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
                       >
-                        <PlayCircle className="w-10 h-10 text-blue-600" />
+                        <PlayCircle className="w-10 h-10 text-emerald-600" />
                       </button>
                     </div>
                   </div>
@@ -235,7 +235,7 @@ export default function CourseDetailPage({
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
                           <div
-                            className="bg-blue-600 h-2 rounded-full"
+                            className="bg-emerald-600 h-2 rounded-full"
                             style={{ width: `${userProgress}%` }}
                           ></div>
                         </div>
@@ -246,7 +246,7 @@ export default function CourseDetailPage({
                     {isEnrolled ? (
                       <Link
                         href={route('training.course.player', course.slug)}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4 inline-block text-center"
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4 inline-block text-center"
                       >
                         Continue Learning
                       </Link>
@@ -256,7 +256,7 @@ export default function CourseDetailPage({
                         disabled={enrolling}
                         aria-busy={enrolling}
                         aria-disabled={enrolling}
-                        className={`w-full text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4 ${enrolling ? 'bg-blue-500 opacity-70 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+                        className={`w-full text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4 ${enrolling ? 'bg-emerald-500 opacity-70 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700'}`}
                       >
                         {enrolling ? (
                           <span className="flex items-center justify-center space-x-2">
@@ -337,7 +337,7 @@ export default function CourseDetailPage({
                       onClick={() => setActiveTab(tab.id)}
                       className={`py-4 border-b-2 font-medium text-sm transition-colors ${
                         activeTab === tab.id
-                          ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                          ? 'border-emerald-600 text-emerald-600 dark:text-emerald-400'
                           : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
                       }`}
                     >
@@ -358,7 +358,7 @@ export default function CourseDetailPage({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {(course.learning_objectives || []).map((outcome: string, index: number) => (
                         <div key={index} className="flex items-start space-x-2">
-                          <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
                           <span className="text-sm text-gray-700 dark:text-gray-300">{outcome}</span>
                         </div>
                       ))}
@@ -384,7 +384,7 @@ export default function CourseDetailPage({
                       <ul className="space-y-2">
                         {course.prerequisites.map((req: string, index: number) => (
                           <li key={index} className="flex items-start space-x-2">
-                            <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="w-2 h-2 bg-emerald-600 rounded-full mt-2 flex-shrink-0"></div>
                             <span className="text-gray-700 dark:text-gray-300">{req}</span>
                           </li>
                         ))}
@@ -446,7 +446,7 @@ export default function CourseDetailPage({
                                 {lecture.is_completed ? (
                                   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
                                 ) : lecture.is_preview ? (
-                                  <PlayCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                                  <PlayCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                                 ) : (
                                   <Lock className="w-5 h-5 text-gray-400 flex-shrink-0" />
                                 )}
@@ -460,7 +460,7 @@ export default function CourseDetailPage({
 
                               <div className="flex items-center space-x-4">
                                 {lecture.is_preview && (
-                                  <span className="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs font-medium rounded-full">
+                                  <span className="px-2 py-1 bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 text-xs font-medium rounded-full">
                                     Preview
                                   </span>
                                 )}
@@ -483,7 +483,7 @@ export default function CourseDetailPage({
               {activeTab === 'instructor' && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                   <div className="flex items-start space-x-6">
-                    <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-to-br from-emerald-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-white text-xl font-semibold">
                         {course.instructor?.name?.split(' ').map((n: string) => n[0]).join('') || 'IN'}
                       </span>

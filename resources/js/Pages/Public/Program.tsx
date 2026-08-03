@@ -59,7 +59,7 @@ export default function Program() {
                         </ul>
                     </div>
 
-                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 rounded-lg p-8">
+                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-950 dark:to-emerald-950 rounded-lg p-8">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Ready to Participate?</h3>
                         <p className="text-gray-700 dark:text-gray-300 mb-6">
                             Learn more about our partner organizations and funding opportunities.

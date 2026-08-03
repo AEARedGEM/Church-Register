@@ -518,8 +518,8 @@ export default function CoursePlayer() {
                   disabled={!getNextLecture()}
                   className={`flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 text-sm lg:text-base ${
                     navigatingLecture === getNextLecture()?.id
-                      ? 'bg-blue-500 text-white shadow-lg scale-105'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                      ? 'bg-emerald-500 text-white shadow-lg scale-105'
+                      : 'bg-emerald-600 hover:bg-emerald-700 text-white'
                   } ${
                     !getNextLecture()
                       ? 'disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -543,7 +543,7 @@ export default function CoursePlayer() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex-1 flex items-center justify-center space-x-1.5 px-2 py-3 text-xs sm:text-sm font-medium transition-colors ${
                         activeTab === tab.id
-                          ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                          ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600 dark:border-emerald-400'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                       }`}
                     >
@@ -566,7 +566,7 @@ export default function CoursePlayer() {
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${enrollment.progress_percentage}%` }}
                         />
                       </div>
@@ -612,7 +612,7 @@ export default function CoursePlayer() {
                                     disabled={lecture.is_locked}
                                     className={`w-full p-3 flex items-start space-x-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left text-xs sm:text-sm ${
                                       isCurrentLecture
-                                        ? 'bg-blue-50 dark:bg-blue-900/20 border-l-2 border-blue-600'
+                                        ? 'bg-emerald-50 dark:bg-emerald-900/20 border-l-2 border-emerald-600'
                                         : ''
                                     } ${lecture.is_locked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                                   >
@@ -665,7 +665,7 @@ export default function CoursePlayer() {
 
                 {activeTab === 'notes' && (
                   <div className="p-4 text-sm">
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-center">
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 text-center">
                       <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                       <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
                         Notes feature coming soon
@@ -694,7 +694,7 @@ export default function CoursePlayer() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex-1 flex items-center justify-center space-x-2 px-2 lg:px-4 py-3 text-xs lg:text-sm font-medium transition-colors ${
                         activeTab === tab.id
-                          ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                          ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600 dark:border-emerald-400'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                       }`}
                     >
@@ -718,7 +718,7 @@ export default function CoursePlayer() {
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${enrollment.progress_percentage}%` }}
                       />
                     </div>
@@ -772,7 +772,7 @@ export default function CoursePlayer() {
                                     ) : lecture.is_locked ? (
                                       <Lock className="w-5 h-5 text-gray-400 dark:text-gray-600" />
                                     ) : isCurrentLecture ? (
-                                      <Play className="w-5 h-5 text-blue-600" />
+                                      <Play className="w-5 h-5 text-emerald-600" />
                                     ) : (
                                       <div className="w-5 h-5 border-2 border-gray-400 dark:border-gray-600 rounded-full" />
                                     )}
@@ -813,7 +813,7 @@ export default function CoursePlayer() {
                   <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Instructor</h3>
                   <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
                     <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <span className="text-white font-semibold">
                           {course.instructor.name.split(' ').map(n => n[0]).join('')}
                         </span>

@@ -68,7 +68,7 @@ export default function Impact() {
                         </section>
                     </div>
 
-                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 rounded-lg p-8 text-center">
+                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-950 dark:to-emerald-950 rounded-lg p-8 text-center">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Be Part of the Story</h3>
                         <p className="text-gray-700 dark:text-gray-300 mb-6">
                             Join thousands of youth transforming Nigeria's economy through industrialization and innovation.

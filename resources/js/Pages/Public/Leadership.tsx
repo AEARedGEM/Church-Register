@@ -51,7 +51,7 @@ export default function Leadership() {
                     {/* Leadership Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                         {leaders.map((leader, index) => (
-                            <div key={index} className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-8 border border-emerald-200 dark:border-emerald-900/30">
+                            <div key={index} className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-8 border border-emerald-200 dark:border-emerald-900/30">
                                 <div className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm mb-2">{leader.role}</div>
                                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{leader.name}</h3>
                                 <p className="text-gray-700 dark:text-gray-300">{leader.bio}</p>
@@ -74,7 +74,7 @@ export default function Leadership() {
                     </div>
 
                     {/* Explore More */}
-                    <div className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 rounded-lg p-8 text-center">
+                    <div className="bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-950 dark:to-emerald-950 rounded-lg p-8 text-center">
                         <Link href="/governance" className="inline-block px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
                             View Governance Structure
                         </Link>

@@ -13,8 +13,8 @@ interface PieChartProps {
 }
 
 const COLORS = [
-    '#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#ef4444',
-    '#3b82f6', '#ec4899', '#14b8a6', '#6366f1', '#f97316'
+    '#10b981', '#059669', '#34d399', '#6ee7b7', '#a7f3d0',
+    '#065f46', '#022c22', '#111827', '#ffffff', '#000000'
 ];
 
 export default function PieChart({ data, title, colors = COLORS }: PieChartProps) {

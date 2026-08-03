@@ -22,6 +22,46 @@ interface User {
     };
 }
 
+function BalancesDropdown({ user }: { user: User }) {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <div className="relative">
+            <button
+                type="button"
+                onClick={() => setOpen((s) => !s)}
+                className="flex items-center gap-2 rounded-md border border-slate-700 bg-slate-950/80 px-3 py-2 text-sm font-medium text-white hover:bg-slate-900"
+            >
+                USD
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            {open && (
+                <div className="absolute right-0 mt-2 w-64 rounded-lg bg-slate-950/90 border border-slate-800/80 p-3 shadow-lg shadow-slate-950/40 z-50">
+                    <div className="py-2 flex justify-between text-sm text-slate-200">
+                        <span>Industrial Naira</span>
+                        <span className="font-semibold text-white">{user.wallet.ngn ? `₦${user.wallet.ngn}` : '₦0.00'}</span>
+                    </div>
+                    <div className="py-2 flex justify-between text-sm text-emerald-200">
+                        <span>Industrial USD</span>
+                        <span className="font-semibold text-white">{user.wallet.usdi ? `$${user.wallet.usdi}` : '$0.00'}</span>
+                    </div>
+                    <div className="py-2 flex justify-between text-sm text-emerald-200">
+                        <span>Industrial Fund</span>
+                        <span className="font-semibold text-white">{user.wallet.ind ?? '0.00'}</span>
+                    </div>
+                    <div className="py-2 flex justify-between text-sm text-slate-200">
+                        <span>Industrial NGN</span>
+                        <span className="font-semibold text-white">{user.wallet.ngni ?? '0.00'}</span>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
 interface DashboardContext {
     current_role: string;
     role_label: string;
@@ -215,7 +255,7 @@ export default function Dashboard({
             title: 'Startup Tokenization',
             description: 'Apply for startup funding and tokenization support.',
             route: 'funding.index',
-            color: 'blue',
+            color: 'emerald',
             icon: 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z'
         },
         {
@@ -298,23 +338,14 @@ export default function Dashboard({
             success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
             pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
             failed: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-            info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-        }[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+            info: 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100',
+        }[status] || 'bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100';
     };
 
     const getActionColorClasses = (color: string) => {
-        const colorMap = {
-            emerald: 'bg-emerald-100 dark:bg-emerald-900 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-800 text-emerald-600 dark:text-emerald-400',
-            blue: 'bg-blue-100 dark:bg-blue-900 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 text-blue-600 dark:text-blue-400',
-            purple: 'bg-purple-100 dark:bg-purple-900 group-hover:bg-purple-200 dark:group-hover:bg-purple-800 text-purple-600 dark:text-purple-400',
-            teal: 'bg-teal-100 dark:bg-teal-900 group-hover:bg-teal-200 dark:group-hover:bg-teal-800 text-teal-600 dark:text-teal-400',
-            orange: 'bg-orange-100 dark:bg-orange-900 group-hover:bg-orange-200 dark:group-hover:bg-orange-800 text-orange-600 dark:text-orange-400',
-            green: 'bg-green-100 dark:bg-green-900 group-hover:bg-green-200 dark:group-hover:bg-green-800 text-green-600 dark:text-green-400',
-            indigo: 'bg-indigo-100 dark:bg-indigo-900 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800 text-indigo-600 dark:text-indigo-400',
-            cyan: 'bg-cyan-100 dark:bg-cyan-900 group-hover:bg-cyan-200 dark:group-hover:bg-cyan-800 text-cyan-600 dark:text-cyan-400',
-            violet: 'bg-violet-100 dark:bg-violet-900 group-hover:bg-violet-200 dark:group-hover:bg-violet-800 text-violet-600 dark:text-violet-400',
-        };
-        return colorMap[color as keyof typeof colorMap] || colorMap.emerald;
+        // Use softer slate backgrounds with emerald accent text for actions
+        const slateAction = 'bg-slate-100 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800 text-slate-700 dark:text-slate-300';
+        return slateAction;
     };
 
     return (
@@ -323,7 +354,7 @@ export default function Dashboard({
             header={
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                        <h2 className="text-xl font-semibold leading-tight text-slate-900 dark:text-white">
                             NYP Industrialization Program
                         </h2>
 
@@ -335,7 +366,7 @@ export default function Dashboard({
                         <select
                         value={currentRole}
                         onChange={(e) => handleRoleSwitch(e.target.value)}
-                        className="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-700 dark:text-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-150 ease-in-out"
+                        className="w-full text-sm bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-150 ease-in-out"
                         >
                         <option value={currentRole}>{formatRoleLabel(roleLabel)}</option>
                         {dashboardContext.available_roles.map((role) => (
@@ -358,18 +389,16 @@ export default function Dashboard({
 
     <div className="grid grid-cols-1 gap-6">
         <aside className="hidden lg:block">
-            <div className="fixed top-[132px] left-0 bottom-0 z-30 h-[calc(100vh-132px)] w-[260px] overflow-auto border-r border-slate-800/70 bg-slate-950 text-slate-300 shadow-lg">
-                <div className="px-4 pt-8 pb-3">
-                    <p className="text-xs uppercase tracking-[0.32em] text-slate-500">NYP Industrialization</p>
-                </div>
+            <div className="fixed top-[132px] left-0 bottom-0 z-30 h-[calc(100vh-132px)] w-[260px] overflow-auto border-r border-slate-800/70 bg-slate-950 text-slate-200 shadow-lg shadow-slate-950/40">
+                <div className="px-4 pt-8 pb-3" />
                 <nav className="space-y-2 px-4 pb-4 pt-2">
                     {sidebarItems.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => handleSidebarClick(item)}
-                            className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${activeTab === item.target ? 'bg-emerald-500/10 text-emerald-300 shadow-inner' : 'text-slate-300 hover:bg-slate-900/80 hover:text-white'}`}
+                            className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${activeTab === item.target ? 'bg-slate-700/20 text-emerald-300 shadow-inner' : 'text-slate-300 hover:bg-slate-900/80 hover:text-white'}`}
                         >
-                            <svg className={`w-5 h-5 shrink-0 ${activeTab === item.target ? 'text-emerald-300' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className={`w-5 h-5 shrink-0 ${activeTab === item.target ? 'text-emerald-300' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
                             </svg>
                             <span className="truncate">{item.label}</span>
@@ -380,60 +409,23 @@ export default function Dashboard({
         </aside>
 
         <section className="space-y-6 lg:ml-[calc(260px+2rem)]">
-            <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-                <div className="bg-white dark:bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-sm">
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-400 font-semibold">Overview</p>
-                    <h1 className="mt-4 text-3xl font-semibold text-slate-900 dark:text-white">Welcome back, {user.name}</h1>
-                    <p className="mt-3 text-sm leading-6 text-slate-500 dark:text-slate-400">Manage your NYP-IP program progress, access survey tools, training, tokenization, and community features from one place.</p>
-
-                    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">Active Funds</p>
-                            <p className="mt-3 text-lg font-semibold text-white">{stats.activeFunds}</p>
-                        </div>
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">Training Done</p>
-                            <p className="mt-3 text-lg font-semibold text-white">{stats.trainingCompleted}</p>
-                        </div>
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">NAP Surveys</p>
-                            <p className="mt-3 text-lg font-semibold text-white">{stats.napsCompleted}</p>
-                        </div>
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">Community Rank</p>
-                            <p className="mt-3 text-lg font-semibold text-white">#{stats.communityRank}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-slate-950 dark:bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm text-white">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="grid gap-6">
+                <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-sm text-white">
+                    {/* Compact Account Balance card (wide, short) with dropdown metrics */}
+                    <div className="relative flex items-center justify-between gap-4 h-28">
                         <div>
                             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Account Balance</p>
-                            <p className="mt-3 text-4xl font-semibold text-white">{user.wallet.ngn ? `₦${user.wallet.ngn}` : '₦0.00'}</p>
+                            <p className="mt-1 text-3xl font-semibold text-white">{user.wallet.ngn ? `₦${user.wallet.ngn}` : '₦0.00'}</p>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <button className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500 text-white text-lg font-semibold transition hover:bg-emerald-400">+</button>
-                            <button className="rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">Send</button>
-                        </div>
-                    </div>
 
-                    <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">Industrial Naira</p>
-                            <p className="mt-3 text-lg font-semibold text-white">₦{user.wallet.ngn}</p>
-                        </div>
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">Industrial USD</p>
-                            <p className="mt-3 text-lg font-semibold text-white">${user.wallet.usdi}</p>
-                        </div>
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">Industrial Fund</p>
-                            <p className="mt-3 text-lg font-semibold text-white">{user.wallet.ind}</p>
-                        </div>
-                        <div className="rounded-3xl bg-slate-900/80 p-4">
-                            <p className="text-[11px] uppercase tracking-[0.28em] text-slate-400">Industrial NGN</p>
-                            <p className="mt-3 text-lg font-semibold text-white">{user.wallet.ngni}</p>
+                        <div className="flex items-center gap-3">
+                            <div className="relative">
+                                <BalancesDropdown user={user} />
+                            </div>
+
+                            <button className="rounded-full border border-slate-700 bg-slate-950/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900">Rates</button>
+                            <button className="rounded-full bg-emerald-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400">+ Add</button>
+                            <button className="rounded-full border border-slate-700 bg-slate-950/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900">Send</button>
                         </div>
                     </div>
                 </div>
@@ -444,14 +436,14 @@ export default function Dashboard({
                     <button
                         key={feature.id}
                         onClick={() => router.visit(route(feature.route))}
-                        className={`rounded-3xl border border-slate-800 bg-slate-950/80 p-5 text-left text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${feature.color === 'emerald' ? 'ring-1 ring-emerald-500/20' : feature.color === 'blue' ? 'ring-1 ring-blue-500/20' : feature.color === 'purple' ? 'ring-1 ring-purple-500/20' : feature.color === 'teal' ? 'ring-1 ring-teal-500/20' : 'ring-1 ring-orange-500/20'}`}
+                        className={`rounded-3xl border border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-950/90 p-5 text-left text-slate-900 dark:text-slate-100 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-200/70`}
                     >
                         <div className="flex items-center justify-between gap-4">
                             <div>
-                                <p className="text-sm font-semibold text-white">{feature.title}</p>
-                                <p className="mt-2 text-sm text-slate-400">{feature.description}</p>
+                                <p className="text-sm font-semibold text-slate-900 dark:text-white">{feature.title}</p>
+                                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{feature.description}</p>
                             </div>
-                            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
                                 </svg>
@@ -465,10 +457,10 @@ export default function Dashboard({
 
     {/* Compact Recent Activity (tabs collapsed) */}
     <div className="bg-slate-950/95 shadow-sm rounded-[24px] border border-slate-800/70 overflow-hidden p-4 md:p-6 lg:ml-[calc(300px+2rem)]">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Recent Activity</h3>
-        <div className="text-center py-6 md:py-8 text-gray-500 dark:text-gray-400">
+        <h3 className="text-lg font-medium text-white mb-2">Recent Activity</h3>
+        <div className="text-center py-6 md:py-8 text-slate-300">
             <p>No recent activity yet</p>
-            <p className="text-sm mt-1">Start by exploring training or applying for funding</p>
+            <p className="text-sm mt-1 text-slate-400">Start by exploring training or applying for funding</p>
         </div>
     </div>
 

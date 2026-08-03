@@ -264,11 +264,11 @@ export default function RoleApplicationForm({
                                                 </p>
                                             </div>
 
-                                            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                                                <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-3">Required Information</h4>
+                                            <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+                                                <h4 className="text-sm font-medium text-emerald-900 dark:text-emerald-100 mb-3">Required Information</h4>
                                                 <ul className="space-y-2">
                                                     {ROLE_REQUIREMENTS[selectedRole]?.fields.map((field, idx) => (
-                                                        <li key={idx} className="text-sm text-blue-800 dark:text-blue-200 flex items-start">
+                                                        <li key={idx} className="text-sm text-emerald-800 dark:text-emerald-200 flex items-start">
                                                             <span className="mr-3">•</span>
                                                             <span>{field.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}</span>
                                                         </li>
@@ -373,25 +373,25 @@ export default function RoleApplicationForm({
                     )}
                 </div>
             ) : (
-                <div className="text-center py-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-2">
+                <div className="text-center py-8 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                    <h3 className="text-lg font-medium text-emerald-900 dark:text-emerald-100 mb-2">
                         No Additional Roles Available
                     </h3>
                     {dashCtx.current_role?.toLowerCase().includes('admin') || dashCtx.current_role?.toLowerCase().includes('support') ? (
                         <>
-                            <p className="text-blue-800 dark:text-blue-200 mb-2">
+                            <p className="text-emerald-800 dark:text-emerald-200 mb-2">
                                 System administrators cannot apply for additional roles.
                             </p>
-                            <p className="text-sm text-blue-700 dark:text-blue-300">
+                            <p className="text-sm text-emerald-700 dark:text-emerald-300">
                                 If you need to switch to a different system role, please contact the system administrator.
                             </p>
                         </>
                     ) : (
                         <>
-                            <p className="text-blue-800 dark:text-blue-200 mb-2">
+                            <p className="text-emerald-800 dark:text-emerald-200 mb-2">
                                 You currently have access to all available roles in the NYP-IP system.
                             </p>
-                            <p className="text-sm text-blue-700 dark:text-blue-300">
+                            <p className="text-sm text-emerald-700 dark:text-emerald-300">
                                 Complete your profile to unlock additional opportunities as they become available.
                             </p>
                         </>

@@ -302,7 +302,7 @@ export default function Register() {
                                 </div>
 
                                 <PrimaryButton
-                                    className="w-full bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-500 dark:to-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-emerald-700 hover:to-blue-700 dark:hover:from-emerald-600 dark:hover:to-blue-600 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+                                    className="w-full bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-500 dark:to-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-700 dark:hover:from-emerald-600 dark:hover:to-emerald-600 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
                                     disabled={processing}
                                 >
                                     {processing ? 'Creating Account...' : 'Create Account'}

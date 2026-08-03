@@ -59,7 +59,7 @@ export default function CertificatesIndex() {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                  <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
                     {certificates.length}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -122,7 +122,7 @@ export default function CertificatesIndex() {
               </p>
               <Link
                 href={route('training.courses')}
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
               >
                 Browse Courses
               </Link>
@@ -184,7 +184,7 @@ export default function CertificatesIndex() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleViewCertificate(certificate.id)}
-                        className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
+                        className="flex-1 flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
                       >
                         <Eye className="w-4 h-4" />
                         <span>View</span>

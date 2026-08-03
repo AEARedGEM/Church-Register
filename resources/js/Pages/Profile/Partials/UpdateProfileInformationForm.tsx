@@ -202,7 +202,7 @@ export default function UpdateProfileInformationForm({
                     <InputLabel htmlFor="address" value="Address" />
                     <textarea
                         id="address"
-                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
                         rows={3}
                         value={data.address}
                         onChange={(e) => setData('address', e.target.value)}
@@ -217,7 +217,7 @@ export default function UpdateProfileInformationForm({
                         <InputLabel htmlFor="state" value="State of Origin" />
                         <select
                             id="state"
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
                             value={data.state}
                             onChange={(e) => handleStateChange(e.target.value)}
                             disabled={loadingStates}
@@ -234,7 +234,7 @@ export default function UpdateProfileInformationForm({
                         <InputLabel htmlFor="lga" value="Local Government Area (LGA)" />
                         <select
                             id="lga"
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm disabled:opacity-50"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 shadow-sm disabled:opacity-50"
                             value={data.lga}
                             onChange={(e) => setData('lga', e.target.value)}
                             disabled={!data.state || loadingLgas || lgasList.length === 0}
@@ -256,7 +256,7 @@ export default function UpdateProfileInformationForm({
                         <InputLabel htmlFor="sector" value="Primary Sector of Interest" />
                         <select
                             id="sector"
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
                             value={data.sector}
                             onChange={(e) => setData('sector', e.target.value)}
                         >
@@ -272,7 +272,7 @@ export default function UpdateProfileInformationForm({
                         <InputLabel htmlFor="education_level" value="Education Level" />
                         <select
                             id="education_level"
-                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
                             value={data.education_level}
                             onChange={(e) => setData('education_level', e.target.value)}
                         >

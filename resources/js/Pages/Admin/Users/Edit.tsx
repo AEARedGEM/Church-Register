@@ -95,7 +95,7 @@ const InputField: React.FC<{
           className={`block w-full ${icon ? 'pl-10' : 'pl-3'} pr-3 py-2.5 border ${
             error
               ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
-              : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500'
+              : 'border-gray-300 dark:border-gray-600 focus:ring-emerald-500 focus:border-emerald-500'
           } rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors`}
           placeholder={placeholder}
         />
@@ -138,7 +138,7 @@ const SelectField: React.FC<{
           className={`block w-full ${icon ? 'pl-10' : 'pl-3'} pr-10 py-2.5 border ${
             error
               ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
-              : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500'
+              : 'border-gray-300 dark:border-gray-600 focus:ring-emerald-500 focus:border-emerald-500'
           } rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
         >
           <option value="">Select {label}</option>
@@ -181,7 +181,7 @@ const TextareaField: React.FC<{
         className={`block w-full px-3 py-2.5 border ${
           error
             ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
-            : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500'
+            : 'border-gray-300 dark:border-gray-600 focus:ring-emerald-500 focus:border-emerald-500'
         } rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors`}
         placeholder={placeholder}
       />
@@ -230,13 +230,13 @@ const SkillsInput: React.FC<{
               addSkill();
             }
           }}
-          className="flex-1 px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          className="flex-1 px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
           placeholder="Type a skill and press Enter"
         />
         <button
           type="button"
           onClick={addSkill}
-          className="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          className="px-4 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
         >
           Add
         </button>
@@ -246,13 +246,13 @@ const SkillsInput: React.FC<{
           {skills.map((skill, index) => (
             <span
               key={index}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm rounded-full"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm rounded-full"
             >
               {skill}
               <button
                 type="button"
                 onClick={() => removeSkill(skill)}
-                className="hover:text-blue-900 dark:hover:text-blue-100"
+                className="hover:text-emerald-900 dark:hover:text-emerald-100"
               >
                 <XCircleIcon className="w-4 h-4" />
               </button>
@@ -281,7 +281,7 @@ const RoleCheckbox: React.FC<{
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+        className="mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 dark:border-gray-600 rounded"
       />
       <div className="flex-1 min-w-0">
         <div className="font-medium text-gray-900 dark:text-white">
@@ -498,7 +498,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles }) => {
                       id="change-password"
                       checked={showPasswordFields}
                       onChange={(e) => setShowPasswordFields(e.target.checked)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                      className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 dark:border-gray-600 rounded"
                     />
                     <label htmlFor="change-password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Change Password
@@ -662,7 +662,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles }) => {
                   <button
                     type="submit"
                     disabled={processing}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium shadow-sm"
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium shadow-sm"
                   >
                     <CheckCircleIcon className="w-5 h-5" />
                     {processing ? 'Updating...' : 'Update User'}

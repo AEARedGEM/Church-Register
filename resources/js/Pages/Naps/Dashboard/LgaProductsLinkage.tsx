@@ -105,9 +105,9 @@ export default function LgaProductsLinkage() {
             {/* State Stats Overview (when state selected) */}
             {selectedStateData && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <p className="text-blue-600 dark:text-blue-400 text-xs font-medium">LGAs in {selectedState}</p>
-                        <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{selectedStateData.lgaCount}</p>
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                        <p className="text-emerald-600 dark:text-emerald-400 text-xs font-medium">LGAs in {selectedState}</p>
+                        <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{selectedStateData.lgaCount}</p>
                     </div>
                     <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
                         <p className="text-green-600 dark:text-green-400 text-xs font-medium">Total Respondents</p>
@@ -173,7 +173,7 @@ export default function LgaProductsLinkage() {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 dark:text-gray-400">Wards:</span>
-                                    <span className="font-semibold text-blue-600 dark:text-blue-400">{state.totalWards}</span>
+                                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{state.totalWards}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 dark:text-gray-400">Respondents:</span>

@@ -34,7 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Logo */}
       <div className="flex items-center justify-between h-16 px-4 border-b dark:border-gray-700">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">NYP</span>
           </div>
           <div>
@@ -65,7 +65,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => onNavigate(item.id)}
                 className={`w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
                   currentPage === item.id
-                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-200'
+                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
@@ -86,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               Learning Progress
             </span>
           </div>
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
             {enrollmentCount}
           </div>
           <div className="text-xs text-gray-600 dark:text-gray-400">

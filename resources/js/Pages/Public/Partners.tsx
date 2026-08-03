@@ -44,7 +44,7 @@ export default function Partners() {
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{category.title}</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {category.partners.map((partner, pidx) => (
-                                        <div key={pidx} className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-900/30">
+                                        <div key={pidx} className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-900/30">
                                             <p className="font-semibold text-gray-900 dark:text-white">{partner}</p>
                                         </div>
                                     ))}
@@ -67,7 +67,7 @@ export default function Partners() {
                         </ul>
                     </div>
 
-                    <div className="mt-8 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 rounded-lg p-8 text-center">
+                    <div className="mt-8 bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-950 dark:to-emerald-950 rounded-lg p-8 text-center">
                         <p className="text-gray-700 dark:text-gray-300 mb-4">Interested in partnering with us?</p>
                         <Link href="/support" className="inline-block px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
                             Get in Touch

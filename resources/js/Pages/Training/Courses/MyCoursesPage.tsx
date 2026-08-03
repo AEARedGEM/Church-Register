@@ -55,7 +55,7 @@ export default function MyCoursesPage() {
 
   const getProgressColor = (progress: number) => {
     if (progress >= 80) return 'bg-green-600';
-    if (progress >= 50) return 'bg-blue-600';
+    if (progress >= 50) return 'bg-emerald-600';
     if (progress >= 25) return 'bg-yellow-600';
     return 'bg-gray-600';
   };
@@ -89,7 +89,7 @@ export default function MyCoursesPage() {
               </p>
               <Link
                 href={route('training.courses')}
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
               >
                 Browse Courses
               </Link>
@@ -119,7 +119,7 @@ export default function MyCoursesPage() {
                         href={route('training.course.player', enrollment.course.slug)}
                         className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
                       >
-                        <PlayCircle className="w-6 h-6 text-blue-600" />
+                        <PlayCircle className="w-6 h-6 text-emerald-600" />
                       </Link>
                     </div>
                   </div>
@@ -132,7 +132,7 @@ export default function MyCoursesPage() {
                         enrollment.status === 'completed'
                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                           : enrollment.status === 'in_progress'
-                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200'
                           : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
                       }`}>
                         {enrollment.status === 'not_started' ? 'Not Started' :
@@ -178,7 +178,7 @@ export default function MyCoursesPage() {
                           ${
                           enrollment.status === 'completed'
                               ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                              : 'bg-blue-600 hover:bg-blue-700 text-white'
+                              : 'bg-emerald-600 hover:bg-emerald-700 text-white'
                           }`}
                     >
                       {enrollment.status === 'in_progress'

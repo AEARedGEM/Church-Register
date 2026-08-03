@@ -104,7 +104,7 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
       case 'super_admin':
         return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'admin':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
       case 'manager':
         return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300';
       case 'investor':
@@ -112,7 +112,7 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
       case 'startup':
         return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300';
       case 'sme_owner':
-        return 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300';
+        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
       default:
         return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }
@@ -254,7 +254,7 @@ export const UserTable: React.FC<UserTableProps> = ({
               <select
                 value={currentFilters.per_page || 10}
                 onChange={(e) => handlePerPageChange(Number(e.target.value))}
-                className="border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -343,7 +343,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                           alt={user.name}
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
                           <span className="text-sm font-semibold text-white">
                             {getInitials(user)}
                           </span>
@@ -354,7 +354,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                       <div className="text-sm font-medium text-gray-900 dark:text-white truncate">
                         <Link
                           href={route('users.show', user.id)}
-                          className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                          className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                         >
                           {getFullName(user)}
                         </Link>
@@ -451,7 +451,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                     alt={user.name}
                   />
                 ) : (
-                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
+                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
                     <span className="text-sm font-semibold text-white">
                       {getInitials(user)}
                     </span>
@@ -461,7 +461,7 @@ export const UserTable: React.FC<UserTableProps> = ({
               <div className="flex-1 min-w-0">
                 <Link
                   href={route('users.show', user.id)}
-                  className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 block truncate"
+                  className="text-sm font-medium text-gray-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 block truncate"
                 >
                   {getFullName(user)}
                 </Link>
@@ -550,7 +550,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                     href={link.url}
                     className={`px-3 py-2 text-sm rounded-lg transition-colors whitespace-nowrap ${
                       link.active
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-emerald-600 text-white'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}
                     dangerouslySetInnerHTML={{ __html: link.label }}

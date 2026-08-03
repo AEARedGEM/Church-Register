@@ -29,8 +29,8 @@ export default function FAQ() {
                             </div>
                         ))}
                     </div>
-                    <div className="mt-8 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-900 rounded-lg p-6">
-                        <p className="text-blue-900 dark:text-blue-100">
+                    <div className="mt-8 bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900 rounded-lg p-6">
+                        <p className="text-emerald-900 dark:text-emerald-100">
                             <strong>Can't find your answer?</strong> Visit our <Link href="/support" className="underline hover:no-underline">support page</Link> or contact us directly.
                         </p>
                     </div>

@@ -8,6 +8,7 @@ use App\Models\NapsSurveyResponse;
 use App\Models\NapsStatistics;
 use App\Models\NapsSubSkill;
 use App\Models\NapsSkillGroup;
+use App\Services\LocationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -836,6 +837,16 @@ class NapsApiController extends Controller
         try {
             $states = \App\Models\State::orderBy('name')->get(['id', 'name', 'abbreviation']);
 
+            if ($states->isEmpty()) {
+                $states = collect(LocationService::getStates())->map(function ($stateName) {
+                    return [
+                        'id' => $stateName,
+                        'name' => $stateName,
+                        'abbreviation' => substr($stateName, 0, 2),
+                    ];
+                });
+            }
+
             return response()->json([
                 'success' => true,
                 'states' => $states
@@ -855,10 +866,36 @@ class NapsApiController extends Controller
     public function getLgasByState($stateId)
     {
         try {
-            $lgas = \App\Models\LGA::where('state_id', $stateId)
-                ->orderBy('sort_order')
-                ->orderBy('name')
-                ->get(['id', 'name', 'sort_order']);
+            if (!is_numeric($stateId)) {
+                $stateName = urldecode($stateId);
+                $lgaNames = LocationService::getLGAsByState($stateName);
+                $lgas = collect($lgaNames)->map(function ($lgaName, $index) {
+                    return [
+                        'id' => $lgaName,
+                        'name' => $lgaName,
+                        'sort_order' => $index + 1,
+                    ];
+                });
+            } else {
+                $lgas = \App\Models\LGA::where('state_id', $stateId)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->get(['id', 'name', 'sort_order']);
+
+                if ($lgas->isEmpty()) {
+                    $state = \App\Models\State::find($stateId);
+                    if ($state) {
+                        $lgaNames = LocationService::getLGAsByState($state->name);
+                        $lgas = collect($lgaNames)->map(function ($lgaName, $index) {
+                            return [
+                                'id' => $lgaName,
+                                'name' => $lgaName,
+                                'sort_order' => $index + 1,
+                            ];
+                        });
+                    }
+                }
+            }
 
             return response()->json([
                 'success' => true,
@@ -876,13 +913,49 @@ class NapsApiController extends Controller
     /**
      * Get wards by LGA
      */
-    public function getWardsByLga($lgaId)
+    public function getWardsByLga($lgaId, Request $request)
     {
         try {
-            $wards = \App\Models\Ward::where('lga_id', $lgaId)
-                ->orderBy('sort_order')
-                ->orderBy('name')
-                ->get(['id', 'name', 'sort_order']);
+            if (!is_numeric($lgaId)) {
+                $lgaName = urldecode($lgaId);
+                $stateName = $request->query('state');
+                $wardNames = [];
+
+                if ($stateName) {
+                    $wardNames = LocationService::getWardsByStateAndLga($stateName, $lgaName);
+                }
+
+                if (empty($wardNames)) {
+                    $wardNames = LocationService::getWardsByLga($lgaName);
+                }
+
+                $wards = collect($wardNames)->map(function ($wardName, $index) {
+                    return [
+                        'id' => $wardName,
+                        'name' => $wardName,
+                        'sort_order' => $index + 1,
+                    ];
+                });
+            } else {
+                $wards = \App\Models\Ward::where('lga_id', $lgaId)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->get(['id', 'name', 'sort_order']);
+
+                if ($wards->isEmpty()) {
+                    $lga = \App\Models\LGA::find($lgaId);
+                    if ($lga) {
+                        $wardNames = LocationService::getWardsByStateAndLga($lga->state->name ?? '', $lga->name);
+                        $wards = collect($wardNames)->map(function ($wardName, $index) {
+                            return [
+                                'id' => $wardName,
+                                'name' => $wardName,
+                                'sort_order' => $index + 1,
+                            ];
+                        });
+                    }
+                }
+            }
 
             return response()->json([
                 'success' => true,
@@ -907,42 +980,96 @@ class NapsApiController extends Controller
                 ->get(['id', 'state_id', 'name']);
 
             $lgaProducts = [];
+            $respondents = NapsRespondent::whereNotNull('products_interest')->get();
 
-            foreach ($lgas as $lga) {
-                // Get all respondents from wards in this LGA
-                $wardIds = \App\Models\Ward::where('lga_id', $lga->id)->pluck('id');
+            if ($lgas->isEmpty()) {
+                $grouped = $respondents->groupBy(function ($respondent) {
+                    return trim($respondent->state) . '||' . trim($respondent->lga);
+                });
 
-                // Count products voted for in all wards of this LGA
-                $respondents = NapsRespondent::whereIn('ward', $wardIds)
-                    ->whereNotNull('products_interest')
-                    ->get();
+                foreach ($grouped as $groupKey => $group) {
+                    [$stateName, $lgaName] = explode('||', $groupKey);
 
-                $productCounts = [];
-                foreach ($respondents as $respondent) {
-                    if (is_array($respondent->products_interest)) {
-                        foreach ($respondent->products_interest as $product) {
-                            if (!empty($product)) {
-                                $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+                    $productCounts = [];
+                    foreach ($group as $respondent) {
+                        if (is_array($respondent->products_interest)) {
+                            foreach ($respondent->products_interest as $product) {
+                                if (!empty($product)) {
+                                    $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+                                }
                             }
                         }
                     }
+
+                    arsort($productCounts);
+                    $topProducts = array_slice($productCounts, 0, 5, true);
+
+                    $wardCount = 0;
+                    if ($stateName && $lgaName) {
+                        $wardCount = count(LocationService::getWardsByStateAndLga($stateName, $lgaName));
+                    }
+
+                    $lgaProducts[] = [
+                        'lga_id' => $groupKey,
+                        'lga_name' => $lgaName ?: 'Unknown',
+                        'state_id' => null,
+                        'state_name' => $stateName ?: 'Unknown',
+                        'total_wards' => $wardCount,
+                        'total_respondents' => $group->count(),
+                        'top_products' => collect($topProducts)->map(function($count, $product) {
+                            return ['name' => $product, 'votes' => $count];
+                        })->values()->all()
+                    ];
                 }
+            } else {
+                foreach ($lgas as $lga) {
+                    $wardIds = \App\Models\Ward::where('lga_id', $lga->id)->pluck('id');
+                    $respondentsForLga = collect();
 
-                // Get top 5 products for this LGA
-                arsort($productCounts);
-                $topProducts = array_slice($productCounts, 0, 5, true);
+                    if ($wardIds->isNotEmpty()) {
+                        $respondentsForLga = NapsRespondent::whereIn('ward', $wardIds)
+                            ->whereNotNull('products_interest')
+                            ->get();
+                    }
 
-                $lgaProducts[] = [
-                    'lga_id' => $lga->id,
-                    'lga_name' => $lga->name,
-                    'state_id' => $lga->state_id,
-                    'state_name' => $lga->state->name ?? 'Unknown',
-                    'total_wards' => $wardIds->count(),
-                    'total_respondents' => $respondents->count(),
-                    'top_products' => collect($topProducts)->map(function($count, $product) {
-                        return ['name' => $product, 'votes' => $count];
-                    })->values()->all()
-                ];
+                    if ($respondentsForLga->isEmpty()) {
+                        $respondentsForLga = NapsRespondent::where('state', $lga->state->name ?? '')
+                            ->where('lga', $lga->name)
+                            ->whereNotNull('products_interest')
+                            ->get();
+                    }
+
+                    $productCounts = [];
+                    foreach ($respondentsForLga as $respondent) {
+                        if (is_array($respondent->products_interest)) {
+                            foreach ($respondent->products_interest as $product) {
+                                if (!empty($product)) {
+                                    $productCounts[$product] = ($productCounts[$product] ?? 0) + 1;
+                                }
+                            }
+                        }
+                    }
+
+                    arsort($productCounts);
+                    $topProducts = array_slice($productCounts, 0, 5, true);
+
+                    $wardCount = $wardIds->count();
+                    if ($wardCount === 0) {
+                        $wardCount = count(LocationService::getWardsByStateAndLga($lga->state->name ?? '', $lga->name));
+                    }
+
+                    $lgaProducts[] = [
+                        'lga_id' => $lga->id,
+                        'lga_name' => $lga->name,
+                        'state_id' => $lga->state_id,
+                        'state_name' => $lga->state->name ?? 'Unknown',
+                        'total_wards' => $wardCount,
+                        'total_respondents' => $respondentsForLga->count(),
+                        'top_products' => collect($topProducts)->map(function($count, $product) {
+                            return ['name' => $product, 'votes' => $count];
+                        })->values()->all()
+                    ];
+                }
             }
 
             return response()->json([
