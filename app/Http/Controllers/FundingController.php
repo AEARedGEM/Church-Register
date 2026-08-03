@@ -14,7 +14,9 @@ class FundingController extends Controller
         return response()->json([
             'tradefiApplications' => $user->fundingApplications()
                 ->with('fundType')
-                ->where('category', 'tradefi')
+                ->whereHas('fundType', function ($query) {
+                    $query->where('category', 'tradefi');
+                })
                 ->get(),
             'vcMatches' => $user->vcMatches()
                 ->with('investor')

@@ -88,14 +88,16 @@ Route::middleware(['auth'])->group(function () {
 
     // Funding routes
     Route::prefix('funding')->name('funding.')->group(function () {
-        Route::get('/', [FundingController::class, 'index'])->name('index');
+        // Internal funding data endpoint - moved off the public '/funding' path
+        Route::get('/data', [FundingController::class, 'index'])->name('index');
         Route::post('/apply', [FundingController::class, 'apply'])->name('apply');
         Route::get('/types', [FundingController::class, 'fundTypes'])->name('types');
     });
 
     // Community routes
     Route::prefix('community')->name('community.')->group(function () {
-        Route::get('/', [CommunityController::class, 'index'])->name('index');
+        // Internal community data endpoint - moved off the public '/community' path
+        Route::get('/data', [CommunityController::class, 'index'])->name('index');
         Route::post('/join/{community}', [CommunityController::class, 'join'])->name('join');
         Route::post('/mentorship/request', [CommunityController::class, 'requestMentorship'])->name('mentorship.request');
     });

@@ -215,14 +215,14 @@ export default function Dashboard({
             id: 'startup-tokenization',
             label: 'Startup Tokenization',
             type: 'route',
-            route: 'funding.index',
+            route: 'funding',
             icon: 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z'
         },
         {
             id: 'tradefi-tokenization',
             label: 'TradeFi Tokenization',
             type: 'route',
-            route: 'funding.index',
+            route: 'funding',
             icon: 'M3 3H21V21H3V3Z'
         },
         {
@@ -254,7 +254,7 @@ export default function Dashboard({
             id: 'startup-tokenization',
             title: 'Startup Tokenization',
             description: 'Apply for startup funding and tokenization support.',
-            route: 'funding.index',
+            route: 'funding',
             color: 'emerald',
             icon: 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z'
         },
@@ -262,7 +262,7 @@ export default function Dashboard({
             id: 'tradefi-tokenization',
             title: 'TradeFi Tokenization',
             description: 'Explore TradeFi tokenization opportunities and market access.',
-            route: 'funding.index',
+            route: 'funding',
             color: 'purple',
             icon: 'M3 3H21V21H3V3Z'
         },

@@ -54,6 +54,23 @@ interface SkillGroup {
   sub_skills: SubSkill[];
 }
 
+interface NapsPageProps {
+  stats?: {
+    totalRespondents: number;
+    surveysCompleted: number;
+    verifiedUsers: number;
+    statesReached: number;
+  };
+  charts?: {
+    employmentData: any[];
+    skillsData: any[];
+    productsData: any[];
+    fundingData: any[];
+    stateData: any[];
+  };
+  public?: boolean;
+}
+
 const skills = [
   { id: 1, name: 'Web Development', category: 'digital' },
   { id: 2, name: 'Graphic Design', category: 'digital' },
@@ -68,7 +85,7 @@ const products = [
   'Textile/Adire', 'Shoe Manufacturing', 'Soap Production', 'Software Development'
 ];
 
-export default function NAPSDemo() {
+export default function NAPSDemo({ stats: initialStats, charts: initialCharts, public: isPublic = false }: NapsPageProps) {
   const [currentView, setCurrentView] = useState<ViewType>('landing');
   const [surveyStep, setSurveyStep] = useState(1);
   const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
@@ -83,14 +100,14 @@ export default function NAPSDemo() {
   const [skillGroups, setSkillGroups] = useState<SkillGroup[]>([]);
   const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
 
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState(initialStats || {
     totalRespondents: 0,
     surveysCompleted: 0,
     verifiedUsers: 0,
     statesReached: 0
   });
 
-  const [chartData, setChartData] = useState<any>({
+  const [chartData, setChartData] = useState<any>(initialCharts || {
     employmentData: [],
     skillsData: [],
     productsData: [],
@@ -189,6 +206,16 @@ export default function NAPSDemo() {
       alert('Failed to download PDF. Please try again.');
     }
   };
+
+  useEffect(() => {
+    if (initialStats) {
+      setStats(initialStats);
+    }
+
+    if (initialCharts) {
+      setChartData(initialCharts);
+    }
+  }, [initialStats, initialCharts]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -420,7 +447,10 @@ export default function NAPSDemo() {
                   ✨ Register & Participate
                 </span>
               </button>
-              <button className="px-8 py-3.5 bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold rounded-lg hover:bg-white/10 hover:border-white/40 transition-all duration-300 transform hover:scale-105 text-sm">
+              <button
+                onClick={() => window.location.href = route('naps.public')}
+                className="px-8 py-3.5 bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold rounded-lg hover:bg-white/10 hover:border-white/40 transition-all duration-300 transform hover:scale-105 text-sm"
+              >
                 📊 View Dashboard
               </button>
             </div>
@@ -429,7 +459,7 @@ export default function NAPSDemo() {
 
         {/* Charts Section - Immediately Following NAP/S Banner */}
         <div className="relative z-10 px-4 py-12">
-          <AdminDashboard />
+          {isPublic ? <PublicDashboard /> : <AdminDashboard />}
         </div>
       </div>
     </>
@@ -775,12 +805,13 @@ export default function NAPSDemo() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Funding Support Needed</label>
                 <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { name: 'Traditional Loan', tooltip: 'Conventional bank loans with fixed terms and interest rates' },
-                    { name: 'TradeFi Funding', tooltip: 'Traditional finance solutions including invoice factoring and trade credit' },
-                    { name: 'Tokenization', tooltip: 'Blockchain-based funding through digital asset creation and token sales' },
-                    { name: 'Equity Funding', tooltip: 'Investment capital in exchange for ownership stake in your business' }
-                  ].map((item, i) => (
+                  {
+                    [
+                      { name: 'Invoice Financing', tooltip: 'Invoice financing (tokenized) — convert receivables into working capital. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/invoice-financing' },
+                      { name: 'Export Financing', tooltip: 'Export financing (tokenized) — support cross-border trade. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/export-financing' },
+                      { name: 'Import Financing', tooltip: 'Import financing (tokenized) — finance imports through tokenized instruments. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/import-financing' },
+                      { name: 'Startup Tokenization', tooltip: 'Startup tokenization — blockchain-based funding through digital asset creation and token sales' }
+                    ].map((item, i) => (
                     <div key={i} className="relative group">
                       <button
                         type="button"
@@ -800,7 +831,21 @@ export default function NAPSDemo() {
                       </button>
                       <div className="absolute top-full left-0 right-0 mt-2 px-4 py-3 bg-gradient-to-br from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-20 shadow-xl">
                         <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-emerald-500 dark:border-b-emerald-600"></div>
-                        <p className="text-center leading-relaxed">{item.tooltip}</p>
+                        <div className="text-center leading-relaxed">
+                          <p>{item.tooltip}</p>
+                          {item.url && (
+                            <div className="mt-2">
+                              <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noreferrer noopener"
+                                className="inline-block text-xs font-semibold underline text-white/90 hover:text-white"
+                              >
+                                Learn
+                              </a>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -908,6 +953,232 @@ export default function NAPSDemo() {
       </div>
     </div>
   );
+
+  // Public-facing dashboard for stakeholders and partners
+  const PublicDashboard = () => {
+    const featuredProducts = [...(chartData.productsData || [])]
+      .sort((a: any, b: any) => (b.value || 0) - (a.value || 0))
+      .slice(0, 6);
+
+    const featuredSkills = [...(chartData.skillsData || [])]
+      .sort((a: any, b: any) => (b.count || 0) - (a.count || 0))
+      .slice(0, 6);
+
+    const featuredFunding = [...(chartData.fundingData || [])]
+      .sort((a: any, b: any) => (b.value || 0) - (a.value || 0))
+      .slice(0, 6);
+
+    const stateSignals = [...(chartData.stateData || [])].slice(0, 6);
+
+    const compactSkillItems = featuredSkills.slice(0, 4);
+    const extraSkillItems = featuredSkills.slice(4);
+    const compactFundingItems = featuredFunding.slice(0, 4);
+    const extraFundingItems = featuredFunding.slice(4);
+    const compactStateSignals = stateSignals.slice(0, 4);
+    const extraStateSignals = stateSignals.slice(4);
+
+    const strategicPillars = [
+      {
+        title: 'Ward-level intelligence',
+        copy: 'Every response helps map local priority products and support needs from ward to national policy.',
+      },
+      {
+        title: 'OWOP readiness',
+        copy: 'The strongest product signals are converted into ward-based industrial focus areas with export potential.',
+      },
+      {
+        title: 'Quarterly tokenization pipeline',
+        copy: 'The top-performing startups are identified every quarter or half-year for support, visibility and scale-up.',
+      },
+    ];
+
+    return (
+      <div className="space-y-5">
+        <section className="mt-6 rounded-3xl border border-emerald-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-emerald-300">Public Dashboard</p>
+              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                NAP/S Public Metrics &amp; Ward Intelligence
+              </h2>
+            </div>
+            <div className="rounded-full bg-emerald-50/10 px-3 py-1 text-xs font-semibold text-emerald-200">
+              Dashboard View Only
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-3 md:grid-cols-4">
+          <div className="rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm dark:border-emerald-800 dark:bg-gray-900">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">Total respondents</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{stats.totalRespondents.toLocaleString()}</p>
+          </div>
+          <div className="rounded-2xl border border-cyan-200 bg-white p-4 shadow-sm dark:border-cyan-800 dark:bg-gray-900">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-400">States reached</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{stats.statesReached}</p>
+          </div>
+          <div className="rounded-2xl border border-violet-200 bg-white p-4 shadow-sm dark:border-violet-800 dark:bg-gray-900">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600 dark:text-violet-400">Surveys completed</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{stats.surveysCompleted.toLocaleString()}</p>
+          </div>
+          <div className="rounded-2xl border border-amber-200 bg-white p-4 shadow-sm dark:border-amber-800 dark:bg-gray-900">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600 dark:text-amber-400">Verified users</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{stats.verifiedUsers.toLocaleString()}</p>
+          </div>
+        </section>
+
+        <section className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Product signals</p>
+                <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Strongest ward-level product opportunities</h3>
+              </div>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                OWOP focus
+              </span>
+            </div>
+            <div className="mt-5 h-60">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={featuredProducts}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                  <XAxis dataKey="name" tick={{ fontSize: 10 }} interval={0} angle={-15} textAnchor="end" />
+                  <YAxis tick={{ fontSize: 10 }} />
+                  <Tooltip contentStyle={{ fontSize: '12px' }} />
+                  <Bar dataKey="value" fill="#059669" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <details className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
+            <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-400">
+              Strategic pillars · Learn more
+            </summary>
+            <div className="mt-4 space-y-3">
+              {strategicPillars.map((pillar) => (
+                <div key={pillar.title} className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                  <h4 className="font-semibold text-sm text-slate-900 dark:text-white">{pillar.title}</h4>
+                  <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">{pillar.copy}</p>
+                </div>
+              ))}
+            </div>
+          </details>
+        </section>
+
+        <section className="grid gap-5 lg:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Skill clusters</p>
+                <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Capabilities across the network</h3>
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              {compactSkillItems.map((skill: any, index: number) => (
+                <div key={skill.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{skill.name}</span>
+                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">{skill.count} signals</span>
+                </div>
+              ))}
+              {extraSkillItems.length > 0 && (
+                <details className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/60">
+                  <summary className="cursor-pointer font-semibold text-slate-900 dark:text-white">View {extraSkillItems.length} more skills</summary>
+                  <div className="mt-3 space-y-2">
+                    {extraSkillItems.map((skill: any, index: number) => (
+                      <div key={skill.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
+                        <span className="text-sm text-slate-700 dark:text-slate-200">{skill.name}</span>
+                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">{skill.count} signals</span>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-400">Funding signals</p>
+                <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Support priorities</h3>
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              {compactFundingItems.map((item: any, index: number) => (
+                <div key={item.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{item.name}</span>
+                  <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">{item.value} mentions</span>
+                </div>
+              ))}
+              {extraFundingItems.length > 0 && (
+                <details className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/60">
+                  <summary className="cursor-pointer font-semibold text-slate-900 dark:text-white">View {extraFundingItems.length} more funding items</summary>
+                  <div className="mt-3 space-y-2">
+                    {extraFundingItems.map((item: any, index: number) => (
+                      <div key={item.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
+                        <span className="text-sm text-slate-700 dark:text-slate-200">{item.name}</span>
+                        <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">{item.value} mentions</span>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
+          <details className="group" open>
+            <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-400">
+              <span>State reach</span>
+              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">Top 6 states</span>
+            </summary>
+            <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              {compactStateSignals.map((state: any) => (
+                <div key={state.state} className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/60">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-semibold text-slate-900 dark:text-white">{state.state}</span>
+                    <span className="rounded-full bg-cyan-50 px-2 py-0.5 text-[11px] font-semibold text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300">{state.respondents}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {extraStateSignals.length > 0 && (
+              <details className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/60">
+                <summary className="cursor-pointer font-semibold text-slate-900 dark:text-white">View {extraStateSignals.length} more states</summary>
+                <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                  {extraStateSignals.map((state: any) => (
+                    <div key={state.state} className="rounded-xl border border-slate-200 bg-white p-3 text-sm dark:border-slate-700 dark:bg-slate-900/70">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-slate-900 dark:text-white">{state.state}</span>
+                        <span className="rounded-full bg-cyan-50 px-2 py-0.5 text-[11px] font-semibold text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300">{state.respondents}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+          </details>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
+          <details className="group" open>
+            <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">
+              <span>Ward-to-product linkage</span>
+              <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">Public planning insight</span>
+            </summary>
+            <div className="mt-4 text-sm text-slate-600 dark:text-slate-300">
+              Explore how ward-level demand maps to product demand and LGA industrial priorities.
+            </div>
+            <div className="mt-4">
+              <LgaProductsLinkage />
+            </div>
+          </details>
+        </section>
+      </div>
+    );
+  };
 
   // Admin Dashboard
   const AdminDashboard = () => {
@@ -1523,14 +1794,20 @@ export default function NAPSDemo() {
     <NapsLayout>
       <Head title="NAPS Survey" />
       <div className="w-full">
-        {currentView === 'landing' && <LandingPage />}
-        {currentView === 'register' && <RegistrationPage />}
-        {currentView === 'survey' && <SurveyPage />}
-        {currentView === 'complete' && <CompletePage />}
-        {currentView === 'analytics-employment' && <EmploymentAnalytics />}
-        {currentView === 'analytics-products' && <ProductsAnalytics />}
-        {currentView === 'analytics-skills' && <SkillsAnalytics />}
-        {currentView === 'analytics-funding' && <FundingAnalytics />}
+        {isPublic ? (
+          <PublicDashboard />
+        ) : (
+          <>
+            {currentView === 'landing' && <LandingPage />}
+            {currentView === 'register' && <RegistrationPage />}
+            {currentView === 'survey' && <SurveyPage />}
+            {currentView === 'complete' && <CompletePage />}
+            {currentView === 'analytics-employment' && <EmploymentAnalytics />}
+            {currentView === 'analytics-products' && <ProductsAnalytics />}
+            {currentView === 'analytics-skills' && <SkillsAnalytics />}
+            {currentView === 'analytics-funding' && <FundingAnalytics />}
+          </>
+        )}
         <AllDataModal />
       </div>
     </NapsLayout>

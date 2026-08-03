@@ -46,25 +46,41 @@ export default function Funding() {
 
                     <div className="space-y-8">
                         <section>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Access to Funding</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Startup Tokenization</h2>
                             <p className="text-gray-700 dark:text-gray-300 mb-4">
-                                Eligible youth entrepreneurs can access funding through:
+                                Top startup and project candidates from the NAP/S public dashboard are selected through state and partner networks. These initiatives are grouped by state, LGA and ward before tokenization support is offered.
                             </p>
-                            <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                                <li>Competitive application processes</li>
-                                <li>Direct institutional partnerships</li>
-                                <li>Mentorship-guided access programs</li>
-                                <li>Skills-linked financing mechanisms</li>
-                            </ol>
+                            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                                <li>Top 3 startup/projects from each state cluster are surfaced for support.</li>
+                                <li>Partner networks and community squads advance applications together.</li>
+                                <li>Forms and proposals are submitted through state or community-led channels.</li>
+                            </ul>
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Funding Terms</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">TradeFi Tokenization</h2>
+                            <p className="text-gray-700 dark:text-gray-300 mb-4">
+                                Support for working capital and trade finance is provided through three tokenized product variants, making finance more affordable and accessible for existing businesses and growth-stage ventures.
+                            </p>
                             <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                                <li>Flexible repayment schedules aligned with business growth</li>
-                                <li>Competitive interest rates and fee structures</li>
-                                <li>Equity, debt, and hybrid financing options</li>
-                                <li>Technical support and business development services</li>
+                                <li>Tokenized Invoice Financing for receivable-backed liquidity.</li>
+                                <li>Tokenized Export Financing for export-ready producers and supply chains.</li>
+                                <li>Tokenized Import Financing for materials sourcing and working capital.</li>
+                            </ul>
+                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                                Fees are designed to be competitive, with an objective of roughly half the cost of comparable market providers, including LuxuryX-type services.
+                            </p>
+                        </section>
+
+                        <section>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Community & Partner-led Applications</h2>
+                            <p className="text-gray-700 dark:text-gray-300 mb-4">
+                                Individual entrepreneurs cannot submit tokenization applications on their own. The program encourages coordinated proposals through mentors, incubators, state networks and community hubs.
+                            </p>
+                            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                                <li>Partner-led teams ensure projects are market-ready and compliant.</li>
+                                <li>Community hubs help identify the highest-impact local proposals.</li>
+                                <li>State / LGA / ward-based alignment helps connect finance to production.</li>
                             </ul>
                         </section>
                     </div>
