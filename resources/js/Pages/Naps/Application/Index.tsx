@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NapsLayout from '@/Layouts/Naps/NapsLayout';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import napsApi from '@/services/napsApi';
 import RegistrationFormComponent from './Partials/RegistrationFormComponent';
 import LgaProductsLinkage from '../Dashboard/LgaProductsLinkage';
 
 const COLORS = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
-type ViewType = 'landing' | 'register' | 'survey' | 'complete' | 'admin' | 'analytics-employment' | 'analytics-products' | 'analytics-skills' | 'analytics-funding';
+type ViewType = 'landing' | 'public' | 'register' | 'survey' | 'complete' | 'admin' | 'analytics-employment' | 'analytics-products' | 'analytics-skills' | 'analytics-funding';
 
 interface SurveyData {
   firstName: string;
@@ -86,7 +86,7 @@ const products = [
 ];
 
 export default function NAPSDemo({ stats: initialStats, charts: initialCharts, public: isPublic = false }: NapsPageProps) {
-  const [currentView, setCurrentView] = useState<ViewType>('landing');
+  const [currentView, setCurrentView] = useState<ViewType>(isPublic ? 'public' : 'landing');
   const [surveyStep, setSurveyStep] = useState(1);
   const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -995,15 +995,26 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
     return (
       <div className="space-y-5">
         <section className="mt-6 rounded-3xl border border-emerald-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-emerald-300">Public Dashboard</p>
               <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
                 NAP/S Public Metrics &amp; Ward Intelligence
               </h2>
             </div>
-            <div className="rounded-full bg-emerald-50/10 px-3 py-1 text-xs font-semibold text-emerald-200">
-              Dashboard View Only
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                href="/owop-mandate"
+                className="inline-flex items-center justify-center rounded-full border border-emerald-300/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-100"
+              >
+                Learn About O.W.O.P/NAP
+              </Link>
+              <button
+                onClick={() => setCurrentView('register')}
+                className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+              >
+                Take The Poll
+              </button>
             </div>
           </div>
         </section>
@@ -1160,6 +1171,198 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               </details>
             )}
           </details>
+        </section>
+
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+            <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Employment Distribution</h2>
+            {chartData.employmentData && chartData.employmentData.length > 0 ? (
+              <>
+                <ResponsiveContainer width="100%" height={140}>
+                  <PieChart>
+                    <Pie
+                      data={chartData.employmentData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={55}
+                      isAnimationActive={false}
+                    >
+                      {chartData.employmentData.map((_: any, i: number) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="mt-2 space-y-1">
+                  {chartData.employmentData.slice(0, 4).map((item: any, i: number) => (
+                    <div key={i} className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                      <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
+                      <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+                {chartData.employmentData.length > 4 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedDataModal('employment');
+                    }}
+                    className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                  >
+                    Visualize All {chartData.employmentData.length} Items
+                  </button>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+            )}
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+            <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Product Distribution</h2>
+            {chartData.productsData && chartData.productsData.length > 0 ? (
+              <>
+                <ResponsiveContainer width="100%" height={140}>
+                  <PieChart>
+                    <Pie
+                      data={chartData.productsData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={35}
+                      outerRadius={55}
+                      paddingAngle={1}
+                      dataKey="value"
+                      isAnimationActive={false}
+                    >
+                      {chartData.productsData.map((_: any, i: number) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="mt-2 space-y-1">
+                  {chartData.productsData.slice(0, 4).map((item: any, i: number) => (
+                    <div key={i} className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                      <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
+                      <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+                {chartData.productsData.length > 4 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedDataModal('products');
+                    }}
+                    className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                  >
+                    Visualize All {chartData.productsData.length} Items
+                  </button>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+            )}
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+            <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Skills Distribution</h2>
+            {chartData.skillsData && chartData.skillsData.length > 0 ? (
+              <>
+                <ResponsiveContainer width="100%" height={140}>
+                  <PieChart>
+                    <Pie
+                      data={chartData.skillsData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={35}
+                      outerRadius={55}
+                      paddingAngle={1}
+                      dataKey="count"
+                      isAnimationActive={false}
+                    >
+                      {chartData.skillsData.map((_: any, i: number) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="mt-2 space-y-1">
+                  {chartData.skillsData.slice(0, 4).map((item: any, i: number) => (
+                    <div key={i} className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                      <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name || `Skill ${item.id}`}</span>
+                      <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.count}</span>
+                    </div>
+                  ))}
+                </div>
+                {chartData.skillsData.length > 4 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedDataModal('skills');
+                    }}
+                    className="mt-2 w-full text-center text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 py-1 rounded hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors"
+                  >
+                    Visualize All {chartData.skillsData.length} Items
+                  </button>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+            )}
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+            <h2 className="text-base font-semibold mb-3 text-gray-800 dark:text-gray-100 line-clamp-2">Funding Support</h2>
+            {chartData.fundingData && chartData.fundingData.length > 0 ? (
+              <>
+                <ResponsiveContainer width="100%" height={140}>
+                  <PieChart>
+                    <Pie
+                      data={chartData.fundingData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={55}
+                      isAnimationActive={false}
+                    >
+                      {chartData.fundingData.map((_: any, i: number) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="mt-2 space-y-1">
+                  {chartData.fundingData.slice(0, 4).map((item: any, i: number) => (
+                    <div key={i} className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                      <span className="text-gray-700 dark:text-gray-300 truncate flex-1">{item.name}</span>
+                      <span className="text-gray-500 dark:text-gray-400 flex-shrink-0">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+                {chartData.fundingData.length > 4 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedDataModal('funding');
+                    }}
+                    className="mt-2 w-full text-center text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 py-1 rounded hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                  >
+                    Visualize All {chartData.fundingData.length} Items
+                  </button>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No data</p>
+            )}
+          </div>
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
@@ -1792,10 +1995,15 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
 
   return (
     <NapsLayout>
-      <Head title="NAPS Survey" />
+      <Head title={isPublic ? 'NAPS Public Dashboard' : 'NAPS Survey'} />
       <div className="w-full">
         {isPublic ? (
-          <PublicDashboard />
+          <>
+            {currentView === 'public' && <PublicDashboard />}
+            {currentView === 'register' && <RegistrationPage />}
+            {currentView === 'survey' && <SurveyPage />}
+            {currentView === 'complete' && <CompletePage />}
+          </>
         ) : (
           <>
             {currentView === 'landing' && <LandingPage />}
