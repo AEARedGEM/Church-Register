@@ -31,8 +31,7 @@ Route::prefix('api')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/naps', [NapsApiController::class, 'dashboard'])->name('naps.dashboard');
-    Route::get('/naps/dashboard', [NapsApiController::class, 'dashboard'])->name('naps.index');
+    Route::get('/naps', [NapsApiController::class, 'publicDashboard'])->name('naps.dashboard');
 });
 
 // Public dashboard for stakeholders and the public (read-only overview)

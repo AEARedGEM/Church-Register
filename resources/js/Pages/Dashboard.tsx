@@ -208,7 +208,7 @@ export default function Dashboard({
             id: 'naps',
             label: 'NAP Survey',
             type: 'route',
-            route: 'naps.index',
+            route: 'naps.public',
             icon: 'M9 12L11 14.5L21 4.5M3 3H21V21H3V3Z'
         },
         {
@@ -245,8 +245,8 @@ export default function Dashboard({
         {
             id: 'naps',
             title: 'NAP Survey',
-            description: 'Launch the survey experience and review survey progress.',
-            route: 'naps.index',
+            description: 'Open the public survey dashboard and review community insights.',
+            route: 'naps.public',
             color: 'emerald',
             icon: 'M9 12L11 14.5L21 4.5M3 3H21V21H3V3Z'
         },

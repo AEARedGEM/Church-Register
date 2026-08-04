@@ -146,8 +146,7 @@ export default function Welcome({
                                 <span className="bg-gradient-to-r from-slate-900 via-emerald-500 to-emerald-500 bg-clip-text text-transparent drop-shadow-lg">Industrial Future</span>
                             </h1>
                             <p className="text-slate-200 mb-6 max-w-2xl mx-auto leading-relaxed backdrop-blur-sm bg-slate-900/70 dark:bg-slate-950/80 rounded-lg p-5 border border-slate-800">
-                                An Industrialization Programme and a Digital Portal connecting Startups, SMEs, Capital, Investments, and Initiatives
-                                to catalyze innovation, Skills Development, and Industrialization Financing across Nigeria.
+                                A National Industrialization Programme and Digital Portal Connecting Youth Entrepreneurs, Startups, SMEs, Communities, Capital Providers, Investors, Partners, and Initiatives to Catalyze Innovation, Skills Development, Enterprise Growth, Industrial Financing, and Inclusive Value-Chain Transformation Across Nigeria.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center">
                                 <Link

@@ -3,7 +3,6 @@
 use App\Enum\RolesEnum;
 use App\Http\Controllers\AdminTrainingController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\NapsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\FundingController;
@@ -151,8 +150,6 @@ Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
     Route::resource('users', UserController::class);
     Route::post('users/export', [UserController::class, 'export'])->name('users.export');
 });
-
-Route::get('/naps', [NapsController::class, 'dashboard'])->middleware('auth')->name('naps.index');
 
 });
 

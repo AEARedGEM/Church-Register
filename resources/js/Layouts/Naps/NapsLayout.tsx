@@ -371,7 +371,7 @@ export default function NapsLayout({ children }: ModernLayoutProps): JSX.Element
           <nav className="space-y-2 px-4 pb-4 pt-2">
             {[
                 { id: 'overview', label: 'Overview', type: 'route', route: 'dashboard', icon: 'M3 7V5C3 3.9 3.9 3 5 3H19C20.1 3 21 3.9 21 5V7M3 7L12 12L21 7M3 7V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V7' },
-              { id: 'naps', label: 'NAP Survey', type: 'route', route: 'naps.index', icon: 'M9 12L11 14.5L21 4.5M3 3H21V21H3V3Z' },
+              { id: 'naps', label: 'NAP Survey', type: 'route', route: 'naps.public', icon: 'M9 12L11 14.5L21 4.5M3 3H21V21H3V3Z' },
               { id: 'startup-tokenization', label: 'Startup Tokenization', type: 'route', route: 'funding', icon: 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z' },
               { id: 'tradefi-tokenization', label: 'TradeFi Tokenization', type: 'route', route: 'funding', icon: 'M3 3H21V21H3V3Z' },
               { id: 'training', label: 'Training', type: 'route', route: 'training.dashboard', icon: 'M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3Z' },

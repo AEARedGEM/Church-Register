@@ -716,20 +716,6 @@ class NapsApiController extends Controller
     }
 
     /**
-     * Dashboard page render for Inertia
-     */
-    public function dashboard()
-    {
-        $stats = $this->getDashboardStats();
-        $statsData = json_decode($stats->getContent(), true);
-
-        return Inertia::render('Naps/Application/Index', [
-            'stats' => $statsData['stats'],
-            'charts' => $statsData['charts'],
-        ]);
-    }
-
-    /**
      * Public dashboard view for unauthenticated users and stakeholders
      */
     public function publicDashboard()
