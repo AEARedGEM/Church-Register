@@ -26,6 +26,7 @@ interface ChartData {
     employmentData: any[];
     skillsData: any[];
     productsData: any[];
+    fundingData: any[];
     stateData: any[];
 }
 

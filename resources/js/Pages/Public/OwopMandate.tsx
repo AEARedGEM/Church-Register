@@ -67,10 +67,10 @@ export default function OwopMandate() {
                                     Visit the NAP/S dashboard to participate in the survey and help shape the priorities for your ward and community.
                                 </p>
                                 <Link
-                                    href="/naps/public"
+                                    href={route('dashboard')}
                                     className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-700"
                                 >
-                                    Go to NAP/S Dashboard
+                                    Go to Main Dashboard
                                 </Link>
                             </section>
                         </div>
