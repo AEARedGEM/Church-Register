@@ -22,9 +22,9 @@ class NapsApiController extends Controller
     /**
      * Get survey questions by section
      */
-    public function getSurveyQuestions($section = null)
+    public function getSurveyQuestions(?string $section = null)
     {
-        $query = NapsSurveyQuestion::where('is_active', true)
+        $query = NapsSurveyQuestion::query()->where('is_active', true)
             ->orderBy('order')
             ->orderBy('id');
 
@@ -126,16 +126,16 @@ class NapsApiController extends Controller
     public function getDashboardStats()
     {
         try {
-            $totalRespondents = NapsRespondent::count();
-            $surveysCompleted = NapsRespondent::completed()->count();
-            $verifiedUsers = NapsRespondent::whereHas('user', function($q) {
+            $totalRespondents = NapsRespondent::query()->count('*');
+            $surveysCompleted = NapsRespondent::query()->completed()->count('*');
+            $verifiedUsers = NapsRespondent::query()->whereHas('user', function($q) {
                 $q->whereNotNull('verified_at');
             })->count();
 
-            $statesReached = NapsRespondent::distinct('state')->count('state');
+            $statesReached = NapsRespondent::query()->distinct('state')->count('state');
 
             // Employment distribution
-            $employmentData = NapsRespondent::select('employment_status')
+            $employmentData = NapsRespondent::query()->select('employment_status')
                 ->selectRaw('count(*) as count')
                 ->groupBy('employment_status')
                 ->get()
@@ -152,7 +152,7 @@ class NapsApiController extends Controller
 
             // Skills distribution - Get skill names from database
             $skillsData = [];
-            $respondents = NapsRespondent::whereNotNull('skills')->get();
+            $respondents = NapsRespondent::query()->whereNotNull('skills', 'and')->get();
             $skillCounts = [];
 
             // Get skill ID to name mapping from database (all 65 skills)
@@ -201,7 +201,7 @@ class NapsApiController extends Controller
 
             // Products interest (Preferred Product)
             $productsData = [];
-            $respondents = NapsRespondent::whereNotNull('products_interest')->get();
+            $respondents = NapsRespondent::query()->whereNotNull('products_interest', 'and')->get();
             $productCounts = [];
             foreach ($respondents as $respondent) {
                 if (is_array($respondent->products_interest)) {
@@ -223,7 +223,7 @@ class NapsApiController extends Controller
 
             // Funding Support Needed distribution
             $fundingData = [];
-            $respondents = NapsRespondent::whereNotNull('funding_needs')->get();
+            $respondents = NapsRespondent::query()->whereNotNull('funding_needs', 'and')->get();
             $fundingCounts = [];
             foreach ($respondents as $respondent) {
                 if (is_array($respondent->funding_needs)) {
@@ -244,7 +244,7 @@ class NapsApiController extends Controller
             }
 
             // State distribution
-            $stateData = NapsRespondent::select('state')
+            $stateData = NapsRespondent::query()->select('state')
                 ->selectRaw('count(*) as count')
                 ->groupBy('state')
                 ->orderByDesc('count')
@@ -274,7 +274,7 @@ class NapsApiController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            \Log::error('NAPS Dashboard Stats Error: ' . $e->getMessage());
+            Log::error('NAPS Dashboard Stats Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch statistics',
@@ -342,7 +342,7 @@ class NapsApiController extends Controller
     /**
      * Get single respondent details
      */
-    public function getRespondent($id)
+    public function getRespondent(int|string $id)
     {
         try {
             $respondent = NapsRespondent::with(['user', 'responses.question'])
@@ -385,7 +385,7 @@ class NapsApiController extends Controller
     /**
      * Get products for a specific sector
      */
-    public function getSectorProducts($sectorId)
+    public function getSectorProducts(int|string $sectorId)
     {
         try {
             $config = require base_path('app/Config/OwopSectors.php');
@@ -422,13 +422,13 @@ class NapsApiController extends Controller
      * Get OWOP prioritization for a specific ward
      * Returns top-3 products recommended for the ward based on scoring model
      */
-    public function getWardOwopPriorities($state, $lga, $ward)
+    public function getWardOwopPriorities(string $state, string $lga, string $ward)
     {
         try {
             $config = require base_path('app/Config/OwopSectors.php');
 
             // Get all respondents from this ward
-            $respondents = NapsRespondent::where('state', $state)
+            $respondents = NapsRespondent::query()->where('state', $state)
                 ->where('lga', $lga)
                 ->where('ward', $ward)
                 ->get();
@@ -527,8 +527,8 @@ class NapsApiController extends Controller
                 $score += $resourceScore * $scoringModel['natural_resource_alignment'] * 100;
 
                 // Market demand (15%) - based on overall product popularity
-                $marketDemandCount = NapsRespondent::whereJsonContains('products_interest', $product)->count();
-                $marketScore = $marketDemandCount / max(NapsRespondent::count(), 1);
+                $marketDemandCount = NapsRespondent::query()->whereJsonContains('products_interest', $product, 'and', false)->count('*');
+                $marketScore = $marketDemandCount / max(NapsRespondent::query()->count('*'), 1);
                 $score += $marketScore * $scoringModel['market_demand'] * 100;
 
                 // Infrastructure proximity (10%) - base score for urban areas
@@ -565,7 +565,7 @@ class NapsApiController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            \Log::error('OWOP Priorities Error: ' . $e->getMessage());
+            Log::error('OWOP Priorities Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to calculate ward priorities',
@@ -577,7 +577,7 @@ class NapsApiController extends Controller
     /**
      * Helper function to get region products
      */
-    private function getRegionProducts($state)
+    private function getRegionProducts(string $state)
     {
         $config = require base_path('app/Config/OwopSectors.php');
         $regions = $config['regional_resources'];
@@ -683,14 +683,14 @@ class NapsApiController extends Controller
             NapsStatistics::updateOrCreate(
                 ['metric_key' => 'total_respondents'],
                 [
-                    'metric_value' => NapsRespondent::count(),
+                    'metric_value' => NapsRespondent::query()->count('*'),
                     'category' => 'general',
                     'recorded_at' => now()
                 ]
             );
 
             // Update by state
-            $stateCount = NapsRespondent::where('state', $respondent->state)->count();
+            $stateCount = NapsRespondent::query()->where('state', $respondent->state)->count();
             NapsStatistics::updateOrCreate(
                 ['metric_key' => 'respondents_by_state', 'category' => $respondent->state],
                 [
@@ -701,7 +701,7 @@ class NapsApiController extends Controller
 
             // Update by employment status
             if ($respondent->employment_status) {
-                $employmentCount = NapsRespondent::where('employment_status', $respondent->employment_status)->count();
+                $employmentCount = NapsRespondent::query()->where('employment_status', $respondent->employment_status)->count();
                 NapsStatistics::updateOrCreate(
                     ['metric_key' => 'respondents_by_employment', 'category' => $respondent->employment_status],
                     [
@@ -775,7 +775,7 @@ class NapsApiController extends Controller
     public function getSkillsDistribution()
     {
         try {
-            $respondents = NapsRespondent::whereNotNull('skills')->get();
+            $respondents = NapsRespondent::query()->whereNotNull('skills', 'and')->get();
             $skillCounts = [];
 
             // Get skill ID to name mapping from database
@@ -836,7 +836,7 @@ class NapsApiController extends Controller
     public function getStates()
     {
         try {
-            $states = \App\Models\State::orderBy('name')->get(['id', 'name', 'abbreviation']);
+            $states = \App\Models\State::query()->orderBy('name')->get(['id', 'name', 'abbreviation']);
 
             if ($states->isEmpty()) {
                 $states = collect(LocationService::getStates())->map(function ($stateName) {
@@ -864,7 +864,7 @@ class NapsApiController extends Controller
     /**
      * Get LGAs by state
      */
-    public function getLgasByState($stateId)
+    public function getLgasByState(int|string $stateId)
     {
         try {
             if (!is_numeric($stateId)) {
@@ -878,13 +878,13 @@ class NapsApiController extends Controller
                     ];
                 });
             } else {
-                $lgas = \App\Models\LGA::where('state_id', $stateId)
-                    ->orderBy('sort_order')
-                    ->orderBy('name')
+                $lgas = \App\Models\LGA::query()->where('state_id', $stateId)
+                    ->orderBy('sort_order', 'asc')
+                    ->orderBy('name', 'asc')
                     ->get(['id', 'name', 'sort_order']);
 
                 if ($lgas->isEmpty()) {
-                    $state = \App\Models\State::find($stateId);
+                    $state = \App\Models\State::query()->find($stateId);
                     if ($state) {
                         $lgaNames = LocationService::getLGAsByState($state->name);
                         $lgas = collect($lgaNames)->map(function ($lgaName, $index) {
@@ -914,7 +914,7 @@ class NapsApiController extends Controller
     /**
      * Get wards by LGA
      */
-    public function getWardsByLga($lgaId, Request $request)
+    public function getWardsByLga(int|string $lgaId, Request $request)
     {
         try {
             if (!is_numeric($lgaId)) {
@@ -938,13 +938,13 @@ class NapsApiController extends Controller
                     ];
                 });
             } else {
-                $wards = \App\Models\Ward::where('lga_id', $lgaId)
-                    ->orderBy('sort_order')
-                    ->orderBy('name')
+                $wards = \App\Models\Ward::query()->where('lga_id', $lgaId)
+                    ->orderBy('sort_order', 'asc')
+                    ->orderBy('name', 'asc')
                     ->get(['id', 'name', 'sort_order']);
 
                 if ($wards->isEmpty()) {
-                    $lga = \App\Models\LGA::find($lgaId);
+                    $lga = \App\Models\LGA::query()->find($lgaId);
                     if ($lga) {
                         $wardNames = LocationService::getWardsByStateAndLga($lga->state->name ?? '', $lga->name);
                         $wards = collect($wardNames)->map(function ($wardName, $index) {
@@ -981,7 +981,7 @@ class NapsApiController extends Controller
                 ->get(['id', 'state_id', 'name']);
 
             $lgaProducts = [];
-            $respondents = NapsRespondent::whereNotNull('products_interest')->get();
+            $respondents = NapsRespondent::query()->whereNotNull('products_interest', 'and')->get();
 
             if ($lgas->isEmpty()) {
                 $grouped = $respondents->groupBy(function ($respondent) {
@@ -1024,19 +1024,19 @@ class NapsApiController extends Controller
                 }
             } else {
                 foreach ($lgas as $lga) {
-                    $wardIds = \App\Models\Ward::where('lga_id', $lga->id)->pluck('id');
+                    $wardIds = \App\Models\Ward::query()->where('lga_id', $lga->id)->pluck('id');
                     $respondentsForLga = collect();
 
                     if ($wardIds->isNotEmpty()) {
-                        $respondentsForLga = NapsRespondent::whereIn('ward', $wardIds)
-                            ->whereNotNull('products_interest')
+                        $respondentsForLga = NapsRespondent::query()->whereIn('ward', $wardIds, 'and', false)
+                            ->whereNotNull('products_interest', 'and')
                             ->get();
                     }
 
                     if ($respondentsForLga->isEmpty()) {
-                        $respondentsForLga = NapsRespondent::where('state', $lga->state->name ?? '')
+                        $respondentsForLga = NapsRespondent::query()->where('state', $lga->state->name ?? '')
                             ->where('lga', $lga->name)
-                            ->whereNotNull('products_interest')
+                            ->whereNotNull('products_interest', 'and')
                             ->get();
                     }
 
@@ -1090,10 +1090,10 @@ class NapsApiController extends Controller
     /**
      * Get products for a specific LGA
      */
-    public function getLgaProducts($lgaId)
+    public function getLgaProducts(int|string $lgaId)
     {
         try {
-            $lga = \App\Models\LGA::find($lgaId);
+            $lga = \App\Models\LGA::find($lgaId, ['*']);
             if (!$lga) {
                 return response()->json([
                     'success' => false,
@@ -1102,18 +1102,18 @@ class NapsApiController extends Controller
             }
 
             // Get all wards in this LGA
-            $wardIds = \App\Models\Ward::where('lga_id', $lgaId)->pluck('id');
+            $wardIds = \App\Models\Ward::query()->where('lga_id', $lgaId)->pluck('id');
 
             // Get all respondents from these wards
-            $respondents = NapsRespondent::whereIn('ward', $wardIds)
-                ->whereNotNull('products_interest')
+            $respondents = NapsRespondent::query()->whereIn('ward', $wardIds, 'and', false)
+                ->whereNotNull('products_interest', 'and')
                 ->get();
 
             $productCounts = [];
             $wardProductData = [];
 
             foreach ($respondents as $respondent) {
-                $wardName = \App\Models\Ward::find($respondent->ward)->name ?? 'Unknown';
+                $wardName = \App\Models\Ward::find($respondent->ward, ['*'])->name ?? 'Unknown';
 
                 if (is_array($respondent->products_interest)) {
                     foreach ($respondent->products_interest as $product) {
@@ -1157,12 +1157,12 @@ class NapsApiController extends Controller
     public function getChartsSummary()
     {
         try {
-            $respondents = NapsRespondent::all();
+            $respondents = NapsRespondent::query()->count('*');
 
             // Skills data for compact display
             $skillsData = [];
             $skillCounts = [];
-            $respondents = NapsRespondent::whereNotNull('skills')->get();
+            $respondents = NapsRespondent::query()->whereNotNull('skills', 'and')->get();
 
             foreach ($respondents as $respondent) {
                 if (is_array($respondent->skills)) {
@@ -1179,14 +1179,14 @@ class NapsApiController extends Controller
                 $skillsData[] = [
                     'id' => $skillId,
                     'count' => $count,
-                    'percentage' => round(($count / NapsRespondent::count()) * 100, 1)
+                    'percentage' => round(($count / NapsRespondent::query()->count('*')) * 100, 1)
                 ];
             }
 
             // Products data for compact display
             $productsData = [];
             $productCounts = [];
-            $respondents = NapsRespondent::whereNotNull('products_interest')->get();
+            $respondents = NapsRespondent::query()->whereNotNull('products_interest', 'and')->get();
 
             foreach ($respondents as $respondent) {
                 if (is_array($respondent->products_interest)) {
@@ -1205,7 +1205,7 @@ class NapsApiController extends Controller
                 $productsData[] = [
                     'name' => $product,
                     'count' => $count,
-                    'percentage' => round(($count / NapsRespondent::count()) * 100, 1)
+                    'percentage' => round(($count / NapsRespondent::query()->count()) * 100, 1)
                 ];
             }
 

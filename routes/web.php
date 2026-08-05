@@ -8,11 +8,13 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\FundingController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\NapsApiController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PublicPageController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -38,6 +40,7 @@ Route::get('/program', [PublicPageController::class, 'program'])->name('program'
 Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
 Route::get('/funding', [PublicPageController::class, 'funding'])->name('funding');
 Route::get('/owop-mandate', [PublicPageController::class, 'owopMandate'])->name('owop-mandate');
+Route::get('/naps', [NapsApiController::class, 'publicDashboard'])->name('naps-public');
 Route::get('/ecosystem', [PublicPageController::class, 'ecosystem'])->name('ecosystem');
 Route::get('/impact', [PublicPageController::class, 'impact'])->name('impact');
 
@@ -161,7 +164,7 @@ Route::prefix('api')->group(function () {
 
 // Debug route for cache clearing (remove after use)
 Route::get('/debug/clear-cache', function () {
-    if (auth()->check() && auth()->user()->hasRole('super_admin|admin')) {
+    if (Auth::check() && Auth::user()?->hasRole('super_admin|admin')) {
         \Illuminate\Support\Facades\Artisan::call('route:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         return 'Routes and caches cleared successfully';
