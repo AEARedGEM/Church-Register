@@ -40,7 +40,14 @@ Route::get('/program', [PublicPageController::class, 'program'])->name('program'
 Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
 Route::get('/funding', [PublicPageController::class, 'funding'])->name('funding');
 Route::get('/owop-mandate', [PublicPageController::class, 'owopMandate'])->name('owop-mandate');
-Route::get('/naps', [NapsApiController::class, 'publicDashboard'])->name('naps-public');
+// Public survey/dashboard route: render the multi-step NAPS application index
+// and default to the registration view so the "Take The Poll" CTA opens the full form.
+Route::get('/survey', function () {
+    return Inertia::render('Naps/Application/Index', [
+        'public' => true,
+        'initialView' => 'register',
+    ]);
+})->name('survey-public');
 Route::get('/ecosystem', [PublicPageController::class, 'ecosystem'])->name('ecosystem');
 Route::get('/impact', [PublicPageController::class, 'impact'])->name('impact');
 

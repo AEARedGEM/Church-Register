@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
 import NapsLayout from '@/Layouts/Naps/NapsLayout';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import napsApi from '@/services/napsApi';
 import RegistrationFormComponent from './Partials/RegistrationFormComponent';
 import LgaProductsLinkage from '../Dashboard/LgaProductsLinkage';
@@ -69,6 +69,7 @@ interface NapsPageProps {
     stateData: any[];
   };
   public?: boolean;
+  initialView?: ViewType;
 }
 
 const skills = [
@@ -85,8 +86,9 @@ const products = [
   'Textile/Adire', 'Shoe Manufacturing', 'Soap Production', 'Software Development'
 ];
 
-export default function NAPSDemo({ stats: initialStats, charts: initialCharts, public: isPublic = false }: NapsPageProps) {
-  const [currentView, setCurrentView] = useState<ViewType>(isPublic ? 'public' : 'landing');
+export default function NAPSDemo({ stats: initialStats, charts: initialCharts, public: isPublic = false, initialView }: NapsPageProps) {
+  const startingView: ViewType = initialView ?? (isPublic ? 'public' : 'landing');
+  const [currentView, setCurrentView] = useState<ViewType>(startingView);
   const [surveyStep, setSurveyStep] = useState(1);
   const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -942,8 +944,8 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
 
           <button
             onClick={() => {
-              setCurrentView('landing');
-              setSurveyStep(1);
+              // Ensure user returns to the dashboard home page
+              router.visit(route('dashboard'));
             }}
             className="px-8 py-3 bg-emerald-600 dark:bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
           >

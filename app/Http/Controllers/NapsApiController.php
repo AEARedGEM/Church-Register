@@ -718,15 +718,15 @@ class NapsApiController extends Controller
     /**
      * Public dashboard view for unauthenticated users and stakeholders
      */
-    public function publicDashboard()
+    public function publicDashboard(Request $request)
     {
+        // Serve a single, dedicated public survey entry page to avoid duplicate dashboard UIs.
         $stats = $this->getDashboardStats();
         $statsData = json_decode($stats->getContent(), true);
 
-        return Inertia::render('Naps/Application/Index', [
+        return Inertia::render('Public/Naps', [
             'stats' => $statsData['stats'],
             'charts' => $statsData['charts'],
-            'public' => true,
         ]);
     }
 

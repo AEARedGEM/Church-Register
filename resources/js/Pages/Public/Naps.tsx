@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import RegistrationFormComponent from '@/Pages/Naps/Application/Partials/RegistrationFormComponent';
+import RegistrationFormComponent from '@/Pages/Naps/Partials/RegistrationFormComponent';
 
 interface NapsProps {
     stats?: {
