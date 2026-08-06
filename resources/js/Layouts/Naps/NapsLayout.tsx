@@ -374,7 +374,7 @@ export default function NapsLayout({ children }: ModernLayoutProps): JSX.Element
               { id: 'startup-tokenization', label: 'Startup Tokenization', type: 'route', route: 'funding', icon: 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z' },
               { id: 'tradefi-tokenization', label: 'TradeFi Tokenization', type: 'route', route: 'funding', icon: 'M3 3H21V21H3V3Z' },
               { id: 'training', label: 'Training', type: 'route', route: 'training.dashboard', icon: 'M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3Z' },
-              { id: 'community', label: 'Community', type: 'route', route: 'community.index', icon: 'M16 4C18.2 4 20 5.8 20 8S18.2 12 16 12 12 10.2 12 8 13.8 4 16 4M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M8 6C9.1 6 10 6.9 10 8S9.1 10 8 10 6 9.1 6 8 6.9 6 8 6M8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12Z' }
+              { id: 'community', label: 'Community', type: 'route', route: 'community', icon: 'M16 4C18.2 4 20 5.8 20 8S18.2 12 16 12 12 10.2 12 8 13.8 4 16 4M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M8 6C9.1 6 10 6.9 10 8S9.1 10 8 10 6 9.1 6 8 6.9 6 8 6M8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12Z' }
             ].map((item) => (
               <button
                 key={item.id}

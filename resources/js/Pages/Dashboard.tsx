@@ -25,7 +25,32 @@ interface User {
     };
 }
 
-function BalancesDropdown({ user }: { user: User }) {
+type CurrencyKey = 'ngn' | 'usdi' | 'ind' | 'ngni';
+
+interface CurrencyOption {
+    id: string;
+    label: string;
+    field: CurrencyKey;
+    symbol: string;
+}
+
+const currencyOptions: CurrencyOption[] = [
+    { id: 'naira', label: 'Naira', field: 'ngn', symbol: '₦' },
+    { id: 'usd', label: 'USD', field: 'usdi', symbol: '$' },
+    { id: 'industrial_usd', label: 'Industrial USD', field: 'usdi', symbol: '$' },
+    { id: 'industrial_fund', label: 'Industrial Fund', field: 'ind', symbol: '$' },
+    { id: 'industrial_ngn', label: 'Industrial NGN', field: 'ngni', symbol: '₦' },
+];
+
+function formatCurrency(value: string | undefined, symbol: string) {
+    const amount = Number(String(value ?? '').replace(/,/g, ''));
+    if (!Number.isFinite(amount)) {
+        return `${symbol}0.00`;
+    }
+    return `${symbol}${amount.toFixed(2)}`;
+}
+
+function BalancesDropdown({ user, selectedCurrency, onSelect }: { user: User; selectedCurrency: CurrencyOption; onSelect: (option: CurrencyOption) => void }) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -35,7 +60,7 @@ function BalancesDropdown({ user }: { user: User }) {
                 onClick={() => setOpen((s) => !s)}
                 className="flex items-center gap-2 rounded-md border border-slate-700 bg-slate-950/80 px-3 py-2 text-sm font-medium text-white hover:bg-slate-900"
             >
-                USD
+                {selectedCurrency.label}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -43,22 +68,22 @@ function BalancesDropdown({ user }: { user: User }) {
 
             {open && (
                 <div className="absolute right-0 mt-2 w-64 rounded-lg bg-slate-950/90 border border-slate-800/80 p-3 shadow-lg shadow-slate-950/40 z-50">
-                    <div className="py-2 flex justify-between text-sm text-slate-200">
-                        <span>Industrial Naira</span>
-                        <span className="font-semibold text-white">{user.wallet.ngn ? `₦${user.wallet.ngn}` : '₦0.00'}</span>
-                    </div>
-                    <div className="py-2 flex justify-between text-sm text-emerald-200">
-                        <span>Industrial USD</span>
-                        <span className="font-semibold text-white">{user.wallet.usdi ? `$${user.wallet.usdi}` : '$0.00'}</span>
-                    </div>
-                    <div className="py-2 flex justify-between text-sm text-emerald-200">
-                        <span>Industrial Fund</span>
-                        <span className="font-semibold text-white">{user.wallet.ind ?? '0.00'}</span>
-                    </div>
-                    <div className="py-2 flex justify-between text-sm text-slate-200">
-                        <span>Industrial NGN</span>
-                        <span className="font-semibold text-white">{user.wallet.ngni ?? '0.00'}</span>
-                    </div>
+                    {currencyOptions.map((option) => (
+                        <button
+                            key={option.id}
+                            type="button"
+                            onClick={() => {
+                                onSelect(option);
+                                setOpen(false);
+                            }}
+                            className={`w-full text-left py-2 px-3 rounded-lg transition ${selectedCurrency.id === option.id ? 'bg-slate-800 text-white' : 'text-slate-200 hover:bg-slate-900'}`}
+                        >
+                            <div className="flex items-center justify-between">
+                                <span>{option.label}</span>
+                                <span className="font-semibold">{formatCurrency(user.wallet[option.field], option.symbol)}</span>
+                            </div>
+                        </button>
+                    ))}
                 </div>
             )}
         </div>
@@ -184,6 +209,7 @@ export default function Dashboard({
     quickActions
 }: DashboardProps) {
     const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
+    const [selectedCurrency, setSelectedCurrency] = useState<CurrencyOption>(currencyOptions[0]);
     const [napsStats, setNapsStats] = useState<NapsStatsData>({
         totalRespondents: 0,
         surveysCompleted: 0,
@@ -272,7 +298,7 @@ export default function Dashboard({
             id: 'community',
             label: 'Community',
             type: 'route',
-            route: 'community.index',
+            route: 'community',
             icon: 'M16 4C18.2 4 20 5.8 20 8S18.2 12 16 12 12 10.2 12 8 13.8 4 16 4M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M8 6C9.1 6 10 6.9 10 8S9.1 10 8 10 6 9.1 6 8 6.9 6 8 6M8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12Z'
         },
     ];
@@ -345,17 +371,7 @@ export default function Dashboard({
     const featuredProducts = [...(napsCharts.productsData || [])]
         .sort((a: any, b: any) => (b.value || 0) - (a.value || 0))
         .slice(0, 6);
-    const featuredSkills = [...(napsCharts.skillsData || [])]
-        .sort((a: any, b: any) => (b.count || 0) - (a.count || 0))
-        .slice(0, 6);
-    const featuredFunding = [...(napsCharts.fundingData || [])]
-        .sort((a: any, b: any) => (b.value || 0) - (a.value || 0))
-        .slice(0, 6);
     const stateSignals = [...(napsCharts.stateData || [])].slice(0, 6);
-    const compactSkillItems = featuredSkills.slice(0, 4);
-    const extraSkillItems = featuredSkills.slice(4);
-    const compactFundingItems = featuredFunding.slice(0, 4);
-    const extraFundingItems = featuredFunding.slice(4);
     const compactStateSignals = stateSignals.slice(0, 4);
     const extraStateSignals = stateSignals.slice(4);
     const strategicPillars = [
@@ -410,12 +426,14 @@ export default function Dashboard({
                     <div className="relative flex items-center justify-between gap-4 h-14">
                         <div>
                             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Account Balance</p>
-                            <p className="mt-1 text-3xl font-semibold text-white">{user.wallet.ngn ? `₦${user.wallet.ngn}` : '₦0.00'}</p>
+                            <p className="mt-1 text-3xl font-semibold text-white">
+                                {formatCurrency(user.wallet[selectedCurrency.field], selectedCurrency.symbol)}
+                            </p>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="relative">
-                                <BalancesDropdown user={user} />
+                                <BalancesDropdown user={user} selectedCurrency={selectedCurrency} onSelect={setSelectedCurrency} />
                             </div>
 
                             <button className="rounded-full border border-slate-700 bg-slate-950/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900">Rates</button>
@@ -430,7 +448,6 @@ export default function Dashboard({
                 <section className="rounded-3xl border border-emerald-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <p className="text-xs uppercase tracking-[0.3em] text-emerald-300">Public Dashboard</p>
                             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
                                 NAP/S Public Metrics &amp; Ward Intelligence
                             </h2>
@@ -522,68 +539,6 @@ export default function Dashboard({
                             <LgaProductsLinkage />
                         </div>
                     </details>
-                </section>
-
-                <section className="grid gap-5 lg:grid-cols-2">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
-                        <div className="flex items-center justify-between gap-3">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Skill clusters</p>
-                                <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Capabilities across the network</h3>
-                            </div>
-                        </div>
-                        <div className="mt-4 space-y-2">
-                            {compactSkillItems.map((skill: any, index: number) => (
-                                <div key={skill.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
-                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{skill.name}</span>
-                                    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">{skill.count} signals</span>
-                                </div>
-                            ))}
-                            {extraSkillItems.length > 0 && (
-                                <details className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/60">
-                                    <summary className="cursor-pointer font-semibold text-slate-900 dark:text-white">View {extraSkillItems.length} more skills</summary>
-                                    <div className="mt-3 space-y-2">
-                                        {extraSkillItems.map((skill: any, index: number) => (
-                                            <div key={skill.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
-                                                <span className="text-sm text-slate-700 dark:text-slate-200">{skill.name}</span>
-                                                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">{skill.count} signals</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </details>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
-                        <div className="flex items-center justify-between gap-3">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-400">Funding signals</p>
-                                <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Support priorities</h3>
-                            </div>
-                        </div>
-                        <div className="mt-4 space-y-2">
-                            {compactFundingItems.map((item: any, index: number) => (
-                                <div key={item.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
-                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{item.name}</span>
-                                    <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">{item.value} mentions</span>
-                                </div>
-                            ))}
-                            {extraFundingItems.length > 0 && (
-                                <details className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/60">
-                                    <summary className="cursor-pointer font-semibold text-slate-900 dark:text-white">View {extraFundingItems.length} more funding items</summary>
-                                    <div className="mt-3 space-y-2">
-                                        {extraFundingItems.map((item: any, index: number) => (
-                                            <div key={item.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
-                                                <span className="text-sm text-slate-700 dark:text-slate-200">{item.name}</span>
-                                                <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">{item.value} mentions</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </details>
-                            )}
-                        </div>
-                    </div>
                 </section>
 
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -999,7 +999,6 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
         <section className="mt-6 rounded-3xl border border-emerald-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-emerald-300">Public Dashboard</p>
               <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
                 NAP/S Public Metrics &amp; Ward Intelligence
               </h2>
