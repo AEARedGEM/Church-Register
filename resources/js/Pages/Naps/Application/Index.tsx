@@ -446,14 +446,14 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 <span className="relative inline-flex items-center gap-2">
-                  Γ£¿ Register & Participate
+                  Register & Participate
                 </span>
               </button>
               <button
                 onClick={() => window.location.href = route('naps.public')}
                 className="px-8 py-3.5 bg-white/5 backdrop-blur-xl border border-white/20 text-white font-semibold rounded-lg hover:bg-white/10 hover:border-white/40 transition-all duration-300 transform hover:scale-105 text-sm"
               >
-                ≡ƒôè View Dashboard
+                View Dashboard
               </button>
             </div>
           </div>
@@ -475,7 +475,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           onClick={() => setCurrentView('landing')}
           className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
         >
-          ΓåÉ Back
+          Back
         </button>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
@@ -513,7 +513,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           onClick={() => setCurrentView('register')}
           className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
         >
-          ΓåÉ Back
+          ? Back
         </button>
 
         {error && (
@@ -586,7 +586,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                   {selectedSkills.length > 0 && (
                     <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 px-4 py-2 rounded-lg">
                       <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-                        Γ£ô {selectedSkills.length} skill{selectedSkills.length !== 1 ? 's' : ''} selected
+                        {selectedSkills.length} skill{selectedSkills.length !== 1 ? 's' : ''} selected
                       </p>
                     </div>
                   )}
@@ -605,7 +605,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                           <p className="text-sm text-gray-600 dark:text-gray-400">{group.sub_skills.length} skills available</p>
                         </div>
                         <span className={`transition-transform ${expandedGroups.has(group.id) ? 'rotate-180' : ''}`}>
-                          Γû╝
+                          ?
                         </span>
                       </button>
 
@@ -658,8 +658,8 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           {surveyStep === 3 && (
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-900/30 dark:to-emerald-900/30 p-6 rounded-lg mb-6 border border-emerald-200 dark:border-emerald-800">
-                <h3 className="font-semibold text-emerald-800 dark:text-emerald-300 mb-2 flex items-center gap-2">
-                  <span className="text-2xl">≡ƒÅ¡</span> One Ward One Product (OWOP)
+                <h3 className="font-semibold text-emerald-800 dark:text-emerald-300 mb-2">
+                  One Ward One Product (OWOP)
                 </h3>
                 <p className="text-emerald-700 dark:text-emerald-400 text-sm mb-3">Vote for products your ward should focus on producing and exporting. Select up to 2 sectors/products.</p>
               </div>
@@ -667,7 +667,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               {/* Ward Priorities Recommendation */}
               {wardPriorities.length > 0 && (
                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
-                  <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">≡ƒÄ» Recommended for Your Ward</h4>
+                  <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-2">Recommended for Your Ward</h4>
                   <div className="space-y-2">
                     {wardPriorities.map((priority, idx) => (
                       <div key={idx} className="text-sm text-amber-700 dark:text-amber-200">
@@ -723,7 +723,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                     {surveyData.selectedProduct && (
                       <div className="mt-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
                         <p className="text-sm text-emerald-800 dark:text-emerald-200">
-                          Γ£ô Primary choice: <strong>{surveyData.selectedProduct}</strong>
+                          Primary choice: <strong>{surveyData.selectedProduct}</strong>
                         </p>
                       </div>
                     )}
@@ -789,7 +789,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                         {surveyData.secondaryProduct && (
                           <div className="mt-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
                             <p className="text-sm text-emerald-800 dark:text-emerald-200">
-                              Γ£ô Secondary choice: <strong>{surveyData.secondaryProduct}</strong>
+                              Secondary choice: <strong>{surveyData.secondaryProduct}</strong>
                             </p>
                           </div>
                         )}
@@ -809,10 +809,10 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 <div className="grid grid-cols-2 gap-3">
                   {
                     [
-                      { name: 'Invoice Financing', tooltip: 'Invoice financing (tokenized) ΓÇö convert receivables into working capital. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/invoice-financing' },
-                      { name: 'Export Financing', tooltip: 'Export financing (tokenized) ΓÇö support cross-border trade. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/export-financing' },
-                      { name: 'Import Financing', tooltip: 'Import financing (tokenized) ΓÇö finance imports through tokenized instruments. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/import-financing' },
-                      { name: 'Startup Tokenization', tooltip: 'Startup tokenization ΓÇö blockchain-based funding through digital asset creation and token sales' }
+                      { name: 'Invoice Financing', tooltip: 'Invoice financing (tokenized) � convert receivables into working capital. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/invoice-financing' },
+                      { name: 'Export Financing', tooltip: 'Export financing (tokenized) � support cross-border trade. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/export-financing' },
+                      { name: 'Import Financing', tooltip: 'Import financing (tokenized) � finance imports through tokenized instruments. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/import-financing' },
+                      { name: 'Startup Tokenization', tooltip: 'Startup tokenization � blockchain-based funding through digital asset creation and token sales' }
                     ].map((item, i) => (
                     <div key={i} className="relative group">
                       <button
@@ -912,7 +912,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
-                    <span className="inline-block animate-spin">ΓÅ│</span>
+                    <span className="inline-block animate-spin">?</span>
                     Submitting...
                   </span>
                 ) : (
@@ -931,7 +931,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-16 px-4 transition-colors duration-300">
       <div className="max-w-2xl mx-auto text-center">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-12 border border-gray-200 dark:border-gray-700">
-          <div className="text-7xl mb-6">≡ƒÄë</div>
+          <div className="text-7xl mb-6">?</div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             Thank You!
           </h1>
@@ -1066,7 +1066,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
 
           <details className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
             <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-400">
-              Strategic pillars ┬╖ Learn more
+              Strategic pillars -+ Learn more
             </summary>
             <div className="mt-4 space-y-3">
               {strategicPillars.map((pillar) => (
@@ -1610,7 +1610,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           onClick={() => setCurrentView('landing')}
           className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2"
         >
-          ΓåÉ Back to Dashboard
+          ? Back to Dashboard
         </button>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
@@ -1624,13 +1624,13 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 onClick={() => downloadChartAsImage(chartRefs.employment, 'employment-distribution')}
                 className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôÑ</span> PNG Export
+                <span>??</span> PNG Export
               </button>
               <button
                 onClick={() => downloadChartAsPDF(chartRefs.employment, 'employment-distribution')}
                 className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôä</span> PDF Export
+                <span>??</span> PDF Export
               </button>
             </div>
           </div>
@@ -1688,7 +1688,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           onClick={() => setCurrentView('landing')}
           className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2"
         >
-          ΓåÉ Back to Dashboard
+          ? Back to Dashboard
         </button>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
@@ -1702,13 +1702,13 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 onClick={() => downloadChartAsImage(chartRefs.products, 'product-distribution')}
                 className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôÑ</span> PNG Export
+                <span>??</span> PNG Export
               </button>
               <button
                 onClick={() => downloadChartAsPDF(chartRefs.products, 'product-distribution')}
                 className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôä</span> PDF Export
+                <span>??</span> PDF Export
               </button>
             </div>
           </div>
@@ -1766,7 +1766,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           onClick={() => setCurrentView('landing')}
           className="mb-4 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors flex items-center gap-2"
         >
-          ΓåÉ Back to Dashboard
+          ? Back to Dashboard
         </button>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
@@ -1780,13 +1780,13 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 onClick={() => downloadChartAsImage(chartRefs.skills, 'skills-distribution')}
                 className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôÑ</span> PNG Export
+                <span>??</span> PNG Export
               </button>
               <button
                 onClick={() => downloadChartAsPDF(chartRefs.skills, 'skills-distribution')}
                 className="px-6 py-3 bg-cyan-700 hover:bg-cyan-800 active:bg-cyan-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôä</span> PDF Export
+                <span>??</span> PDF Export
               </button>
             </div>
           </div>
@@ -1844,7 +1844,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           onClick={() => setCurrentView('landing')}
           className="mb-4 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors flex items-center gap-2"
         >
-          ΓåÉ Back to Dashboard
+          ? Back to Dashboard
         </button>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
@@ -1858,13 +1858,13 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 onClick={() => downloadChartAsImage(chartRefs.funding, 'funding-support')}
                 className="px-6 py-3 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôÑ</span> PNG Export
+                <span>??</span> PNG Export
               </button>
               <button
                 onClick={() => downloadChartAsPDF(chartRefs.funding, 'funding-support')}
                 className="px-6 py-3 bg-purple-700 hover:bg-purple-800 active:bg-purple-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
-                <span>≡ƒôä</span> PDF Export
+                <span>??</span> PDF Export
               </button>
             </div>
           </div>
@@ -1960,7 +1960,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               onClick={() => setExpandedDataModal(null)}
               className="text-white hover:bg-white/20 p-1 rounded transition-colors"
             >
-              Γ£ò
+              �
             </button>
           </div>
 

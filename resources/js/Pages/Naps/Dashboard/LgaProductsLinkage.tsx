@@ -156,17 +156,17 @@ export default function LgaProductsLinkage() {
 
             {/* States Grid (Main View) */}
             {!selectedState && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3">
                     {statesData.map((state) => (
                         <button
                             key={state.name}
                             onClick={() => setSelectedState(state.name)}
-                            className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group"
+                            className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-3 border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group"
                         >
-                            <h3 className="text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
+                            <h3 className="text-[0.8rem] font-semibold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
                                 {state.name}
                             </h3>
-                            <div className="space-y-1 text-xs">
+                            <div className="space-y-1 text-[11px] leading-5">
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 dark:text-gray-400">LGAs:</span>
                                     <span className="font-semibold text-emerald-600 dark:text-emerald-400">{state.lgaCount}</span>
@@ -180,8 +180,8 @@ export default function LgaProductsLinkage() {
                                     <span className="font-semibold text-purple-600 dark:text-purple-400">{state.totalRespondents}</span>
                                 </div>
                             </div>
-                            <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium group-hover:font-bold transition-all">
+                            <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium group-hover:font-semibold transition-all">
                                     Click to explore →
                                 </p>
                             </div>
