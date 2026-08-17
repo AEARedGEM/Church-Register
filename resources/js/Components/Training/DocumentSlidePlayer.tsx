@@ -203,7 +203,7 @@ export default function DocumentSlidePlayer({
           <div className="h-full flex items-center justify-center p-8">
             {loading && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
-                <Loader2 className="w-12 h-12 text-emerald-600 animate-spin" />
+                <Loader2 className="w-12 h-12 text-red-600 animate-spin" />
               </div>
             )}
 
@@ -239,8 +239,8 @@ export default function DocumentSlidePlayer({
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`relative aspect-video bg-gray-800 dark:bg-gray-900 rounded-lg overflow-hidden group hover:ring-2 hover:ring-emerald-500 transition-all ${
-                    currentSlide === index ? 'ring-2 ring-emerald-600' : ''
+                  className={`relative aspect-video bg-gray-800 dark:bg-gray-900 rounded-lg overflow-hidden group hover:ring-2 hover:ring-red-500 transition-all ${
+                    currentSlide === index ? 'ring-2 ring-red-600' : ''
                   }`}
                 >
                   <img
@@ -281,7 +281,7 @@ export default function DocumentSlidePlayer({
               </span>
               <div className="hidden md:block w-48 bg-gray-700 dark:bg-gray-800 rounded-full h-2">
                 <div
-                  className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-red-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${((currentSlide + 1) / totalSlides) * 100}%` }}
                 />
               </div>
@@ -341,7 +341,7 @@ export default function DocumentSlidePlayer({
           <div className="flex items-center space-x-2">
             <button
               onClick={downloadCurrent}
-              className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+              className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
               title="Download Current Slide"
             >
               <Download className="w-4 h-4" />
@@ -349,7 +349,7 @@ export default function DocumentSlidePlayer({
 
             <button
               onClick={downloadAll}
-              className="hidden md:block px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg transition-colors"
+              className="hidden md:block px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors"
               title="Download All Slides"
             >
               Download All
@@ -382,7 +382,7 @@ function PDFViewer({ url, title, onProgress }: { url: string; title: string; onP
         <a
           href={url}
           download
-          className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+          className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
           title="Download PDF"
         >
           <Download className="w-4 h-4" />
@@ -392,7 +392,7 @@ function PDFViewer({ url, title, onProgress }: { url: string; title: string; onP
       <div className="flex-1 relative">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
-            <Loader2 className="w-12 h-12 text-emerald-600 animate-spin" />
+            <Loader2 className="w-12 h-12 text-red-600 animate-spin" />
           </div>
         )}
 
@@ -404,7 +404,7 @@ function PDFViewer({ url, title, onProgress }: { url: string; title: string; onP
               <a
                 href={url}
                 download
-                className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors inline-flex items-center space-x-2"
+                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors inline-flex items-center space-x-2"
               >
                 <Download className="w-5 h-5" />
                 <span>Download PDF</span>
@@ -447,13 +447,13 @@ function DocumentViewer({ url, title, onProgress }: { url: string; title: string
     <div className="w-full h-full bg-gray-900 dark:bg-gray-950 flex flex-col">
       <div className="bg-gray-800 dark:bg-gray-900 border-b border-gray-700 dark:border-gray-800 p-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <FileText className="w-5 h-5 text-emerald-500" />
+          <FileText className="w-5 h-5 text-red-500" />
           <span className="text-white font-medium text-sm">{title}</span>
         </div>
         <a
           href={url}
           download
-          className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+          className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
           title="Download Document"
         >
           <Download className="w-4 h-4" />
@@ -463,7 +463,7 @@ function DocumentViewer({ url, title, onProgress }: { url: string; title: string
       <div className="flex-1 relative">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
-            <Loader2 className="w-12 h-12 text-emerald-600 animate-spin" />
+            <Loader2 className="w-12 h-12 text-red-600 animate-spin" />
           </div>
         )}
 

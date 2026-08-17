@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const userTrigger = (
     <div className="flex items-center space-x-2 p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-700">
-      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-purple-600 rounded-full flex items-center justify-center">
+      <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-purple-600 rounded-full flex items-center justify-center">
         <span className="text-white text-sm font-medium">
           {user?.name?.charAt(0).toUpperCase() || 'U'}
         </span>

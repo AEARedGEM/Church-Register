@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePage, Head, router } from '@inertiajs/react';
 import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Search, Star, Clock, BookOpen, Heart, Play } from 'lucide-react';
@@ -158,7 +158,7 @@ export default function CoursesPage(): JSX.Element {
   }, []);
 
   const getDifficultyColor = (level?: string) => {
-    if (level === 'beginner') return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+    if (level === 'beginner') return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
     if (level === 'intermediate') return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
     if (level === 'advanced') return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
     return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
@@ -240,11 +240,11 @@ export default function CoursesPage(): JSX.Element {
           <div className="space-y-0.5">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-medium text-gray-700 dark:text-gray-300">Progress</span>
-              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">{progress}%</span>
+              <span className="text-[10px] font-bold text-red-600 dark:text-red-400">{progress}%</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-emerald-600 h-full rounded-full transition-all duration-300"
+                className="bg-red-600 h-full rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -254,7 +254,7 @@ export default function CoursesPage(): JSX.Element {
           <div className="flex items-center gap-2">
             <button
               onClick={handleContinue}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1.5 transition-colors duration-150"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1.5 transition-colors duration-150"
             >
               <Play className="w-3 h-3" />
               Continue
@@ -312,14 +312,14 @@ export default function CoursesPage(): JSX.Element {
           <div className="flex items-center gap-2 mt-2">
             <button
               onClick={handleDownloadCertificate}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1.5 transition-colors duration-150"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1.5 transition-colors duration-150"
             >
               <Star className="w-3 h-3" />
               Download Certificate
             </button>
             <button
               onClick={handleRevisit}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1.5 transition-colors duration-150"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1.5 transition-colors duration-150"
             >
               <Play className="w-3 h-3" />
               Revisit
@@ -349,10 +349,10 @@ export default function CoursesPage(): JSX.Element {
         <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="mb-6 flex items-center gap-3">
             <div className="inline-flex rounded-lg bg-white dark:bg-gray-900 p-1 border border-gray-200 dark:border-gray-800">
-              <button onClick={() => setMode('browse')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'browse' ? 'bg-emerald-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>Browse</button>
-              <button onClick={() => setMode('my')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'my' ? 'bg-emerald-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>My Courses</button>
-              <button onClick={() => setMode('favourites')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'favourites' ? 'bg-emerald-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>Favourites</button>
-              <button onClick={() => setMode('completed')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'completed' ? 'bg-emerald-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>Completed Courses</button>
+              <button onClick={() => setMode('browse')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'browse' ? 'bg-red-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>Browse</button>
+              <button onClick={() => setMode('my')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'my' ? 'bg-red-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>My Courses</button>
+              <button onClick={() => setMode('favourites')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'favourites' ? 'bg-red-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>Favourites</button>
+              <button onClick={() => setMode('completed')} className={`px-3 py-1 rounded-lg text-sm font-medium ${mode === 'completed' ? 'bg-red-600 text-white' : 'text-gray-600 dark:text-gray-300'}`}>Completed Courses</button>
             </div>
           </div>
 

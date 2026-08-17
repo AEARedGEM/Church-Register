@@ -161,13 +161,9 @@ const secondaryNavigation: SecondaryNavigationItem[] = [
 
 // Color mapping for stats (keeping for potential future use)
 const colorClasses = {
-  emerald: {
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
-    text: 'text-emerald-600 dark:text-emerald-400'
-  },
-  green: {
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    text: 'text-green-600 dark:text-green-400'
+  red: {
+    bg: 'bg-red-50 dark:bg-red-900/20',
+    text: 'text-red-600 dark:text-red-400'
   },
   yellow: {
     bg: 'bg-yellow-50 dark:bg-yellow-900/20',
@@ -233,7 +229,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                 flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                 transition-all duration-200
                 ${active
-                  ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                  ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }
                 ${depth > 0 ? 'ml-4' : ''}
@@ -242,7 +238,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
               <Icon className="w-5 h-5 flex-shrink-0" />
               <span className="flex-1 text-left">{item.label}</span>
               {item.badge && (
-                <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500 text-white rounded-full">
+                <span className="px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">
                   {item.badge}
                 </span>
               )}
@@ -254,7 +250,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                 flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                 transition-all duration-200
                 ${active
-                  ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                  ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }
                 ${depth > 0 ? 'ml-4' : ''}
@@ -263,7 +259,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
               <Icon className="w-5 h-5 flex-shrink-0" />
               <span className="flex-1 text-left">{item.label}</span>
               {item.badge && (
-                <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500 text-white rounded-full">
+                <span className="px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">
                   {item.badge}
                 </span>
               )}
@@ -293,7 +289,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                     w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
                     transition-all duration-200
                     ${isActive(subItem.route)
-                      ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                      ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
                       : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }
                   `}
@@ -301,7 +297,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                   <span className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 flex-shrink-0"></span>
                   <span className="flex-1 text-left">{subItem.label}</span>
                   {subItem.badge && (
-                    <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500 text-white rounded-full">
+                    <span className="px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">
                       {subItem.badge}
                     </span>
                   )}
@@ -344,9 +340,9 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
             <div className="flex items-center gap-2">
               {/* Credits */}
               {user && (
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-50 to-green-50 dark:from-yellow-900/20 dark:to-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                  <CreditCard className="w-4 h-4 text-green-600 dark:text-green-400" />
-                  {/* <span className="text-sm font-semibold text-green-700 dark:text-green-300">
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-red-50 to-red-50 dark:from-yellow-900/20 dark:to-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                  <CreditCard className="w-4 h-4 text-red-600 dark:text-red-400" />
+                  {/* <span className="text-sm font-semibold text-red-700 dark:text-red-300">
                     {user.credit || 0}
                   </span> */}
                 </div>
@@ -371,7 +367,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                     className="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-semibold">
                         {user.name.split(' ').map((n: string) => n[0]).join('')}
                       </span>

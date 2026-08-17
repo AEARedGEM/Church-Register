@@ -7,8 +7,8 @@ export default function Terms() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">NYP-IP</Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">Back to Home</Link>
+                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">NYP-IP</Link>
+                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">Back to Home</Link>
                     </div>
                 </nav>
                 <div className="container mx-auto px-6 py-16 max-w-4xl">

@@ -3,25 +3,25 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title inertia>{{ config('app.name', 'NYP-IP-Portal') }}</title>
+        <title inertia>{{ config('app.name', 'APGA Worldwide') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link rel="icon" href="{{asset('images/favicon.ico')}}" type="image/x-icon" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <meta name="twitter:title" content="NYP-IP Portal | Industrialization" />
-        <meta name="twitter:description" content="NYP-IP Is A National-Scale, Youth-Driven Industrialization & Entrepreneurship Platform Enabling Nigerian Youths To Become Builders Of Real Industry. Powered by LuxuryX Technologies & TradeFi Limited X The Nigerian Youth Parliament." />
-        <meta name="twitter:image" content="{{asset('images/nyp-logo.png')}}" />
+        <meta name="twitter:title" content="APGA Worldwide - Apostolic Power Glorious Assembly" />
+        <meta name="twitter:description" content="APGA Worldwide is a faith-based community dedicated to spiritual growth, fellowship, and making a difference in the world. Join us in growing God's kingdom together in faith." />
+        <meta name="twitter:image" content="{{asset('images/logo.jpg')}}" />
         <meta name="twitter:card" content="summary" />
 
         <!-- Open Graph Meta Tags -->
-        <meta property="og:title" content="NYP-IP Portal | Industrialization" />
-        <meta property="og:description" content="NYP-IP Is A National-Scale, Youth-Driven Industrialization & Entrepreneurship Platform Enabling Nigerian Youths To Become Builders Of Real Industry. Powered by LuxuryX Technologies & TradeFi Limited X The Nigerian Youth Parliament." />
-        <meta property="og:image" content="{{asset('images/nyp-logo.png')}}" />
+        <meta property="og:title" content="APGA Worldwide - Apostolic Power Glorious Assembly" />
+        <meta property="og:description" content="APGA Worldwide is a faith-based community dedicated to spiritual growth, fellowship, and making a difference in the world. Join us in growing God's kingdom together in faith." />
+        <meta property="og:image" content="{{asset('images/logo.jpg')}}" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://nypipportal.luxuryxtech.org.ng" />
-        <meta property="og:image:alt" content="NYP-IP Portal" />
+        <meta property="og:url" content="https://apgaworldwide.org" />
+        <meta property="og:image:alt" content="APGA Worldwide - Church Management Platform" />
         <meta property="og:image:width" content="400">
         <meta property="og:image:height" content="400">
 

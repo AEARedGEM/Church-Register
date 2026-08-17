@@ -33,10 +33,10 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   const variantClasses = {
-    primary: 'bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-emerald-400',
+    primary: 'bg-red-600 hover:bg-red-700 text-white disabled:bg-red-400',
     secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white disabled:bg-gray-300 dark:disabled:bg-gray-600',
     danger: 'bg-red-600 hover:bg-red-700 text-white disabled:bg-red-400',
-    success: 'bg-green-600 hover:bg-green-700 text-white disabled:bg-green-400'
+    success: 'bg-red-600 hover:bg-red-700 text-white disabled:bg-red-400'
   };
 
   const widthClasses = fullWidth ? 'w-full' : '';

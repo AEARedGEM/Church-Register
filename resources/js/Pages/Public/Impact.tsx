@@ -15,10 +15,10 @@ export default function Impact() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
                             NYP-IP
                         </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">
+                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
                             Back to Home
                         </Link>
                     </div>
@@ -29,9 +29,9 @@ export default function Impact() {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
                         {impactMetrics.map((item, idx) => (
-                            <div key={idx} className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 rounded-lg p-6 text-center border border-emerald-200 dark:border-emerald-900/50">
-                                <p className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">{item.metric}</p>
-                                <p className="text-sm text-emerald-800 dark:text-emerald-200">{item.desc}</p>
+                            <div key={idx} className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 rounded-lg p-6 text-center border border-red-200 dark:border-red-900/50">
+                                <p className="text-2xl md:text-3xl font-bold text-red-600 dark:text-red-400 mb-2">{item.metric}</p>
+                                <p className="text-sm text-red-800 dark:text-red-200">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -68,12 +68,12 @@ export default function Impact() {
                         </section>
                     </div>
 
-                    <div className="mt-12 bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-950 dark:to-emerald-950 rounded-lg p-8 text-center">
+                    <div className="mt-12 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-950 dark:to-red-950 rounded-lg p-8 text-center">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Be Part of the Story</h3>
                         <p className="text-gray-700 dark:text-gray-300 mb-6">
                             Join thousands of youth transforming Nigeria's economy through industrialization and innovation.
                         </p>
-                        <Link href="/program" className="inline-block px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                        <Link href="/program" className="inline-block px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                             Learn More About the Program
                         </Link>
                     </div>

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use App\Enum\RolesEnum;
 use App\Enum\PermissionsEnum;
@@ -146,11 +148,7 @@ class User extends Authenticatable
      */
     public function initializeWithCPDAccess(): void
     {
-        if (!$this->hasRole(RolesEnum::Individual->value)) {
-            $this->assignRole(RolesEnum::Individual->value);
-        }
-
-        // Ensure CPD permissions
+        $roleName = RolesEnum::Individual->value;
         $cpdPermissions = [
             PermissionsEnum::AccessCPD->value,
             PermissionsEnum::ViewDashboard->value,
@@ -158,6 +156,25 @@ class User extends Authenticatable
             PermissionsEnum::EditProfile->value,
             PermissionsEnum::NavigateApplication->value,
         ];
+
+        // Guard against a fresh or partially-seeded database where the default role/permissions do not exist yet.
+        foreach ($cpdPermissions as $permissionName) {
+            Permission::firstOrCreate([
+                'name' => $permissionName,
+                'guard_name' => 'web',
+            ]);
+        }
+
+        $role = Role::firstOrCreate([
+            'name' => $roleName,
+            'guard_name' => 'web',
+        ]);
+
+        $role->syncPermissions($cpdPermissions);
+
+        if (!$this->hasRole($roleName)) {
+            $this->assignRole($roleName);
+        }
 
         $this->givePermissionTo($cpdPermissions);
     }

@@ -59,7 +59,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         </div>
         <div className="flex items-center space-x-3">
           <Trophy className="w-4 h-4 text-yellow-500" />
-          <span className="text-sm font-semibold text-green-600">
+          <span className="text-sm font-semibold text-red-600">
             Prize Pool: {event.prize}
           </span>
         </div>

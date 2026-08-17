@@ -274,7 +274,7 @@ export default function UpdateBusinessProfileForm({
                                 <InputLabel htmlFor="business_type" value="Business Type" />
                                 <select
                                     id="business_type"
-                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                     value={data.business_type || ''}
                                     onChange={(e) => updateData('business_type', e.target.value)}
                                 >
@@ -294,7 +294,7 @@ export default function UpdateBusinessProfileForm({
                                 <InputLabel htmlFor="business_stage" value="Business Stage" />
                                 <select
                                     id="business_stage"
-                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                     value={data.business_stage || ''}
                                     onChange={(e) => updateData('business_stage', e.target.value)}
                                 >
@@ -372,7 +372,7 @@ export default function UpdateBusinessProfileForm({
                                 <InputLabel htmlFor="business_type" value="Business Type *" />
                                 <select
                                     id="business_type"
-                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                     value={data.business_type || ''}
                                     onChange={(e) => updateData('business_type', e.target.value)}
                                     required
@@ -436,7 +436,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="market_reach" value="Market Reach *" />
                             <select
                                 id="market_reach"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 value={data.market_reach || ''}
                                 onChange={(e) => updateData('market_reach', e.target.value)}
                                 required
@@ -459,7 +459,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="investor_type" value="Investor Type *" />
                             <select
                                 id="investor_type"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 value={data.investor_type || ''}
                                 onChange={(e) => updateData('investor_type', e.target.value)}
                                 required
@@ -541,7 +541,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="office_address" value="Office Address *" />
                             <textarea
                                 id="office_address"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 rows={3}
                                 value={data.office_address || ''}
                                 onChange={(e) => updateData('office_address', e.target.value)}
@@ -585,7 +585,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="institution_sector" value="Institution Sector *" />
                             <select
                                 id="institution_sector"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 value={data.institution_sector || ''}
                                 onChange={(e) => updateData('institution_sector', e.target.value)}
                                 required
@@ -636,7 +636,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="bio" value="Professional Bio *" />
                             <textarea
                                 id="bio"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 rows={4}
                                 value={data.bio || ''}
                                 onChange={(e) => updateData('bio', e.target.value)}
@@ -667,7 +667,7 @@ export default function UpdateBusinessProfileForm({
                                 <InputLabel htmlFor="training_mode" value="Preferred Training Mode *" />
                                 <select
                                     id="training_mode"
-                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                     value={data.training_mode || ''}
                                     onChange={(e) => updateData('training_mode', e.target.value)}
                                     required
@@ -717,7 +717,7 @@ export default function UpdateBusinessProfileForm({
                                 <InputLabel htmlFor="experience_level" value="Experience Level" />
                                 <select
                                     id="experience_level"
-                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                     value={data.experience_level || ''}
                                     onChange={(e) => updateData('experience_level', e.target.value)}
                                 >
@@ -752,7 +752,7 @@ export default function UpdateBusinessProfileForm({
                                 <InputLabel htmlFor="availability" value="Availability for Training/Networking" />
                                 <select
                                     id="availability"
-                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                     value={data.availability || ''}
                                     onChange={(e) => updateData('availability', e.target.value)}
                                 >
@@ -784,7 +784,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="bio" value="Personal Bio" />
                             <textarea
                                 id="bio"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 rows={4}
                                 value={data.bio || ''}
                                 onChange={(e) => updateData('bio', e.target.value)}
@@ -840,7 +840,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="description" value="Description" />
                             <textarea
                                 id="description"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 rows={4}
                                 value={data.description}
                                 onChange={(e) => updateData('description', e.target.value)}
@@ -883,7 +883,7 @@ export default function UpdateBusinessProfileForm({
                             <InputLabel htmlFor="description" value="Personal Summary" />
                             <textarea
                                 id="description"
-                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-emerald-500 dark:focus:ring-emerald-600 shadow-sm"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-red-500 dark:focus:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 shadow-sm"
                                 rows={4}
                                 value={data.description}
                                 onChange={(e) => updateData('description', e.target.value)}

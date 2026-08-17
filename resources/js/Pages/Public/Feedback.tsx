@@ -7,8 +7,8 @@ export default function Feedback() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">NYP-IP</Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">Back to Home</Link>
+                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">NYP-IP</Link>
+                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">Back to Home</Link>
                     </div>
                 </nav>
                 <div className="container mx-auto px-6 py-16 max-w-4xl">
@@ -27,8 +27,8 @@ export default function Feedback() {
                                 <li>Attend community forums and stakeholder meetings</li>
                             </ul>
                         </section>
-                        <div className="bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900 rounded-lg p-6">
-                            <p className="text-emerald-900 dark:text-emerald-100">
+                        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg p-6">
+                            <p className="text-red-900 dark:text-red-100">
                                 <strong>All feedback is confidential and will be reviewed by our leadership team.</strong> We appreciate your contribution to making the NYP-IP even better.
                             </p>
                         </div>

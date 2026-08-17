@@ -151,7 +151,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
             {/* Personal Information Section */}
             <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-semibold text-sm">1</div>
+                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 font-semibold text-sm">1</div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Personal Information</h3>
                 </div>
 
@@ -212,7 +212,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
             {/* Location Section */}
             <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-semibold text-sm">2</div>
+                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 font-semibold text-sm">2</div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Location</h3>
                 </div>
 

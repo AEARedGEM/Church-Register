@@ -354,7 +354,7 @@ export default function Dashboard({
 
     const getStatusColor = (status: string): string => {
         return {
-            success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+            success: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
             pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
             failed: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
             info: 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100',
@@ -362,12 +362,12 @@ export default function Dashboard({
     };
 
     const getActionColorClasses = (color: string) => {
-        // Use softer slate backgrounds with emerald accent text for actions
+        // Use softer slate backgrounds with red accent text for actions
         const slateAction = 'bg-slate-100 dark:bg-slate-900 group-hover:bg-slate-200 dark:group-hover:bg-slate-800 text-slate-700 dark:text-slate-300';
         return slateAction;
     };
 
-    const COLORS = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
+    const COLORS = ['#2563eb', '#dc2626', '#3b82f6', '#60a5fa', '#1e40af'];
     const featuredProducts = [...(napsCharts.productsData || [])]
         .sort((a: any, b: any) => (b.value || 0) - (a.value || 0))
         .slice(0, 6);
@@ -407,9 +407,9 @@ export default function Dashboard({
                         <button
                             key={item.id}
                             onClick={() => handleSidebarClick(item)}
-                            className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${activeTab === item.target ? 'bg-slate-700/20 text-emerald-300 shadow-inner' : 'text-slate-300 hover:bg-slate-900/80 hover:text-white'}`}
+                            className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${activeTab === item.target ? 'bg-slate-700/20 text-blue-300 shadow-inner' : 'text-slate-300 hover:bg-slate-900/80 hover:text-white'}`}
                         >
-                            <svg className={`w-5 h-5 shrink-0 ${activeTab === item.target ? 'text-emerald-300' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className={`w-5 h-5 shrink-0 ${activeTab === item.target ? 'text-blue-300' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
                             </svg>
                             <span className="truncate">{item.label}</span>
@@ -437,7 +437,7 @@ export default function Dashboard({
                             </div>
 
                             <button className="rounded-full border border-slate-700 bg-slate-950/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900">Rates</button>
-                            <button className="rounded-full bg-emerald-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400">+ Add</button>
+                            <button className="rounded-full bg-blue-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-400">+ Add</button>
                             <button className="rounded-full border border-slate-700 bg-slate-950/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900">Send</button>
                         </div>
                     </div>
@@ -445,7 +445,7 @@ export default function Dashboard({
             </div>
 
             <div className="space-y-5 rounded-3xl border border-slate-800 bg-slate-950/95 p-5 shadow-sm text-white">
-                <section className="rounded-3xl border border-emerald-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
+                <section className="rounded-3xl border border-blue-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                         <div>
                             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -455,13 +455,13 @@ export default function Dashboard({
                         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                             <Link
                                 href={route('owop-mandate')}
-                                className="inline-flex items-center justify-center rounded-full border border-emerald-300/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-100"
+                                className="inline-flex items-center justify-center rounded-full border border-red-300/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-red-200 hover:bg-red-500/10 hover:text-red-100"
                             >
                                 Learn About O.W.O.P/NAP
                             </Link>
                             <Link
                                 href={route('survey-public')}
-                                className="inline-flex items-center justify-center rounded-full border border-emerald-400/60 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:border-emerald-300 hover:bg-emerald-500/25 hover:text-emerald-100"
+                                className="inline-flex items-center justify-center rounded-full border border-red-400/60 bg-red-500/15 px-4 py-2 text-sm font-semibold text-red-200 transition hover:border-red-300 hover:bg-red-500/25 hover:text-red-100"
                             >
                                 Take The Poll
                             </Link>
@@ -470,8 +470,8 @@ export default function Dashboard({
                 </section>
 
                 <section className="grid gap-3 md:grid-cols-4">
-                    <div className="rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm dark:border-emerald-800 dark:bg-gray-900">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">Total respondents</p>
+                    <div className="rounded-2xl border border-red-200 bg-white p-4 shadow-sm dark:border-red-800 dark:bg-gray-900">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">Total respondents</p>
                         <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{napsStats.totalRespondents.toLocaleString()}</p>
                     </div>
                     <div className="rounded-2xl border border-cyan-200 bg-white p-4 shadow-sm dark:border-cyan-800 dark:bg-gray-900">
@@ -491,10 +491,10 @@ export default function Dashboard({
                     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
                         <div className="flex items-start justify-between gap-3">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Product signals</p>
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Product signals</p>
                                 <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Strongest ward-level product opportunities</h3>
                             </div>
-                            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                            <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">
                                 OWOP focus
                             </span>
                         </div>
@@ -528,9 +528,9 @@ export default function Dashboard({
 
                 <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900 mt-3">
                     <details className="group" open>
-                        <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">
+                        <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">
                             <span>Ward-to-product linkage</span>
-                            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">Public planning insight</span>
+                            <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">Public planning insight</span>
                         </summary>
                         <div className="mt-4 text-sm text-slate-600 dark:text-slate-300">
                             Explore how ward-level demand maps to product demand and LGA industrial priorities.
@@ -578,7 +578,7 @@ export default function Dashboard({
                                             e.stopPropagation();
                                             setExpandedDataModal('employment');
                                         }}
-                                        className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                                        className="mt-2 w-full text-center text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                     >
                                         Visualize All {napsCharts.employmentData.length} Items
                                     </button>
@@ -626,7 +626,7 @@ export default function Dashboard({
                                             e.stopPropagation();
                                             setExpandedDataModal('products');
                                         }}
-                                        className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                                        className="mt-2 w-full text-center text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                     >
                                         Visualize All {napsCharts.productsData.length} Items
                                     </button>

@@ -284,7 +284,7 @@ export default function Edit({
                                             onClick={() => setActiveSection(section.id)}
                                             className={`${
                                                 activeSection === section.id
-                                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-200'
+                                                    ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-200'
                                                     : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                                             } group w-full flex items-start px-3 py-2 text-sm font-medium border rounded-md transition-colors`}
                                         >
@@ -299,9 +299,9 @@ export default function Edit({
 
                             {/* Role Status Card */}
                             {dashboardContext.available_roles.length > 0 && (
-                                <div className="mt-6 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
+                                <div className="mt-6 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
                                     <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
                                             <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
@@ -317,7 +317,7 @@ export default function Edit({
                                     </div>
                                     <button
                                         onClick={() => setActiveSection('roles')}
-                                        className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium"
+                                        className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                                     >
                                         Apply for Additional Roles →
                                     </button>
@@ -332,7 +332,7 @@ export default function Edit({
                                     <div className="text-center">
                                         <div className="inline-block">
                                             <div className="inline-flex items-center gap-2">
-                                                <div className="w-4 h-4 bg-emerald-500 rounded-full animate-pulse"></div>
+                                                <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
                                                 <span className="text-gray-600 dark:text-gray-400">Loading profile...</span>
                                             </div>
                                         </div>
@@ -406,7 +406,7 @@ export default function Edit({
 
                                             <button
                                                 onClick={() => router.get(route('profile.export-data'))}
-                                                className="inline-flex items-center px-4 py-2 bg-emerald-600 dark:bg-emerald-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 dark:hover:bg-emerald-600 focus:bg-emerald-700 dark:focus:bg-emerald-600 active:bg-emerald-800 dark:active:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-emerald-900 transition ease-in-out duration-150"
+                                                className="inline-flex items-center px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 dark:hover:bg-red-600 focus:bg-red-700 dark:focus:bg-red-600 active:bg-red-800 dark:active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-red-900 transition ease-in-out duration-150"
                                             >
                                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

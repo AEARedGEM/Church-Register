@@ -69,12 +69,12 @@ interface Props {
 
 const statusColors = {
   draft: { bg: 'bg-gray-100 dark:bg-gray-700', text: 'text-gray-700 dark:text-gray-300', icon: Clock },
-  published: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400', icon: CheckCircle },
+  published: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400', icon: CheckCircle },
   archived: { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-700 dark:text-orange-400', icon: Archive },
 };
 
 const difficultyColors = {
-  beginner: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  beginner: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   intermediate: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
   advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
@@ -140,7 +140,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
           </div>
           <Link
             href={route('admin.training.create')}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Create Course
@@ -155,13 +155,13 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                 icon={BookOpen}
                 label="Total Courses"
                 value={stats.total_courses}
-                color="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
+                color="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
               />
               <StatCard
                 icon={CheckCircle}
                 label="Published"
                 value={stats.published_courses}
-                color="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                color="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
               />
               <StatCard
                 icon={Clock}
@@ -179,7 +179,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                 icon={DollarSign}
                 label="Total Revenue"
                 value={`₦${stats.total_revenue.toLocaleString()}`}
-                color="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                color="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
               />
             </div>
           </div>
@@ -196,13 +196,13 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                   placeholder="Search courses..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="draft">Draft</option>
@@ -212,7 +212,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
             </div>
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+              className="w-full sm:w-auto px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm sm:text-base"
             >
               Search
             </button>
@@ -225,7 +225,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
               </span>
               <button
                 onClick={() => handleBulkStatusUpdate('published')}
-                className="flex-1 sm:flex-none px-3 py-1.5 text-xs sm:text-sm bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50 text-green-700 dark:text-green-400 rounded-lg transition-colors"
+                className="flex-1 sm:flex-none px-3 py-1.5 text-xs sm:text-sm bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 rounded-lg transition-colors"
               >
                 Publish
               </button>
@@ -350,7 +350,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             href={route('admin.training.edit', course.id)}
-                            className="p-2 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg transition-colors"
+                            className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg transition-colors"
                           >
                             <Edit className="w-4 h-4" />
                           </Link>
@@ -451,7 +451,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                       <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                         <Link
                           href={route('admin.training.edit', course.id)}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg transition-colors text-sm font-medium"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg transition-colors text-sm font-medium"
                         >
                           <Edit className="w-4 h-4" />
                           Edit
@@ -484,7 +484,7 @@ export default function AdminTrainingIndex({ courses, stats }: Props) {
                     href={route('admin.training.index', { page })}
                     className={`px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                       page === courses.current_page
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-red-600 text-white'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                     }`}
                   >

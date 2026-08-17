@@ -4,7 +4,7 @@ interface ProgressBarProps {
   value: number;
   max?: number;
   size?: 'sm' | 'md' | 'lg';
-  color?: 'emerald' | 'green' | 'yellow' | 'red';
+  color?: 'red' | 'yellow' | 'purple';
   showLabel?: boolean;
   className?: string;
 }
@@ -13,7 +13,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   value,
   max = 100,
   size = 'md',
-  color = 'emerald',
+  color = 'red',
   showLabel = false,
   className = ''
 }) => {
@@ -26,10 +26,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   };
 
   const colorClasses = {
-    emerald: 'bg-emerald-600',
-    green: 'bg-green-600',
+    red: 'bg-red-600',
     yellow: 'bg-yellow-600',
-    red: 'bg-red-600'
+    purple: 'bg-purple-600'
   };
 
   return (

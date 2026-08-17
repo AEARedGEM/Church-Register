@@ -95,7 +95,7 @@ const AdminTrainingManagement: React.FC = () => {
               {currentView === 'list' && (
                 <button
                   onClick={() => setCurrentView('create')}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
                 >
                   <Plus size={18} />
                   Create Course
@@ -184,12 +184,12 @@ const CourseList: React.FC<CourseListProps> = ({ onEdit }) => {
           placeholder="Search courses..."
           value={filter.search}
           onChange={(e) => setFilter({ ...filter, search: e.target.value })}
-          className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+          className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
         />
         <select
           value={filter.status}
           onChange={(e) => setFilter({ ...filter, status: e.target.value })}
-          className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+          className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
         >
           <option value="all">All Status</option>
           <option value="published">Published</option>
@@ -199,7 +199,7 @@ const CourseList: React.FC<CourseListProps> = ({ onEdit }) => {
         <select
           value={filter.category}
           onChange={(e) => setFilter({ ...filter, category: e.target.value })}
-          className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+          className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
         >
           <option value="all">All Categories</option>
           <option value="web">Web Development</option>
@@ -229,7 +229,7 @@ const CourseList: React.FC<CourseListProps> = ({ onEdit }) => {
                 <td className="py-3 px-4">{course.instructor}</td>
                 <td className="py-3 px-4">
                   <span className={`px-2 py-1 rounded text-xs ${
-                    course.status === 'published' ? 'bg-green-100 text-green-800' :
+                    course.status === 'published' ? 'bg-red-100 text-red-800' :
                     course.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-gray-100 text-gray-800'
                   }`}>
@@ -241,7 +241,7 @@ const CourseList: React.FC<CourseListProps> = ({ onEdit }) => {
                 <td className="py-3 px-4">
                   <button
                     onClick={() => onEdit(course.id)}
-                    className="text-emerald-600 hover:text-emerald-800 mr-3"
+                    className="text-red-600 hover:text-red-800 mr-3"
                   >
                     Edit
                   </button>
@@ -358,8 +358,8 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId, onCancel, onSave }) =
               onClick={() => setCurrentTab(tab.id as any)}
               className={`pb-3 px-2 border-b-2 transition-colors ${
                 currentTab === tab.id
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-emerald-600'
+                  ? 'border-red-600 text-red-600'
+                  : 'border-transparent text-gray-600 hover:text-red-600'
               }`}
             >
               {tab.label}
@@ -409,7 +409,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId, onCancel, onSave }) =
             console.log('Saving course:', formData);
             onSave();
           }}
-          className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
+          className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
         >
           <Save size={18} />
           {courseId ? 'Update Course' : 'Create Course'}
@@ -454,7 +454,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           value={formData.title}
           onChange={(e) => updateField('title', e.target.value)}
           placeholder="e.g., Introduction to Web Development"
-          className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+          className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
         />
       </div>
 
@@ -467,7 +467,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           placeholder="Brief overview (max 500 characters)"
           rows={2}
           maxLength={500}
-          className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+          className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
         />
       </div>
 
@@ -479,7 +479,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           onChange={(e) => updateField('description', e.target.value)}
           placeholder="Detailed course description"
           rows={6}
-          className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+          className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
         />
       </div>
       {/* Category and Skill Type */}
@@ -489,7 +489,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           <select
             value={formData.course_category_id || ''}
             onChange={(e) => updateField('course_category_id', parseInt(e.target.value))}
-            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
           >
             <option value="">Select a category</option>
             {categories.map(cat => (
@@ -502,7 +502,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           <select
             value={formData.skill_type_id || ''}
             onChange={(e) => updateField('skill_type_id', parseInt(e.target.value))}
-            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
           >
             <option value="">Select a skill type</option>
             {skillTypes.map(skill => (
@@ -519,7 +519,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           <select
             value={formData.instructor_id || ''}
             onChange={(e) => updateField('instructor_id', parseInt(e.target.value))}
-            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
           >
             <option value="">Select an instructor</option>
             {instructors.map(inst => (
@@ -532,7 +532,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           <select
             value={formData.difficulty_level}
             onChange={(e) => updateField('difficulty_level', e.target.value)}
-            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+            className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
           >
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
@@ -552,7 +552,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               onChange={(e) => updateField('duration_hours', parseInt(e.target.value))}
               min="0"
               placeholder="Hours"
-              className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+              className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
             />
           </div>
           <div>
@@ -563,7 +563,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               min="0"
               max="59"
               placeholder="Minutes"
-              className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+              className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
             />
           </div>
         </div>
@@ -579,7 +579,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               value={obj}
               onChange={(e) => updateArrayItem('learning_objectives', index, e.target.value)}
               placeholder="What will students learn?"
-              className={`flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+              className={`flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
             />
             {formData.learning_objectives.length > 1 && (
               <button
@@ -593,7 +593,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
         ))}
         <button
           onClick={() => addArrayItem('learning_objectives')}
-          className="text-emerald-600 hover:text-emerald-700 text-sm flex items-center gap-1"
+          className="text-red-600 hover:text-red-700 text-sm flex items-center gap-1"
         >
           <Plus size={16} /> Add Objective
         </button>
@@ -609,7 +609,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               value={prereq}
               onChange={(e) => updateArrayItem('prerequisites', index, e.target.value)}
               placeholder="What should students know before taking this course?"
-              className={`flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+              className={`flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
             />
             {formData.prerequisites.length > 1 && (
               <button
@@ -623,7 +623,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
         ))}
         <button
           onClick={() => addArrayItem('prerequisites')}
-          className="text-emerald-600 hover:text-emerald-700 text-sm flex items-center gap-1"
+          className="text-red-600 hover:text-red-700 text-sm flex items-center gap-1"
         >
           <Plus size={16} /> Add Prerequisite
         </button>
@@ -639,7 +639,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               value={skill}
               onChange={(e) => updateArrayItem('skills_gained', index, e.target.value)}
               placeholder="Skill name"
-              className={`flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+              className={`flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
             />
             {formData.skills_gained.length > 1 && (
               <button
@@ -653,7 +653,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
         ))}
         <button
           onClick={() => addArrayItem('skills_gained')}
-          className="text-emerald-600 hover:text-emerald-700 text-sm flex items-center gap-1"
+          className="text-red-600 hover:text-red-700 text-sm flex items-center gap-1"
         >
           <Plus size={16} /> Add Skill
         </button>
@@ -767,7 +767,7 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
         </div>
         <button
           onClick={addSection}
-          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
         >
           <Plus size={18} />
           Add Section
@@ -793,14 +793,14 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
                     value={section.title}
                     onChange={(e) => updateSection(sectionIndex, 'title', e.target.value)}
                     placeholder="Section title"
-                    className={`px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                    className={`px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
                   />
                   <input
                     type="text"
                     value={section.description || ''}
                     onChange={(e) => updateSection(sectionIndex, 'description', e.target.value)}
                     placeholder="Section description (optional)"
-                    className={`px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                    className={`px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
                   />
                 </div>
                 <button
@@ -829,14 +829,14 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
                             value={lecture.title}
                             onChange={(e) => updateLecture(sectionIndex, lectureIndex, 'title', e.target.value)}
                             placeholder="Lecture title"
-                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
                           />
                         </div>
                         <div className="md:col-span-2">
                           <select
                             value={lecture.type}
                             onChange={(e) => updateLecture(sectionIndex, lectureIndex, 'type', e.target.value)}
-                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
                           >
                             <option value="video">Video</option>
                             <option value="reading">Reading</option>
@@ -851,7 +851,7 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
                             onChange={(e) => updateLecture(sectionIndex, lectureIndex, 'duration_minutes', parseInt(e.target.value))}
                             placeholder="Duration (min)"
                             min="0"
-                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
                           />
                         </div>
                         <div className="md:col-span-3 flex items-center gap-2">
@@ -860,7 +860,7 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
                               type="checkbox"
                               checked={lecture.is_preview}
                               onChange={(e) => updateLecture(sectionIndex, lectureIndex, 'is_preview', e.target.checked)}
-                              className="w-4 h-4 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500"
+                              className="w-4 h-4 text-red-600 rounded focus:ring-2 focus:ring-red-500"
                             />
                             <span className="text-sm">Preview</span>
                           </label>
@@ -883,7 +883,7 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
                             value={lecture.video_url || ''}
                             onChange={(e) => updateLecture(sectionIndex, lectureIndex, 'video_url', e.target.value)}
                             placeholder="Video URL (YouTube, Vimeo, etc.)"
-                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
                           />
                         )}
                         {(lecture.type === 'reading' || lecture.type === 'assignment') && (
@@ -892,7 +892,7 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
                             onChange={(e) => updateLecture(sectionIndex, lectureIndex, 'content', e.target.value)}
                             placeholder="Content or instructions"
                             rows={3}
-                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                            className={`w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
                           />
                         )}
                       </div>
@@ -901,7 +901,7 @@ const CourseContentTab: React.FC<CourseContentTabProps> = ({ formData, setFormDa
 
                   <button
                     onClick={() => addLecture(sectionIndex)}
-                    className="w-full py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center justify-center gap-2"
                   >
                     <Plus size={18} />
                     Add Lecture
@@ -943,7 +943,7 @@ const PricingTab: React.FC<PricingTabProps> = ({ formData, updateField }) => {
                 min="0"
                 step="0.01"
                 placeholder="0.00"
-                className={`w-full pl-8 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                className={`w-full pl-8 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
               />
             </div>
             <p className={`text-xs mt-1 text-gray-500 dark:text-gray-400`}>Set to 0 for free courses</p>
@@ -959,11 +959,11 @@ const PricingTab: React.FC<PricingTabProps> = ({ formData, updateField }) => {
                 min="0"
                 step="0.01"
                 placeholder="0.00"
-                className={`w-full pl-8 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+                className={`w-full pl-8 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
               />
             </div>
             {formData.discount_price && formData.discount_price < formData.price && (
-              <p className="text-xs mt-1 text-green-600">
+              <p className="text-xs mt-1 text-red-600">
                 {Math.round(((formData.price - formData.discount_price) / formData.price) * 100)}% discount
               </p>
             )}
@@ -980,7 +980,7 @@ const PricingTab: React.FC<PricingTabProps> = ({ formData, updateField }) => {
             <select
               value={formData.status}
               onChange={(e) => updateField('status', e.target.value)}
-              className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none`}
+              className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none`}
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
@@ -999,7 +999,7 @@ const PricingTab: React.FC<PricingTabProps> = ({ formData, updateField }) => {
               id="is_featured"
               checked={formData.is_featured}
               onChange={(e) => updateField('is_featured', e.target.checked)}
-              className="mt-1 w-4 h-4 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500"
+              className="mt-1 w-4 h-4 text-red-600 rounded focus:ring-2 focus:ring-red-500"
             />
             <div>
               <label htmlFor="is_featured" className="font-medium cursor-pointer">
@@ -1072,7 +1072,7 @@ const PricingTab: React.FC<PricingTabProps> = ({ formData, updateField }) => {
           <div className="flex justify-between">
             <span className="text-gray-500 dark:text-gray-400">Status:</span>
             <span className={`px-2 py-1 rounded text-xs ${
-              formData.status === 'published' ? 'bg-green-100 text-green-800' :
+              formData.status === 'published' ? 'bg-red-100 text-red-800' :
               formData.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
               'bg-gray-100 text-gray-800'
             }`}>

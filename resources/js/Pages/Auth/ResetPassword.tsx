@@ -41,7 +41,7 @@ export default function ResetPassword({
                 <div className="w-full max-w-6xl flex bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
 
                     {/* Left Side - Security Info Panel */}
-                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-600 to-purple-600 dark:from-emerald-700 dark:to-purple-700 p-12 flex-col justify-center text-white relative overflow-hidden">
+                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-red-600 dark:from-blue-700 dark:to-red-700 p-12 flex-col justify-center text-white relative overflow-hidden">
                         <div className="absolute inset-0 bg-black opacity-10 dark:opacity-20"></div>
                         <div className="relative z-10">
                             <div className="mb-8">
@@ -98,8 +98,8 @@ export default function ResetPassword({
                         <div className="w-full max-w-md mx-auto">
 
                             <div className="text-center mb-8">
-                                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                    <KeyRound className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+                                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <KeyRound className="w-8 h-8 text-red-600 dark:text-red-400" />
                                 </div>
                                 <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Set New Password</h2>
                                 <p className="text-gray-600 dark:text-gray-300">
@@ -143,7 +143,7 @@ export default function ResetPassword({
                                             type={showPassword ? "text" : "password"}
                                             name="password"
                                             value={data.password}
-                                            className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
+                                            className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
                                             autoComplete="new-password"
                                             isFocused={true}
                                             onChange={(e) => setData('password', e.target.value)}
@@ -175,7 +175,7 @@ export default function ResetPassword({
                                             type={showConfirmPassword ? "text" : "password"}
                                             name="password_confirmation"
                                             value={data.password_confirmation}
-                                            className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
+                                            className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-all duration-200 bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100"
                                             autoComplete="new-password"
                                             onChange={(e) =>
                                                 setData('password_confirmation', e.target.value)
@@ -199,7 +199,7 @@ export default function ResetPassword({
                                 </div>
 
                                 <PrimaryButton
-                                    className="w-full bg-gradient-to-r from-emerald-600 to-purple-600 dark:from-emerald-500 dark:to-purple-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-emerald-700 hover:to-purple-700 dark:hover:from-emerald-600 dark:hover:to-purple-600 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+                                    className="w-full bg-gradient-to-r from-red-600 to-purple-600 dark:from-red-500 dark:to-purple-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-red-700 hover:to-purple-700 dark:hover:from-red-600 dark:hover:to-purple-600 focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
                                     disabled={processing}
                                 >
                                     {processing ? 'Updating Password...' : 'Update Password'}
@@ -211,7 +211,7 @@ export default function ResetPassword({
                                     Remember your password?{' '}
                                     <Link
                                         href={route('login')}
-                                        className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold focus:outline-none focus:underline transition-colors"
+                                        className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-semibold focus:outline-none focus:underline transition-colors"
                                     >
                                         Sign In
                                     </Link>

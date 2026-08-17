@@ -81,9 +81,9 @@ export default function EventsPage() {
   const getEventTypeColor = (type: string): string => {
     const typeMap: Record<string, string> = {
       hackathon: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      bootcamp: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+      bootcamp: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
       competition: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-      workshop: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      workshop: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
     };
     return typeMap[type.toLowerCase()] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   };
@@ -124,7 +124,7 @@ export default function EventsPage() {
                     placeholder="Search events..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-4 pr-4 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 dark:text-white"
+                    className="w-full pl-4 pr-4 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:ring-2 focus:ring-red-500 dark:text-white"
                   />
                 </div>
               </div>
@@ -137,7 +137,7 @@ export default function EventsPage() {
                     onClick={() => setSelectedFilter(filter.key)}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       selectedFilter === filter.key
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-red-600 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
@@ -175,7 +175,7 @@ export default function EventsPage() {
                     setSearchTerm('');
                     setSelectedFilter('all');
                   }}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                  className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                 >
                   Clear Filters
                 </button>
@@ -195,7 +195,7 @@ export default function EventsPage() {
                         {event.type}
                       </span>
                       {isEventRegistered(event.id) && (
-                        <span className="flex items-center space-x-1 text-green-600 dark:text-green-400 text-sm">
+                        <span className="flex items-center space-x-1 text-red-600 dark:text-red-400 text-sm">
                           <CheckCircle className="w-4 h-4" />
                           <span>Registered</span>
                         </span>
@@ -225,7 +225,7 @@ export default function EventsPage() {
                         <span>{event.registered_count} / {event.max_participants} participants</span>
                       </div>
                       {event.prize_pool && (
-                        <div className="flex items-center space-x-2 text-sm font-semibold text-green-600 dark:text-green-400">
+                        <div className="flex items-center space-x-2 text-sm font-semibold text-red-600 dark:text-red-400">
                           <Trophy className="w-4 h-4" />
                           <span>{event.prize_pool}</span>
                         </div>
@@ -241,7 +241,7 @@ export default function EventsPage() {
                           ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 cursor-not-allowed'
                           : event.registered_count >= event.max_participants
                           ? 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400 cursor-not-allowed'
-                          : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          : 'bg-red-600 hover:bg-red-700 text-white'
                       }`}
                     >
                       {isEventRegistered(event.id)
@@ -264,7 +264,7 @@ export default function EventsPage() {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                  <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                     {events.data.length}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -272,7 +272,7 @@ export default function EventsPage() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                     {eventCounts.upcoming}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">

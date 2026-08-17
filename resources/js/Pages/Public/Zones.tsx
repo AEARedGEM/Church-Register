@@ -17,10 +17,10 @@ export default function Zones() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
                             NYP-IP
                         </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">
+                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
                             Back to Home
                         </Link>
                     </div>
@@ -34,12 +34,12 @@ export default function Zones() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                         {zones.map((zone, index) => (
-                            <div key={index} className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-900/30">
+                            <div key={index} className="bg-gradient-to-br from-red-50 to-red-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-red-200 dark:border-red-900/30">
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{zone.name}</h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">States:</p>
                                 <div className="flex flex-wrap gap-2">
                                     {zone.states.map((state, idx) => (
-                                        <span key={idx} className="bg-white dark:bg-gray-700 px-3 py-1 rounded-full text-sm text-gray-700 dark:text-gray-300 border border-emerald-200 dark:border-emerald-900/30">
+                                        <span key={idx} className="bg-white dark:bg-gray-700 px-3 py-1 rounded-full text-sm text-gray-700 dark:text-gray-300 border border-red-200 dark:border-red-900/30">
                                             {state}
                                         </span>
                                     ))}

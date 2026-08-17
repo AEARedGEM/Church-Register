@@ -17,10 +17,10 @@ export default function Ecosystem() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
                             NYP-IP
                         </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">
+                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
                             Back to Home
                         </Link>
                     </div>
@@ -38,7 +38,7 @@ export default function Ecosystem() {
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Ecosystem Components</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                         {ecosystemElements.map((element, idx) => (
-                            <div key={idx} className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-emerald-200 dark:border-emerald-900/30">
+                            <div key={idx} className="bg-gradient-to-br from-red-50 to-red-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-red-200 dark:border-red-900/30">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{element.title}</h3>
                                 <p className="text-gray-700 dark:text-gray-300 text-sm">{element.desc}</p>
                             </div>
@@ -56,13 +56,13 @@ export default function Ecosystem() {
                         </ul>
                     </section>
 
-                    <div className="bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-950 dark:to-emerald-950 rounded-lg p-8">
+                    <div className="bg-gradient-to-r from-red-50 to-red-50 dark:from-red-950 dark:to-red-950 rounded-lg p-8">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Explore More</h3>
                         <div className="flex gap-4 flex-wrap">
-                            <Link href="/program" className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                            <Link href="/program" className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                                 Program Overview
                             </Link>
-                            <Link href="/impact" className="px-6 py-2 border border-emerald-600 text-emerald-600 dark:text-emerald-400 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors">
+                            <Link href="/impact" className="px-6 py-2 border border-red-600 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-950 transition-colors">
                                 See Our Impact
                             </Link>
                         </div>

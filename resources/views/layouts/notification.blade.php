@@ -63,7 +63,7 @@
         .button {
             display: inline-block;
             padding: 12px 25px;
-            background-color: #10b981;
+            background-color: #2563eb;
             color: #ffffff !important;
             text-decoration: none;
             border-radius: 4px;

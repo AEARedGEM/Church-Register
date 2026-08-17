@@ -151,7 +151,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
             {/* Personal Information Section */}
             <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-semibold text-sm">1</div>
+                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 font-semibold text-sm">1</div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Personal Information</h3>
                 </div>
 
@@ -212,7 +212,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
             {/* Location Section */}
             <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-semibold text-sm">2</div>
+                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-700 dark:text-red-300 font-semibold text-sm">2</div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Location</h3>
                 </div>
 
@@ -225,7 +225,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
                             name="state_id"
                             value={data.state_id}
                             onChange={(e) => handleStateChange(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
                             disabled={loadingStates}
                             required
                         >
@@ -245,7 +245,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
                             name="lga_id"
                             value={data.lga_id}
                             onChange={(e) => handleLgaChange(e.target.value)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
                             disabled={!data.state_id || loadingLgas}
                             required
                         >
@@ -267,7 +267,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
                             name="ward_id"
                             value={data.ward_id}
                             onChange={(e) => setData('ward_id', e.target.value || '' as any)}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-emerald-500 dark:focus:ring-emerald-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 dark:bg-gray-700 dark:text-white disabled:opacity-50"
                             disabled={!data.lga_id || loadingWards}
                             required
                         >
@@ -298,7 +298,7 @@ export default function RegistrationFormComponent({ onSuccess }: RegistrationFor
                         <div
                             key={i}
                             className={`h-1 w-3 rounded-full transition-all ${
-                                i === 1 ? 'bg-emerald-500 w-6' : 'bg-gray-300 dark:bg-gray-600'
+                                i === 1 ? 'bg-red-500 w-6' : 'bg-gray-300 dark:bg-gray-600'
                             }`}
                         />
                     ))}

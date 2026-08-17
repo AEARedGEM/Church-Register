@@ -76,16 +76,16 @@ export default function RoleApplicationForm({
             </div>
 
             {/* Current Role Status */}
-            <div className="mb-8 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                <h3 className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+            <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
                     Current Active Role: {dashCtx.role_label}
                 </h3>
-                <p className="text-sm text-emerald-700 dark:text-emerald-300 mt-1">
+                <p className="text-sm text-red-700 dark:text-red-300 mt-1">
                     You currently have access to the {dashCtx.role_label} dashboard and its features.
                 </p>
                 {dashCtx.active_roles && dashCtx.active_roles.length > 1 && (
                     <div className="mt-3">
-                        <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mb-2">
+                        <p className="text-xs text-red-600 dark:text-red-400 font-medium mb-2">
                             Switch to other active roles:
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -95,7 +95,7 @@ export default function RoleApplicationForm({
                                     <button
                                         key={role}
                                         onClick={() => switchRole(role)}
-                                        className="px-2.5 py-1 bg-white dark:bg-gray-800 text-emerald-700 dark:text-emerald-300 text-xs font-medium rounded border border-emerald-200 dark:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                                        className="px-2.5 py-1 bg-white dark:bg-gray-800 text-red-700 dark:text-red-300 text-xs font-medium rounded border border-red-200 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                     >
                                         Switch to {role.replace('_', ' ')}
                                     </button>
@@ -153,7 +153,7 @@ export default function RoleApplicationForm({
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+                                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
                                         >
                                             {processing ? 'Submitting...' : 'Submit Application'}
                                         </button>
@@ -170,7 +170,7 @@ export default function RoleApplicationForm({
                                         </button>
 
                                         {recentlySuccessful && (
-                                            <p className="text-sm text-green-600 dark:text-green-400">
+                                            <p className="text-sm text-red-600 dark:text-red-400">
                                                 Application submitted successfully!
                                             </p>
                                         )}

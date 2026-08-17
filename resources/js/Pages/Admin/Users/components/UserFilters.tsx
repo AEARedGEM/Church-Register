@@ -94,7 +94,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
           <select
             value={localFilters.role || ''}
             onChange={(e) => handleInputChange('role', e.target.value || undefined)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
           >
             <option value="">All Roles</option>
             {roles.map((role) => (
@@ -114,7 +114,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
           <select
             value={localFilters.status || ''}
             onChange={(e) => handleInputChange('status', e.target.value || undefined)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
           >
             <option value="">All Statuses</option>
             {filterOptions.statuses.map((status) => (
@@ -133,7 +133,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
           <select
             value={localFilters.registration_status || ''}
             onChange={(e) => handleInputChange('registration_status', e.target.value || undefined)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
           >
             <option value="">All Registration Status</option>
             {filterOptions.registrationStatuses.map((status) => (
@@ -154,7 +154,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
             <select
               value={localFilters.sector || ''}
               onChange={(e) => handleInputChange('sector', e.target.value || undefined)}
-              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
             >
               <option value="">All Sectors</option>
               {filterOptions.sectors.map((sector) => (
@@ -176,7 +176,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
             <select
               value={localFilters.state || ''}
               onChange={(e) => handleInputChange('state', e.target.value || undefined)}
-              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
             >
               <option value="">All States</option>
               {filterOptions.states.map((state) => (
@@ -198,7 +198,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
             type="date"
             value={localFilters.date_from || ''}
             onChange={(e) => handleInputChange('date_from', e.target.value || undefined)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
           />
         </div>
 
@@ -212,16 +212,16 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
             type="date"
             value={localFilters.date_to || ''}
             onChange={(e) => handleInputChange('date_to', e.target.value || undefined)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
           />
         </div>
       </div>
 
       {/* Active Filters Display */}
       {hasActiveFilters && (
-        <div className="mb-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+        <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
           <div className="flex flex-wrap gap-2">
-            <span className="text-sm font-medium text-emerald-800 dark:text-emerald-300 mr-2">
+            <span className="text-sm font-medium text-red-800 dark:text-red-300 mr-2">
               Active filters:
             </span>
 
@@ -231,12 +231,12 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
               return (
                 <span
                   key={key}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded-full"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 text-xs font-medium rounded-full"
                 >
                   {getActiveFilterLabel(key, value.toString())}
                   <button
                     onClick={() => handleInputChange(key as keyof UserFilterParams, undefined)}
-                    className="hover:text-emerald-600 dark:hover:text-emerald-300"
+                    className="hover:text-red-600 dark:hover:text-red-300"
                   >
                     <XMarkIcon className="w-3.5 h-3.5" />
                   </button>
@@ -250,7 +250,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
       <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
         <button
           onClick={handleApplyFilters}
-          className="flex-1 sm:flex-none px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium text-sm"
+          className="flex-1 sm:flex-none px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm"
         >
           Apply Filters
         </button>

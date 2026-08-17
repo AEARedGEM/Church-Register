@@ -29,8 +29,8 @@ const StatusBadge: React.FC<{ user: User }> = ({ user }) => {
     // Email verification status
     if (user.email_verified_at) {
       return {
-        bg: 'bg-green-100 dark:bg-green-900/30',
-        text: 'text-green-700 dark:text-green-300',
+        bg: 'bg-red-100 dark:bg-red-900/30',
+        text: 'text-red-700 dark:text-red-300',
         icon: <CheckBadgeIcon className="w-3.5 h-3.5" />,
         label: 'Verified'
       };
@@ -58,8 +58,8 @@ const RegistrationStatusBadge: React.FC<{ status: string }> = ({ status }) => {
     switch (status.toLowerCase()) {
       case 'verified':
         return {
-          bg: 'bg-green-100 dark:bg-green-900/30',
-          text: 'text-green-700 dark:text-green-300',
+          bg: 'bg-red-100 dark:bg-red-900/30',
+          text: 'text-red-700 dark:text-red-300',
           label: 'Verified'
         };
       case 'pending':
@@ -104,15 +104,15 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
       case 'super_admin':
         return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'admin':
-        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'manager':
         return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300';
       case 'investor':
-        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'startup':
         return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300';
       case 'sme_owner':
-        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       default:
         return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }
@@ -254,7 +254,7 @@ export const UserTable: React.FC<UserTableProps> = ({
               <select
                 value={currentFilters.per_page || 10}
                 onChange={(e) => handlePerPageChange(Number(e.target.value))}
-                className="border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -343,7 +343,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                           alt={user.name}
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
                           <span className="text-sm font-semibold text-white">
                             {getInitials(user)}
                           </span>
@@ -354,7 +354,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                       <div className="text-sm font-medium text-gray-900 dark:text-white truncate">
                         <Link
                           href={route('users.show', user.id)}
-                          className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                          className="hover:text-red-600 dark:hover:text-red-400 transition-colors"
                         >
                           {getFullName(user)}
                         </Link>
@@ -451,7 +451,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                     alt={user.name}
                   />
                 ) : (
-                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
+                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center ring-2 ring-gray-100 dark:ring-gray-700">
                     <span className="text-sm font-semibold text-white">
                       {getInitials(user)}
                     </span>
@@ -461,7 +461,7 @@ export const UserTable: React.FC<UserTableProps> = ({
               <div className="flex-1 min-w-0">
                 <Link
                   href={route('users.show', user.id)}
-                  className="text-sm font-medium text-gray-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 block truncate"
+                  className="text-sm font-medium text-gray-900 dark:text-white hover:text-red-600 dark:hover:text-red-400 block truncate"
                 >
                   {getFullName(user)}
                 </Link>
@@ -550,7 +550,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                     href={link.url}
                     className={`px-3 py-2 text-sm rounded-lg transition-colors whitespace-nowrap ${
                       link.active
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-red-600 text-white'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}
                     dangerouslySetInnerHTML={{ __html: link.label }}

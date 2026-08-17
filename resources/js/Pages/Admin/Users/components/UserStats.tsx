@@ -40,14 +40,14 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, subtitle, trend
           )}
           {trend && (
             <div className={`inline-flex items-center gap-1 text-xs font-medium mt-2 ${
-              trend.isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+              trend.isPositive ? 'text-red-600 dark:text-red-400' : 'text-red-600 dark:text-red-400'
             }`}>
               <span>{trend.isPositive ? '↑' : '↓'} {trend.value}%</span>
               <span className="text-gray-500 dark:text-gray-400">{trend.label}</span>
             </div>
           )}
         </div>
-        <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
           {icon}
         </div>
       </div>
@@ -74,14 +74,14 @@ export const UserStats: React.FC<UserStatsProps> = ({ statistics }) => {
       <StatCard
         title="Total Users"
         value={formatNumber(statistics.total_users)}
-        icon={<UsersIcon className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />}
+        icon={<UsersIcon className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />}
         subtitle="All registered users"
       />
 
       <StatCard
         title="Email Verified"
         value={formatNumber(statistics.verified_users)}
-        icon={<CheckBadgeIcon className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />}
+        icon={<CheckBadgeIcon className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />}
         subtitle={`${getVerificationRate()}% verification rate`}
       />
 
@@ -109,7 +109,7 @@ export const UserStats: React.FC<UserStatsProps> = ({ statistics }) => {
       <StatCard
         title="Total Roles"
         value={formatNumber(statistics.total_roles)}
-        icon={<UserGroupIcon className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />}
+        icon={<UserGroupIcon className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />}
         subtitle="Available system roles"
       />
     </div>

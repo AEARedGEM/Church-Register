@@ -35,7 +35,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
               className="p-4 hover:shadow-md cursor-pointer"
             >
               <div className="flex items-center space-x-3 mb-3">
-                <div className="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200">
+                <div className="w-12 h-12 rounded-lg bg-red-50 text-red-700 flex items-center justify-center border border-red-200">
                   <Icon className="w-6 h-6" />
                 </div>
                 <div>

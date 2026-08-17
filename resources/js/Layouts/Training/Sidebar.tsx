@@ -29,13 +29,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out sidebar ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
-    } lg:translate-x-0 bg-emerald-950/95 dark:bg-emerald-950 border-r border-emerald-900`}>
+    } lg:translate-x-0 bg-red-950/95 dark:bg-red-950 border-r border-red-900`}>
 
       {/* Logo */}
       <div className="flex items-center justify-between h-16 px-4 border-b dark:border-gray-700">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-emerald-700/20 rounded-lg flex items-center justify-center border border-emerald-700/30">
-            <span className="text-emerald-200 font-semibold text-sm">NYP</span>
+          <div className="w-8 h-8 bg-red-700/20 rounded-lg flex items-center justify-center border border-red-700/30">
+            <span className="text-red-200 font-semibold text-sm">NYP</span>
           </div>
           <div>
             <span className="font-semibold text-sm text-gray-900 dark:text-white">
@@ -65,8 +65,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => onNavigate(item.id)}
                 className={`w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
                       currentPage === item.id
-                        ? 'bg-white/5 text-emerald-200 dark:bg-emerald-800/60 dark:text-emerald-100'
-                        : 'text-emerald-300 hover:bg-emerald-900/40 hover:text-emerald-100'
+                        ? 'bg-white/5 text-red-200 dark:bg-red-800/60 dark:text-red-100'
+                        : 'text-red-300 hover:bg-red-900/40 hover:text-red-100'
                 }`}
               >
                 <Icon className="w-5 h-5 mr-3" />
@@ -79,17 +79,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Quick Stats */}
       <div className="mt-8 px-4">
-        <div className="p-4 rounded-lg bg-white/5 border border-emerald-800/40">
+        <div className="p-4 rounded-lg bg-white/5 border border-red-800/40">
           <div className="flex items-center space-x-3 mb-2">
             <Trophy className="w-5 h-5 text-amber-400" />
-            <span className="font-medium text-sm text-emerald-100">
+            <span className="font-medium text-sm text-red-100">
               Learning Progress
             </span>
           </div>
-          <div className="text-2xl font-bold text-emerald-200">
+          <div className="text-2xl font-bold text-red-200">
             {enrollmentCount}
           </div>
-          <div className="text-xs text-emerald-300">
+          <div className="text-xs text-red-300">
             Courses enrolled
           </div>
         </div>

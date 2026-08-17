@@ -169,14 +169,14 @@ export default function CertificateDetail() {
           <div className="flex flex-wrap gap-3 mb-6">
             <button
               onClick={handleDownloadPDF}
-              className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
+              className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
             >
               <Download className="w-5 h-5" />
               <span>Download PDF</span>
             </button>
             <button
               onClick={handleShare}
-              className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
+              className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors"
             >
               <Share2 className="w-5 h-5" />
               <span>Share</span>
@@ -315,7 +315,7 @@ export default function CertificateDetail() {
                     has successfully completed
                   </p>
 
-                  <h3 className="text-3xl md:text-4xl font-semibold text-emerald-600 dark:text-emerald-400 px-8">
+                  <h3 className="text-3xl md:text-4xl font-semibold text-red-600 dark:text-red-400 px-8">
                     {certificateData.course_name}
                   </h3>
 
@@ -340,7 +340,7 @@ export default function CertificateDetail() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Final Score</p>
-                    <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+                    <p className="text-lg font-semibold text-red-600 dark:text-red-400">
                       {certificateData.score}%
                     </p>
                   </div>
@@ -390,7 +390,7 @@ export default function CertificateDetail() {
                 </div>
 
                 {/* Blockchain Badge */}
-                <div className="flex items-center justify-center space-x-2 text-green-600 dark:text-green-400 pt-4">
+                <div className="flex items-center justify-center space-x-2 text-red-600 dark:text-red-400 pt-4">
                   <Shield className="w-5 h-5" />
                   <span className="text-sm font-medium">Blockchain Verified & Secure</span>
                 </div>
@@ -404,7 +404,7 @@ export default function CertificateDetail() {
           {/* Verification Info */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
             <h3 className="font-semibold mb-4 text-gray-900 dark:text-white flex items-center space-x-2">
-              <Shield className="w-5 h-5 text-green-600" />
+              <Shield className="w-5 h-5 text-red-600" />
               <span>Certificate Verification</span>
             </h3>
             <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400">
@@ -414,9 +414,9 @@ export default function CertificateDetail() {
                   {certificateData.certificate_id}
                 </span>
               </p>
-              <div className="flex items-start space-x-2 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                <Shield className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <p className="text-green-800 dark:text-green-200">
+              <div className="flex items-start space-x-2 bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+                <Shield className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <p className="text-red-800 dark:text-red-200">
                   This certificate is permanently recorded and cryptographically secured, ensuring its authenticity
                   and making it tamper-proof. Anyone can verify its authenticity using the QR code or verification portal.
                 </p>
@@ -425,15 +425,15 @@ export default function CertificateDetail() {
                 <p className="font-medium text-gray-900 dark:text-white mb-2">How to share:</p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start space-x-2">
-                    <span className="text-emerald-600 dark:text-emerald-400">•</span>
+                    <span className="text-red-600 dark:text-red-400">•</span>
                     <span>Add to your LinkedIn profile to showcase your achievement</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-emerald-600 dark:text-emerald-400">•</span>
+                    <span className="text-red-600 dark:text-red-400">•</span>
                     <span>Include in your resume or CV as proof of skill development</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-emerald-600 dark:text-emerald-400">•</span>
+                    <span className="text-red-600 dark:text-red-400">•</span>
                     <span>Share the verification link with employers or colleagues</span>
                   </li>
                 </ul>

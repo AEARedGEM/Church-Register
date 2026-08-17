@@ -32,7 +32,7 @@ export const Toggle: React.FC<ToggleProps> = ({
     <button
       onClick={() => onChange(!enabled)}
       className={`relative inline-flex ${sizeClasses[size]} items-center rounded-full transition-colors ${
-        enabled ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-700'
+        enabled ? 'bg-red-600' : 'bg-gray-200 dark:bg-gray-700'
       } ${className}`}
     >
       <span

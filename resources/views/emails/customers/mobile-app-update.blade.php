@@ -11,8 +11,8 @@
 
     <p>We're excited to announce a new update for the AFRIData NG mobile app (v{{ $version }})! This release includes important improvements and new features to enhance your experience.</p>
 
-    <div style="background-color: #ffffff; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0;">
-        <h3 style="margin-top: 0; color: #10b981;">What's New in This Version</h3>
+    <div style="background-color: #ffffff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #2563eb;">What's New in This Version</h3>
         <ul style="margin-bottom: 0; padding-left: 20px;">
             @foreach($features as $feature)
             <li style="margin-bottom: 8px;">{{ $feature }}</li>

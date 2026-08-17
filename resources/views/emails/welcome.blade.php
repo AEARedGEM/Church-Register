@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to NYP-IP Portal</title>
+    <title>Welcome to APGA Worldwide</title>
     <style>
         * {
             margin: 0;
@@ -27,7 +27,7 @@
 
         /* Header */
         .email-header {
-            background-color: #10b981;
+            background-color: #2563eb;
             padding: 40px 40px 30px;
             border-bottom: 3px solid #000000;
         }
@@ -85,7 +85,7 @@
 
         .highlight-box {
             background-color: #ffffff;
-            border-left: 4px solid #10b981;
+            border-left: 4px solid #2563eb;
             padding: 20px;
             margin: 30px 0;
         }
@@ -117,14 +117,14 @@
             margin-bottom: 18px;
             padding: 15px;
             background-color: #ffffff;
-            border-left: 3px solid #10b981;
+            border-left: 3px solid #2563eb;
         }
 
         .access-icon {
             flex-shrink: 0;
             width: 32px;
             height: 32px;
-            background-color: #10b981;
+            background-color: #2563eb;
             color: #ffffff;
             border-radius: 4px;
             display: flex;
@@ -153,7 +153,7 @@
             text-align: center;
             margin: 40px 0;
             padding: 30px;
-            background-color: #10b981;
+            background-color: #2563eb;
         }
 
         .cta-label {
@@ -177,7 +177,7 @@
         }
 
         .cta-button:hover {
-            background-color: #10b981;
+            background-color: #2563eb;
             color: #ffffff;
         }
 
@@ -211,7 +211,7 @@
             top: 0;
             width: 32px;
             height: 32px;
-            background-color: #10b981;
+            background-color: #2563eb;
             color: #ffffff;
             border-radius: 4px;
             display: flex;
@@ -230,7 +230,7 @@
             margin: 35px 0 25px;
             padding: 25px;
             background-color: #ffffff;
-            border-top: 3px solid #10b981;
+            border-top: 3px solid #2563eb;
             font-size: 15px;
             color: #000000;
             line-height: 1.7;
@@ -250,7 +250,7 @@
 
         /* Footer */
         .email-footer {
-            background-color: #10b981;
+            background-color: #2563eb;
             padding: 35px 40px;
             color: #ffffff;
         }
@@ -301,7 +301,7 @@
 
         .social-links a:hover {
             color: #ffffff;
-            border-color: #10b981;
+            border-color: #2563eb;
         }
 
         .footer-bottom {
@@ -350,11 +350,11 @@
         <!-- Header -->
         <div class="email-header">
             <div class="logo-section">
-                <div class="logo-title">NYP-IP PORTAL</div>
-                <div class="logo-subtitle">Nigeria Youth Parliament Industrialization Program Portal</div>
+                <div class="logo-title">APGA WORLDWIDE</div>
+                <div class="logo-subtitle">Apostolic Power Glorious Assembly</div>
             </div>
             <div class="header-tagline">
-                Powered by LuxuryX Technologies & TradeFi Ltd, The Nigeria Youth Parliament, and AfaraHub Limited
+                Growing God's Kingdom Together in Faith
             </div>
         </div>
 
@@ -363,12 +363,12 @@
             <h1 class="greeting">Welcome, {{ $userName }}</h1>
 
             <p class="intro-text">
-                Welcome to the <strong>Nigeria Youth Parliament Industrialization Program (NYP-IP)</strong> — a national network of builders, innovators, and entrepreneurs committed to transforming Nigeria's industrial and digital economy.
+                Welcome to <strong>APGA Worldwide</strong> — a faith-based community dedicated to spiritual growth, fellowship, and making a difference in the world.
             </p>
 
             <div class="highlight-box">
                 <p>
-                    You're now part of a national ecosystem where ideas turn into industries — powered by decentralized finance, innovation, and youth energy.
+                    You're now part of a faith-based community dedicated to spiritual growth, fellowship, and building meaningful connections in Christ.
                 </p>
             </div>
 
@@ -378,40 +378,40 @@
                 <div class="access-item">
                     <div class="access-icon">01</div>
                     <div class="access-content">
-                        <h4>Industrialization Programs</h4>
-                        <p>Startup bootcamps, mentorships and business incubation</p>
+                        <h4>Attendance Tracking</h4>
+                        <p>Keep track of worship services and church activities</p>
                     </div>
                 </div>
 
                 <div class="access-item">
                     <div class="access-icon">02</div>
                     <div class="access-content">
-                        <h4>Tokenization, TradeFi & DeFi Funding</h4>
-                        <p>Access working capital through tokenized industrial finance ($IND, USDI)</p>
+                        <h4>Event Management</h4>
+                        <p>Discover and register for church events and programs</p>
                     </div>
                 </div>
 
                 <div class="access-item">
                     <div class="access-icon">03</div>
                     <div class="access-content">
-                        <h4>Training & Skills Modules</h4>
-                        <p>Tech, vocational, and soft skill empowerment</p>
+                        <h4>Member Directory</h4>
+                        <p>Connect with fellow church members and community</p>
                     </div>
                 </div>
 
                 <div class="access-item">
                     <div class="access-icon">04</div>
                     <div class="access-content">
-                        <h4>Growth Network</h4>
-                        <p>Connect with mentors, investors and youth clusters across states</p>
+                        <h4>Prayer Requests</h4>
+                        <p>Share and receive prayer support from the community</p>
                     </div>
                 </div>
 
                 <div class="access-item">
                     <div class="access-icon">05</div>
                     <div class="access-content">
-                        <h4>Regional Leaders Board</h4>
-                        <p>Track performance by state and unlock growth challenges</p>
+                        <h4>Invitation League</h4>
+                        <p>Invite friends and grow our faith community</p>
                     </div>
                 </div>
             </div>
@@ -427,22 +427,22 @@
             <h2 class="section-title">Getting Started</h2>
 
             <ol class="steps-list">
-                <li><strong>Complete Your Profile</strong> with your details and business info to verify your identity</li>
-                <li><strong>Choose Your Track</strong> from Tech, Vocational, or Entrepreneurial programs that match your interests</li>
-                <li><strong>Connect with Your Chapter</strong> and join conversations shaping your state's productivity</li>
-                <li><strong>Learn and Build</strong> by applying for TradeFi or Equity funding via your dashboard</li>
-                <li><strong>Track Your Impact</strong> and earn badges as you climb the Regional Leaders Board</li>
+                <li><strong>Complete Your Profile</strong> with your details to join our community</li>
+                <li><strong>Explore Events & Programs</strong> that match your interests and faith journey</li>
+                <li><strong>Connect with Fellow Members</strong> and participate in small groups and activities</li>
+                <li><strong>Share Prayer Requests</strong> and support others in the community</li>
+                <li><strong>Invite Friends & Family</strong> to join us in growing God's kingdom together</li>
             </ol>
 
             <!-- Closing Message -->
             <div class="closing-message">
-                Together, we're building a new era of industrial youth power for Nigeria. Welcome once again — your journey to empowerment, innovation, and national impact starts now.
+                Welcome to APGA Worldwide! We're excited to have you join our faith community. Together, we're growing God's kingdom and making a positive impact in the world. Your spiritual journey with us starts now.
             </div>
 
             <div class="signature">
-                <div class="signature-name">Warm regards,</div>
-                <div>LuxuryX Technologies & TradeFi Ltd</div>
-                <div>AfaraHub Team | The Nigeria Youth Parliament</div>
+                <div class="signature-name">Blessings,</div>
+                <div>APGA Worldwide Team</div>
+                <div>Apostolic Power Glorious Assembly</div>
             </div>
         </div>
 
@@ -451,31 +451,30 @@
             <div class="footer-section">
                 <div class="footer-title">Contact Us</div>
                 <div class="contact-info">
-                    <div><a href="mailto:partnerships@luxuryxtech.org.ng">partnerships@luxuryxtech.org.ng</a></div>
-                    <div><a href="mailto:info@luxuryxtech.com">info@luxuryxtech.com</a></div>
+                    <div><a href="mailto:info@apgaworldwide.org">info@apgaworldwide.org</a></div>
+                    <div>Growing God's Kingdom Together</div>
                 </div>
             </div>
 
             <div class="footer-section">
-                <div class="footer-title">Visit Our Platforms</div>
+                <div class="footer-title">About APGA Worldwide</div>
                 <div class="contact-info">
-                    <div><a href="https://nypipportal.luxuryxtech.org.ng">nypipportal.luxuryxtech.org.ng</a></div>
-                    <div><a href="https://luxuryxtech.org.ng">luxuryxtech.org.ng</a></div>
+                    <div>Apostolic Power Glorious Assembly</div>
+                    <div>A faith-based community dedicated to spiritual growth and fellowship</div>
                 </div>
             </div>
 
             <div class="footer-section">
                 <div class="footer-title">Follow Us</div>
                 <div class="social-links">
-                    <a href="https://t.me/nypipcommunity">Telegram</a>
-                    <a href="https://www.linkedin.com/company/luxuryx-technologies">LinkedIn</a>
-                    <a href="https://x.com/LuxuryX_Tech">X (Twitter)</a>
-                    <a href="https://www.facebook.com/LuxuryXTechnologies">Facebook</a>
+                    <a href="https://facebook.com/apgaworldwide">Facebook</a>
+                    <a href="https://instagram.com/apgaworldwide">Instagram</a>
+                    <a href="https://twitter.com/apgaworldwide">X (Twitter)</a>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                © 2025 NYP-IP Portal. All rights reserved.
+                © 2025 APGA Worldwide. All rights reserved.
             </div>
         </div>
     </div>

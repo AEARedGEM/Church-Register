@@ -151,7 +151,7 @@ export default function Authenticated({
                                         router.visit(route('dashboard'));
                                     }
                                 }}
-                                className="block w-full text-left rounded-lg px-4 py-3 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100 dark:text-emerald-200 dark:hover:bg-emerald-900"
+                                className="block w-full text-left rounded-lg px-4 py-3 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:text-red-200 dark:hover:bg-red-900"
                             >
                                 {item.label}
                             </button>

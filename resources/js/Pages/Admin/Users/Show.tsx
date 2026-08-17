@@ -28,9 +28,9 @@ const StatusBadge: React.FC<{ user: User }> = ({ user }) => {
   const getConfig = () => {
     if (user.email_verified_at) {
       return {
-        bg: 'bg-green-100 dark:bg-green-900/30',
-        text: 'text-green-700 dark:text-green-300',
-        ring: 'ring-green-200',
+        bg: 'bg-red-100 dark:bg-red-900/30',
+        text: 'text-red-700 dark:text-red-300',
+        ring: 'ring-red-200',
         icon: <CheckBadgeIcon className="w-4 h-4" />
       };
     }
@@ -57,9 +57,9 @@ const RegistrationStatusBadge: React.FC<{ status: string }> = ({ status }) => {
     switch (status.toLowerCase()) {
       case 'verified':
         return {
-          bg: 'bg-green-100 dark:bg-green-900/30',
-          text: 'text-green-700 dark:text-green-300',
-          ring: 'ring-green-200',
+          bg: 'bg-red-100 dark:bg-red-900/30',
+          text: 'text-red-700 dark:text-red-300',
+          ring: 'ring-red-200',
           label: 'Verified Account'
         };
       case 'pending':
@@ -108,15 +108,15 @@ const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
       case 'super_admin':
         return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'admin':
-        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'manager':
         return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300';
       case 'investor':
-        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'startup':
         return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300';
       case 'sme_owner':
-        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       default:
         return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }
@@ -241,7 +241,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                     alt={user.name}
                   />
                 ) : (
-                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg ring-2 ring-gray-200 dark:ring-gray-600">
+                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg ring-2 ring-gray-200 dark:ring-gray-600">
                     <span className="text-xl sm:text-2xl font-bold text-white">
                       {getInitials()}
                     </span>
@@ -266,7 +266,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center gap-2">
                     <EnvelopeIcon className="w-4 h-4 flex-shrink-0" />
-                    <a href={`mailto:${user.email}`} className="hover:text-emerald-500 break-all">
+                    <a href={`mailto:${user.email}`} className="hover:text-red-500 break-all">
                       {user.email}
                     </a>
                   </div>
@@ -274,7 +274,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                   {user.phone && (
                     <div className="flex items-center gap-2">
                       <PhoneIcon className="w-4 h-4 flex-shrink-0" />
-                      <a href={`tel:${user.phone}`} className="hover:text-emerald-500">
+                      <a href={`tel:${user.phone}`} className="hover:text-red-500">
                         {user.phone}
                       </a>
                     </div>
@@ -330,7 +330,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                 <DetailItem
                   label="Email Address"
                   value={
-                    <a href={`mailto:${user.email}`} className="text-emerald-600 dark:text-emerald-400 hover:underline break-all">
+                    <a href={`mailto:${user.email}`} className="text-red-600 dark:text-red-400 hover:underline break-all">
                       {user.email}
                     </a>
                   }
@@ -341,7 +341,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                   label="Phone Number"
                   value={
                     user.phone ? (
-                      <a href={`tel:${user.phone}`} className="text-emerald-600 dark:text-emerald-400 hover:underline">
+                      <a href={`tel:${user.phone}`} className="text-red-600 dark:text-red-400 hover:underline">
                         {user.phone}
                       </a>
                     ) : null
@@ -368,7 +368,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                 <DetailItem
                   label="Email Verification"
                   value={user.email_verified_at ? (
-                    <span className="text-green-600 dark:text-green-400">
+                    <span className="text-red-600 dark:text-red-400">
                       Verified on {formatDate(user.email_verified_at)}
                     </span>
                   ) : (
@@ -421,7 +421,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                         {user.skills_of_interest.map((skill, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs rounded-full"
+                            className="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs rounded-full"
                           >
                             {skill}
                           </span>
@@ -463,8 +463,8 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
                   {user.roles.map((role) => (
                     <div key={role.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex-shrink-0">
-                          <ShieldCheckIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                        <div className="p-2 rounded-lg bg-red-50 dark:bg-red-900/20 flex-shrink-0">
+                          <ShieldCheckIcon className="h-5 w-5 text-red-600 dark:text-red-400" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-900 dark:text-white">
@@ -529,7 +529,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
             <InfoCard title="Timeline">
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-gray-900 dark:text-white text-sm">
                       User Created
@@ -543,7 +543,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
 
                 {user.updated_at !== user.created_at && (
                   <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-gray-900 dark:text-white text-sm">
                         Last Updated
@@ -558,7 +558,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
 
                 {user.email_verified_at && (
                   <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-gray-900 dark:text-white text-sm">
                         Email Verified
@@ -573,7 +573,7 @@ const UserShow: React.FC<UserShowProps> = ({ user }) => {
 
                 {user.verified_at && (
                   <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-gray-900 dark:text-white text-sm">
                         Account Verified

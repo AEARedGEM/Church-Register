@@ -59,7 +59,7 @@
             .home-button {
                 display: inline-block;
                 padding: 0.75rem 1.5rem;
-                background-color: #10b981;
+                background-color: #2563eb;
                 color: #ffffff;
                 text-decoration: none;
                 border-radius: 45px;

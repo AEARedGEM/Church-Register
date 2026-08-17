@@ -77,24 +77,24 @@ export default function LgaProductsLinkage() {
             {/* Global Stats Overview */}
             {!selectedState && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Total LGAs</p>
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-600 transition-all">
+                        <p className="text-red-700 dark:text-red-400 text-xs font-medium">Total LGAs</p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{lgaProducts.length}</p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Total Respondents</p>
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-600 transition-all">
+                        <p className="text-red-700 dark:text-red-400 text-xs font-medium">Total Respondents</p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {lgaProducts.reduce((sum, item) => sum + item.total_respondents, 0).toLocaleString()}
                         </p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Total Wards</p>
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-600 transition-all">
+                        <p className="text-red-700 dark:text-red-400 text-xs font-medium">Total Wards</p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {lgaProducts.reduce((sum, item) => sum + item.total_wards, 0).toLocaleString()}
                         </p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all">
-                        <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium">Unique Products</p>
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-600 transition-all">
+                        <p className="text-red-700 dark:text-red-400 text-xs font-medium">Unique Products</p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {new Set(lgaProducts.flatMap(item => item.top_products.map(p => p.name))).size}
                         </p>
@@ -105,13 +105,13 @@ export default function LgaProductsLinkage() {
             {/* State Stats Overview (when state selected) */}
             {selectedStateData && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                        <p className="text-emerald-600 dark:text-emerald-400 text-xs font-medium">LGAs in {selectedState}</p>
-                        <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{selectedStateData.lgaCount}</p>
+                    <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
+                        <p className="text-red-600 dark:text-red-400 text-xs font-medium">LGAs in {selectedState}</p>
+                        <p className="text-2xl font-bold text-red-700 dark:text-red-300">{selectedStateData.lgaCount}</p>
                     </div>
-                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                        <p className="text-green-600 dark:text-green-400 text-xs font-medium">Total Respondents</p>
-                        <p className="text-2xl font-bold text-green-700 dark:text-green-300">
+                    <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
+                        <p className="text-red-600 dark:text-red-400 text-xs font-medium">Total Respondents</p>
+                        <p className="text-2xl font-bold text-red-700 dark:text-red-300">
                             {selectedStateData.totalRespondents.toLocaleString()}
                         </p>
                     </div>
@@ -139,7 +139,7 @@ export default function LgaProductsLinkage() {
                             placeholder={`Search LGAs in ${selectedState}...`}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:text-white"
                         />
                     </div>
                     <button
@@ -161,19 +161,19 @@ export default function LgaProductsLinkage() {
                         <button
                             key={state.name}
                             onClick={() => setSelectedState(state.name)}
-                            className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-3 border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group"
+                            className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-3 border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-red-500 dark:hover:border-red-500 transition-all cursor-pointer group"
                         >
-                            <h3 className="text-[0.8rem] font-semibold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
+                            <h3 className="text-[0.8rem] font-semibold text-gray-800 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors mb-2 line-clamp-2">
                                 {state.name}
                             </h3>
                             <div className="space-y-1 text-[11px] leading-5">
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 dark:text-gray-400">LGAs:</span>
-                                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{state.lgaCount}</span>
+                                    <span className="font-semibold text-red-600 dark:text-red-400">{state.lgaCount}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 dark:text-gray-400">Wards:</span>
-                                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{state.totalWards}</span>
+                                    <span className="font-semibold text-red-600 dark:text-red-400">{state.totalWards}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600 dark:text-gray-400">Respondents:</span>
@@ -181,7 +181,7 @@ export default function LgaProductsLinkage() {
                                 </div>
                             </div>
                             <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium group-hover:font-semibold transition-all">
+                                <p className="text-[11px] text-red-600 dark:text-red-400 font-medium group-hover:font-semibold transition-all">
                                     Click to explore →
                                 </p>
                             </div>
@@ -206,14 +206,14 @@ export default function LgaProductsLinkage() {
                             </div>
 
                             <div className="space-y-2">
-                                <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">Top 5 Products</p>
+                                <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide">Top 5 Products</p>
                                 {lga.top_products.length > 0 ? (
                                     <div className="space-y-2">
                                         {lga.top_products.map((product, idx) => (
                                             <div key={idx} className="flex items-center gap-2">
                                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 overflow-hidden">
                                                     <div
-                                                        className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full flex items-center justify-end pr-2"
+                                                        className="bg-gradient-to-r from-red-500 to-red-500 h-full flex items-center justify-end pr-2"
                                                         style={{
                                                             width: `${(product.votes / Math.max(...lga.top_products.map(p => p.votes))) * 100}%`
                                                         }}

@@ -480,10 +480,10 @@ export default function CoursePlayer() {
                   disabled={isCurrentLectureCompleted || !currentLectureData || completingLecture === currentLectureData?.id}
                   className={`px-4 lg:px-6 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 text-sm lg:text-base ${
                     completingLecture === currentLectureData?.id
-                      ? 'bg-green-500 text-white shadow-lg scale-105'
+                      ? 'bg-red-500 text-white shadow-lg scale-105'
                       : isCurrentLectureCompleted
-                      ? 'bg-green-600 text-white cursor-default'
-                      : 'bg-green-600 hover:bg-green-700 text-white'
+                      ? 'bg-red-600 text-white cursor-default'
+                      : 'bg-red-600 hover:bg-red-700 text-white'
                   } ${
                     !currentLectureData || (isCurrentLectureCompleted && completingLecture !== currentLectureData?.id)
                       ? 'disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:cursor-not-allowed'
@@ -518,8 +518,8 @@ export default function CoursePlayer() {
                   disabled={!getNextLecture()}
                   className={`flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 text-sm lg:text-base ${
                     navigatingLecture === getNextLecture()?.id
-                      ? 'bg-emerald-500 text-white shadow-lg scale-105'
-                      : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                      ? 'bg-red-500 text-white shadow-lg scale-105'
+                      : 'bg-red-600 hover:bg-red-700 text-white'
                   } ${
                     !getNextLecture()
                       ? 'disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -543,7 +543,7 @@ export default function CoursePlayer() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex-1 flex items-center justify-center space-x-1.5 px-2 py-3 text-xs sm:text-sm font-medium transition-colors ${
                         activeTab === tab.id
-                          ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600 dark:border-emerald-400'
+                          ? 'text-red-600 dark:text-red-400 border-b-2 border-red-600 dark:border-red-400'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                       }`}
                     >
@@ -566,7 +566,7 @@ export default function CoursePlayer() {
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
-                          className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
+                          className="bg-red-600 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${enrollment.progress_percentage}%` }}
                         />
                       </div>
@@ -612,12 +612,12 @@ export default function CoursePlayer() {
                                     disabled={lecture.is_locked}
                                     className={`w-full p-3 flex items-start space-x-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left text-xs sm:text-sm ${
                                       isCurrentLecture
-                                        ? 'bg-emerald-50 dark:bg-emerald-900/20 border-l-2 border-emerald-600'
+                                        ? 'bg-red-50 dark:bg-red-900/20 border-l-2 border-red-600'
                                         : ''
                                     } ${lecture.is_locked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                                   >
                                     {isCompleted ? (
-                                      <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                                      <CheckCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
                                     ) : lecture.is_locked ? (
                                       <Lock className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
                                     ) : (
@@ -665,7 +665,7 @@ export default function CoursePlayer() {
 
                 {activeTab === 'notes' && (
                   <div className="p-4 text-sm">
-                    <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3 text-center">
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-center">
                       <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                       <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
                         Notes feature coming soon
@@ -694,7 +694,7 @@ export default function CoursePlayer() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex-1 flex items-center justify-center space-x-2 px-2 lg:px-4 py-3 text-xs lg:text-sm font-medium transition-colors ${
                         activeTab === tab.id
-                          ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-600 dark:border-emerald-400'
+                          ? 'text-red-600 dark:text-red-400 border-b-2 border-red-600 dark:border-red-400'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                       }`}
                     >
@@ -718,7 +718,7 @@ export default function CoursePlayer() {
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div
-                        className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-red-600 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${enrollment.progress_percentage}%` }}
                       />
                     </div>
@@ -768,17 +768,17 @@ export default function CoursePlayer() {
                                 >
                                   <div className="flex-shrink-0">
                                     {isCompleted ? (
-                                      <CheckCircle className="w-5 h-5 text-green-600 animate-pulse" />
+                                      <CheckCircle className="w-5 h-5 text-red-600 animate-pulse" />
                                     ) : lecture.is_locked ? (
                                       <Lock className="w-5 h-5 text-gray-400 dark:text-gray-600" />
                                     ) : isCurrentLecture ? (
-                                      <Play className="w-5 h-5 text-emerald-600" />
+                                      <Play className="w-5 h-5 text-red-600" />
                                     ) : (
                                       <div className="w-5 h-5 border-2 border-gray-400 dark:border-gray-600 rounded-full" />
                                     )}
                                   </div>
                                   <div className="flex-1 text-left min-w-0">
-                                    <p className={`text-sm font-medium truncate ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>
+                                    <p className={`text-sm font-medium truncate ${isCompleted ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
                                       {lecture.title}
                                     </p>
                                     <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -813,7 +813,7 @@ export default function CoursePlayer() {
                   <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Instructor</h3>
                   <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
                     <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <span className="text-white font-semibold">
                           {course.instructor.name.split(' ').map(n => n[0]).join('')}
                         </span>

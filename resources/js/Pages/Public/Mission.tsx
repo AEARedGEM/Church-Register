@@ -8,10 +8,10 @@ export default function Mission() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
                             NYP-IP
                         </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">
+                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
                             Back to Home
                         </Link>
                     </div>
@@ -21,16 +21,16 @@ export default function Mission() {
                     <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-12">Our Mission & Vision</h1>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 rounded-lg p-8 border border-emerald-200 dark:border-emerald-900/50">
-                            <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mb-4">Our Mission</h2>
-                            <p className="text-emerald-800 dark:text-emerald-200 text-lg">
+                        <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 rounded-lg p-8 border border-red-200 dark:border-red-900/50">
+                            <h2 className="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">Our Mission</h2>
+                            <p className="text-red-800 dark:text-red-200 text-lg">
                                 To empower Nigerian youth through inclusive dialogue, advocacy, and action toward sustainable development and national transformation.
                             </p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 rounded-lg p-8 border border-emerald-200 dark:border-emerald-900/50">
-                            <h2 className="text-2xl font-bold text-emerald-900 dark:text-emerald-100 mb-4">Our Vision</h2>
-                            <p className="text-emerald-800 dark:text-emerald-200 text-lg">
+                        <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 rounded-lg p-8 border border-red-200 dark:border-red-900/50">
+                            <h2 className="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">Our Vision</h2>
+                            <p className="text-red-800 dark:text-red-200 text-lg">
                                 A Nigeria where youth are active participants in governance, economic development, and nation-building at all levels.
                             </p>
                         </div>

@@ -118,13 +118,13 @@ function ImageWithFallback({ src, alt, className, fallbackText }: ImageWithFallb
 
   const getColorFromText = (text: string): string => {
     const colors = [
-      'bg-emerald-500',
+      'bg-red-500',
       'bg-purple-500',
-      'bg-green-500',
+      'bg-red-500',
       'bg-orange-500',
       'bg-pink-500',
-      'bg-emerald-500',
-      'bg-teal-500',
+      'bg-red-500',
+      'bg-red-500',
       'bg-red-500'
     ];
     const index = text.length % colors.length;
@@ -298,10 +298,10 @@ export default function TrainingDashboard({
                   icon={BookOpen}
                   label="Enrolled Courses"
                   value={stats.enrolledCourses}
-                  iconColor="text-emerald-600"
-                  bgColor="bg-emerald-50"
-                  darkBgColor="dark:bg-emerald-900/20"
-                  darkIconColor="dark:text-emerald-400"
+                  iconColor="text-red-600"
+                  bgColor="bg-red-50"
+                  darkBgColor="dark:bg-red-900/20"
+                  darkIconColor="dark:text-red-400"
                 />
               </div>
               <div className="w-64 flex-shrink-0">
@@ -309,10 +309,10 @@ export default function TrainingDashboard({
                   icon={CheckCircle2}
                   label="Completed"
                   value={stats.completedCourses}
-                  iconColor="text-green-600"
-                  bgColor="bg-green-50"
-                  darkBgColor="dark:bg-green-900/20"
-                  darkIconColor="dark:text-green-400"
+                  iconColor="text-red-600"
+                  bgColor="bg-red-50"
+                  darkBgColor="dark:bg-red-900/20"
+                  darkIconColor="dark:text-red-400"
                 />
               </div>
               <div className="w-64 flex-shrink-0">
@@ -331,10 +331,10 @@ export default function TrainingDashboard({
                   icon={Award}
                   label="Certificates"
                   value={stats.certificatesEarned}
-                  iconColor="text-emerald-600"
-                  bgColor="bg-emerald-50"
-                  darkBgColor="dark:bg-emerald-900/20"
-                  darkIconColor="dark:text-emerald-400"
+                  iconColor="text-red-600"
+                  bgColor="bg-red-50"
+                  darkBgColor="dark:bg-red-900/20"
+                  darkIconColor="dark:text-red-400"
                 />
               </div>
             </div>
@@ -345,19 +345,19 @@ export default function TrainingDashboard({
               icon={BookOpen}
               label="Enrolled Courses"
               value={stats.enrolledCourses}
-              iconColor="text-emerald-600"
-              bgColor="bg-emerald-50"
-              darkBgColor="dark:bg-emerald-900/20"
-              darkIconColor="dark:text-emerald-400"
+              iconColor="text-red-600"
+              bgColor="bg-red-50"
+              darkBgColor="dark:bg-red-900/20"
+              darkIconColor="dark:text-red-400"
             />
             <StatCard
               icon={CheckCircle2}
               label="Completed"
               value={stats.completedCourses}
-              iconColor="text-green-600"
-              bgColor="bg-green-50"
-              darkBgColor="dark:bg-green-900/20"
-              darkIconColor="dark:text-green-400"
+              iconColor="text-red-600"
+              bgColor="bg-red-50"
+              darkBgColor="dark:bg-red-900/20"
+              darkIconColor="dark:text-red-400"
             />
             <StatCard
               icon={Clock}
@@ -372,10 +372,10 @@ export default function TrainingDashboard({
               icon={Award}
               label="Certificates"
               value={stats.certificatesEarned}
-              iconColor="text-emerald-600"
-              bgColor="bg-emerald-50"
-              darkBgColor="dark:bg-emerald-900/20"
-              darkIconColor="dark:text-emerald-400"
+              iconColor="text-red-600"
+              bgColor="bg-red-50"
+              darkBgColor="dark:bg-red-900/20"
+              darkIconColor="dark:text-red-400"
             />
           </div>
         </div>
@@ -392,7 +392,7 @@ export default function TrainingDashboard({
                 </h2>
                 <Link
                   href={route('training.courses')}
-                  className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium flex items-center gap-1"
+                  className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium flex items-center gap-1"
                 >
                   View All
                   <ArrowRight className="w-4 h-4" />
@@ -415,7 +415,7 @@ export default function TrainingDashboard({
                     <p className="text-gray-500 dark:text-gray-400">No enrolled courses yet</p>
                     <Link
                       href={route('training.courses')}
-                      className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 text-sm font-medium mt-2 inline-block"
+                      className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm font-medium mt-2 inline-block"
                     >
                       Browse courses to get started
                     </Link>
@@ -432,7 +432,7 @@ export default function TrainingDashboard({
                 </h2>
                 <Link
                   href={route('training.courses')}
-                  className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium flex items-center gap-1"
+                  className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium flex items-center gap-1"
                 >
                   View All
                   <ArrowRight className="w-4 h-4" />
@@ -509,10 +509,10 @@ export default function TrainingDashboard({
                     className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 transition-colors">
-                        <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <div className="w-8 h-8 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center group-hover:bg-red-100 dark:group-hover:bg-red-900/30 transition-colors">
+                        <BookOpen className="w-4 h-4 text-red-600 dark:text-red-400" />
                       </div>
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-red-600 dark:group-hover:text-red-400">
                         {category.name}
                       </span>
                     </div>
@@ -524,7 +524,7 @@ export default function TrainingDashboard({
               </div>
               <Link
                 href={route('training.courses')}
-                className="w-full mt-4 text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium text-center block"
+                className="w-full mt-4 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-center block"
               >
                 View All Categories
               </Link>
@@ -573,7 +573,7 @@ export default function TrainingDashboard({
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
                           {event.title}
                         </p>
-                        <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-1 rounded-full whitespace-nowrap">
+                        <span className="text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2 py-1 rounded-full whitespace-nowrap">
                           {event.type}
                         </span>
                       </div>
@@ -590,7 +590,7 @@ export default function TrainingDashboard({
                   </div>
                 )}
               </div>
-              <button className="w-full mt-4 text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium text-center block">
+              <button className="w-full mt-4 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-center block">
                 View All Events
               </button>
             </div>
@@ -651,18 +651,18 @@ function CourseCard({ course, onCardClick, onAction }: CourseCardProps) {
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+            <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate group-hover:text-red-600 dark:group-hover:text-red-400">
               {course.title}
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">{course.category}</p>
           </div>
-          <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
+          <span className="text-xs font-medium text-red-600 dark:text-red-400 whitespace-nowrap">
             {course.progress}%
           </span>
         </div>
         <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5 mb-3">
           <div
-            className="bg-emerald-600 dark:bg-emerald-500 h-1.5 rounded-full transition-all"
+            className="bg-red-600 dark:bg-red-500 h-1.5 rounded-full transition-all"
             style={{ width: `${course.progress}%` }}
           ></div>
         </div>
@@ -672,7 +672,7 @@ function CourseCard({ course, onCardClick, onAction }: CourseCardProps) {
             <span className="truncate">{course.nextLesson}</span>
           </div>
           <button
-            className="text-xs font-medium text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 self-start sm:self-auto"
+            className="text-xs font-medium text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300 self-start sm:self-auto"
             onClick={(e) => {
               e.stopPropagation();
               onAction?.();
@@ -696,7 +696,7 @@ function FeaturedCourseCard({ course }: FeaturedCourseCardProps) {
         fallbackText={course.title}
       />
       <div className="flex-1 min-w-0">
-        <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+        <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1 truncate group-hover:text-red-600 dark:group-hover:text-red-400">
           {course.title}
         </h4>
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 truncate">{course.course_category.name}</p>
@@ -816,7 +816,7 @@ function ActivityChart({ activityData, activitySource, activityRange }: { activi
             <div key={`${day}-${idx}`} className="flex flex-col items-center w-8 sm:w-12">
               <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-t-lg flex items-end" style={{ height: '100%' }}>
                 <div
-                  className="w-full bg-emerald-600 dark:bg-emerald-500 rounded-t-lg transition-all flex items-end justify-center"
+                  className="w-full bg-red-600 dark:bg-red-500 rounded-t-lg transition-all flex items-end justify-center"
                   style={{ height: `${(hours[idx] / maxHours) * 100}%`, minHeight: '6px' }}
                   title={`${hours[idx]} hrs`}
                 >
@@ -831,7 +831,7 @@ function ActivityChart({ activityData, activitySource, activityRange }: { activi
 
       <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-1">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-emerald-600 dark:bg-emerald-500 rounded" />
+          <div className="w-3 h-3 bg-red-600 dark:bg-red-500 rounded" />
           <span>Hours Studied</span>
         </div>
         <div className="flex items-center gap-3">

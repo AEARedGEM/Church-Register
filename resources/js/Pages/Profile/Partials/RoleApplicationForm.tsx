@@ -142,16 +142,16 @@ export default function RoleApplicationForm({
             </div>
 
             {/* Current Role Status */}
-            <div className="mb-8 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                <h3 className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+            <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
                     Current Active Role: {dashCtx.role_label}
                 </h3>
-                <p className="text-sm text-emerald-700 dark:text-emerald-300 mt-1">
+                <p className="text-sm text-red-700 dark:text-red-300 mt-1">
                     You currently have access to the {dashCtx.role_label} dashboard and its features.
                 </p>
                 {dashCtx.active_roles && dashCtx.active_roles.length > 1 && (
                     <div className="mt-3">
-                        <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mb-2">
+                        <p className="text-xs text-red-600 dark:text-red-400 font-medium mb-2">
                             Switch to other active roles:
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -161,7 +161,7 @@ export default function RoleApplicationForm({
                                     <button
                                         key={role}
                                         onClick={() => switchRole(role)}
-                                        className="px-2.5 py-1 bg-white dark:bg-gray-800 text-emerald-700 dark:text-emerald-300 text-xs font-medium rounded border border-emerald-200 dark:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                                        className="px-2.5 py-1 bg-white dark:bg-gray-800 text-red-700 dark:text-red-300 text-xs font-medium rounded border border-red-200 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                     >
                                         Switch to {role.replace('_', ' ')}
                                     </button>
@@ -183,7 +183,7 @@ export default function RoleApplicationForm({
                             return (
                                 <div
                                     key={role.id}
-                                    className="p-4 rounded-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all flex flex-col"
+                                    className="p-4 rounded-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-600 transition-all flex flex-col"
                                 >
                                     <div className="flex-1">
                                         <h4 className="text-sm font-medium text-gray-900 dark:text-white">
@@ -203,7 +203,7 @@ export default function RoleApplicationForm({
                                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                                             <div
                                                 className={`h-2 rounded-full transition-all ${
-                                                    completeness >= 80 ? 'bg-emerald-500' :
+                                                    completeness >= 80 ? 'bg-red-500' :
                                                     completeness >= 50 ? 'bg-yellow-500' :
                                                     'bg-red-500'
                                                 }`}
@@ -215,7 +215,7 @@ export default function RoleApplicationForm({
                                     {/* CTA Button */}
                                     <button
                                         onClick={() => handleRoleSelection(role.id)}
-                                        className="mt-4 w-full inline-flex items-center justify-center px-4 py-2 bg-emerald-600 dark:bg-emerald-700 text-white rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 font-medium text-sm transition-colors"
+                                        className="mt-4 w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 font-medium text-sm transition-colors"
                                     >
                                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2m0 0v-8m0 8H3m0-8h18" />
@@ -264,11 +264,11 @@ export default function RoleApplicationForm({
                                                 </p>
                                             </div>
 
-                                            <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
-                                                <h4 className="text-sm font-medium text-emerald-900 dark:text-emerald-100 mb-3">Required Information</h4>
+                                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                                                <h4 className="text-sm font-medium text-red-900 dark:text-red-100 mb-3">Required Information</h4>
                                                 <ul className="space-y-2">
                                                     {ROLE_REQUIREMENTS[selectedRole]?.fields.map((field, idx) => (
-                                                        <li key={idx} className="text-sm text-emerald-800 dark:text-emerald-200 flex items-start">
+                                                        <li key={idx} className="text-sm text-red-800 dark:text-red-200 flex items-start">
                                                             <span className="mr-3">•</span>
                                                             <span>{field.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}</span>
                                                         </li>
@@ -276,14 +276,14 @@ export default function RoleApplicationForm({
                                                 </ul>
                                             </div>
 
-                                            <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
+                                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
                                                 <div className="flex items-start">
                                                     <input
                                                         type="checkbox"
                                                         id="confirm_eligibility"
                                                         checked={data.confirm_eligibility}
                                                         onChange={(e) => setData('confirm_eligibility', e.target.checked)}
-                                                        className="mt-1 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                                                        className="mt-1 rounded border-gray-300 text-red-600 focus:ring-red-500"
                                                     />
                                                     <label htmlFor="confirm_eligibility" className="ml-3 text-sm text-gray-700 dark:text-gray-300">
                                                         I confirm that I meet the requirements for this role and will complete the necessary profile information.
@@ -342,7 +342,7 @@ export default function RoleApplicationForm({
                                         <button
                                             type="submit"
                                             disabled={processing || (applicationStep === 1 && !data.confirm_eligibility)}
-                                            className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium transition-colors"
+                                            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium transition-colors"
                                         >
                                             {processing ? 'Processing...' : (applicationStep === 1 ? 'Continue' : 'Submit Application')}
                                         </button>
@@ -361,8 +361,8 @@ export default function RoleApplicationForm({
                                     </div>
 
                                     {recentlySuccessful && (
-                                        <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-4">
-                                            <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                                            <p className="text-sm text-red-600 dark:text-red-400 font-medium">
                                                 ✓ Application submitted successfully! You'll receive an update soon.
                                             </p>
                                         </div>
@@ -373,25 +373,25 @@ export default function RoleApplicationForm({
                     )}
                 </div>
             ) : (
-                <div className="text-center py-8 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                    <h3 className="text-lg font-medium text-emerald-900 dark:text-emerald-100 mb-2">
+                <div className="text-center py-8 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                    <h3 className="text-lg font-medium text-red-900 dark:text-red-100 mb-2">
                         No Additional Roles Available
                     </h3>
                     {dashCtx.current_role?.toLowerCase().includes('admin') || dashCtx.current_role?.toLowerCase().includes('support') ? (
                         <>
-                            <p className="text-emerald-800 dark:text-emerald-200 mb-2">
+                            <p className="text-red-800 dark:text-red-200 mb-2">
                                 System administrators cannot apply for additional roles.
                             </p>
-                            <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                            <p className="text-sm text-red-700 dark:text-red-300">
                                 If you need to switch to a different system role, please contact the system administrator.
                             </p>
                         </>
                     ) : (
                         <>
-                            <p className="text-emerald-800 dark:text-emerald-200 mb-2">
+                            <p className="text-red-800 dark:text-red-200 mb-2">
                                 You currently have access to all available roles in the NYP-IP system.
                             </p>
-                            <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                            <p className="text-sm text-red-700 dark:text-red-300">
                                 Complete your profile to unlock additional opportunities as they become available.
                             </p>
                         </>

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import NapsLayout from '@/Layouts/Naps/NapsLayout';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Head, Link, router } from '@inertiajs/react';
@@ -396,12 +396,12 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
   // Landing Page
   const LandingPage = () => (
     <>
-      <div className="bg-gradient-to-b from-slate-950 via-teal-900 to-slate-950 relative overflow-hidden">
+      <div className="bg-gradient-to-b from-slate-950 via-red-900 to-slate-950 relative overflow-hidden">
         {/* Animated Gradient Orbs */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 right-10 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-pulse duration-4000"></div>
-          <div className="absolute bottom-20 left-5 w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl animate-pulse duration-5000" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/3 left-1/3 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl animate-pulse duration-6000" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute bottom-20 left-5 w-80 h-80 bg-red-500/15 rounded-full blur-3xl animate-pulse duration-5000" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/3 left-1/3 w-64 h-64 bg-red-500/10 rounded-full blur-3xl animate-pulse duration-6000" style={{ animationDelay: '2s' }}></div>
         </div>
 
         {/* Animated Grid */}
@@ -417,7 +417,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
             {/* Title Section */}
             <div className="space-y-4">
               <h1 className="text-6xl md:text-7xl font-black tracking-tighter">
-                <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="bg-gradient-to-r from-cyan-300 via-red-300 to-red-300 bg-clip-text text-transparent drop-shadow-2xl">
                   NAP/S
                 </span>
               </h1>
@@ -442,9 +442,9 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <button
                 onClick={() => setCurrentView('register')}
-                className="relative group px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/30 transform hover:scale-105 overflow-hidden text-sm"
+                className="relative group px-8 py-3.5 bg-gradient-to-r from-red-500 to-cyan-500 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/30 transform hover:scale-105 overflow-hidden text-sm"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 <span className="relative inline-flex items-center gap-2">
                   Register & Participate
                 </span>
@@ -473,14 +473,14 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => setCurrentView('landing')}
-          className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+          className="mb-4 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
         >
           Back
         </button>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">Register for NAP/S</h1>
+            <h1 className="text-3xl font-bold text-red-700 dark:text-red-400 mb-2">Register for NAP/S</h1>
             <p className="text-gray-600 dark:text-gray-300">Join 10Million+ Nigerian Entrepreneurs/Intrapreneur/Youths</p>
           </div>
 
@@ -511,7 +511,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
       <div className="max-w-3xl mx-auto">
         <button
           onClick={() => setCurrentView('register')}
-          className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+          className="mb-4 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
         >
           ? Back
         </button>
@@ -537,11 +537,11 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               {[1,2,3,4,5].map((step) => (
                 <React.Fragment key={step}>
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
-                    step <= surveyStep ? 'bg-emerald-600 dark:bg-emerald-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                    step <= surveyStep ? 'bg-red-600 dark:bg-red-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
                   }`}>
                     {step}
                   </div>
-                  {step < 5 && <div className={`flex-1 h-1 transition-all ${step < surveyStep ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'}`} />}
+                  {step < 5 && <div className={`flex-1 h-1 transition-all ${step < surveyStep ? 'bg-red-600 dark:bg-red-500' : 'bg-gray-200 dark:bg-gray-700'}`} />}
                 </React.Fragment>
               ))}
             </div>
@@ -558,7 +558,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 <select
                   value={surveyData.employmentStatus}
                   onChange={(e) => setSurveyData({...surveyData, employmentStatus: e.target.value})}
-                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-red-500 dark:focus:border-red-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
                 >
                   <option value="">Select...</option>
                   <option value="employed">Employed</option>
@@ -584,8 +584,8 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 <div className="space-y-3">
                   {/* Summary badge */}
                   {selectedSkills.length > 0 && (
-                    <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 px-4 py-2 rounded-lg">
-                      <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                    <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 px-4 py-2 rounded-lg">
+                      <p className="text-sm font-medium text-red-700 dark:text-red-300">
                         {selectedSkills.length} skill{selectedSkills.length !== 1 ? 's' : ''} selected
                       </p>
                     </div>
@@ -619,7 +619,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                               onClick={() => toggleSubSkill(subSkill.id)}
                               className={`p-3 border rounded-lg text-left transition-all text-sm ${
                                 selectedSkills.includes(subSkill.id)
-                                  ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                                  ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/30'
                                   : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800'
                               }`}
                             >
@@ -641,7 +641,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                       onClick={() => toggleSkill(skill.id)}
                       className={`p-4 border rounded-lg text-left transition-all ${
                         selectedSkills.includes(skill.id)
-                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                          ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/30'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-700'
                       }`}
                     >
@@ -657,11 +657,11 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           {/* Step 3: Product - One Ward One Product */}
           {surveyStep === 3 && (
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-emerald-50 to-emerald-50 dark:from-emerald-900/30 dark:to-emerald-900/30 p-6 rounded-lg mb-6 border border-emerald-200 dark:border-emerald-800">
-                <h3 className="font-semibold text-emerald-800 dark:text-emerald-300 mb-2">
+              <div className="bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/30 dark:to-red-900/30 p-6 rounded-lg mb-6 border border-red-200 dark:border-red-800">
+                <h3 className="font-semibold text-red-800 dark:text-red-300 mb-2">
                   One Ward One Product (OWOP)
                 </h3>
-                <p className="text-emerald-700 dark:text-emerald-400 text-sm mb-3">Vote for products your ward should focus on producing and exporting. Select up to 2 sectors/products.</p>
+                <p className="text-red-700 dark:text-red-400 text-sm mb-3">Vote for products your ward should focus on producing and exporting. Select up to 2 sectors/products.</p>
               </div>
 
               {/* Ward Priorities Recommendation */}
@@ -694,7 +694,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                   <select
                     value={surveyData.selectedSector || ''}
                     onChange={(e) => handleSectorChange(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-red-500 dark:focus:border-red-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
                   >
                     <option value="">Choose a sector...</option>
                     {sectors.map((sector) => (
@@ -713,7 +713,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                     <select
                       value={surveyData.selectedProduct}
                       onChange={(e) => setSurveyData({...surveyData, selectedProduct: e.target.value})}
-                      className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-red-500 dark:focus:border-red-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
                     >
                       <option value="">Choose a product...</option>
                       {sectorProducts.map((product, i) => (
@@ -721,8 +721,8 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                       ))}
                     </select>
                     {surveyData.selectedProduct && (
-                      <div className="mt-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
-                        <p className="text-sm text-emerald-800 dark:text-emerald-200">
+                      <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <p className="text-sm text-red-800 dark:text-red-200">
                           Primary choice: <strong>{surveyData.selectedProduct}</strong>
                         </p>
                       </div>
@@ -760,7 +760,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                       <select
                         value={surveyData.secondarySector || ''}
                         onChange={(e) => handleSecondarySectorChange(e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                        className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-red-500 dark:focus:border-red-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
                       >
                         <option value="">Choose a sector...</option>
                         {sectors.filter(s => s.id !== parseInt(surveyData.selectedSector || '0')).map((sector) => (
@@ -779,7 +779,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                         <select
                           value={surveyData.secondaryProduct || ''}
                           onChange={(e) => setSurveyData({...surveyData, secondaryProduct: e.target.value})}
-                          className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                          className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-red-500 dark:focus:border-red-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
                         >
                           <option value="">Choose a product...</option>
                           {secondarySectorProducts.map((product, i) => (
@@ -787,8 +787,8 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                           ))}
                         </select>
                         {surveyData.secondaryProduct && (
-                          <div className="mt-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
-                            <p className="text-sm text-emerald-800 dark:text-emerald-200">
+                          <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                            <p className="text-sm text-red-800 dark:text-red-200">
                               Secondary choice: <strong>{surveyData.secondaryProduct}</strong>
                             </p>
                           </div>
@@ -809,10 +809,10 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 <div className="grid grid-cols-2 gap-3">
                   {
                     [
-                      { name: 'Invoice Financing', tooltip: 'Invoice financing (tokenized) � convert receivables into working capital. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/invoice-financing' },
-                      { name: 'Export Financing', tooltip: 'Export financing (tokenized) � support cross-border trade. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/export-financing' },
-                      { name: 'Import Financing', tooltip: 'Import financing (tokenized) � finance imports through tokenized instruments. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/import-financing' },
-                      { name: 'Startup Tokenization', tooltip: 'Startup tokenization � blockchain-based funding through digital asset creation and token sales' }
+                      { name: 'Invoice Financing', tooltip: 'Invoice financing (tokenized) ? convert receivables into working capital. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/invoice-financing' },
+                      { name: 'Export Financing', tooltip: 'Export financing (tokenized) ? support cross-border trade. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/export-financing' },
+                      { name: 'Import Financing', tooltip: 'Import financing (tokenized) ? finance imports through tokenized instruments. Learn more', url: 'https://luxuryxtech.org.ng/tokenizable-assets/import-financing' },
+                      { name: 'Startup Tokenization', tooltip: 'Startup tokenization ? blockchain-based funding through digital asset creation and token sales' }
                     ].map((item, i) => (
                     <div key={i} className="relative group">
                       <button
@@ -825,14 +825,14 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                         }}
                         className={`w-full p-4 border rounded-lg transition-all relative ${
                           surveyData.fundingNeeds.includes(item.name)
-                            ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                            ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/30'
                             : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-700'
                         }`}
                       >
                         <span className="text-gray-900 dark:text-gray-100 font-medium">{item.name}</span>
                       </button>
-                      <div className="absolute top-full left-0 right-0 mt-2 px-4 py-3 bg-gradient-to-br from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-20 shadow-xl">
-                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-emerald-500 dark:border-b-emerald-600"></div>
+                      <div className="absolute top-full left-0 right-0 mt-2 px-4 py-3 bg-gradient-to-br from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-20 shadow-xl">
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-red-500 dark:border-b-red-600"></div>
                         <div className="text-center leading-relaxed">
                           <p>{item.tooltip}</p>
                           {item.url && (
@@ -871,7 +871,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                       onClick={() => setSurveyData({...surveyData, governanceRating: n})}
                       className={`w-14 h-14 rounded-lg font-semibold transition-all ${
                         surveyData.governanceRating === n
-                          ? 'bg-emerald-600 dark:bg-emerald-500 text-white'
+                          ? 'bg-red-600 dark:bg-red-500 text-white'
                           : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100'
                       }`}
                     >
@@ -896,7 +896,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
             {surveyStep < 5 ? (
               <button
                 onClick={() => setSurveyStep(surveyStep + 1)}
-                className="flex-1 py-3 bg-emerald-600 dark:bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl"
+                className="flex-1 py-3 bg-red-600 dark:bg-red-500 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-all shadow-lg hover:shadow-xl"
               >
                 Continue
               </button>
@@ -907,7 +907,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                 className={`flex-1 py-3 text-white rounded-lg transition-all shadow-lg hover:shadow-xl ${
                   isSubmitting
                     ? 'bg-gray-400 cursor-not-allowed opacity-75'
-                    : 'bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600'
+                    : 'bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-600'
                 }`}
               >
                 {isSubmitting ? (
@@ -937,9 +937,9 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">Your survey has been submitted successfully.</p>
 
-          <div className="bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-6 mb-8 border border-emerald-200 dark:border-emerald-800">
-            <div className="text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">+100 Points</div>
-            <p className="text-emerald-700 dark:text-emerald-300">Added to your participation score!</p>
+          <div className="bg-red-50 dark:bg-red-900/30 rounded-xl p-6 mb-8 border border-red-200 dark:border-red-800">
+            <div className="text-4xl font-bold text-red-600 dark:text-red-400 mb-2">+100 Points</div>
+            <p className="text-red-700 dark:text-red-300">Added to your participation score!</p>
           </div>
 
           <button
@@ -947,7 +947,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               // Ensure user returns to the dashboard home page
               router.visit(route('dashboard'));
             }}
-            className="px-8 py-3 bg-emerald-600 dark:bg-emerald-500 text-white rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="px-8 py-3 bg-red-600 dark:bg-red-500 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Back to Home
           </button>
@@ -996,7 +996,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
 
     return (
       <div className="space-y-5">
-        <section className="mt-6 rounded-3xl border border-emerald-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
+        <section className="mt-6 rounded-3xl border border-red-200/50 bg-slate-950/90 pt-10 pb-6 px-6 text-white shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -1006,13 +1006,13 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href="/owop-mandate"
-                className="inline-flex items-center justify-center rounded-full border border-emerald-300/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-100"
+                className="inline-flex items-center justify-center rounded-full border border-red-300/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-red-200 hover:bg-red-500/10 hover:text-red-100"
               >
                 Learn About O.W.O.P/NAP
               </Link>
               <button
                 onClick={() => setCurrentView('register')}
-                className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+                className="inline-flex items-center justify-center rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-red-400"
               >
                 Take The Poll
               </button>
@@ -1021,8 +1021,8 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
         </section>
 
         <section className="grid gap-3 md:grid-cols-4">
-          <div className="rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm dark:border-emerald-800 dark:bg-gray-900">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">Total respondents</p>
+          <div className="rounded-2xl border border-red-200 bg-white p-4 shadow-sm dark:border-red-800 dark:bg-gray-900">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">Total respondents</p>
             <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{stats.totalRespondents.toLocaleString()}</p>
           </div>
           <div className="rounded-2xl border border-cyan-200 bg-white p-4 shadow-sm dark:border-cyan-800 dark:bg-gray-900">
@@ -1043,10 +1043,10 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Product signals</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Product signals</p>
                 <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Strongest ward-level product opportunities</h3>
               </div>
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+              <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">
                 OWOP focus
               </span>
             </div>
@@ -1082,7 +1082,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Skill clusters</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Skill clusters</p>
                 <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">Capabilities across the network</h3>
               </div>
             </div>
@@ -1090,7 +1090,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               {compactSkillItems.map((skill: any, index: number) => (
                 <div key={skill.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
                   <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{skill.name}</span>
-                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">{skill.count} signals</span>
+                  <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">{skill.count} signals</span>
                 </div>
               ))}
               {extraSkillItems.length > 0 && (
@@ -1100,7 +1100,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                     {extraSkillItems.map((skill: any, index: number) => (
                       <div key={skill.name || index} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">
                         <span className="text-sm text-slate-700 dark:text-slate-200">{skill.name}</span>
-                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">{skill.count} signals</span>
+                        <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">{skill.count} signals</span>
                       </div>
                     ))}
                   </div>
@@ -1211,7 +1211,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                       e.stopPropagation();
                       setExpandedDataModal('employment');
                     }}
-                    className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                    className="mt-2 w-full text-center text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                   >
                     Visualize All {chartData.employmentData.length} Items
                   </button>
@@ -1259,7 +1259,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                       e.stopPropagation();
                       setExpandedDataModal('products');
                     }}
-                    className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                    className="mt-2 w-full text-center text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                   >
                     Visualize All {chartData.productsData.length} Items
                   </button>
@@ -1368,9 +1368,9 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-gray-900">
           <details className="group" open>
-            <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">
+            <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">
               <span>Ward-to-product linkage</span>
-              <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">Public planning insight</span>
+              <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">Public planning insight</span>
             </summary>
             <div className="mt-4 text-sm text-slate-600 dark:text-slate-300">
               Explore how ward-level demand maps to product demand and LGA industrial priorities.
@@ -1436,7 +1436,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                         e.stopPropagation();
                         setExpandedDataModal('employment');
                       }}
-                      className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                      className="mt-2 w-full text-center text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                     >
                       Visualize All {chartData.employmentData.length} Items
                     </button>
@@ -1485,7 +1485,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
                         e.stopPropagation();
                         setExpandedDataModal('products');
                       }}
-                      className="mt-2 w-full text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 py-1 rounded hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                      className="mt-2 w-full text-center text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                     >
                       Visualize All {chartData.productsData.length} Items
                     </button>
@@ -1607,7 +1607,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
       <div className="max-w-6xl mx-auto">
         <button
           onClick={() => setCurrentView('landing')}
-          className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2"
+          className="mb-4 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors flex items-center gap-2"
         >
           ? Back to Dashboard
         </button>
@@ -1621,13 +1621,13 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => downloadChartAsImage(chartRefs.employment, 'employment-distribution')}
-                className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+                className="px-6 py-3 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 <span>??</span> PNG Export
               </button>
               <button
                 onClick={() => downloadChartAsPDF(chartRefs.employment, 'employment-distribution')}
-                className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+                className="px-6 py-3 bg-red-700 hover:bg-red-800 active:bg-red-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 <span>??</span> PDF Export
               </button>
@@ -1660,7 +1660,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               )}
             </div>
 
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+            <div className="bg-gradient-to-br from-red-50 to-red-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Summary</h2>
               <div className="space-y-3">
                 {chartData.employmentData && chartData.employmentData.map((item: any, i: number) => (
@@ -1685,7 +1685,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
       <div className="max-w-6xl mx-auto">
         <button
           onClick={() => setCurrentView('landing')}
-          className="mb-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2"
+          className="mb-4 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors flex items-center gap-2"
         >
           ? Back to Dashboard
         </button>
@@ -1699,13 +1699,13 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => downloadChartAsImage(chartRefs.products, 'product-distribution')}
-                className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+                className="px-6 py-3 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 <span>??</span> PNG Export
               </button>
               <button
                 onClick={() => downloadChartAsPDF(chartRefs.products, 'product-distribution')}
-                className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
+                className="px-6 py-3 bg-red-700 hover:bg-red-800 active:bg-red-900 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 <span>??</span> PDF Export
               </button>
@@ -1738,7 +1738,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               )}
             </div>
 
-            <div className="bg-gradient-to-br from-emerald-50 to-cyan-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-96">
+            <div className="bg-gradient-to-br from-red-50 to-cyan-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-96">
               <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white sticky top-0 bg-white dark:bg-gray-800 pb-2">Summary</h2>
               <div className="space-y-3">
                 {chartData.productsData && chartData.productsData.map((item: any, i: number) => (
@@ -1816,7 +1816,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               )}
             </div>
 
-            <div className="bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-96">
+            <div className="bg-gradient-to-br from-cyan-50 to-red-50 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-96">
               <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white sticky top-0 bg-white dark:bg-gray-800 pb-2">Top Skills</h2>
               <div className="space-y-3">
                 {chartData.skillsData && chartData.skillsData.map((item: any, i: number) => (
@@ -1927,15 +1927,15 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
     if (expandedDataModal === 'employment') {
       data = chartData.employmentData;
       title = 'Employment Distribution - All Data';
-      bgColor = 'from-emerald-500 to-emerald-600';
-      borderColor = 'border-emerald-200 dark:border-emerald-700';
-      textColor = 'text-emerald-600 dark:text-emerald-400';
+      bgColor = 'from-red-500 to-red-600';
+      borderColor = 'border-red-200 dark:border-red-700';
+      textColor = 'text-red-600 dark:text-red-400';
     } else if (expandedDataModal === 'products') {
       data = chartData.productsData;
       title = 'Product Distribution - All Data';
-      bgColor = 'from-emerald-500 to-emerald-600';
-      borderColor = 'border-emerald-200 dark:border-emerald-700';
-      textColor = 'text-emerald-600 dark:text-emerald-400';
+      bgColor = 'from-red-500 to-red-600';
+      borderColor = 'border-red-200 dark:border-red-700';
+      textColor = 'text-red-600 dark:text-red-400';
     } else if (expandedDataModal === 'skills') {
       data = chartData.skillsData;
       title = 'Skills Distribution - All Data';
@@ -1959,7 +1959,7 @@ export default function NAPSDemo({ stats: initialStats, charts: initialCharts, p
               onClick={() => setExpandedDataModal(null)}
               className="text-white hover:bg-white/20 p-1 rounded transition-colors"
             >
-              �
+              ?
             </button>
           </div>
 

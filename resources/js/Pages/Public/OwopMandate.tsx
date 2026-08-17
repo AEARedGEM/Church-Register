@@ -8,18 +8,18 @@ export default function OwopMandate() {
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                     <div className="container mx-auto flex items-center justify-between px-6 py-4">
-                        <Link href="/" className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
                             NYP-IP
                         </Link>
-                        <Link href="/" className="text-gray-600 transition-colors hover:text-emerald-600 dark:text-gray-300">
+                        <Link href="/" className="text-gray-600 transition-colors hover:text-red-600 dark:text-gray-300">
                             Back to Home
                         </Link>
                     </div>
                 </nav>
 
                 <div className="container mx-auto max-w-5xl px-6 py-16">
-                    <div className="mb-10 rounded-2xl border border-emerald-200 bg-emerald-50 p-8 shadow-sm dark:border-emerald-800 dark:bg-emerald-950/40">
-                        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
+                    <div className="mb-10 rounded-2xl border border-red-200 bg-red-50 p-8 shadow-sm dark:border-red-800 dark:bg-red-950/40">
+                        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-red-700 dark:text-red-300">
                             O.W.O.P & NAP/S Programme
                         </p>
                         <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
@@ -61,14 +61,14 @@ export default function OwopMandate() {
                                 </ul>
                             </section>
 
-                            <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-8 shadow-sm dark:border-emerald-800 dark:bg-emerald-950/40">
+                            <section className="rounded-2xl border border-red-200 bg-red-50 p-8 shadow-sm dark:border-red-800 dark:bg-red-950/40">
                                 <h2 className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Take the survey</h2>
                                 <p className="mb-6 text-gray-700 dark:text-gray-300">
                                     Visit the NAP/S dashboard to participate in the survey and help shape the priorities for your ward and community.
                                 </p>
                                 <Link
                                     href={route('dashboard')}
-                                    className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-700"
+                                    className="inline-flex items-center justify-center rounded-lg bg-red-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-red-700"
                                 >
                                     Go to Main Dashboard
                                 </Link>

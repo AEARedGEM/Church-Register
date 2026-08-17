@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Header -->
-    <h3 style="margin: 0 0 20px 0; font-size: 24px; font-weight: 600; color: #10b981; text-transform: uppercase; text-align: center;">
+    <h3 style="margin: 0 0 20px 0; font-size: 24px; font-weight: 600; color: #2563eb; text-transform: uppercase; text-align: center;">
         NEW USER REGISTRATION ALERT
     </h3>
 
@@ -15,7 +15,7 @@
     <!-- User Details Table -->
     <table class="info-table" style="width: 100%; max-width: 100%; margin: 20px 0; border-collapse: collapse; background: #ffffff; border-radius: 6px; overflow: hidden;">
         <tr>
-            <td class="label" style="padding: 12px 15px; border-bottom: 1px solid #000000; font-weight: 600; color: #10b981; width: 35%;">Name</td>
+            <td class="label" style="padding: 12px 15px; border-bottom: 1px solid #000000; font-weight: 600; color: #2563eb; width: 35%;">Name</td>
             <td style="padding: 12px 15px; border-bottom: 1px solid #000000;">{{ $user->name }}</td>
         </tr>
         <tr>
