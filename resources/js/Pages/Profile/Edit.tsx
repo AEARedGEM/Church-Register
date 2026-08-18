@@ -4,7 +4,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateBusinessProfileForm from './Partials/UpdateBusinessProfileForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
-import RoleApplicationForm from './Partials/RoleApplicationForm';
 import ErrorBoundary from '@/Components/ErrorBoundary';
 import { PageProps } from '@/types';
 
@@ -110,7 +109,6 @@ interface EditProps extends PageProps {
     trainingModes: SelectOption[];
     educationLevels: SelectOption[];
     states: SelectOption[];
-    availableRoles: SelectOption[];
 }
 
 export default function Edit({
@@ -126,8 +124,7 @@ export default function Edit({
     institutionSectors,
     trainingModes,
     educationLevels,
-    states,
-    availableRoles
+    states
 }: EditProps) {
     const [activeSection, setActiveSection] = React.useState<string>('profile');
     const [pageLoaded, setPageLoaded] = React.useState<boolean>(false);
@@ -186,12 +183,11 @@ export default function Edit({
     // Debug logging
     React.useEffect(() => {
         console.log('Profile Edit page mounted');
-        console.log('Available Roles:', availableRoles);
         console.log('Dashboard Context:', dashboardContext);
         console.log('User Profile:', safeUser.profile);
         console.log('User object:', user);
         setPageLoaded(true);
-    }, [availableRoles, dashboardContext, safeUser, user]);
+    }, [dashboardContext, safeUser, user]);
 
     const sections = [
         {
@@ -203,11 +199,6 @@ export default function Edit({
             id: 'business',
             name: 'Business Profile',
             description: 'Manage your business or professional information'
-        },
-        {
-            id: 'roles',
-            name: 'Role Applications',
-            description: 'Apply for additional roles and manage permissions'
         },
         {
             id: 'security',
@@ -296,33 +287,6 @@ export default function Edit({
                                     ))}
                                 </nav>
                             </div>
-
-                            {/* Role Status Card */}
-                            {dashboardContext.available_roles.length > 0 && (
-                                <div className="mt-6 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                                Additional Roles Available
-                                            </div>
-                                            <div className="text-xs text-gray-600 dark:text-gray-300">
-                                                {dashboardContext.available_roles.length} roles to explore
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={() => setActiveSection('roles')}
-                                        className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
-                                    >
-                                        Apply for Additional Roles →
-                                    </button>
-                                </div>
-                            )}
                         </div>
 
                         {/* Main Content */}
@@ -367,18 +331,6 @@ export default function Edit({
                                             investorTypes={investorTypes}
                                             institutionSectors={institutionSectors}
                                             trainingModes={trainingModes}
-                                        />
-                                    </div>
-                                )}
-
-                                {/* Role Applications Section */}
-                                {activeSection === 'roles' && pageLoaded && (
-                                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-                                        <RoleApplicationForm
-                                            className="p-6"
-                                            user={safeUser}
-                                            dashboardContext={dashboardContext}
-                                            availableRoles={availableRoles}
                                         />
                                     </div>
                                 )}

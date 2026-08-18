@@ -76,10 +76,10 @@ export default function Register() {
         <GuestLayout>
             <Head title="Register - APGA Worldwide" />
 
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-3 transition-colors duration-300">
+            <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-3 transition-colors duration-300">
                 <div className="w-full max-w-5xl flex bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-sm">
                     {/* Left Side - APGA Branding */}
-                    <div className="hidden lg:flex lg:w-2/5 bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 p-8 flex-col justify-between text-white relative overflow-hidden">
+                    <div className="hidden lg:flex lg:w-2/5 bg-gradient-to-br from-red-600 to-red-700 dark:from-red-700 dark:to-red-800 p-8 flex-col justify-between text-white relative overflow-hidden">
                         <div className="absolute inset-0 bg-black opacity-15 dark:opacity-25"></div>
                         <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -mr-20 -mt-20"></div>
                         <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full -ml-16 -mb-16"></div>
@@ -150,7 +150,7 @@ export default function Register() {
                                         id="name"
                                         name="name"
                                         value={data.name}
-                                        className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-300 dark:focus:border-blue-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
+                                        className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-300 dark:focus:border-red-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
                                         autoComplete="name"
                                         isFocused={true}
                                         onChange={(e) => setData('name', e.target.value)}
@@ -173,7 +173,7 @@ export default function Register() {
                                         type="email"
                                         name="email"
                                         value={data.email}
-                                        className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-300 dark:focus:border-blue-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
+                                        className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-300 dark:focus:border-red-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
                                         autoComplete="username"
                                         onChange={(e) => setData('email', e.target.value)}
                                         required
@@ -196,7 +196,7 @@ export default function Register() {
                                             name="state"
                                             value={data.state}
                                             onChange={(e) => handleStateChange(e.target.value)}
-                                            className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-300 dark:focus:border-blue-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
+                                            className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-300 dark:focus:border-red-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
                                         >
                                             <option value="">{loadingStates ? 'Loading...' : 'State'}</option>
                                             {states.map((state) => (
@@ -222,7 +222,7 @@ export default function Register() {
                                             value={data.lga}
                                             onChange={(e) => setData('lga', e.target.value)}
                                             disabled={!data.state || loadingLgas}
-                                            className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-300 dark:focus:border-blue-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-300 dark:focus:border-red-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             <option value="">
                                                 {!data.state ? 'State first' : loadingLgas ? 'Loading...' : 'LGA'}
@@ -251,7 +251,7 @@ export default function Register() {
                                             type={showPassword ? "text" : "password"}
                                             name="password"
                                             value={data.password}
-                                            className="w-full px-3.5 py-2.5 pr-10 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-300 dark:focus:border-blue-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
+                                            className="w-full px-3.5 py-2.5 pr-10 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-300 dark:focus:border-red-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
                                             autoComplete="new-password"
                                             onChange={(e) => setData('password', e.target.value)}
                                             required
@@ -282,7 +282,7 @@ export default function Register() {
                                             type={showConfirmPassword ? "text" : "password"}
                                             name="password_confirmation"
                                             value={data.password_confirmation}
-                                            className="w-full px-3.5 py-2.5 pr-10 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-300 dark:focus:border-blue-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
+                                            className="w-full px-3.5 py-2.5 pr-10 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-300 dark:focus:border-red-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm shadow-sm"
                                             autoComplete="new-password"
                                             onChange={(e) =>
                                                 setData('password_confirmation', e.target.value)
@@ -306,7 +306,7 @@ export default function Register() {
                                 </div>
 
                                 <PrimaryButton
-                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white py-2.5 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-300 transform hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-md text-sm font-medium"
+                                    className="w-full bg-gradient-to-r from-red-600 to-red-700 dark:from-red-500 dark:to-red-600 text-white py-2.5 px-4 rounded-lg font-semibold hover:from-red-700 hover:to-red-800 dark:hover:from-red-600 dark:hover:to-red-700 focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-300 transform hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-md text-sm font-medium"
                                     disabled={processing}
                                 >
                                     {processing ? 'Creating Account...' : 'Create Account'}
@@ -319,7 +319,7 @@ export default function Register() {
                                     Already a member?{' '}
                                     <Link
                                         href={route('login')}
-                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold focus:outline-none hover:underline transition-colors"
+                                        className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-semibold focus:outline-none hover:underline transition-colors"
                                     >
                                         Sign In
                                     </Link>

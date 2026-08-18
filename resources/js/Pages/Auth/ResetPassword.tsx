@@ -41,7 +41,7 @@ export default function ResetPassword({
                 <div className="w-full max-w-6xl flex bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
 
                     {/* Left Side - Security Info Panel */}
-                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-red-600 dark:from-blue-700 dark:to-red-700 p-12 flex-col justify-center text-white relative overflow-hidden">
+                    <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-red-600 to-red-600 dark:from-red-700 dark:to-red-700 p-12 flex-col justify-center text-white relative overflow-hidden">
                         <div className="absolute inset-0 bg-black opacity-10 dark:opacity-20"></div>
                         <div className="relative z-10">
                             <div className="mb-8">
@@ -98,7 +98,7 @@ export default function ResetPassword({
                         <div className="w-full max-w-md mx-auto">
 
                             <div className="text-center mb-8">
-                                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                     <KeyRound className="w-8 h-8 text-red-600 dark:text-red-400" />
                                 </div>
                                 <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Set New Password</h2>
