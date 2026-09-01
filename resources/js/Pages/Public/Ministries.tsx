@@ -62,9 +62,12 @@ export default function Ministries({ ministries = [] }: { ministries?: Ministry[
                     <div className="mt-14 rounded-3xl border border-red-800/70 bg-gradient-to-r from-red-900/20 to-slate-900 p-8 text-center">
                         <h3 className="text-2xl font-bold text-white">Want to serve?</h3>
                         <p className="mt-3 text-slate-300">Join a ministry and become part of God’s work in the church and community.</p>
-                        <div className="mt-6">
+                        <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
                             <Link href={route('register')} className="rounded-full bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-500">
                                 Get involved
+                            </Link>
+                            <Link href={route('units')} className="rounded-full border border-red-700 bg-slate-900 px-6 py-3 font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">
+                                Explore church units
                             </Link>
                         </div>
                     </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\MemberProfile;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -33,19 +34,41 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'phone' => ['nullable', 'string', 'max:30'],
+            'date_of_birth' => ['nullable', 'date', 'before_or_equal:today'],
+            'gender' => ['nullable', 'in:1,2'],
+            'membership_status' => ['required', 'in:1,2'],
+            'workforce_status' => ['nullable', 'in:1,2'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'user_type' => 'nullable|string|in:entrepreneur,sme,investor,individual',
             'state' => 'nullable|string',
             'lga' => 'nullable|string',
         ]);
 
+        $normalizedGender = $request->gender === '1' ? 'male' : ($request->gender === '2' ? 'female' : null);
+        $normalizedMembershipStatus = $request->membership_status === '1' ? 'regular_member' : 'first_timer';
+        $normalizedWorkforceStatus = $request->membership_status === '1' ? ($request->workforce_status === '1' ? 'unit_member' : ($request->workforce_status === '2' ? 'not_in_unit' : null)) : null;
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->date_of_birth,
             'password' => Hash::make($request->password),
             'user_type' => $request->user_type ?? 'entrepreneur',
             'state' => $request->state,
             'lga' => $request->lga,
+        ]);
+
+        MemberProfile::create([
+            'user_id' => $user->id,
+            'first_name' => $request->name,
+            'phone' => $request->phone,
+            'gender' => $normalizedGender,
+            'date_of_birth' => $request->date_of_birth,
+            'membership_status' => $normalizedMembershipStatus,
+            'workforce_status' => $normalizedWorkforceStatus,
+            'is_active' => true,
         ]);
 
         event(new Registered($user));

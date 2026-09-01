@@ -56,6 +56,7 @@ export default function AdminDashboard({ churchData }: { churchData: ChurchData 
                             <li className="rounded-xl bg-red-50 px-4 py-3">Attendance board is active for Sunday services</li>
                             <li className="rounded-xl bg-red-50 px-4 py-3">Members directory is ready for onboarding</li>
                             <li className="rounded-xl bg-red-50 px-4 py-3">Reports and invitation league scorecards are now available</li>
+                            <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.units')} className="font-semibold text-red-700 underline">Open Unit & Department Management</a></li>
                             <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.scorecards')} className="font-semibold text-red-700 underline">Open Scorecards Dashboard</a></li>
                             <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.absentees')} className="font-semibold text-red-700 underline">Open Absentee Board</a></li>
                             <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.workers-meetings')} className="font-semibold text-red-700 underline">Open Workers Meetings</a></li>

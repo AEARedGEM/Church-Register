@@ -21,6 +21,7 @@ class MemberProfile extends Model
         'marital_status',
         'occupation',
         'membership_status',
+        'workforce_status',
         'membership_number',
         'department',
         'unit',

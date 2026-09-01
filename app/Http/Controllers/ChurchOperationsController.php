@@ -8,6 +8,9 @@ use App\Models\ChurchMediaContent;
 use App\Models\ChurchMinistry;
 use App\Models\ChurchReport;
 use App\Models\ChurchScorecard;
+use App\Models\ChurchUnit;
+use App\Models\ChurchUnitLeader;
+use App\Models\ChurchUnitMember;
 use App\Models\ChurchWorkersMeeting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -46,6 +49,92 @@ class ChurchOperationsController extends Controller
         ]);
 
         return redirect()->route('church-admin.ministries')->with('success', 'Ministry created successfully.');
+    }
+
+    public function churchUnits(Request $request)
+    {
+        $units = ChurchUnit::query()
+            ->with(['leaders', 'members'])
+            ->orderBy('category')
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('Church/UnitManagement', [
+            'units' => $units,
+            'flash' => [
+                'success' => $request->session()->get('success'),
+            ],
+        ]);
+    }
+
+    public function storeChurchUnit(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255'],
+            'summary' => ['nullable', 'string'],
+            'aim' => ['nullable', 'string'],
+            'objectives' => ['nullable', 'string'],
+            'duties' => ['nullable', 'string'],
+            'highlights' => ['nullable', 'string'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        $slug = str($validated['name'])
+            ->slug()
+            ->toString();
+
+        $unit = ChurchUnit::query()->firstOrCreate(
+            ['slug' => $slug],
+            [
+                'name' => $validated['name'],
+                'category' => $validated['category'],
+                'summary' => $validated['summary'] ?? null,
+                'aim' => $validated['aim'] ?? null,
+                'objectives' => $this->parseList($validated['objectives'] ?? ''),
+                'duties' => $this->parseList($validated['duties'] ?? ''),
+                'highlights' => $this->parseList($validated['highlights'] ?? ''),
+                'is_active' => (bool) ($validated['is_active'] ?? true),
+            ]
+        );
+
+        return redirect()->route('church-admin.units')->with('success', $unit->wasRecentlyCreated ? 'Church unit created successfully.' : 'Church unit saved successfully.');
+    }
+
+    public function storeUnitLeader(Request $request, ChurchUnit $unit)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'role' => ['nullable', 'string', 'max:255'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        ChurchUnitLeader::create([
+            'church_unit_id' => $unit->id,
+            'name' => $validated['name'],
+            'role' => $validated['role'] ?? null,
+            'is_active' => (bool) ($validated['is_active'] ?? true),
+        ]);
+
+        return redirect()->route('church-admin.units')->with('success', 'Unit leader added successfully.');
+    }
+
+    public function storeUnitMember(Request $request, ChurchUnit $unit)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'role' => ['nullable', 'string', 'max:255'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        ChurchUnitMember::create([
+            'church_unit_id' => $unit->id,
+            'name' => $validated['name'],
+            'role' => $validated['role'] ?? null,
+            'is_active' => (bool) ($validated['is_active'] ?? true),
+        ]);
+
+        return redirect()->route('church-admin.units')->with('success', 'Unit member added successfully.');
     }
 
     public function leadership(Request $request)
@@ -107,6 +196,21 @@ class ChurchOperationsController extends Controller
                 'success' => $request->session()->get('success'),
             ],
         ]);
+    }
+
+    private function parseList(string $value): array
+    {
+        $lines = preg_split('/\r\n|\n|\r/', trim($value));
+
+        if (!$lines) {
+            return [];
+        }
+
+        return collect($lines)
+            ->map(fn ($line) => trim((string) $line))
+            ->filter(fn ($line) => $line !== '')
+            ->values()
+            ->all();
     }
 
     public function storeReport(Request $request)

@@ -36,57 +36,53 @@ export default function Login({
         <GuestLayout>
             <Head title="Log in - APGA Worldwide" />
 
-            <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-3 transition-colors duration-300">
-                <div className="w-full max-w-5xl flex bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-sm">
+            <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_24%),radial-gradient(circle_at_bottom,_rgba(168,85,247,0.14),_transparent_25%),linear-gradient(135deg,#f5f7ff_0%,#eef2ff_28%,#fdf2f8_100%)] dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-3 transition-colors duration-300">
+                <div className="w-full max-w-5xl flex overflow-hidden rounded-[28px] border border-white/30 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.18)] backdrop-blur-sm dark:bg-gray-800">
 
                     {/* Left Side - Brand/Info Panel */}
-                    <div className="hidden lg:flex lg:w-2/5 bg-gradient-to-br from-red-600 to-red-700 dark:from-red-700 dark:to-red-800 p-8 flex-col justify-between text-white relative overflow-hidden">
-                        <div className="absolute inset-0 bg-black opacity-15 dark:opacity-25"></div>
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -mr-20 -mt-20"></div>
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full -ml-16 -mb-16"></div>
-                        <div className="relative z-10">
-                            <div className="mb-7">
-                                <h1 className="text-3xl font-bold mb-1 leading-tight">Welcome Back</h1>
-                                <p className="text-sm opacity-90 font-medium">APGA Worldwide</p>
-                                <p className="text-xs opacity-70 mt-2">Growing God's Kingdom Together in Faith</p>
-                            </div>
+                    <div className="hidden lg:flex lg:w-2/5 flex-col justify-between overflow-hidden p-8 text-white relative bg-[linear-gradient(135deg,#0b1735_0%,#102a4b_18%,#153b5f_42%,#0f3d74_70%,#1a1e5a_100%)]">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.28),_transparent_22%),radial-gradient(circle_at_bottom_right,_rgba(236,72,153,0.22),_transparent_26%)]"></div>
+                        <div className="absolute -left-12 top-12 h-40 w-40 rounded-full bg-cyan-400/15 blur-3xl animate-pulse"></div>
+                        <div className="absolute right-0 top-0 h-52 w-52 rounded-full bg-fuchsia-400/20 blur-3xl animate-[spin_18s_linear_infinite]"></div>
+                        <div className="absolute bottom-6 right-16 h-44 w-44 rounded-full bg-indigo-400/20 blur-3xl animate-pulse"></div>
 
-                            <div className="grid grid-cols-2 gap-2.5 mb-6">
-                                <div className="bg-white bg-opacity-10 backdrop-blur-sm p-3 rounded-lg hover:bg-opacity-20 transition-all duration-300 group cursor-default">
-                                    <div className="w-8 h-8 bg-white bg-opacity-20 rounded-md flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-                                        <Users className="w-4 h-4" />
+                        <div className="relative z-10 flex h-full flex-col justify-between">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-white/10 shadow-[0_20px_40px_rgba(14,116,144,0.25)] backdrop-blur-md">
+                                        <img src="/images/logo.png" alt="APGA logo" className="h-10 w-10 object-contain" />
                                     </div>
-                                    <h3 className="font-semibold text-xs leading-tight">Attendance</h3>
-                                    <p className="text-xs opacity-70">Track</p>
+                                    <div>
+                                        <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-cyan-100/80">APGA Worldwide</p>
+                                        <h1 className="mt-1 text-3xl font-black tracking-tight">Welcome Back</h1>
+                                    </div>
                                 </div>
 
-                                <div className="bg-white bg-opacity-10 backdrop-blur-sm p-3 rounded-lg hover:bg-opacity-20 transition-all duration-300 group cursor-default">
-                                    <div className="w-8 h-8 bg-white bg-opacity-20 rounded-md flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-                                        <BarChart3 className="w-4 h-4" />
-                                    </div>
-                                    <h3 className="font-semibold text-xs leading-tight">Events</h3>
-                                    <p className="text-xs opacity-70">Calendar</p>
-                                </div>
-
-                                <div className="bg-white bg-opacity-10 backdrop-blur-sm p-3 rounded-lg hover:bg-opacity-20 transition-all duration-300 group cursor-default">
-                                    <div className="w-8 h-8 bg-white bg-opacity-20 rounded-md flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-                                        <Users2 className="w-4 h-4" />
-                                    </div>
-                                    <h3 className="font-semibold text-xs leading-tight">Community</h3>
-                                    <p className="text-xs opacity-70">Connect</p>
-                                </div>
-
-                                <div className="bg-white bg-opacity-10 backdrop-blur-sm p-3 rounded-lg hover:bg-opacity-20 transition-all duration-300 group cursor-default">
-                                    <div className="w-8 h-8 bg-white bg-opacity-20 rounded-md flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform">
-                                        <Zap className="w-4 h-4" />
-                                    </div>
-                                    <h3 className="font-semibold text-xs leading-tight">Prayer</h3>
-                                    <p className="text-xs opacity-70">Request</p>
+                                <div className="space-y-2">
+                                    <p className="text-lg font-semibold text-cyan-100">Apostolic Power Glorious Assembly</p>
+                                    <p className="max-w-xs text-sm text-slate-200/85">Growing God’s Kingdom together in faith, purpose, and community.</p>
                                 </div>
                             </div>
 
-                            <div className="p-3 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg border border-white border-opacity-20">
-                                <p className="text-xs font-medium leading-relaxed italic opacity-95">"Therefore if any man be in Christ, he is a new creature." — 2 Corinthians 5:17</p>
+                            <div className="grid grid-cols-2 gap-3">
+                                {[
+                                    { label: 'Attendance', meta: 'Track', icon: Users },
+                                    { label: 'Events', meta: 'Calendar', icon: BarChart3 },
+                                    { label: 'Community', meta: 'Connect', icon: Users2 },
+                                    { label: 'Prayer', meta: 'Request', icon: Zap },
+                                ].map(({ label, meta, icon: Icon }) => (
+                                    <div key={label} className="group rounded-2xl border border-white/10 bg-white/8 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/12">
+                                        <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/12 text-white transition-transform duration-300 group-hover:scale-110">
+                                            <Icon className="h-4 w-4" />
+                                        </div>
+                                        <h3 className="text-sm font-semibold text-white">{label}</h3>
+                                        <p className="text-[11px] text-slate-200/80">{meta}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="rounded-2xl border border-white/15 bg-white/8 p-4 shadow-[0_20px_40px_rgba(8,47,95,0.2)] backdrop-blur-sm">
+                                <p className="text-xs font-medium leading-relaxed italic text-slate-100/95">"Therefore if any man be in Christ, he is a new creature." — 2 Corinthians 5:17</p>
                             </div>
                         </div>
                     </div>

@@ -10,6 +10,7 @@ use App\Models\EventRegistration;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
 class PublicPageController extends Controller
@@ -46,6 +47,13 @@ class PublicPageController extends Controller
     public function mission()
     {
         return Inertia::render('Public/Mission', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function churchHistory()
+    {
+        return Inertia::render('Public/ChurchHistory', [
             'laravelVersion' => Application::VERSION,
         ]);
     }
@@ -89,6 +97,27 @@ class PublicPageController extends Controller
     public function impact()
     {
         return Inertia::render('Public/Impact', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function smallGroups()
+    {
+        return Inertia::render('Public/SmallGroups', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function volunteer()
+    {
+        return Inertia::render('Public/Volunteer', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function giving()
+    {
+        return Inertia::render('Public/Giving', [
             'laravelVersion' => Application::VERSION,
         ]);
     }
@@ -137,8 +166,461 @@ class PublicPageController extends Controller
         ]);
     }
 
+    private function churchUnitCatalog(): array
+    {
+        return [
+            'church-presbytery' => [
+                'slug' => 'church-presbytery',
+                'name' => 'Church Presbytery',
+                'category' => 'Spiritual Leadership',
+                'summary' => 'The spiritual oversight and leadership council that guides doctrine, prayer, pastoral direction, and church accountability.',
+                'aim' => 'To provide spiritual direction, pastoral oversight, and wise governance for the growth and health of the church.',
+                'objectives' => [
+                    'Strengthen sound doctrine and spiritual alignment across the church.',
+                    'Provide pastoral review and counsel for church leadership and members.',
+                    'Support unity, discipline, accountability, and biblical order.',
+                    'Guide major ministry decisions and the church’s spiritual vision.',
+                ],
+                'duties' => [
+                    'Pray for and oversee the spiritual welfare of the congregation.',
+                    'Review ministry reports and provide pastoral guidance.',
+                    'Coordinate prayer, teaching priorities, and church-wide spiritual focus.',
+                    'Ensure the church remains rooted in Scripture, holiness, and accountability.',
+                ],
+                'leadership' => [
+                    ['name' => 'Pastor in Charge', 'role' => 'Chairman'],
+                    ['name' => 'Elders Council', 'role' => 'Spiritual Oversight'],
+                    ['name' => 'Secretary', 'role' => 'Records & Coordination'],
+                ],
+                'members' => ['Elders', 'Deacons', 'Church Leaders', 'Assigned Prayer Team'],
+                'highlights' => ['Pastoral oversight', 'Doctrinal alignment', 'Spiritual direction', 'Church accountability'],
+            ],
+            'church-administration-unit' => [
+                'slug' => 'church-administration-unit',
+                'name' => 'Church Administration Unit',
+                'category' => 'Operations & Structure',
+                'summary' => 'The administrative backbone of the church, ensuring smooth coordination, documentation, and operational efficiency.',
+                'aim' => 'To maintain effective church administration that supports spiritual growth, order, and service delivery.',
+                'objectives' => [
+                    'Coordinate church operations and internal planning.',
+                    'Ensure records, reports, and communication are accurate and timely.',
+                    'Support leaders in strategic decision-making and church management.',
+                    'Strengthen efficiency across all departments and service activities.',
+                ],
+                'duties' => [
+                    'Maintain church records, directories, and official communication.',
+                    'Coordinate schedules, meetings, and administrative follow-ups.',
+                    'Support welfare, planning, and reporting across ministries.',
+                    'Ensure compliance, documentation, and continuity of church operations.',
+                ],
+                'leadership' => [
+                    ['name' => 'Administrative Head', 'role' => 'Unit Leader'],
+                    ['name' => 'Office Secretary', 'role' => 'Records & Communication'],
+                    ['name' => 'Finance Liaison', 'role' => 'Support Coordination'],
+                ],
+                'members' => ['Administrative Officers', 'Secretariat Team', 'Support Staff', 'Department Coordinators'],
+                'highlights' => ['Records management', 'Planning', 'Operations support', 'Communication'],
+            ],
+            'sunday-school-unit' => [
+                'slug' => 'sunday-school-unit',
+                'name' => 'Sunday School Unit',
+                'category' => 'Children & Discipleship',
+                'summary' => 'A faith-building unit dedicated to teaching children and young learners the Word of God in a vibrant and engaging way.',
+                'aim' => 'To disciple children and youth through biblical teaching, character building, and scriptural understanding.',
+                'objectives' => [
+                    'Teach biblical truths in a clear and age-appropriate manner.',
+                    'Encourage Christian character, prayerfulness, and obedience.',
+                    'Promote scripture memorization and personal devotion.',
+                    'Nurture a love for God and the church from an early age.',
+                ],
+                'duties' => [
+                    'Prepare lesson materials and lead Bible study sessions.',
+                    'Guide children in prayer, worship, and spiritual growth.',
+                    'Support children with pastoral care and classroom discipline.',
+                    'Coordinate children’s spiritual milestones and follow-up.',
+                ],
+                'leadership' => [
+                    ['name' => 'Sunday School Coordinator', 'role' => 'Unit Leader'],
+                    ['name' => 'Teachers Team', 'role' => 'Bible Teaching'],
+                    ['name' => 'Class Mentors', 'role' => 'Support & Follow-up'],
+                ],
+                'members' => ['Teachers', 'Assistant Teachers', 'Children', 'Parents Support Group'],
+                'highlights' => ['Bible teaching', 'Character formation', 'Spiritual mentorship', 'Youth discipleship'],
+            ],
+            'choir-unit' => [
+                'slug' => 'choir-unit',
+                'name' => 'Choir Unit',
+                'category' => 'Worship & Praise',
+                'summary' => 'The church’s worship expression team, leading the congregation in heartfelt praise, worship, and spiritual atmosphere.',
+                'aim' => 'To lead the church in vibrant and Spirit-filled worship that glorifies God and inspires the congregation.',
+                'objectives' => [
+                    'Lift worship to God with excellence and reverence.',
+                    'Encourage congregational participation in praise and adoration.',
+                    'Support spiritual ambiance during services and special programmes.',
+                    'Train singers and instrumentalists for ministry excellence.',
+                ],
+                'duties' => [
+                    'Lead songs and choruses during worship services.',
+                    'Prepare special renditions for prayer meetings and revival programmes.',
+                    'Support choir rehearsals and musical coordination.',
+                    'Maintain harmony, unity, and spirit-led worship in the assembly.',
+                ],
+                'leadership' => [
+                    ['name' => 'Choir Director', 'role' => 'Music Leadership'],
+                    ['name' => 'Section Leaders', 'role' => 'Voice & Harmony'],
+                    ['name' => 'Rehearsal Coordinator', 'role' => 'Practice & Preparation'],
+                ],
+                'members' => ['Soprano Team', 'Alto Team', 'Tenor Team', 'Bass Team', 'Instrumentalist Team'],
+                'highlights' => ['Worship leading', 'Music ministry', 'Service atmosphere', 'Congregational praise'],
+            ],
+            'media-unit' => [
+                'slug' => 'media-unit',
+                'name' => 'Media Unit',
+                'category' => 'Communication & Visibility',
+                'summary' => 'The media and communication team responsible for documenting, broadcasting, and enhancing the church’s public and internal communication.',
+                'aim' => 'To promote the church’s mission through impactful media, communication, and digital engagement.',
+                'objectives' => [
+                    'Capture church events and spiritual moments.',
+                    'Support digital outreach and church publicity.',
+                    'Maintain quality audio-visual communication during services.',
+                    'Highlight testimonies, teachings, and church mission through media.',
+                ],
+                'duties' => [
+                    'Manage sound, video, projection, and livestream systems.',
+                    'Document church programmes for records and promotion.',
+                    'Support social media, announcements, and public communication.',
+                    'Maintain media equipment and technical presentations.',
+                ],
+                'leadership' => [
+                    ['name' => 'Media Coordinator', 'role' => 'Unit Head'],
+                    ['name' => 'Video Team', 'role' => 'Recording & Production'],
+                    ['name' => 'Sound Team', 'role' => 'Audio & Streaming'],
+                ],
+                'members' => ['Cameramen', 'Graphic Designers', 'Audio Operators', 'Content Editors'],
+                'highlights' => ['Live streaming', 'Digital outreach', 'Event documentation', 'Visual communication'],
+            ],
+            'evangelism-unit' => [
+                'slug' => 'evangelism-unit',
+                'name' => 'Evangelism Unit',
+                'category' => 'Outreach & Mission',
+                'summary' => 'The church’s mission movement focused on soul-winning, outreach, and making Christ known in communities and cities.',
+                'aim' => 'To spread the gospel, witness to the lost, and multiply disciples through evangelistic outreach.',
+                'objectives' => [
+                    'Win souls for Christ through prayers, preaching, and witness.',
+                    'Mobilize members for community outreach and evangelism.',
+                    'Support converts with follow-up and discipleship.',
+                    'Expand the reach of the church through mission and partnerships.',
+                ],
+                'duties' => [
+                    'Conduct evangelistic meetings and open-air outreaches.',
+                    'Visit homes, communities, and public spaces with the gospel.',
+                    'Distribute invitations, tracts, and gospel messages.',
+                    'Follow up new converts and connect them to church life.',
+                ],
+                'leadership' => [
+                    ['name' => 'Evangelism Leader', 'role' => 'Outreach Direction'],
+                    ['name' => 'Field Coordinators', 'role' => 'Community Mission'],
+                    ['name' => 'Follow-up Team', 'role' => 'Discipleship Support'],
+                ],
+                'members' => ['Outreach Team', 'Prayer Evangelists', 'Follow-up Team', 'Home Mission Members'],
+                'highlights' => ['Soul winning', 'Community outreach', 'Follow-up discipleship', 'Mission impact'],
+            ],
+            'sanitation-unit' => [
+                'slug' => 'sanitation-unit',
+                'name' => 'Sanitation Unit',
+                'category' => 'Environment & Order',
+                'summary' => 'The care and cleanliness team responsible for maintaining a healthy, organized, and welcoming church environment.',
+                'aim' => 'To maintain cleanliness, order, and a safe worship environment for all members and guests.',
+                'objectives' => [
+                    'Promote hygiene and cleanliness within the church environment.',
+                    'Keep service spaces orderly and welcoming.',
+                    'Ensure safety and comfort for worshippers and visitors.',
+                    'Support church events with proper environmental care and preparation.',
+                ],
+                'duties' => [
+                    'Clean worship halls, toilets, and church premises.',
+                    'Prepare surroundings for programmes and special meetings.',
+                    'Organize waste disposal and environmental upkeep.',
+                    'Support housekeeping protocols for all church gatherings.',
+                ],
+                'leadership' => [
+                    ['name' => 'Sanitation Coordinator', 'role' => 'Unit Leader'],
+                    ['name' => 'Cleaning Team', 'role' => 'Premises Upkeep'],
+                    ['name' => 'Facility Support', 'role' => 'Environment Maintenance'],
+                ],
+                'members' => ['Cleaning Crew', 'Support Volunteers', 'Event Setup Team', 'Safety Helpers'],
+                'highlights' => ['Clean environment', 'Orderliness', 'Safety', 'Service readiness'],
+            ],
+            'ushering-unit' => [
+                'slug' => 'ushering-unit',
+                'name' => 'Ushering Unit',
+                'category' => 'Hospitality & Order',
+                'summary' => 'The hospitality and service team responsible for receiving members and guests with warmth, order, and care.',
+                'aim' => 'To create a welcoming, orderly, and spiritually friendly environment for worship and church gatherings.',
+                'objectives' => [
+                    'Receive members and guests with warm hospitality.',
+                    'Help maintain order and smooth service flow.',
+                    'Guide attendees to seats and support event setup.',
+                    'Ensure a respectful and caring atmosphere in all programmes.',
+                ],
+                'duties' => [
+                    'Welcome members and visitors during services.',
+                    'Manage seating arrangements and service flow.',
+                    'Support church protocol and organized access.',
+                    'Relay pastoral and logistical support during programmes.',
+                ],
+                'leadership' => [
+                    ['name' => 'Head Usher', 'role' => 'Unit Leader'],
+                    ['name' => 'Service Team', 'role' => 'Hospitality & Flow'],
+                    ['name' => 'Greeters', 'role' => 'Welcome & Guidance'],
+                ],
+                'members' => ['Usher Team', 'Greeters', 'Seating Coordinators', 'Front Desk Support'],
+                'highlights' => ['Hospitality', 'Order', 'Welcoming environment', 'Service flow'],
+            ],
+            'protocol-unit' => [
+                'slug' => 'protocol-unit',
+                'name' => 'Protocol Unit',
+                'category' => 'Order & Public Conduct',
+                'summary' => 'The protocol team responsible for order, decorum, and graceful flow during meetings, special events, and official church programs.',
+                'aim' => 'To ensure proper order, respect, and beautiful conduct during church services and public engagements.',
+                'objectives' => [
+                    'Create a dignified and orderly environment for church programmes.',
+                    'Guide dignitaries, guests, and new members respectfully.',
+                    'Coordinate entry, seating, and public service order.',
+                    'Promote professionalism and reverence in all church gatherings.',
+                ],
+                'duties' => [
+                    'Coordinate seating, arrivals, and event flow.',
+                    'Assist with church etiquette and official proceedings.',
+                    'Support special ceremonies and public church events.',
+                    'Ensure order and respect during services and programmes.',
+                ],
+                'leadership' => [
+                    ['name' => 'Protocol Leader', 'role' => 'Unit Leadership'],
+                    ['name' => 'Event Protocol Team', 'role' => 'Manage order and movement'],
+                    ['name' => 'Guest Support Team', 'role' => 'Hospitality & Coordination'],
+                ],
+                'members' => ['Protocol Officers', 'Guests Support Team', 'Ceremony Assistants', 'Service Marshals'],
+                'highlights' => ['Orderly services', 'Graceful engagement', 'Guest handling', 'Event coordination'],
+            ],
+            'technical-team-unit' => [
+                'slug' => 'technical-team-unit',
+                'name' => 'Technical Team Unit',
+                'category' => 'Media & Operations',
+                'summary' => 'The technical arm of the church, supporting sound, display, streaming, and digital systems for smooth worship experiences.',
+                'aim' => 'To ensure all technical aspects of church services and events run efficiently and excellently.',
+                'objectives' => [
+                    'Support smooth audio-visual services during worship and meetings.',
+                    'Maintain church tech infrastructure and equipment.',
+                    'Facilitate live streaming and presentation excellence.',
+                    'Provide technical support across church events and programmes.',
+                ],
+                'duties' => [
+                    'Operate sound and visual systems during services.',
+                    'Manage live transmissions, projectors, and microphones.',
+                    'Troubleshoot technical issues quickly and professionally.',
+                    'Maintain technical readiness and backup systems.',
+                ],
+                'leadership' => [
+                    ['name' => 'Technical Lead', 'role' => 'Unit Head'],
+                    ['name' => 'AV Engineers', 'role' => 'Audio & Visual Support'],
+                    ['name' => 'Streaming Team', 'role' => 'Broadcast Coordination'],
+                ],
+                'members' => ['Audio Team', 'Visual Team', 'Streaming Operators', 'Maintenance Assistants'],
+                'highlights' => ['Sound systems', 'Live streaming', 'Visual production', 'Technical coordination'],
+            ],
+            'welfare-unit' => [
+                'slug' => 'welfare-unit',
+                'name' => 'Welfare Unit',
+                'category' => 'Care & Support',
+                'summary' => 'A caring and compassionate unit that reaches out to members in need with prayer, support, and practical assistance.',
+                'aim' => 'To demonstrate Christlike compassion and practical care to members and families in need.',
+                'objectives' => [
+                    'Identify and support members facing hardship or special need.',
+                    'Provide prayerful care and practical assistance.',
+                    'Encourage solidarity and belonging within the church family.',
+                    'Support families during crises and seasons of transition.',
+                ],
+                'duties' => [
+                    'Visit members in need and provide pastoral follow-up.',
+                    'Coordinate food, prayer, and support assistance.',
+                    'Track welfare needs and connect people with appropriate help.',
+                    'Encourage compassion, care, and community belonging.',
+                ],
+                'leadership' => [
+                    ['name' => 'Welfare Coordinator', 'role' => 'Unit Leader'],
+                    ['name' => 'Care Team', 'role' => 'Member Outreach'],
+                    ['name' => 'Follow-up Team', 'role' => 'Support & Check-ins'],
+                ],
+                'members' => ['Care Volunteers', 'Prayer Partners', 'Hospitality Support Team', 'Need Assessment Team'],
+                'highlights' => ['Pastoral care', 'Compassion', 'Member support', 'Practical help'],
+            ],
+            'children-evangelism-unit' => [
+                'slug' => 'children-evangelism-unit',
+                'name' => 'Children Evangelism Unit',
+                'category' => 'Children & Outreach',
+                'summary' => 'A focused outreach arm reaching children with the gospel message, love of Christ, and practical discipleship.',
+                'aim' => 'To win and disciple children through the love of Christ, prayer, and biblical instruction.',
+                'objectives' => [
+                    'Share the gospel with children in homes, schools, and communities.',
+                    'Build children’s faith and confidence in God.',
+                    'Create safe and loving spaces for children to grow spiritually.',
+                    'Encourage sustained follow-up and child discipleship.',
+                ],
+                'duties' => [
+                    'Conduct children’s evangelism outreaches.',
+                    'Teach Bible truths in engaging ways.',
+                    'Support child discipleship and care.',
+                    'Work with parents and caregivers to develop Christ-centered children.',
+                ],
+                'leadership' => [
+                    ['name' => 'Children Evangelism Coordinator', 'role' => 'Lead Vision'],
+                    ['name' => 'School Outreach Team', 'role' => 'Community Reach'],
+                    ['name' => 'Children Mentors', 'role' => 'Guidance & Nurture'],
+                ],
+                'members' => ['Children Outreach Team', 'School Mission Volunteers', 'Bible Teachers', 'Care Volunteers'],
+                'highlights' => ['Child evangelism', 'School outreach', 'Faith foundation', 'Spiritual nurture'],
+            ],
+            'children-unit-church' => [
+                'slug' => 'children-unit-church',
+                'name' => 'Children Unit/Church',
+                'category' => 'Children & Family',
+                'summary' => 'The church’s child discipleship and family-life arm that nurtures children in faith, discipline, and godly living.',
+                'aim' => 'To raise children in faith, wisdom, and a loving relationship with God and the church family.',
+                'objectives' => [
+                    'Build strong spiritual roots in children.',
+                    'Support parents in nurturing healthy Christian homes.',
+                    'Create age-appropriate learning and fellowship spaces.',
+                    'Encourage children to become active disciples of Christ.',
+                ],
+                'duties' => [
+                    'Coordinate child-focused teaching and fellowship programmes.',
+                    'Participate in church-wide children’s events and activities.',
+                    'Encourage child prayer, participation, and obedience.',
+                    'Maintain a healthy, loving environment for every child.',
+                ],
+                'leadership' => [
+                    ['name' => 'Children Unit Leader', 'role' => 'Children Ministry'],
+                    ['name' => 'Children Workers', 'role' => 'Support & Mentorship'],
+                    ['name' => 'Parent Liaison', 'role' => 'Family Connection'],
+                ],
+                'members' => ['Children Workers', 'Parents', 'Child Mentors', 'Family Support Team'],
+                'highlights' => ['Family nurture', 'Child discipleship', 'Spiritual growth', 'Christ-centered living'],
+            ],
+            'youth-unit-ministry' => [
+                'slug' => 'youth-unit-ministry',
+                'name' => 'Youth Unit/Ministry',
+                'category' => 'Youth & Leadership',
+                'summary' => 'A dynamic ministry for teenagers and young adults that fosters spiritual growth, leadership, creativity, and community.',
+                'aim' => 'To raise strong, purpose-driven young believers who are spiritually grounded and active in the church.',
+                'objectives' => [
+                    'Discipleship young people in Christ and biblical values.',
+                    'Develop leadership, creativity, and kingdom influence among youth.',
+                    'Create spaces for fellowship, worship, and mentorship.',
+                    'Prepare youth for service in the church and society.',
+                ],
+                'duties' => [
+                    'Organize youth worship, teaching, and fellowship programmes.',
+                    'Provide mentorship, prayer, and discipleship support.',
+                    'Mobilize youth for outreach and service opportunities.',
+                    'Promote teamwork, purity, responsibility, and purpose.',
+                ],
+                'leadership' => [
+                    ['name' => 'Youth Pastor/Leader', 'role' => 'Ministry Leadership'],
+                    ['name' => 'Youth Coordinators', 'role' => 'Programme Planning'],
+                    ['name' => 'Mentors', 'role' => 'Discipleship Support'],
+                ],
+                'members' => ['Teenagers', 'Young Adults', 'Leaders', 'Prayer & Worship Team'],
+                'highlights' => ['Youth discipleship', 'Leadership formation', 'Worship', 'Outreach'],
+            ],
+            'mens-movement' => [
+                'slug' => 'mens-movement',
+                'name' => 'Men’s Movement',
+                'category' => 'Men’s Fellowship',
+                'summary' => 'A fellowship movement focused on men’s spiritual growth, responsibility, integrity, and kingdom leadership at home and in church.',
+                'aim' => 'To raise men who are spiritually strong, godly, responsible, and committed to Christian leadership.',
+                'objectives' => [
+                    'Develop male discipleship and spiritual maturity.',
+                    'Encourage men to lead with integrity at home and in church.',
+                    'Promote prayer, accountability, and godly character.',
+                    'Strengthen the role of men in service and family leadership.',
+                ],
+                'duties' => [
+                    'Hold men’s prayer meetings and teaching sessions.',
+                    'Encourage accountability and mentoring among men.',
+                    'Support spiritual leadership and family responsibility.',
+                    'Lead outreach and support activities within the church.',
+                ],
+                'leadership' => [
+                    ['name' => 'Men’s Leader', 'role' => 'Movement Coordinator'],
+                    ['name' => 'Prayer Team', 'role' => 'Spiritual Support'],
+                    ['name' => 'Mentors', 'role' => 'Leadership Development'],
+                ],
+                'members' => ['Men of the Church', 'Prayer Partners', 'Fellowship Group', 'Support Mentors'],
+                'highlights' => ['Godly leadership', 'Prayer', 'Accountability', 'Family responsibility'],
+            ],
+            'good-womens-movement' => [
+                'slug' => 'good-womens-movement',
+                'name' => 'Good Women’s Movement',
+                'category' => 'Women’s Fellowship',
+                'summary' => 'A supportive and spiritual women’s fellowship focused on prayer, encouragement, discipleship, and godly living.',
+                'aim' => 'To empower women to grow spiritually strong, support one another, and live purposeful Christian lives.',
+                'objectives' => [
+                    'Strengthen women in prayer and the Word of God.',
+                    'Encourage fellowship, care, and support among women.',
+                    'Develop godly character, leadership, and service.',
+                    'Promote women’s involvement in church and community impact.',
+                ],
+                'duties' => [
+                    'Conduct women’s prayer and Bible study meetings.',
+                    'Offer care support to women and their families.',
+                    'Coordinate empowerment and mentoring programmes.',
+                    'Promote unity, grace, and service among women of the church.',
+                ],
+                'leadership' => [
+                    ['name' => 'Women’s Leader', 'role' => 'Movement Coordinator'],
+                    ['name' => 'Prayer Coordinators', 'role' => 'Prayers & Intercession'],
+                    ['name' => 'Care Team', 'role' => 'Support & Encouragement'],
+                ],
+                'members' => ['Women of the Church', 'Prayers Team', 'Care Group', 'Fellowship Members'],
+                'highlights' => ['Prayer', 'Women’s support', 'Discipleship', 'Spiritual empowerment'],
+            ],
+        ];
+    }
+
+    public function units()
+    {
+        return Inertia::render('Public/Units', [
+            'laravelVersion' => Application::VERSION,
+            'units' => array_values($this->churchUnitCatalog()),
+        ]);
+    }
+
+    public function unitDetail(string $unit)
+    {
+        $catalog = $this->churchUnitCatalog();
+        $selected = $catalog[$unit] ?? null;
+
+        if (!$selected) {
+            abort(404, 'Unit not found.');
+        }
+
+        return Inertia::render('Public/UnitDetail', [
+            'laravelVersion' => Application::VERSION,
+            'unit' => $selected,
+            'allUnits' => array_values($catalog),
+        ]);
+    }
+
     public function ministries()
     {
+        if (!Schema::hasTable('church_ministries')) {
+            return Inertia::render('Public/Ministries', [
+                'laravelVersion' => Application::VERSION,
+                'ministries' => [],
+            ]);
+        }
+
         $ministries = ChurchMinistry::query()
             ->with(['leadershipProfiles' => function ($query) {
                 $query->where('is_active', true)->orderBy('name');
@@ -155,6 +637,13 @@ class PublicPageController extends Controller
 
     public function ministryDetail(ChurchMinistry $ministry)
     {
+        if (!Schema::hasTable('church_ministries')) {
+            return Inertia::render('Public/MinistryDetail', [
+                'laravelVersion' => Application::VERSION,
+                'ministry' => $ministry,
+            ]);
+        }
+
         $ministry->load(['leadershipProfiles' => function ($query) {
             $query->where('is_active', true)->orderBy('name');
         }]);
@@ -167,6 +656,14 @@ class PublicPageController extends Controller
 
     public function media()
     {
+        if (!Schema::hasTable('church_media_content')) {
+            return Inertia::render('Public/Media', [
+                'laravelVersion' => Application::VERSION,
+                'media' => [],
+                'featuredMedia' => [],
+            ]);
+        }
+
         $media = ChurchMediaContent::query()
             ->where('status', 'published')
             ->orderByDesc('featured')
@@ -182,6 +679,14 @@ class PublicPageController extends Controller
 
     public function mediaDetail(ChurchMediaContent $media)
     {
+        if (!Schema::hasTable('church_media_content')) {
+            return Inertia::render('Public/MediaDetail', [
+                'laravelVersion' => Application::VERSION,
+                'media' => $media,
+                'relatedMedia' => [],
+            ]);
+        }
+
         $relatedMedia = ChurchMediaContent::query()
             ->where('id', '!=', $media->id)
             ->where('status', 'published')
@@ -288,9 +793,44 @@ class PublicPageController extends Controller
         ]);
     }
 
+    public function resources()
+    {
+        return Inertia::render('Public/Resources', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function prayerRequests()
+    {
+        return Inertia::render('Public/PrayerRequests', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
     public function support()
     {
         return Inertia::render('Public/Support', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function contact()
+    {
+        return Inertia::render('Public/Contact', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function locationHours()
+    {
+        return Inertia::render('Public/LocationHours', [
+            'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function sendMessage()
+    {
+        return Inertia::render('Public/SendMessage', [
             'laravelVersion' => Application::VERSION,
         ]);
     }

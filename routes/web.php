@@ -45,13 +45,17 @@ Route::get('/', function () {
 
 // Public Footer Pages - Church Foundation
 Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+Route::get('/mission', [PublicPageController::class, 'mission'])->name('mission');
 Route::get('/leadership', [PublicPageController::class, 'leadership'])->name('leadership');
+Route::get('/church-history', [PublicPageController::class, 'churchHistory'])->name('church-history');
 Route::get('/governance', [PublicPageController::class, 'governance'])->name('governance');
 Route::get('/zones', [PublicPageController::class, 'zones'])->name('zones');
-Route::get('/mission', [PublicPageController::class, 'mission'])->name('mission');
 
 // Public Footer Pages - Church Life & Ministry
 Route::get('/program', [PublicPageController::class, 'program'])->name('program');
+Route::get('/small-groups', [PublicPageController::class, 'smallGroups'])->name('small-groups');
+Route::get('/volunteer', [PublicPageController::class, 'volunteer'])->name('volunteer');
+Route::get('/giving', [PublicPageController::class, 'giving'])->name('giving');
 Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
 Route::get('/funding', [PublicPageController::class, 'funding'])->name('funding');
 Route::get('/owop-mandate', [PublicPageController::class, 'owopMandate'])->name('owop-mandate');
@@ -74,6 +78,8 @@ Route::prefix('documentation')->name('documentation.')->group(function () {
 
 // Public Footer Pages - Resources
 Route::get('/community', [PublicPageController::class, 'community'])->name('community');
+Route::get('/units', [PublicPageController::class, 'units'])->name('units');
+Route::get('/units/{unit}', [PublicPageController::class, 'unitDetail'])->name('units.detail');
 Route::get('/ministries', [PublicPageController::class, 'ministries'])->name('ministries');
 Route::get('/ministries/{ministry}', [PublicPageController::class, 'ministryDetail'])->name('ministries.detail');
 Route::get('/media', [PublicPageController::class, 'media'])->name('media');
@@ -83,7 +89,12 @@ Route::get('/events', [PublicPageController::class, 'events'])->name('events');
 Route::get('/events/{event}', [PublicPageController::class, 'eventDetail'])->name('events.detail');
 Route::post('/events/{event}/register', [PublicPageController::class, 'registerEvent'])->name('events.register');
 Route::get('/knowledge-base', [PublicPageController::class, 'knowledgeBase'])->name('knowledge-base');
+Route::get('/resources', [PublicPageController::class, 'resources'])->name('resources');
+Route::get('/prayer-requests', [PublicPageController::class, 'prayerRequests'])->name('prayer-requests');
 Route::get('/support', [PublicPageController::class, 'support'])->name('support');
+Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');
+Route::get('/location-hours', [PublicPageController::class, 'locationHours'])->name('location-hours');
+Route::get('/send-message', [PublicPageController::class, 'sendMessage'])->name('send-message');
 Route::get('/faq', [PublicPageController::class, 'faq'])->name('faq');
 Route::get('/feedback', [PublicPageController::class, 'feedback'])->name('feedback');
 
@@ -105,6 +116,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/church-admin/attendance', [ChurchAdminController::class, 'storeAttendance'])->name('church-admin.attendance.store');
     Route::get('/church-admin/ministries', [ChurchOperationsController::class, 'ministries'])->name('church-admin.ministries');
     Route::post('/church-admin/ministries', [ChurchOperationsController::class, 'storeMinistry'])->name('church-admin.ministries.store');
+    Route::get('/church-admin/units', [ChurchOperationsController::class, 'churchUnits'])->name('church-admin.units');
+    Route::post('/church-admin/units', [ChurchOperationsController::class, 'storeChurchUnit'])->name('church-admin.units.store');
+    Route::post('/church-admin/units/{unit}/leaders', [ChurchOperationsController::class, 'storeUnitLeader'])->name('church-admin.units.leaders.store');
+    Route::post('/church-admin/units/{unit}/members', [ChurchOperationsController::class, 'storeUnitMember'])->name('church-admin.units.members.store');
     Route::get('/church-admin/leadership', [ChurchOperationsController::class, 'leadership'])->name('church-admin.leadership');
     Route::post('/church-admin/leadership', [ChurchOperationsController::class, 'storeLeadership'])->name('church-admin.leadership.store');
     Route::get('/church-admin/reports', [ChurchOperationsController::class, 'reports'])->name('church-admin.reports');

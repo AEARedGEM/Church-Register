@@ -269,6 +269,15 @@ export default function Welcome({
                                 </div>
                             ))}
                         </div>
+
+                        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                            <Link href={route('ministries')} className="rounded-full bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-500">
+                                Explore Ministries
+                            </Link>
+                            <Link href={route('units')} className="rounded-full border border-red-700 bg-slate-900 px-6 py-3 font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">
+                                Explore Church Units
+                            </Link>
+                        </div>
                     </div>
                 </section>
 
@@ -339,69 +348,106 @@ export default function Welcome({
                 </section>
 
                 {/* Features Section */}
-                <section className="relative py-24 overflow-hidden bg-slate-950">
-                    {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-slate-950"></div>
+                <section className="relative overflow-hidden bg-[#050816] py-28">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.18),_transparent_22%),radial-gradient(circle_at_15%_80%,_rgba(239,68,68,0.18),_transparent_24%),radial-gradient(circle_at_85%_15%,_rgba(59,130,246,0.18),_transparent_22%)]"></div>
+                    <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,8,22,0.96),rgba(2,6,23,0.98))]"></div>
 
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-red-900/10 animate-pulse"></div>
+                    <div className="absolute left-8 top-16 h-72 w-72 rounded-full bg-fuchsia-500/15 blur-3xl"></div>
+                    <div className="absolute right-12 top-20 h-80 w-80 rounded-full bg-red-500/15 blur-3xl"></div>
+                    <div className="absolute bottom-6 left-1/3 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
 
-                    {/* Decorative blurred shapes */}
-                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-20 animate-pulse"></div>
-                    <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '1s'}}></div>
-
-                    <div className="relative max-w-7xl mx-auto px-6 z-10">
-                        {/* Header */}
-                        <div className="text-center mb-16">
-                            <div className="inline-block mb-4">
-                                <span className="text-slate-100 font-semibold tracking-wider uppercase text-sm bg-red-800/70 px-4 py-2 border border-red-700 rounded-full backdrop-blur-sm">
-                                    Our Features
-                                </span>
+                    <div className="relative z-10 mx-auto max-w-7xl px-6">
+                        <div className="mb-14 text-center">
+                            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-fuchsia-500/40 bg-white/5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.38em] text-fuchsia-100 backdrop-blur-sm shadow-[0_0_30px_rgba(217,70,239,0.2)]">
+                                <span className="h-2 w-2 rounded-full bg-fuchsia-400 shadow-[0_0_12px_rgba(244,114,182,0.9)]"></span>
+                                Our Platform
                             </div>
-                            <h2 className="text-4xl font-bold mb-4 text-slate-100">Church Management Features</h2>
-                            <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-                                Everything you need to manage and grow your church community
+                            <h2 className="mb-5 text-4xl font-black tracking-[-0.06em] text-white md:text-6xl lg:text-7xl">
+                                Built for a church
+                                <span className="block bg-gradient-to-r from-fuchsia-200 via-red-200 to-orange-200 bg-clip-text text-transparent">
+                                    that moves with purpose
+                                </span>
+                            </h2>
+                            <p className="mx-auto max-w-3xl text-base leading-relaxed text-slate-300 md:text-xl">
+                                From worship and discipleship to outreach and growth, every feature is designed to help your community thrive in faith and momentum.
                             </p>
                         </div>
 
-                        {/* Features Grid */}
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid gap-6 lg:grid-cols-12">
                             {[
                                 {
                                     title: "Worship & Prayer",
-                                    description: "Gather in faith, grow in prayer, and experience Spirit-filled worship every week.",
-                                    icon: "✝️"
+                                    description: "Create a vibrant rhythm of worship, prayer, and spiritual growth every week.",
+                                    icon: "✝️",
+                                    accent: "from-rose-500/40 via-red-500/15 to-transparent",
+                                    glow: "shadow-[0_0_40px_rgba(244,63,94,0.18)]"
                                 },
                                 {
                                     title: "Family & Discipleship",
-                                    description: "Support members through biblical teaching, mentorship, and life-group discipleship.",
-                                    icon: "🤝"
+                                    description: "Encourage meaningful discipleship with mentoring, teaching, and life-group connection.",
+                                    icon: "🤝",
+                                    accent: "from-orange-400/40 via-amber-500/15 to-transparent",
+                                    glow: "shadow-[0_0_40px_rgba(251,146,60,0.16)]"
                                 },
                                 {
                                     title: "Events & Outreach",
-                                    description: "Host impactful church gatherings, community service days, and revival programmes.",
-                                    icon: "📅"
+                                    description: "Plan memorable gatherings, serve the city, and launch powerful ministry moments.",
+                                    icon: "📅",
+                                    accent: "from-sky-500/40 via-blue-500/15 to-transparent",
+                                    glow: "shadow-[0_0_40px_rgba(59,130,246,0.18)]"
                                 },
                                 {
                                     title: "Member Care",
-                                    description: "Stay connected through pastoral care, prayer support, and active church community.",
-                                    icon: "👥"
+                                    description: "Keep every member supported through pastoral presence, prayer, and belonging.",
+                                    icon: "👥",
+                                    accent: "from-violet-500/40 via-fuchsia-500/15 to-transparent",
+                                    glow: "shadow-[0_0_40px_rgba(168,85,247,0.18)]"
                                 },
                                 {
                                     title: "Prayer Requests",
-                                    description: "Bring your needs before God and receive encouragement from the church community.",
-                                    icon: "🙏"
+                                    description: "Lift every need before God and surround people with care, hope, and support.",
+                                    icon: "🙏",
+                                    accent: "from-pink-500/40 via-rose-500/15 to-transparent",
+                                    glow: "shadow-[0_0_40px_rgba(236,72,153,0.18)]"
                                 },
                                 {
                                     title: "Church Insight",
-                                    description: "Track attendance, ministries, and growth with tools designed for healthy church operations.",
-                                    icon: "📊"
+                                    description: "Track attendance and growth with tools built for healthy, strategic ministry.",
+                                    icon: "📊",
+                                    accent: "from-emerald-500/40 via-teal-500/15 to-transparent",
+                                    glow: "shadow-[0_0_40px_rgba(16,185,129,0.18)]"
                                 }
                             ].map((feature, index) => (
-                                <div key={index} className="backdrop-blur-sm bg-slate-900/85 border border-red-800/70 rounded-2xl p-8 shadow-2xl transition-all duration-300 group hover:bg-slate-900/95 hover:-translate-y-2">
-                                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">{feature.icon}</div>
-                                    <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                                    <p className="text-slate-300 leading-relaxed">{feature.description}</p>
+                                <div
+                                    key={index}
+                                    className={[
+                                        "group relative overflow-hidden rounded-[30px] border border-white/10 bg-slate-900/80 p-7 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-red-400/60 hover:shadow-[0_28px_80px_rgba(30,41,59,0.8)]",
+                                        index % 2 === 0 ? "lg:col-span-4" : "lg:col-span-4",
+                                        index === 3 || index === 4 ? "lg:translate-y-8" : "",
+                                        feature.glow
+                                    ].join(" ")}
+                                >
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent}`} />
+                                    <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/5 blur-2xl"></div>
+                                    <div className="absolute inset-x-5 bottom-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+
+                                    <div className="relative z-10">
+                                        <div className="mb-6 flex items-center justify-between gap-3">
+                                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-slate-950/80 text-3xl shadow-inner shadow-white/5 transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_16px_rgba(244,114,182,0.35)]">
+                                                {feature.icon}
+                                            </div>
+                                            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-slate-400">
+                                                0{index + 1}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="mb-3 text-2xl font-bold tracking-tight text-white md:text-[1.8rem]">
+                                            {feature.title}
+                                        </h3>
+                                        <p className="text-base leading-relaxed text-slate-200/90">
+                                            {feature.description}
+                                        </p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -570,16 +616,16 @@ export default function Welcome({
                                 </div>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <a href="#about" className="text-gray-300 hover:text-red-400 transition-colors font-medium">About Us</a>
+                                        <Link href={route('about')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">About Us</Link>
                                     </li>
                                     <li>
-                                        <a href="#mission" className="text-gray-400 hover:text-red-400 transition-colors">Our Mission</a>
+                                        <Link href={route('mission')} className="text-gray-400 hover:text-red-400 transition-colors">Our Mission</Link>
                                     </li>
                                     <li>
-                                        <a href="#leadership" className="text-gray-400 hover:text-red-400 transition-colors">Leadership</a>
+                                        <Link href={route('leadership')} className="text-gray-400 hover:text-red-400 transition-colors">Leadership</Link>
                                     </li>
                                     <li>
-                                        <a href="#history" className="text-gray-400 hover:text-red-400 transition-colors">Church History</a>
+                                        <Link href={route('church-history')} className="text-gray-400 hover:text-red-400 transition-colors">Church History</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -589,16 +635,16 @@ export default function Welcome({
                                 <h3 className="text-lg font-bold text-red-400 mb-6">Get Involved</h3>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <a href="#events" className="text-gray-300 hover:text-red-400 transition-colors font-medium">Events</a>
+                                        <Link href={route('events')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Events</Link>
                                     </li>
                                     <li>
-                                        <a href="#groups" className="text-gray-400 hover:text-red-400 transition-colors">Small Groups</a>
+                                        <Link href={route('small-groups')} className="text-gray-400 hover:text-red-400 transition-colors">Small Groups</Link>
                                     </li>
                                     <li>
-                                        <a href="#volunteering" className="text-gray-400 hover:text-red-400 transition-colors">Volunteer</a>
+                                        <Link href={route('volunteer')} className="text-gray-400 hover:text-red-400 transition-colors">Volunteer</Link>
                                     </li>
                                     <li>
-                                        <a href="#giving" className="text-gray-400 hover:text-red-400 transition-colors">Giving</a>
+                                        <Link href={route('giving')} className="text-gray-400 hover:text-red-400 transition-colors">Giving</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -614,10 +660,13 @@ export default function Welcome({
                                         <Link href={route('ministries')} className="text-gray-400 hover:text-red-400 transition-colors">Ministries</Link>
                                     </li>
                                     <li>
-                                        <a href="#prayer" className="text-gray-400 hover:text-red-400 transition-colors">Prayer Requests</a>
+                                        <Link href={route('units')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Church Units</Link>
                                     </li>
                                     <li>
-                                        <a href="#resources" className="text-gray-400 hover:text-red-400 transition-colors">Resources</a>
+                                        <Link href={route('prayer-requests')} className="text-gray-400 hover:text-red-400 transition-colors">Prayer Requests</Link>
+                                    </li>
+                                    <li>
+                                        <Link href={route('resources')} className="text-gray-400 hover:text-red-400 transition-colors">Resources</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -627,16 +676,16 @@ export default function Welcome({
                                 <h3 className="text-lg font-bold text-red-400 mb-6">Connect</h3>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <a href="#contact" className="text-gray-300 hover:text-red-400 transition-colors font-medium">Contact Us</a>
+                                        <Link href={route('contact')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Contact Us</Link>
                                     </li>
                                     <li>
-                                        <a href="#location" className="text-gray-400 hover:text-red-400 transition-colors">Location & Hours</a>
+                                        <Link href={route('location-hours')} className="text-gray-400 hover:text-red-400 transition-colors">Location & Hours</Link>
                                     </li>
                                     <li>
-                                        <a href="#faq" className="text-gray-400 hover:text-red-400 transition-colors">FAQ</a>
+                                        <Link href={route('faq')} className="text-gray-400 hover:text-red-400 transition-colors">FAQ</Link>
                                     </li>
                                     <li>
-                                        <a href="#contact-form" className="text-gray-400 hover:text-red-400 transition-colors">Send Message</a>
+                                        <Link href={route('send-message')} className="text-gray-400 hover:text-red-400 transition-colors">Send Message</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -679,9 +728,9 @@ export default function Welcome({
                         {/* Bottom Footer */}
                         <div className="py-8 border-t border-red-800/70 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
                             <div className="flex gap-6">
-                                <a href="#privacy" className="hover:text-slate-100 transition-colors">Privacy Policy</a>
-                                <a href="#terms" className="hover:text-slate-100 transition-colors">Terms of Service</a>
-                                <a href="#contact" className="hover:text-slate-100 transition-colors">Contact</a>
+                                <Link href={route('privacy')} className="hover:text-slate-100 transition-colors">Privacy Policy</Link>
+                                <Link href={route('terms')} className="hover:text-slate-100 transition-colors">Terms of Service</Link>
+                                <Link href={route('support')} className="hover:text-slate-100 transition-colors">Contact</Link>
                             </div>
                             <p className="text-slate-400">© {new Date().getFullYear()} APGA Worldwide. All Rights Reserved.</p>
                         </div>
