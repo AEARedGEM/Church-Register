@@ -28,7 +28,8 @@ class DashboardController extends Controller
         $user->load(['profile', 'roles']);
 
         // Get current role context
-        $currentRole = RolesEnum::from($user->primary_role);
+        $primaryRole = $user->primary_role ?? RolesEnum::Individual->value;
+        $currentRole = RolesEnum::from($primaryRole);
         $dashboardContext = $user->getDashboardContext();
 
         // Ensure user has CPD access
@@ -49,6 +50,7 @@ class DashboardController extends Controller
             'trainingData' => $this->getTrainingData($user),
             'communityData' => $this->getCommunityData($user),
             'quickActions' => $this->getQuickActions($user, $currentRole),
+            'churchSummary' => $this->getChurchSummary(),
         ]);
     }
 
@@ -537,6 +539,28 @@ class DashboardController extends Controller
                 'total_posts' => $user->forumPosts()->count(),
                 'mentorship_sessions' => $user->mentorships()->where('status', 'completed')->count(),
             ],
+        ];
+    }
+
+    private function getChurchSummary(): array
+    {
+        $attendanceTotal = \App\Models\AttendanceRecord::count();
+
+        $prayerRequests = 0;
+        if (\Illuminate\Support\Facades\Schema::hasTable('church_prayer_requests')) {
+            $prayerRequests = \App\Models\ChurchPrayerRequest::whereIn('status', ['pending', 'prayed'])->count();
+        }
+
+        $activeMinistries = \App\Models\ChurchMinistry::where('is_active', true)->count();
+        $upcomingEvents = \App\Models\Event::where('start_date', '>', now())
+            ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
+            ->count();
+
+        return [
+            'attendance_total' => $attendanceTotal,
+            'prayer_requests' => $prayerRequests,
+            'active_ministries' => $activeMinistries,
+            'upcoming_events' => $upcomingEvents,
         ];
     }
 

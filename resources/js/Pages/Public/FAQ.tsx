@@ -2,36 +2,36 @@ import { Head, Link } from '@inertiajs/react';
 
 export default function FAQ() {
     const faqs = [
-        { q: 'Who is eligible to participate?', a: 'Nigerian youth aged 18-45 interested in industrialization and entrepreneurship can participate in the NYP-IP program.' },
-        { q: 'How do I register?', a: 'Visit our portal, create an account, and follow the onboarding process to register your interest.' },
-        { q: 'What is the application process like?', a: 'Application involves submission of business proposal, skills assessment, and evaluation by our review committee.' },
-        { q: 'How can I access funding?', a: 'After successful registration and validation, you can apply for funding through various windows available in the program.' },
-        { q: 'Are there training opportunities?', a: 'Yes, we offer comprehensive training in technical skills, business development, and entrepreneurship.' }
+        { q: 'Who can worship with APGA Worldwide?', a: 'Everyone is welcome to worship with us. We are a Christ-centered church family committed to prayer, discipleship, and genuine community.' },
+        { q: 'How do I join the church?', a: 'You can visit our church services, connect with our ministry teams, or register on the website to begin your journey with us.' },
+        { q: 'Are there ministry opportunities for new members?', a: 'Yes. We encourage new members to connect with a ministry, serve, and grow through discipleship and practical outreach.' },
+        { q: 'Can I submit a prayer request?', a: 'Absolutely. You can submit a prayer request through our public prayer form and our care team will pray with you.' },
+        { q: 'Are there events for families and youth?', a: 'Yes. We host worship services, youth gatherings, prayer meetings, community outreach, and special church events throughout the year.' }
     ];
 
     return (
         <>
-            <Head title="FAQ - NYP-IP" />
-            <div className="min-h-screen bg-white dark:bg-gray-900">
-                <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+            <Head title="FAQ - APGA Worldwide" />
+            <div className="min-h-screen bg-slate-950 text-slate-100">
+                <nav className="border-b border-red-800/70 bg-slate-950/95 backdrop-blur-sm">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">NYP-IP</Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">Back to Home</Link>
+                        <Link href="/" className="text-2xl font-bold text-red-400">APGA Worldwide</Link>
+                        <Link href="/" className="text-red-200 transition hover:text-white">Back to Home</Link>
                     </div>
                 </nav>
                 <div className="container mx-auto px-6 py-16 max-w-4xl">
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">Frequently Asked Questions</h1>
+                    <h1 className="mb-6 text-4xl font-bold text-white">Frequently Asked Questions</h1>
                     <div className="space-y-4">
                         {faqs.map((faq, idx) => (
-                            <div key={idx} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-                                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{faq.q}</h3>
-                                <p className="text-gray-700 dark:text-gray-300">{faq.a}</p>
+                            <div key={idx} className="rounded-lg border border-red-800/70 bg-slate-900/80 p-6">
+                                <h3 className="mb-2 font-semibold text-white">{faq.q}</h3>
+                                <p className="text-slate-300">{faq.a}</p>
                             </div>
                         ))}
                     </div>
-                    <div className="mt-8 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg p-6">
-                        <p className="text-red-900 dark:text-red-100">
-                            <strong>Can't find your answer?</strong> Visit our <Link href="/support" className="underline hover:no-underline">support page</Link> or contact us directly.
+                    <div className="mt-8 rounded-lg border border-red-700/60 bg-red-900/20 p-6">
+                        <p className="text-red-100">
+                            <strong>Need a personal response?</strong> Visit our <Link href="/support" className="underline hover:no-underline">support page</Link> or reach out through the church community channels.
                         </p>
                     </div>
                 </div>

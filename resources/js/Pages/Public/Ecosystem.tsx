@@ -12,13 +12,13 @@ export default function Ecosystem() {
 
     return (
         <>
-            <Head title="Industrialization Ecosystem - NYP-IP" />
+            <Head title="Industrialization Ecosystem - APGA Worldwide" />
 
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                         <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
-                            NYP-IP
+                            APGA Worldwide
                         </Link>
                         <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
                             Back to Home
@@ -31,7 +31,7 @@ export default function Ecosystem() {
 
                     <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
                         <p className="text-gray-700 dark:text-gray-300">
-                            The NYP-IP has developed a comprehensive ecosystem designed to support youth-led industrialization efforts, combining infrastructure, services, and market opportunities.
+                            The APGA Worldwide has developed a comprehensive ecosystem designed to support youth-led industrialization efforts, combining infrastructure, services, and market opportunities.
                         </p>
                     </div>
 

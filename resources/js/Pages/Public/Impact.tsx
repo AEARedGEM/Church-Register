@@ -10,13 +10,13 @@ export default function Impact() {
 
     return (
         <>
-            <Head title="Impact & Results - NYP-IP" />
+            <Head title="Impact & Results - APGA Worldwide" />
 
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                         <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
-                            NYP-IP
+                            APGA Worldwide
                         </Link>
                         <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
                             Back to Home

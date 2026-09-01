@@ -610,7 +610,7 @@ class ProfileController extends Controller
             RolesEnum::SMEOwner => 'Get trade financing, working capital support, and digital tools.',
             RolesEnum::Investor => 'Fund startups and SMEs, earn returns, and track your portfolio.',
             RolesEnum::NYPSenator => 'Access oversight tools to track impact and provide policy direction.',
-            RolesEnum::InstitutionalPartner => 'Collaborate, fund, and support NYP-IP initiatives.',
+            RolesEnum::InstitutionalPartner => 'Collaborate, fund, and support APGA Worldwide initiatives.',
             RolesEnum::TrainerMentorExpert => 'Offer training and guidance to youths, startups, and SMEs.',
             default => 'Join the NYP Industrialization Program.',
         };

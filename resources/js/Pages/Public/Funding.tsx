@@ -1,97 +1,76 @@
 import { Head, Link } from '@inertiajs/react';
 
 export default function Funding() {
-    const fundingSources = [
-        { name: 'NYP-IP Fund', desc: 'Central revolving fund for youth enterprise development', amount: 'Multi-billion Naira' },
-        { name: 'Tokenized Assets', desc: 'Digital asset-based financing mechanisms', amount: 'Variable' },
-        { name: 'Stablecoin Issuance', desc: 'Digital currencies backed by development assets', amount: 'Scalable' },
-        { name: 'Government Allocations', desc: 'Budget support and fiscal allocations', amount: 'Annual' }
+    const givingPaths = [
+        { name: 'Tithes & Offerings', desc: 'Regular financial giving to support worship, pastoral care, and ministry operations.', amount: 'Ongoing' },
+        { name: 'Project Support', desc: 'Contributions toward church expansion, community outreach, and ministry initiatives.', amount: 'Seasonal' },
+        { name: 'Mission & Outreach', desc: 'Support for evangelism, local care, and humanitarian efforts across the church family.', amount: 'Impact-driven' },
+        { name: 'Partnership Giving', desc: 'Committed support from partners and sponsors invested in church growth and service.', amount: 'Collaborative' }
     ];
 
     return (
         <>
-            <Head title="Funding & Capital - NYP-IP" />
+            <Head title="Giving & Support - APGA Worldwide" />
 
-            <div className="min-h-screen bg-white dark:bg-gray-900">
-                <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+            <div className="min-h-screen bg-slate-950 text-slate-100">
+                <nav className="border-b border-red-800/70 bg-slate-950/95 backdrop-blur-sm">
                     <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
-                            NYP-IP
-                        </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
-                            Back to Home
-                        </Link>
+                        <Link href="/" className="text-2xl font-bold text-red-400">APGA Worldwide</Link>
+                        <Link href="/" className="text-red-200 transition hover:text-white">Back to Home</Link>
                     </div>
                 </nav>
 
                 <div className="container mx-auto px-6 py-16 max-w-4xl">
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">Funding & Capital</h1>
+                    <h1 className="mb-6 text-4xl font-bold text-white">Giving & Support</h1>
 
-                    <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
-                        <p className="text-gray-700 dark:text-gray-300">
-                            The NYP-IP mobilizes capital through multiple channels to ensure youth entrepreneurs and enterprises have access to the resources needed for growth and scaling.
+                    <div className="mb-12 rounded-2xl border border-red-800/70 bg-slate-900/80 p-8 text-slate-300">
+                        <p>
+                            At APGA Worldwide, giving is an act of worship and partnership. We believe God calls His people to joyfully support the ministry, the mission, and the communities we serve.
                         </p>
                     </div>
 
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Funding Sources</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                        {fundingSources.map((source, idx) => (
-                            <div key={idx} className="bg-gradient-to-br from-red-50 to-red-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-red-200 dark:border-red-900/30">
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{source.name}</h3>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">{source.desc}</p>
-                                <p className="text-red-600 dark:text-red-400 font-semibold text-sm">Amount: {source.amount}</p>
+                    <h2 className="mb-6 text-2xl font-bold text-white">Support pathways</h2>
+                    <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2">
+                        {givingPaths.map((source, idx) => (
+                            <div key={idx} className="rounded-lg border border-red-800/70 bg-gradient-to-br from-red-900/20 to-slate-900 p-6">
+                                <h3 className="mb-2 text-lg font-bold text-white">{source.name}</h3>
+                                <p className="mb-3 text-sm text-slate-300">{source.desc}</p>
+                                <p className="text-red-300 font-semibold text-sm">Focus: {source.amount}</p>
                             </div>
                         ))}
                     </div>
 
                     <div className="space-y-8">
                         <section>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Startup Tokenization</h2>
-                            <p className="text-gray-700 dark:text-gray-300 mb-4">
-                                Top startup and project candidates from the NAP/S public dashboard are selected through state and partner networks. These initiatives are grouped by state, LGA and ward before tokenization support is offered.
+                            <h2 className="mb-4 text-2xl font-bold text-white">Why we give</h2>
+                            <p className="mb-4 text-slate-300">
+                                Kingdom giving strengthens the church’s mission, supports pastoral care, and equips believers to serve families, the vulnerable, and the wider community with practical compassion.
                             </p>
-                            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                                <li>Top 3 startup/projects from each state cluster are surfaced for support.</li>
-                                <li>Partner networks and community squads advance applications together.</li>
-                                <li>Forms and proposals are submitted through state or community-led channels.</li>
+                            <ul className="list-disc list-inside space-y-2 text-slate-300">
+                                <li>Support worship, discipleship, and pastoral leadership.</li>
+                                <li>Fund outreach, events, and church-wide ministry initiatives.</li>
+                                <li>Empower renewal, prayer, and practical community impact.</li>
                             </ul>
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">TradeFi Tokenization</h2>
-                            <p className="text-gray-700 dark:text-gray-300 mb-4">
-                                Support for working capital and trade finance is provided through three tokenized product variants, making finance more affordable and accessible for existing businesses and growth-stage ventures.
+                            <h2 className="mb-4 text-2xl font-bold text-white">Partner with the church</h2>
+                            <p className="mb-4 text-slate-300">
+                                We welcome partners, sponsors, and faithful supporters who want to help the church grow spiritually and serve effectively.
                             </p>
-                            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                                <li>Tokenized Invoice Financing for receivable-backed liquidity.</li>
-                                <li>Tokenized Export Financing for export-ready producers and supply chains.</li>
-                                <li>Tokenized Import Financing for materials sourcing and working capital.</li>
-                            </ul>
-                            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-                                Fees are designed to be competitive, with an objective of roughly half the cost of comparable market providers, including LuxuryX-type services.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Community & Partner-led Applications</h2>
-                            <p className="text-gray-700 dark:text-gray-300 mb-4">
-                                Individual entrepreneurs cannot submit tokenization applications on their own. The program encourages coordinated proposals through mentors, incubators, state networks and community hubs.
-                            </p>
-                            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                                <li>Partner-led teams ensure projects are market-ready and compliant.</li>
-                                <li>Community hubs help identify the highest-impact local proposals.</li>
-                                <li>State / LGA / ward-based alignment helps connect finance to production.</li>
+                            <ul className="list-disc list-inside space-y-2 text-slate-300">
+                                <li>Partner with ministries, outreach initiatives, and service teams.</li>
+                                <li>Sponsor church events, welfare activities, and discipleship programs.</li>
+                                <li>Support the broader mission of evangelism and community transformation.</li>
                             </ul>
                         </section>
                     </div>
 
-                    <div className="mt-12 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-950 dark:to-red-950 rounded-lg p-8 text-center">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Ready to Apply?</h3>
-                        <p className="text-gray-700 dark:text-gray-300 mb-6">
-                            Access our documentation and funding frameworks to understand the process.
-                        </p>
-                        <Link href="/documentation/funding-framework" className="inline-block px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                            View Funding Framework
+                    <div className="mt-12 rounded-lg border border-red-800/70 bg-gradient-to-r from-red-900/20 to-slate-900 p-8 text-center">
+                        <h3 className="mb-4 text-xl font-bold text-white">Be part of the mission</h3>
+                        <p className="mb-6 text-slate-300">Join us in supporting the church’s worship, outreach, and discipleship vision.</p>
+                        <Link href="/events" className="inline-block rounded-lg bg-red-600 px-6 py-2 font-semibold text-white transition hover:bg-red-500">
+                            View church events
                         </Link>
                     </div>
                 </div>

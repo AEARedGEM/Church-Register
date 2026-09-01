@@ -186,7 +186,7 @@ export default function RoleApplicationForm({
                         No Additional Roles Available
                     </h3>
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        You currently have access to all available roles in the NYP-IP system.
+                        You currently have access to all available roles in the APGA Worldwide system.
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                         Complete your profile to unlock additional opportunities as they become available.

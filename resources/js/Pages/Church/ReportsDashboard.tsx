@@ -78,6 +78,12 @@ export default function ReportsDashboard({
             attendanceTrend: attendanceTrendValue >= 0 ? `+${attendanceTrendValue}` : `${attendanceTrendValue}`,
             weeklyGrowth: `${weeklyGrowth >= 0 ? '+' : ''}${weeklyGrowth}%`,
             strongestPeriod: strongestPeriodLabel ? `${strongestPeriodLabel[0].toUpperCase()}${strongestPeriodLabel[0].slice(1)} (${strongestPeriodLabel[1]})` : 'No data',
+            leadershipSummary: latestReport
+                ? `Latest church pulse: ${latestReport.title} (${latestReport.report_date}) - attendance ${latestReport.attendance_count}, first timers ${latestReport.first_timers_count}, prayer requests ${latestReport.prayer_requests_count}.`
+                : 'No church reports are available yet.',
+            leadershipInsight: strongestPeriodLabel
+                ? `The strongest reporting period is ${strongestPeriodLabel[0]} with ${strongestPeriodLabel[1]} recorded attendees.`
+                : 'No attendance trend data yet.',
         };
     }, [reports]);
 
@@ -94,12 +100,53 @@ export default function ReportsDashboard({
         pdf.rect(0, 0, pageWidth, 64, 'F');
         pdf.setTextColor(255, 255, 255);
         pdf.setFontSize(20);
-        pdf.text('APGA Worldwide Church Reports', 40, 38);
+        pdf.text('APGA Worldwide Church Leadership Report', 40, 38);
 
         pdf.setTextColor(30, 41, 59);
         pdf.setFontSize(11);
 
+        const summaryLines = [
+            `Total attendance: ${analytics.totalAttendance}`,
+            `First timers: ${analytics.totalFirstTimers}`,
+            `New members: ${analytics.totalNewMembers}`,
+            `Prayer requests: ${analytics.totalPrayerRequests}`,
+            `Average attendance: ${analytics.averageAttendance}`,
+            `Attendance trend: ${analytics.attendanceTrend}`,
+            `Weekly growth: ${analytics.weeklyGrowth}`,
+            `Strongest period: ${analytics.strongestPeriod}`,
+        ];
+
         let y = 90;
+        summaryLines.forEach((line) => {
+            if (y > 760) {
+                pdf.addPage();
+                y = 60;
+            }
+            pdf.text(line, 40, y);
+            y += 16;
+        });
+
+        y += 12;
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Executive summary', 40, y);
+        y += 18;
+        pdf.setFont('helvetica', 'normal');
+        const summaryText = pdf.splitTextToSize(analytics.leadershipSummary || 'No report summary available yet.', 500);
+        summaryText.forEach((line: string) => {
+            if (y > 760) {
+                pdf.addPage();
+                y = 60;
+            }
+            pdf.text(line, 40, y);
+            y += 14;
+        });
+
+        y += 12;
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Report detail', 40, y);
+        y += 18;
+        pdf.setFont('helvetica', 'normal');
+
         reports.forEach((report, index) => {
             if (y > 720) {
                 pdf.addPage();
@@ -140,7 +187,7 @@ export default function ReportsDashboard({
             pdf.text('No church reports available yet.', 40, 120);
         }
 
-        pdf.save('apga-church-report-summary.pdf');
+        pdf.save('apga-church-leadership-summary.pdf');
     };
 
     return (
@@ -164,7 +211,7 @@ export default function ReportsDashboard({
                         onClick={exportReportsPdf}
                         className="rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-700 shadow-sm transition hover:bg-red-50"
                     >
-                        Export Summary PDF
+                        Export Leadership PDF
                     </button>
                 </div>
 
@@ -228,8 +275,15 @@ export default function ReportsDashboard({
                 </div>
 
                 {analytics.latestReport && (
-                    <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                        <span className="font-semibold">Latest church pulse:</span> {analytics.latestReport.title} · {analytics.latestReport.report_date} · prayer requests {analytics.latestReport.prayer_requests_count}
+                    <div className="mb-8 grid gap-4 lg:grid-cols-2">
+                        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-700">Leadership summary</p>
+                            <p className="mt-3 font-medium">{analytics.leadershipSummary}</p>
+                        </div>
+                        <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4 text-sm text-violet-900">
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Insight</p>
+                            <p className="mt-3 font-medium">{analytics.leadershipInsight}</p>
+                        </div>
                     </div>
                 )}
 

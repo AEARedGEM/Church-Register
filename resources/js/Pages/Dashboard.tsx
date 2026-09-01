@@ -64,6 +64,12 @@ interface DashboardProps {
     trainingData: any;
     communityData: any;
     quickActions: QuickAction[];
+    churchSummary?: {
+        attendance_total?: number;
+        prayer_requests?: number;
+        active_ministries?: number;
+        upcoming_events?: number;
+    };
 }
 
 const defaultQuickActions: QuickAction[] = [
@@ -77,13 +83,6 @@ const defaultEventList: UpcomingEvent[] = [
     { id: 1, title: 'Sunday Worship Service', date: 'This Sunday · 9:00 AM', type: 'Service', location: 'Main Sanctuary', is_registered: true },
     { id: 2, title: 'Prayer & Healing Night', date: 'Friday · 6:30 PM', type: 'Prayer', location: 'Prayer Hall', is_registered: false },
     { id: 3, title: 'Youth Revival', date: 'Saturday · 4:00 PM', type: 'Outreach', location: 'Youth Centre', is_registered: false },
-];
-
-const ministryCards = [
-    { title: 'Attendance', value: '1,248', note: 'Members reached this month', tone: 'from-red-500 to-red-600' },
-    { title: 'Prayer Requests', value: '86', note: 'Open prayer needs', tone: 'from-rose-500 to-orange-500' },
-    { title: 'Small Groups', value: '14', note: 'Active fellowships', tone: 'from-amber-500 to-red-500' },
-    { title: 'Events', value: '09', note: 'Scheduled this quarter', tone: 'from-red-600 to-red-800' },
 ];
 
 const leadershipCards = [
@@ -110,10 +109,38 @@ export default function Dashboard({
     roleLabel,
     quickActions,
     upcomingEvents,
+    churchSummary,
 }: DashboardProps) {
     const [activeSection, setActiveSection] = useState<'overview' | 'attendance' | 'events' | 'community'>('overview');
 
     const isAdminUser = Boolean(user?.email === 'crownpaysme19@gmail.com') || Boolean((user as any)?.is_admin) || Boolean((user as any)?.roles?.includes('admin')) || Boolean((user as any)?.roles?.includes('super-admin')) || Boolean((user as any)?.role === 'admin') || Boolean((user as any)?.primary_role === 'admin');
+
+    const summaryCards = [
+        {
+            title: 'Attendance',
+            value: (churchSummary?.attendance_total ?? 0).toLocaleString(),
+            note: 'Recorded attendance entries',
+            tone: 'from-red-500 to-red-600',
+        },
+        {
+            title: 'Prayer Requests',
+            value: (churchSummary?.prayer_requests ?? 0).toLocaleString(),
+            note: 'Open prayer needs',
+            tone: 'from-rose-500 to-orange-500',
+        },
+        {
+            title: 'Ministries',
+            value: (churchSummary?.active_ministries ?? 0).toLocaleString(),
+            note: 'Active fellowships',
+            tone: 'from-amber-500 to-red-500',
+        },
+        {
+            title: 'Events',
+            value: (churchSummary?.upcoming_events ?? 0).toLocaleString().padStart(2, '0'),
+            note: 'Scheduled this quarter',
+            tone: 'from-red-600 to-red-800',
+        },
+    ];
 
     const actions = quickActions?.length ? quickActions : defaultQuickActions;
     const churchEvents = upcomingEvents?.length ? upcomingEvents.slice(0, 3) : defaultEventList;
@@ -193,7 +220,7 @@ export default function Dashboard({
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                        {ministryCards.map((card) => (
+                        {summaryCards.map((card) => (
                             <div key={card.title} className="rounded-2xl border border-red-100 bg-white p-4 shadow-sm">
                                 <div className={`mb-4 h-2.5 rounded-full bg-gradient-to-r ${card.tone}`} />
                                 <p className="text-sm font-medium text-slate-500">{card.title}</p>

@@ -89,7 +89,7 @@ export default function CourseDetailPage({
 
   return (
     <ModernLayout>
-      <Head title={`${course.title} - NYP-IP Portal`} />
+      <Head title={`${course.title} - APGA Worldwide`} />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Back Button */}
         {onBack && (

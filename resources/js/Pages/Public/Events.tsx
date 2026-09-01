@@ -42,9 +42,18 @@ export default function Events({ events = [] }: { events?: EventItem[] }) {
                                 <p className="mt-3 text-sm leading-relaxed text-slate-300">{event.description || 'A special gathering for worship, prayer, discipleship, and community.'}</p>
                                 <ul className="mt-5 space-y-2 text-sm text-slate-300">
                                     <li><span className="font-semibold text-white">Date:</span> {event.start_date ? new Date(event.start_date).toLocaleString() : 'TBA'}</li>
+                                    <li><span className="font-semibold text-white">Location:</span> {event.location || 'Church campus'}</li>
                                     <li><span className="font-semibold text-white">Status:</span> {event.status || 'upcoming'}</li>
                                     {event.max_participants && <li><span className="font-semibold text-white">Capacity:</span> {event.max_participants} people</li>}
                                 </ul>
+                                <div className="mt-6 flex gap-3">
+                                    <Link href={route('events.detail', event.id)} className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">
+                                        View details
+                                    </Link>
+                                    <Link href={route('events.detail', event.id)} className="rounded-full border border-red-700 px-4 py-2 text-sm font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">
+                                        Register
+                                    </Link>
+                                </div>
                             </article>
                         )) : (
                             <div className="rounded-3xl border border-red-800/70 bg-slate-900/85 p-8 text-center md:col-span-2 xl:col-span-3">

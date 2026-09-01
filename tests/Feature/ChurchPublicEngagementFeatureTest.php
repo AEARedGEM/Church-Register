@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\AttendanceRecord;
 use App\Models\ChurchMediaContent;
+use App\Models\ChurchMinistry;
+use App\Models\ChurchPrayerRequest;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,6 +34,61 @@ class ChurchPublicEngagementFeatureTest extends TestCase
         $response->assertInertia(fn ($page) => $page
             ->where('media.title', 'The Power of Persistent Prayer')
             ->where('media.speaker_name', 'Pastor Grace')
+        );
+    }
+
+    public function test_public_homepage_uses_live_church_summary_data(): void
+    {
+        $user = User::factory()->create();
+
+        AttendanceRecord::create([
+            'user_id' => $user->id,
+            'member_profile_id' => null,
+            'service_type' => 'main_service',
+            'service_date' => '2026-09-01',
+            'status' => 'present',
+            'first_timer' => false,
+            'recorded_by' => $user->id,
+            'notes' => 'Sunday service attendance',
+        ]);
+
+        ChurchPrayerRequest::create([
+            'user_id' => $user->id,
+            'full_name' => 'Joy Adebayo',
+            'email' => 'joy@example.com',
+            'request_type' => 'healing',
+            'message' => 'Please pray for strength and wisdom in my family.',
+            'is_public' => false,
+            'status' => 'pending',
+        ]);
+
+        ChurchMinistry::create([
+            'name' => 'Youth Ministry',
+            'description' => 'Youth discipleship and outreach.',
+            'leader_name' => 'Pastor Joy',
+            'is_active' => true,
+        ]);
+
+        Event::create([
+            'title' => 'Community Prayer Night',
+            'description' => 'A prayer and worship gathering.',
+            'event_type' => 'workshop',
+            'start_date' => now()->addDays(4),
+            'end_date' => now()->addDays(4)->addHours(3),
+            'location' => 'Main Hall',
+            'is_virtual' => false,
+            'registration_deadline' => now()->addDays(2),
+            'status' => 'registration_open',
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('churchSummary.attendance_total', 1)
+            ->where('churchSummary.prayer_requests', 1)
+            ->where('churchSummary.active_ministries', 1)
+            ->where('churchSummary.upcoming_events', 1)
         );
     }
 

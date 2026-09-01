@@ -25,13 +25,13 @@ const otherFrameworks = [
 export default function Whitepaper() {
     return (
         <>
-            <Head title="Project Whitepaper Framework - NYP-IP" />
+            <Head title="Project Whitepaper Framework - APGA Worldwide" />
 
             <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
                 <nav className="border-b border-red-100 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-900/80">
                     <div className="container mx-auto flex items-center justify-between px-6 py-4">
                         <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
-                            NYP-IP
+                            APGA Worldwide
                         </Link>
                         <Link href="/" className="text-gray-600 transition-colors hover:text-red-600 dark:text-gray-300">
                             Back to Home
@@ -47,7 +47,7 @@ export default function Whitepaper() {
                             </span>
                             <h1 className="mt-4 text-4xl font-bold text-gray-900 dark:text-white">Project Whitepaper</h1>
                             <p className="mt-4 text-lg leading-8 text-gray-700 dark:text-gray-300">
-                                This framework outlines the strategic direction of the NYP-IP programme and the pathways through which youth-led industrialization can scale across Nigeria.
+                                This framework outlines the strategic direction of the APGA Worldwide programme and the pathways through which youth-led industrialization can scale across Nigeria.
                             </p>
                         </div>
 

@@ -52,7 +52,7 @@ const ROLE_REQUIREMENTS: Record<string, {
     },
     'institutional_partner': {
         title: 'Institutional Partner Profile',
-        description: 'Share your institution details to collaborate on NYP-IP initiatives.',
+        description: 'Share your institution details to collaborate on APGA Worldwide initiatives.',
         fields: ['institution_name', 'institution_registration', 'institution_sector', 'commitment_areas']
     },
     'trainer_mentor_expert': {
@@ -389,7 +389,7 @@ export default function RoleApplicationForm({
                     ) : (
                         <>
                             <p className="text-red-800 dark:text-red-200 mb-2">
-                                You currently have access to all available roles in the NYP-IP system.
+                                You currently have access to all available roles in the APGA Worldwide system.
                             </p>
                             <p className="text-sm text-red-700 dark:text-red-300">
                                 Complete your profile to unlock additional opportunities as they become available.

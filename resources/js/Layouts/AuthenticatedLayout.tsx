@@ -24,14 +24,14 @@ export default function Authenticated({
         useState(false);
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-[132px] lg:pt-[132px]">
-            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95">
-                <div className="mx-auto  px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-[#f5efe9] pt-[132px] lg:pt-[132px]">
+            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-red-300/40 bg-gradient-to-r from-[#081423] via-[#1f243d] to-[#8d1126] shadow-[0_12px_30px_rgba(86,7,17,0.28)] backdrop-blur">
+                <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-slate-900 dark:text-white" />
+                                    <ApplicationLogo className="block h-9 w-auto fill-current text-white" />
                                 </Link>
                             </div>
 
@@ -39,6 +39,7 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
+                                    className="text-red-50/90 hover:text-white"
                                 >
                                     Dashboard
                                 </NavLink>
@@ -47,6 +48,7 @@ export default function Authenticated({
                                     <NavLink
                                         href={route('church-admin.index')}
                                         active={route().current('church-admin.index')}
+                                        className="text-red-50/90 hover:text-white"
                                     >
                                         Church Admin
                                     </NavLink>
@@ -61,7 +63,7 @@ export default function Authenticated({
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-slate-700 transition duration-150 ease-in-out hover:text-slate-900 focus:outline-none dark:bg-slate-900 dark:text-slate-200 dark:hover:text-white"
+                                                className="inline-flex items-center rounded-lg border border-red-200/20 bg-white/6 px-3 py-2 text-sm font-medium leading-4 text-red-50 shadow-sm transition duration-150 ease-in-out hover:border-red-100/40 hover:bg-white/10 focus:outline-none"
                                             >
                                                 {user.name}
 
@@ -213,8 +215,8 @@ export default function Authenticated({
             </nav>
 
             {header && (
-                <header className="fixed top-16 left-0 right-0 z-40 border-b border-slate-100 bg-white/95 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/95">
-                    <div className="mx-auto  px-4 py-6 sm:px-6 lg:px-8">
+                <header className="fixed top-16 left-0 right-0 z-40 border-b border-red-200/60 bg-gradient-to-r from-[#f3efe9] via-[#f5e7e8] to-[#f8f0ef] shadow-[0_8px_20px_rgba(149,27,47,0.08)] backdrop-blur">
+                    <div className="mx-auto px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>

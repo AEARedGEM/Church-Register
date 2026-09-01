@@ -352,7 +352,7 @@ export default function Edit({
                                                     Export Your Data
                                                 </h2>
                                                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                                    Download all your data from the NYP-IP platform.
+                                                    Download all your data from the APGA Worldwide platform.
                                                 </p>
                                             </header>
 

@@ -9,7 +9,7 @@ import { ThemeProvider } from './context/ThemeContext';
 // Force inclusion of dynamic pages in the manifest
 import './Pages/Training/Certificates/Detail';
 
-const appName = import.meta.env.VITE_APP_NAME || 'NYP-IP Portal';
+const appName = import.meta.env.VITE_APP_NAME || 'APGA Worldwide';
 
 
 

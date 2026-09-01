@@ -35,7 +35,7 @@ class NewUserRegistration extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Welcome To NYP-IP Portal')
+            ->line('Welcome To APGA Worldwide')
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
     }

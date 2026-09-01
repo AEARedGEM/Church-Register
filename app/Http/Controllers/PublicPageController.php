@@ -50,7 +50,7 @@ class PublicPageController extends Controller
         ]);
     }
 
-    // NYP-IP Program Pages
+    // APGA Worldwide Program Pages
     public function program()
     {
         return Inertia::render('Public/Program', [
@@ -182,9 +182,27 @@ class PublicPageController extends Controller
 
     public function mediaDetail(ChurchMediaContent $media)
     {
+        $relatedMedia = ChurchMediaContent::query()
+            ->where('id', '!=', $media->id)
+            ->where('status', 'published')
+            ->when($media->content_type, fn ($query) => $query->where('content_type', $media->content_type))
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+
+        if ($relatedMedia->isEmpty()) {
+            $relatedMedia = ChurchMediaContent::query()
+                ->where('id', '!=', $media->id)
+                ->where('status', 'published')
+                ->orderByDesc('published_at')
+                ->limit(3)
+                ->get();
+        }
+
         return Inertia::render('Public/MediaDetail', [
             'laravelVersion' => Application::VERSION,
             'media' => $media,
+            'relatedMedia' => $relatedMedia,
         ]);
     }
 
@@ -204,9 +222,18 @@ class PublicPageController extends Controller
 
     public function eventDetail(Event $event)
     {
+        $relatedEvents = Event::query()
+            ->where('id', '!=', $event->id)
+            ->where('start_date', '>=', now()->startOfDay())
+            ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
+            ->orderBy('start_date')
+            ->limit(3)
+            ->get();
+
         return Inertia::render('Public/EventDetail', [
             'laravelVersion' => Application::VERSION,
             'event' => $event,
+            'relatedEvents' => $relatedEvents,
             'isRegistered' => Auth::check() && $event->registrations()->where('user_id', Auth::id())->exists(),
         ]);
     }

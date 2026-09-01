@@ -219,6 +219,51 @@ The app now includes a real church administration foundation, including member p
 
 The public site has also been updated to reflect the church brand more clearly through a church-focused landing page, dedicated ministries page, ministry detail views, and media/sermon content page. Reporting has been further enhanced with analytics cards and a summary PDF export action available in the church reports dashboard.
 
+### Dynamic Church Dashboard Cards
+**Status**: ✅ Live and backed by real data
+
+The dashboard summary cards are no longer static placeholders. They now read from the actual church data layer and update based on the current database state for:
+- attendance totals
+- open prayer requests
+- active ministries
+- upcoming church events
+
+This was implemented as a real backend-to-frontend data flow through the dashboard controller so the page reflects live operational numbers rather than hardcoded mock values.
+
+### Public Church Engagement Experience
+**Status**: ✅ Expanded with richer public detail flows
+
+The public experience now includes:
+- sermon and media detail pages with related-content discovery
+- event detail pages with agenda, registration status, and more context
+- prayer request form with church engagement flow on media pages
+- event registration flow with redirect feedback and public event discovery
+
+This makes the public church pages feel more like a live ministry website rather than a static informational shell.
+
+### Public Homepage Metrics
+**Status**: ✅ Now backed by live church data
+
+The homepage no longer uses random static values for member totals, attendance, event counts, or ministry visibility. It now reads live summary values from the application database and renders them as real church metrics, giving visitors a faithful view of the current church rhythm.
+
+### Reporting & PDF Leadership Export
+**Status**: ✅ Strengthened with executive reporting
+
+The church reporting dashboard now includes a more complete leadership summary view with:
+- attendance, first-timer, new-member, and prayer-request totals
+- attendance trend labels and recent growth indicators
+- strongest reporting period insight
+- an executive-summary PDF export for church leadership use
+
+This gives pastors and church leaders a clearer operational snapshot of what is happening across the church without manually assembling the summary themselves.
+
+### Public Church Branding Polish
+**Status**: ✅ Legacy NYP pages converted to APGA church branding
+
+The remaining public-facing pages that still carried APGA Worldwide language were updated to reflect the actual church identity and experience. This includes church community pages, giving/support pages, church FAQs, feedback sections, ministry partner messaging, and the overall public breadcrumb language.
+
+The site now reads consistently as APGA Worldwide rather than a prior institutional platform.
+
 ---
 
 ## What Is Still Left To Be Achieved ❗
@@ -791,7 +836,7 @@ php artisan serve               # Start development server
 
 ### Database Schema Notes
 
-- All existing tables from NYP-IP platform are available for reference/reuse
+- All existing tables from APGA Worldwide platform are available for reference/reuse
 - Community tables can be adapted for small groups
 - Events table ready for church events
 - Forum posts useful for prayer requests/discussions

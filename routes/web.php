@@ -22,22 +22,35 @@ use Inertia\Inertia;
 
 // Public routes
 Route::get('/', function () {
+    $churchSummary = [
+        'member_count' => \App\Models\User::count(),
+        'attendance_total' => \App\Models\AttendanceRecord::count(),
+        'prayer_requests' => \Illuminate\Support\Facades\Schema::hasTable('church_prayer_requests')
+            ? \App\Models\ChurchPrayerRequest::whereIn('status', ['pending', 'prayed'])->count()
+            : 0,
+        'active_ministries' => \App\Models\ChurchMinistry::where('is_active', true)->count(),
+        'upcoming_events' => \App\Models\Event::where('start_date', '>=', now()->startOfDay())
+            ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
+            ->count(),
+    ];
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'churchSummary' => $churchSummary,
     ]);
 });
 
-// Public Footer Pages - About NYP
+// Public Footer Pages - Church Foundation
 Route::get('/about', [PublicPageController::class, 'about'])->name('about');
 Route::get('/leadership', [PublicPageController::class, 'leadership'])->name('leadership');
 Route::get('/governance', [PublicPageController::class, 'governance'])->name('governance');
 Route::get('/zones', [PublicPageController::class, 'zones'])->name('zones');
 Route::get('/mission', [PublicPageController::class, 'mission'])->name('mission');
 
-// Public Footer Pages - NYP-IP Program
+// Public Footer Pages - Church Life & Ministry
 Route::get('/program', [PublicPageController::class, 'program'])->name('program');
 Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
 Route::get('/funding', [PublicPageController::class, 'funding'])->name('funding');

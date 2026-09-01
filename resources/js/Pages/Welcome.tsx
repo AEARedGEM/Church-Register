@@ -8,12 +8,27 @@ export default function Welcome({
     auth,
     laravelVersion,
     phpVersion,
-}: PageProps<{ laravelVersion: string; phpVersion: string }>) {
+    churchSummary,
+}: PageProps<{
+    laravelVersion: string;
+    phpVersion: string;
+    churchSummary?: {
+        member_count?: number;
+        attendance_total?: number;
+        prayer_requests?: number;
+        active_ministries?: number;
+        upcoming_events?: number;
+    };
+}>) {
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === 'dark';
-    const [totalMembers, setTotalMembers] = useState<number>(0);
     const [highlightFooter, setHighlightFooter] = useState(false);
     const highlightTimeoutRef = useRef<number | null>(null);
+
+    const memberCount = churchSummary?.member_count ?? 0;
+    const sundayAttendance = churchSummary?.attendance_total ?? 0;
+    const upcomingEventsCount = churchSummary?.upcoming_events ?? 0;
+    const smallGroupsCount = churchSummary?.active_ministries ?? 0;
 
     const scrollToFooter = () => {
         const footer = document.getElementById('footer-resources');
@@ -29,10 +44,6 @@ export default function Welcome({
             }, 2200);
         }
     };
-
-    useEffect(() => {
-        setTotalMembers(Math.floor(Math.random() * 500) + 250);
-    }, []);
 
     useEffect(() => {
         return () => {
@@ -176,28 +187,28 @@ export default function Welcome({
                             <div className="group relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                                 <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{totalMembers}</div>
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{memberCount}</div>
                                     <div className="text-xs md:text-sm text-slate-300">Total Members</div>
                                 </div>
                             </div>
                             <div className="group relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                                 <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">145</div>
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{sundayAttendance}</div>
                                     <div className="text-xs md:text-sm text-slate-300">Sunday Attendance</div>
                                 </div>
                             </div>
                             <div className="group relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                                 <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">28</div>
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{upcomingEventsCount}</div>
                                     <div className="text-xs md:text-sm text-slate-300">Upcoming Events</div>
                                 </div>
                             </div>
                             <div className="group relative">
                                 <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                                 <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">12</div>
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{smallGroupsCount}</div>
                                     <div className="text-xs md:text-sm text-slate-300">Small Groups</div>
                                 </div>
                             </div>

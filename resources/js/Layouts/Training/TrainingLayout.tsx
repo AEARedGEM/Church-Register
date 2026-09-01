@@ -331,7 +331,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
 
               <Link href={route('dashboard')} className="flex items-center gap-2">
                 <span className="text-xl font-bold text-gray-900 dark:text-white hidden sm:block">
-                  NYP-IP Dashboard
+                  APGA Worldwide Dashboard
                 </span>
               </Link>
             </div>

@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ChurchAdminDashboardTest extends TestCase
@@ -19,6 +21,90 @@ class ChurchAdminDashboardTest extends TestCase
             ->get('/church-admin');
 
         $response->assertOk();
+    }
+
+    public function test_dashboard_summary_cards_are_driven_by_real_church_data(): void
+    {
+        $user = User::factory()->create();
+
+        \App\Models\AttendanceRecord::create([
+            'user_id' => $user->id,
+            'member_profile_id' => null,
+            'service_type' => 'main_service',
+            'service_date' => '2026-09-01',
+            'status' => 'present',
+            'first_timer' => false,
+            'recorded_by' => $user->id,
+            'notes' => 'Sunday service attendance',
+        ]);
+
+        \App\Models\AttendanceRecord::create([
+            'user_id' => $user->id,
+            'member_profile_id' => null,
+            'service_type' => 'main_service',
+            'service_date' => '2026-09-02',
+            'status' => 'present',
+            'first_timer' => true,
+            'recorded_by' => $user->id,
+            'notes' => 'First timer service',
+        ]);
+
+        \App\Models\ChurchPrayerRequest::create([
+            'user_id' => $user->id,
+            'full_name' => 'Jane Doe',
+            'email' => 'jane@example.com',
+            'request_type' => 'healing',
+            'message' => 'Please pray for my family.',
+            'is_public' => true,
+            'status' => 'pending',
+        ]);
+
+        \App\Models\ChurchMinistry::create([
+            'name' => 'Prayer Ministry',
+            'description' => 'Intercession and pastoral support.',
+            'leader_name' => 'Pastor Faith',
+            'is_active' => true,
+        ]);
+
+        \App\Models\Event::create([
+            'title' => 'Community Prayer Night',
+            'description' => 'A prayer and worship gathering.',
+            'event_type' => 'workshop',
+            'start_date' => now()->addDays(4),
+            'end_date' => now()->addDays(4)->addHours(3),
+            'location' => 'Main Hall',
+            'is_virtual' => false,
+            'registration_deadline' => now()->addDays(2),
+            'status' => 'registration_open',
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->get('/dashboard');
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('churchSummary.attendance_total', 2)
+            ->where('churchSummary.prayer_requests', 1)
+            ->where('churchSummary.active_ministries', 1)
+            ->where('churchSummary.upcoming_events', 1)
+        );
+    }
+
+    public function test_dashboard_handles_missing_church_prayer_requests_table_gracefully(): void
+    {
+        $user = User::factory()->create();
+
+        Schema::dropIfExists('church_prayer_requests');
+
+        $response = $this
+            ->actingAs($user)
+            ->get('/dashboard');
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('churchSummary.prayer_requests', 0)
+        );
     }
 
     public function test_church_member_directory_is_accessible_to_authenticated_users(): void

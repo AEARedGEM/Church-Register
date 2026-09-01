@@ -21,7 +21,7 @@ class WelcomeMessage extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to  NYP-IP Portal',
+            subject: 'Welcome to  APGA Worldwide',
         );
     }
 

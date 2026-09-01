@@ -103,7 +103,7 @@ export default function ResetPassword({
                                 </div>
                                 <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Set New Password</h2>
                                 <p className="text-gray-600 dark:text-gray-300">
-                                    Create a strong password for your NYP-IP account
+                                    Create a strong password for your APGA Worldwide account
                                 </p>
                             </div>
 

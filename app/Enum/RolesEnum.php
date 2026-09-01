@@ -7,7 +7,7 @@ enum RolesEnum: string
     // Primary Dashboard Role - Entry point for all users
     case Individual = 'individual';
 
-    // Specialized Roles based on NYP-IP requirements
+    // Specialized Roles based on APGA Worldwide requirements
     case Startup = 'startup';
     case SMEOwner = 'sme_owner';
     case Investor = 'investor';

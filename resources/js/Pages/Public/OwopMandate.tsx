@@ -3,13 +3,13 @@ import { Head, Link } from '@inertiajs/react';
 export default function OwopMandate() {
     return (
         <>
-            <Head title="OWOP & NAP/S Program - NYP-IP" />
+            <Head title="OWOP & NAP/S Program - APGA Worldwide" />
 
             <div className="min-h-screen bg-white dark:bg-gray-900">
                 <nav className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                     <div className="container mx-auto flex items-center justify-between px-6 py-4">
                         <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
-                            NYP-IP
+                            APGA Worldwide
                         </Link>
                         <Link href="/" className="text-gray-600 transition-colors hover:text-red-600 dark:text-gray-300">
                             Back to Home

@@ -25,7 +25,7 @@ class RolePermissionSeeder extends Seeder
         // Create roles and assign permissions
         $this->createRoles();
 
-        $this->command->info('NYP-IP Roles and Permissions seeded successfully!');
+        $this->command->info('APGA Worldwide Roles and Permissions seeded successfully!');
     }
 
     private function createPermissions(): void

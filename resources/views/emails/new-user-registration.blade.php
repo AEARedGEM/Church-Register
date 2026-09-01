@@ -10,7 +10,7 @@
     <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.5;">Hello Admin,</p>
 
     <!-- Intro -->
-    <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.5;">A new user has registered on NYP-IP Portal with the following details:</p>
+    <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.5;">A new user has registered on APGA Worldwide with the following details:</p>
 
     <!-- User Details Table -->
     <table class="info-table" style="width: 100%; max-width: 100%; margin: 20px 0; border-collapse: collapse; background: #ffffff; border-radius: 6px; overflow: hidden;">

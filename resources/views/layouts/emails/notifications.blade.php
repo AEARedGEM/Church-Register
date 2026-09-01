@@ -194,8 +194,8 @@
                     <a href="https://afridata.com.ng/privacy" style="color: #000000; text-decoration: underline;">Privacy Policy</a>
                 </p>
 
-                <p style="margin: 0;">&copy; {{ date('Y') }} NYP-IP Portal. All rights reserved.</p>
-                <p style="margin: 10px 0 0 0;">NYP-IP Portal</p>
+                <p style="margin: 0;">&copy; {{ date('Y') }} APGA Worldwide. All rights reserved.</p>
+                <p style="margin: 10px 0 0 0;">APGA Worldwide</p>
             </td>
         </tr>
     </table>
