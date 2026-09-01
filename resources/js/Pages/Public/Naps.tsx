@@ -10,9 +10,11 @@ interface NapsProps {
         statesReached: number;
     };
     charts?: any;
+    pageTitle?: string;
+    personalInformationLabel?: string;
 }
 
-export default function Naps({ stats }: NapsProps) {
+export default function Naps({ stats, pageTitle = 'NAP/S Survey', personalInformationLabel = 'Personal Information' }: NapsProps) {
     const [submitted, setSubmitted] = useState(false);
     const [formData, setFormData] = useState<any>(null);
 
@@ -23,13 +25,13 @@ export default function Naps({ stats }: NapsProps) {
 
     return (
         <>
-            <Head title="NAP/S Survey" />
+            <Head title={pageTitle} />
 
             <div className="min-h-screen bg-slate-50 py-10 dark:bg-slate-950">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mb-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                         <div className="max-w-3xl">
-                            <p className="text-sm uppercase tracking-[0.3em] text-red-600">NAP/S Survey</p>
+                            <p className="text-sm uppercase tracking-[0.3em] text-red-600">{pageTitle}</p>
                             <h1 className="mt-3 text-4xl font-semibold text-slate-900 dark:text-white">Take the Needs Assessment Poll / Survey</h1>
                             <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
                                 Help shape ward-level priorities by completing the first step of the public NAP/S survey. Your response will support product, funding, and governance planning for your community.
@@ -45,6 +47,7 @@ export default function Naps({ stats }: NapsProps) {
                                     <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                                         Start with your personal and location details, then continue through the NAP/S survey experience.
                                     </p>
+                                    <p className="mt-3 text-sm font-medium text-slate-700 dark:text-slate-200">{personalInformationLabel}</p>
                                 </div>
 
                                 {submitted ? (

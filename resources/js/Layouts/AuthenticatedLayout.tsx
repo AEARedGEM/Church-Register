@@ -17,7 +17,8 @@ export default function Authenticated({
     children,
     mobileNavItems,
 }: PropsWithChildren<{ header?: ReactNode; mobileNavItems?: MobileNavItem[] }>) {
-    const user = usePage().props.auth.user;
+    const user = usePage().props.auth.user as any;
+    const canAccessChurchAdmin = true;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -41,6 +42,15 @@ export default function Authenticated({
                                 >
                                     Dashboard
                                 </NavLink>
+
+                                {canAccessChurchAdmin && (
+                                    <NavLink
+                                        href={route('church-admin.index')}
+                                        active={route().current('church-admin.index')}
+                                    >
+                                        Church Admin
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 
@@ -157,12 +167,22 @@ export default function Authenticated({
                             </button>
                         ))
                     ) : (
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
+                        <>
+                            <ResponsiveNavLink
+                                href={route('dashboard')}
+                                active={route().current('dashboard')}
+                            >
+                                Dashboard
+                            </ResponsiveNavLink>
+                            {canAccessChurchAdmin && (
+                                <ResponsiveNavLink
+                                    href={route('church-admin.index')}
+                                    active={route().current('church-admin.index')}
+                                >
+                                    Church Admin
+                                </ResponsiveNavLink>
+                            )}
+                        </>
                     )}
                 </div>
 

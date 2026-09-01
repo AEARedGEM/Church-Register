@@ -13,13 +13,23 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 const getInitialTheme = (initialTheme?: string) => {
-  if (typeof window !== 'undefined') {
+  if (typeof window === 'undefined') {
+    return initialTheme || 'light';
+  }
+
+  try {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark' || savedTheme === 'light') {
       return savedTheme;
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+    if (typeof window.matchMedia === 'function') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+  } catch {
+    // Ignore storage access issues in restricted browser states.
   }
+
   return initialTheme || 'light';
 };
 
@@ -28,7 +38,11 @@ export const ThemeProvider = ({ children, initialTheme }: { children: React.Reac
 
   const setTheme = (newTheme: string) => {
     setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
+    try {
+      localStorage.setItem('theme', newTheme);
+    } catch {
+      // Ignore protected storage errors.
+    }
   };
 
   const toggleTheme = () => {
@@ -36,9 +50,18 @@ export const ThemeProvider = ({ children, initialTheme }: { children: React.Reac
   };
 
   useLayoutEffect(() => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.classList.toggle('light', theme === 'light');
-    localStorage.setItem('theme', theme);
+
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      // Ignore protected storage errors.
+    }
   }, [theme]);
 
   return (

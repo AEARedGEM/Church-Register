@@ -3,80 +3,92 @@ import { Head, Link } from '@inertiajs/react';
 export default function Leadership() {
     const leaders = [
         {
-            role: 'Speaker, Nigerian Youth Parliament',
-            name: 'Rt. Hon. Aliyu Idris Zakari',
-            bio: 'Visionary leader driving youth representation and nation-building initiatives.'
+            role: 'Senior Pastor',
+            name: 'Pastor in Charge',
+            bio: 'Providing spiritual direction, pastoral care, and visionary leadership for the church family.'
         },
         {
-            role: 'Deputy Speaker',
-            name: 'TBD',
-            bio: 'Supporting the Speaker in parliamentary functions and member engagement.'
+            role: 'Associate Pastor',
+            name: 'Pastorate Team',
+            bio: 'Supporting worship life, discipleship, pastoral care, and ministry alignment across the congregation.'
         },
         {
-            role: 'Director, NYP-IP Program',
-            name: 'TBD',
-            bio: 'Leading the industrialization program with strategic focus on youth economic empowerment.'
+            role: 'Youth & Teens Leader',
+            name: 'Youth Ministry Leadership',
+            bio: 'Guiding the next generation in faith, service, culture, and biblical discipleship.'
         },
         {
-            role: 'Head of Operations',
-            name: 'TBD',
-            bio: 'Overseeing day-to-day operations and program implementation across all zones.'
+            role: 'Women & Outreach Leader',
+            name: 'Women & Community Outreach',
+            bio: 'Leading prayer, fellowship, care ministries, and church outreach to families and communities.'
         }
     ];
 
     return (
         <>
-            <Head title="Leadership - NYP" />
+            <Head title="Leadership - APGA Worldwide" />
 
-            <div className="min-h-screen bg-white dark:bg-gray-900">
-                {/* Navigation */}
-                <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-                    <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
-                            NYP-IP
+            <div className="min-h-screen bg-slate-950 text-slate-100">
+                <nav className="border-b border-red-800/70 bg-slate-950/95 backdrop-blur-sm">
+                    <div className="container mx-auto flex items-center justify-between px-6 py-4">
+                        <Link href="/" className="text-2xl font-bold text-red-400">
+                            APGA Worldwide
                         </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
+                        <Link href="/" className="text-red-200 transition hover:text-white">
                             Back to Home
                         </Link>
                     </div>
                 </nav>
 
-                {/* Content */}
-                <div className="container mx-auto px-6 py-16 max-w-5xl">
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">NYP Leadership</h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-12">
-                        Meet the dedicated leaders driving the Nigerian Youth Parliament's vision for youth empowerment and nation-building.
+                <div className="container mx-auto max-w-5xl px-6 py-16">
+                    <h1 className="mb-4 text-4xl font-bold text-white">Church Leadership</h1>
+                    <p className="mb-12 text-lg text-slate-300">
+                        Meet the leaders guiding our church family in worship, prayer, discipleship, and service.
                     </p>
 
-                    {/* Leadership Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <div className="mb-12 overflow-hidden rounded-3xl border border-red-800/70 bg-slate-900/80 p-6 shadow-xl shadow-red-950/20">
+                        <div className="grid items-center gap-8 md:grid-cols-[220px_1fr]">
+                            <img
+                                src="/images/President_GO.jpeg"
+                                alt="Pastor (Dr.) S.O. Ilesanmi"
+                                className="h-52 w-full rounded-2xl border border-red-700 object-cover md:h-60"
+                            />
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-red-300">President</p>
+                                <h2 className="mt-3 text-3xl font-bold text-white">Pastor (Dr.) S.O. Ilesanmi</h2>
+                                <p className="mt-3 text-slate-300">
+                                    The president provides spiritual direction, pastoral oversight, and a clear vision for worship, discipleship, and church growth across the fellowship.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2">
                         {leaders.map((leader, index) => (
-                            <div key={index} className="bg-gradient-to-br from-red-50 to-red-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-8 border border-red-200 dark:border-red-900/30">
-                                <div className="text-red-600 dark:text-red-400 font-semibold text-sm mb-2">{leader.role}</div>
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{leader.name}</h3>
-                                <p className="text-gray-700 dark:text-gray-300">{leader.bio}</p>
+                            <div key={index} className="rounded-2xl border border-red-800/70 bg-slate-900/80 p-8 shadow-lg shadow-red-950/20">
+                                <div className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-red-300">{leader.role}</div>
+                                <h3 className="mb-3 text-2xl font-bold text-white">{leader.name}</h3>
+                                <p className="text-slate-300">{leader.bio}</p>
                             </div>
                         ))}
                     </div>
 
-                    {/* Leadership Message */}
-                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 mb-12">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Leadership Commitment</h2>
-                        <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            The leadership of the Nigerian Youth Parliament is committed to creating an inclusive, innovative, and impactful platform where every young Nigerian voice matters. We believe in:
+                    <div className="mb-12 rounded-2xl border border-red-800/70 bg-slate-900/80 p-8">
+                        <h2 className="mb-4 text-2xl font-bold text-white">Our Leadership Commitment</h2>
+                        <p className="mb-4 text-slate-300">
+                            Our leaders are committed to shepherding the church with wisdom, humility, and a love for Christ and people. We believe in:
                         </p>
-                        <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                            <li>Transparent and accountable governance</li>
-                            <li>Youth representation across all sectors and regions</li>
-                            <li>Sustainable development and economic empowerment</li>
-                            <li>Collaborative partnerships with government and private sector</li>
+                        <ul className="list-disc space-y-2 pl-6 text-slate-300">
+                            <li>Prayerful leadership and pastoral care</li>
+                            <li>Biblical teaching and spiritual growth</li>
+                            <li>Christ-centered service and community impact</li>
+                            <li>Unity, compassion, and strong family values</li>
                         </ul>
                     </div>
 
-                    {/* Explore More */}
-                    <div className="bg-gradient-to-r from-red-50 to-red-50 dark:from-red-950 dark:to-red-950 rounded-lg p-8 text-center">
-                        <Link href="/governance" className="inline-block px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                            View Governance Structure
+                    <div className="rounded-3xl bg-gradient-to-r from-red-900/30 to-slate-900 p-8 text-center">
+                        <Link href="/ministries" className="inline-block rounded-lg bg-red-600 px-6 py-2 font-semibold text-white transition hover:bg-red-500">
+                            View Our Ministries
                         </Link>
                     </div>
                 </div>

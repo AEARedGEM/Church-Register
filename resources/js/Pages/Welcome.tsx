@@ -205,6 +205,62 @@ export default function Welcome({
                     </div>
                 </section>
 
+                {/* Church service schedule */}
+                <section className="relative py-20 overflow-hidden bg-[#120d0d]">
+                    <div className="absolute inset-0 bg-gradient-to-r from-red-950/40 via-transparent to-red-950/30"></div>
+                    <div className="relative max-w-7xl mx-auto px-6 z-10">
+                        <div className="mb-10 text-center">
+                            <span className="inline-block rounded-full border border-red-700/70 bg-red-900/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-red-200">
+                                Weekly rhythm
+                            </span>
+                            <h2 className="mt-5 text-3xl font-bold text-white md:text-4xl">This Week at APGA Worldwide</h2>
+                        </div>
+
+                        <div className="grid gap-5 md:grid-cols-3">
+                            {[
+                                { title: 'Sunday Worship', time: '9:00 AM', detail: 'Main Sanctuary · Family worship service', tone: 'from-red-600 to-red-700' },
+                                { title: 'Midweek Prayer', time: 'Wednesday · 6:00 PM', detail: 'Prayer & deliverance meeting', tone: 'from-rose-600 to-orange-500' },
+                                { title: 'Youth & Teens', time: 'Friday · 5:30 PM', detail: 'Discipleship, teaching & fellowship', tone: 'from-red-700 to-rose-600' },
+                            ].map((service) => (
+                                <div key={service.title} className="rounded-3xl border border-red-800/70 bg-slate-900/80 p-6 shadow-lg shadow-red-950/20">
+                                    <div className={`mb-4 inline-flex rounded-full bg-gradient-to-r ${service.tone} px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-white`}>
+                                        {service.time}
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-white">{service.title}</h3>
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-300">{service.detail}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Ministries section */}
+                <section className="relative py-20 overflow-hidden bg-slate-950">
+                    <div className="relative max-w-7xl mx-auto px-6 z-10">
+                        <div className="mb-12 text-center">
+                            <span className="inline-block rounded-full border border-red-700/70 bg-red-900/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-red-200">
+                                Ministries
+                            </span>
+                            <h2 className="mt-5 text-3xl font-bold text-white md:text-4xl">Places to Grow, Serve, and Belong</h2>
+                        </div>
+
+                        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                            {[
+                                { name: 'Children’s Church', text: 'Nurturing the next generation with discipleship, creativity, and biblical teaching.' },
+                                { name: 'Youth Ministry', text: 'Empowering teenagers and young adults through mentorship, music, and purpose-driven community.' },
+                                { name: 'Women’s Fellowship', text: 'Building spiritual strength, prayer support, and sisterhood across every season of life.' },
+                                { name: 'Men’s Forum', text: 'Developing godly leadership, accountability, and service in the home and church.' },
+                            ].map((ministry) => (
+                                <div key={ministry.name} className="rounded-2xl border border-red-800/60 bg-slate-900/80 p-5 text-left shadow-md shadow-red-950/20">
+                                    <div className="mb-3 h-2.5 w-16 rounded-full bg-gradient-to-r from-red-500 to-rose-500"></div>
+                                    <h3 className="text-xl font-bold text-white">{ministry.name}</h3>
+                                    <p className="mt-3 text-sm leading-relaxed text-slate-300">{ministry.text}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
                 {/* President Section */}
                 <section className="relative py-24 overflow-hidden bg-slate-950">
                     {/* Premium gradient background */}
@@ -252,11 +308,11 @@ export default function Welcome({
                             <div className="relative">
                                 <div className="backdrop-blur-sm bg-gradient-to-br from-slate-900/85 to-slate-900/95 border border-red-800/70 rounded-2xl p-8 shadow-2xl">
                                     <div className="text-center space-y-4">
-                                        <div className="w-32 h-32 mx-auto bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg">
-                                            <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                                            </svg>
-                                        </div>
+                                        <img
+                                            src="/images/President_GO.jpeg"
+                                            alt="Pastor (Dr.) S.O. Ilesanmi"
+                                            className="mx-auto h-64 w-64 rounded-full border-4 border-red-500 object-cover shadow-lg shadow-red-950/30"
+                                        />
                                         <h3 className="text-2xl font-bold text-white">Pastor (Dr.) S.O. Ilesanmi</h3>
                                         <p className="text-red-300 font-semibold">President</p>
                                         <div className="pt-4 border-t border-red-800/50">
@@ -301,33 +357,33 @@ export default function Welcome({
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {[
                                 {
-                                    title: "Attendance Tracking",
-                                    description: "Track Sunday services, small groups, and special events in real-time",
-                                    icon: "✓"
+                                    title: "Worship & Prayer",
+                                    description: "Gather in faith, grow in prayer, and experience Spirit-filled worship every week.",
+                                    icon: "✝️"
                                 },
                                 {
-                                    title: "Invitation League",
-                                    description: "Monthly and yearly tracking of member invitations to encourage evangelism",
-                                    icon: "→"
+                                    title: "Family & Discipleship",
+                                    description: "Support members through biblical teaching, mentorship, and life-group discipleship.",
+                                    icon: "🤝"
                                 },
                                 {
-                                    title: "Event Management",
-                                    description: "Create, manage, and track church events and activities",
+                                    title: "Events & Outreach",
+                                    description: "Host impactful church gatherings, community service days, and revival programmes.",
                                     icon: "📅"
                                 },
                                 {
-                                    title: "Member Directory",
-                                    description: "Secure directory with member profiles and contact information",
+                                    title: "Member Care",
+                                    description: "Stay connected through pastoral care, prayer support, and active church community.",
                                     icon: "👥"
                                 },
                                 {
                                     title: "Prayer Requests",
-                                    description: "Share and manage prayer requests within the community",
+                                    description: "Bring your needs before God and receive encouragement from the church community.",
                                     icon: "🙏"
                                 },
                                 {
-                                    title: "Analytics Dashboard",
-                                    description: "Comprehensive reports on attendance trends and growth metrics",
+                                    title: "Church Insight",
+                                    description: "Track attendance, ministries, and growth with tools designed for healthy church operations.",
                                     icon: "📊"
                                 }
                             ].map((feature, index) => (
@@ -541,10 +597,10 @@ export default function Welcome({
                                 <h3 className="text-lg font-bold text-red-400 mb-6">Spiritual Growth</h3>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <a href="#sermons" className="text-gray-300 hover:text-red-400 transition-colors font-medium">Sermons</a>
+                                        <Link href={route('media')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Sermons</Link>
                                     </li>
                                     <li>
-                                        <a href="#bible-study" className="text-gray-400 hover:text-red-400 transition-colors">Bible Study</a>
+                                        <Link href={route('ministries')} className="text-gray-400 hover:text-red-400 transition-colors">Ministries</Link>
                                     </li>
                                     <li>
                                         <a href="#prayer" className="text-gray-400 hover:text-red-400 transition-colors">Prayer Requests</a>

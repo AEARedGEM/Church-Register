@@ -3,68 +3,67 @@ import { Head, Link } from '@inertiajs/react';
 export default function Mission() {
     return (
         <>
-            <Head title="Mission & Vision - NYP" />
+            <Head title="Mission & Vision - APGA Worldwide" />
 
-            <div className="min-h-screen bg-white dark:bg-gray-900">
-                <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-                    <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                        <Link href="/" className="text-2xl font-bold text-red-600 dark:text-red-400">
-                            NYP-IP
+            <div className="min-h-screen bg-slate-950 text-slate-100">
+                <nav className="border-b border-red-800/70 bg-slate-950/95 backdrop-blur-sm">
+                    <div className="container mx-auto flex items-center justify-between px-6 py-4">
+                        <Link href="/" className="text-2xl font-bold text-red-400">
+                            APGA Worldwide
                         </Link>
-                        <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-red-600">
+                        <Link href="/" className="text-red-200 transition hover:text-white">
                             Back to Home
                         </Link>
                     </div>
                 </nav>
 
-                <div className="container mx-auto px-6 py-16 max-w-4xl">
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-12">Our Mission & Vision</h1>
+                <div className="container mx-auto max-w-4xl px-6 py-16">
+                    <h1 className="mb-12 text-4xl font-bold text-white">Our Mission & Vision</h1>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                        <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 rounded-lg p-8 border border-red-200 dark:border-red-900/50">
-                            <h2 className="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">Our Mission</h2>
-                            <p className="text-red-800 dark:text-red-200 text-lg">
-                                To empower Nigerian youth through inclusive dialogue, advocacy, and action toward sustainable development and national transformation.
+                    <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+                        <div className="rounded-2xl border border-red-800/70 bg-slate-900/80 p-8">
+                            <h2 className="mb-4 text-2xl font-bold text-white">Mission</h2>
+                            <p className="text-lg text-slate-300">
+                                To build a church that worships God in spirit and truth, equips believers for Christlike living, and serves communities with compassion and purpose.
                             </p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 rounded-lg p-8 border border-red-200 dark:border-red-900/50">
-                            <h2 className="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">Our Vision</h2>
-                            <p className="text-red-800 dark:text-red-200 text-lg">
-                                A Nigeria where youth are active participants in governance, economic development, and nation-building at all levels.
+                        <div className="rounded-2xl border border-red-800/70 bg-slate-900/80 p-8">
+                            <h2 className="mb-4 text-2xl font-bold text-white">Vision</h2>
+                            <p className="text-lg text-slate-300">
+                                To see lives transformed by the Gospel, families strengthened, the church united, and the love of Christ reaching every generation.
                             </p>
                         </div>
                     </div>
 
                     <div className="space-y-8">
                         <section>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Strategic Pillars</h2>
+                            <h2 className="mb-4 text-2xl font-bold text-white">Our Pillars</h2>
                             <div className="space-y-4">
                                 {[
-                                    { title: 'Economic Empowerment', desc: 'Creating pathways for youth economic participation through funding, entrepreneurship, and industrialization initiatives.' },
-                                    { title: 'Skills Development', desc: 'Building capabilities in technical, vocational, and professional areas to prepare youth for the modern economy.' },
-                                    { title: 'Youth Advocacy', desc: 'Amplifying youth voices in policy-making and governance processes at all levels.' },
-                                    { title: 'Community Development', desc: 'Supporting grassroots initiatives that drive social and environmental progress.' }
+                                    { title: 'Worship', desc: 'Creating a vibrant atmosphere of praise, prayer, and reverence for God.' },
+                                    { title: 'Discipleship', desc: 'Helping believers grow in biblical understanding, character, and Christlike maturity.' },
+                                    { title: 'Service', desc: 'Meeting needs in the church and the wider community with compassion and practical support.' },
+                                    { title: 'Outreach', desc: 'Sharing the Gospel and extending the love of Christ beyond our walls.' }
                                 ].map((pillar, index) => (
-                                    <div key={index} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{pillar.title}</h3>
-                                        <p className="text-gray-700 dark:text-gray-300">{pillar.desc}</p>
+                                    <div key={index} className="rounded-xl border border-red-800/70 bg-slate-900/70 p-6">
+                                        <h3 className="mb-2 text-lg font-bold text-white">{pillar.title}</h3>
+                                        <p className="text-slate-300">{pillar.desc}</p>
                                     </div>
                                 ))}
                             </div>
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Commitment</h2>
-                            <p className="text-gray-700 dark:text-gray-300 mb-4">
-                                The NYP is committed to creating an ecosystem where every young Nigerian can discover their potential, access opportunities, and contribute meaningfully to nation-building. We believe in:
+                            <h2 className="mb-4 text-2xl font-bold text-white">Our Commitment</h2>
+                            <p className="mb-4 text-slate-300">
+                                We are committed to helping every believer discover purpose, build strong spiritual foundations, and live as a witness of God’s grace and power.
                             </p>
-                            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                                <li>Inclusive and equitable access to opportunities for all youth</li>
-                                <li>Transparent and accountable operations</li>
-                                <li>Sustainable impact that extends beyond immediate outcomes</li>
-                                <li>Collaboration with government, private sector, and civil society</li>
-                                <li>Continuous innovation and adaptation to emerging challenges</li>
+                            <ul className="list-disc space-y-2 pl-6 text-slate-300">
+                                <li>Prayerful dependence on God</li>
+                                <li>Sound biblical teaching and pastoral care</li>
+                                <li>Healthy community and unity in the church</li>
+                                <li>Practical love and kingdom impact in society</li>
                             </ul>
                         </section>
                     </div>

@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChurchMediaContent;
+use App\Models\ChurchMinistry;
+use App\Models\ChurchPrayerRequest;
+use App\Models\Event;
+use App\Models\EventRegistration;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PublicPageController extends Controller
@@ -128,6 +135,123 @@ class PublicPageController extends Controller
         return Inertia::render('Public/Community', [
             'laravelVersion' => Application::VERSION,
         ]);
+    }
+
+    public function ministries()
+    {
+        $ministries = ChurchMinistry::query()
+            ->with(['leadershipProfiles' => function ($query) {
+                $query->where('is_active', true)->orderBy('name');
+            }])
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('Public/Ministries', [
+            'laravelVersion' => Application::VERSION,
+            'ministries' => $ministries,
+        ]);
+    }
+
+    public function ministryDetail(ChurchMinistry $ministry)
+    {
+        $ministry->load(['leadershipProfiles' => function ($query) {
+            $query->where('is_active', true)->orderBy('name');
+        }]);
+
+        return Inertia::render('Public/MinistryDetail', [
+            'laravelVersion' => Application::VERSION,
+            'ministry' => $ministry,
+        ]);
+    }
+
+    public function media()
+    {
+        $media = ChurchMediaContent::query()
+            ->where('status', 'published')
+            ->orderByDesc('featured')
+            ->orderByDesc('published_at')
+            ->get();
+
+        return Inertia::render('Public/Media', [
+            'laravelVersion' => Application::VERSION,
+            'media' => $media,
+            'featuredMedia' => $media->where('featured', true)->take(3),
+        ]);
+    }
+
+    public function mediaDetail(ChurchMediaContent $media)
+    {
+        return Inertia::render('Public/MediaDetail', [
+            'laravelVersion' => Application::VERSION,
+            'media' => $media,
+        ]);
+    }
+
+    public function events()
+    {
+        $events = Event::query()
+            ->where('start_date', '>=', now()->startOfDay())
+            ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
+            ->orderBy('start_date')
+            ->get();
+
+        return Inertia::render('Public/Events', [
+            'laravelVersion' => Application::VERSION,
+            'events' => $events,
+        ]);
+    }
+
+    public function eventDetail(Event $event)
+    {
+        return Inertia::render('Public/EventDetail', [
+            'laravelVersion' => Application::VERSION,
+            'event' => $event,
+            'isRegistered' => Auth::check() && $event->registrations()->where('user_id', Auth::id())->exists(),
+        ]);
+    }
+
+    public function registerEvent(Event $event, Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        if ($event->registrations()->where('user_id', Auth::id())->exists()) {
+            return redirect()->route('events.detail', $event)->with('info', 'You are already registered for this event.');
+        }
+
+        EventRegistration::create([
+            'user_id' => Auth::id(),
+            'event_id' => $event->id,
+            'status' => 'registered',
+            'registered_at' => now(),
+        ]);
+
+        return redirect()->route('events.detail', $event)->with('success', 'You have successfully registered for ' . $event->title . '.');
+    }
+
+    public function storePrayerRequest(Request $request)
+    {
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'request_type' => ['required', 'in:healing,thanksgiving,guidance,deliverance,other'],
+            'message' => ['required', 'string', 'min:10', 'max:2000'],
+            'is_public' => ['nullable', 'boolean'],
+        ]);
+
+        ChurchPrayerRequest::create([
+            'user_id' => $request->user()?->id,
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'] ?? $request->user()?->email,
+            'request_type' => $validated['request_type'],
+            'message' => $validated['message'],
+            'is_public' => (bool) ($validated['is_public'] ?? false),
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('media')->with('success', 'Your prayer request has been received and will be lifted in prayer.');
     }
 
     public function knowledgeBase()

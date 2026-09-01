@@ -2,7 +2,130 @@
 
 ## Project Overview
 
-**APGA Worldwide** is a comprehensive church management and community engagement platform built for the Apostolic Power Glorious Assembly. The platform was created by adapting a Laravel-based industrial platform into a faith-focused church management system with features for attendance tracking, event management, member engagement, and community building.
+**APGA Worldwide** is now operating as a church-aligned management platform built on a reusable Laravel + React foundation. The application has moved beyond the generic institutional shell and now includes real church-facing public pages, admin workflows, ministry management, leadership visibility, attendance tracking, reporting, and PDF export support.
+
+This documentation reflects the actual project state:
+
+1. The app already contains a working church operations foundation.
+2. The public-facing church experience is now active and branded.
+3. Remaining work is focused on deeper content, richer analytics, and more advanced church-life workflows.
+
+The current project is no longer a placeholder for a church site; it is a practical church operations platform with working backend and frontend flows.
+
+---
+
+## Reality Check: Current App vs Church Goal
+
+### What the application currently does
+The live codebase already contains the following real features:
+
+- Public landing page and marketing homepage
+- About, leadership, governance, mission, program, partners, funding, community, and support pages
+- Authentication and basic user registration/login
+- Role-based dashboard and access patterns
+- Training and course management flows
+- Community, mentorship, and funding modules
+- NAPS survey flow and public application pages
+- Admin pages for training and users
+- Laravel + Inertia + React frontend structure with Tailwind styling
+
+### What the church website brief requires
+The church brief adds a different set of needs:
+
+- Church administration and attendance operations
+- President/Vice-President public welcome sections
+- Live worship service tracking
+- Member and first-timer service reporting
+- Invitation league and weekly/monthly/quarterly/annual scorecards
+- Leadership and unit-head profiles with portraits, bios, and socials
+- Birthday recognition and absentee display
+- Weekly and annual church reporting in PDF-ready format
+- Workers meeting records, interviews, and media highlights
+
+### Current reality after implementation
+The project is now a church operations platform with active admin and public layers, including:
+
+- Church admin dashboard and member directory routes
+- Church attendance board routes and pages
+- Church ministries management and public ministry detail pages
+- Leadership profile management and public ministry leadership display
+- Church reporting dashboard with PDF summary export
+- Public ministry and media pages for church engagement
+- Church-brand landing page and public navigation flow
+- Verified admin access logic for super admin testing and church operations
+
+The app now has a working church domain foundation, and the remaining work is focused on deeper analytics, richer sermon/media content, and more complete church-lifecycle workflows.
+
+---
+
+## Church Administration Feature Requirements
+
+The website must support a leadership-led digital church experience that combines worship visibility, member management, and reporting.
+
+### 1. Attendance & Worship Experience
+- Church President Welcome Speech
+- Church Vice-President Welcome Speech
+- Church President Interview
+- Live In Service (Sunday School)
+- Live In Service (Actual Service After Sunday School: Member)
+- Live In Service (Actual Service After Sunday School: First Timer)
+- Weekly-Monthly-Yearly Invitation League
+- Church member profiles
+- Birthday celebrations
+- Pixelated pictures of all absentees (6x3) on screen
+- Weekly Sunday reports (PDF)
+- Monthly report (PDF)
+- Quarterly report (PDF)
+- Annual report (PDF)
+- Weekly scorecard
+- Workers meeting
+- Opportunistic interview with Word/Gospel/Music Ministers
+- Opportunistic interview with VIPs/Visitors
+
+### 2. Leadership & Ministry Profiles
+- All ministers' official portraits
+- All ministers' official autobiographies
+- All ministers' official social media handles
+- All unit heads' official portraits
+- All unit heads' official autobiographies
+- All unit heads' official social media handles
+
+### 3. Church Administration Modules
+- Attendance capture and summary dashboards
+- Member directory and searchable profile records
+- Birthday recognition section for church members
+- Absentee display and visual attendance reports
+- Reports library for weekly, monthly, quarterly, and annual church performance
+- Leadership and unit head visibility pages
+- Scoreboard and league tracking for invitation and outreach activity
+- Workers meeting archive and summaries
+- Media and interview content for church broadcasting and engagement
+
+### 4. Functional Design Expectations
+- Clean church branding with professional presentation
+- Dynamic leadership showcase with portraits, bios, and social links
+- Attendance and service data presented in clear visual formats
+- PDF-ready reporting for weekly/monthly/quarterly/annual church updates
+- Searchable and filterable member profiles
+- Mobile-responsive presentation for website visitors and church admins
+- A structured backend for managing members, attendance, reports, and ministry profiles
+
+### 5. Priority Implementation Sequence
+1. Stabilize the church operations foundation and admin flows
+2. Extend public ministry detail pages and church content experience
+3. Add richer church reporting analytics and stronger PDF-ready summaries
+4. Expand sermon/media storytelling and public-facing church content
+5. Add life-cycle features such as giving, prayer requests, and events
+
+### 2026 Church Expansion Update
+The project has now progressed beyond the generic app shell into a church-aligned platform with:
+- public church landing page branding and weekly-church rhythm sections
+- dedicated ministries and media pages for public church engagement
+- data-driven ministry detail views tied to church ministry records
+- PDF-ready church report export from the admin reporting dashboard
+- admin-facing church operations for ministries, leadership, reports, absentee tracking, workers meetings, and media content
+- dashboard analytics and church summary cards for reporting visibility
+- active church dashboard and admin access checks aligned to real church operations
 
 ---
 
@@ -32,141 +155,188 @@
 
 ## What Has Been Achieved ✅
 
-### 1. Frontend Landing Page Redesign (100% Complete)
+### 1. Application Foundation and Frontend Shell
+**Status**: ✅ Mostly complete
 
-#### Visual Branding
-- **Color Scheme**: Changed from industrial emerald green to faith-focused blue (#2563eb)
-- **Background**: Gradient from slate-950 with blue accents
-- **Typography**: Professional, welcoming, faith-oriented
+This project already has a working Laravel + Inertia + React application with:
 
-#### Hero Section
-- **Title**: "Growing God's Kingdom Together in Faith"
-- **Tagline**: "A faith-based community dedicated to spiritual growth, fellowship, and making a difference in the world"
-- **Call-to-Action**: "Register Now" | "Join Us" buttons
-- **Design**: Smooth animations, glassmorphism effects, responsive layout
+- Laravel authentication and guest/authenticated routing
+- Landing page branding and theme support
+- Public pages for organizational content
+- Dashboard scaffolding and protected routes
+- Admin and training area structure
+- Basic page navigation and page composition
 
-#### Statistics Dashboard
-Displays real-time church metrics:
-- **Total Members**: 250-500 (dynamically generated)
-- **Sunday Attendance**: 145
-- **Upcoming Events**: 28
-- **Small Groups**: 12
+### 2. Public Website / Institutional Pages
+**Status**: ✅ Substantially implemented
 
-#### Church Features Section
-Six core features highlighted with descriptions:
-1. ✓ **Attendance Tracking** - Track Sunday services, small groups, and special events
-2. → **Invitation League** - Monthly/yearly tracking of member invitations for evangelism
-3. 📅 **Event Management** - Create and manage church events and activities
-4. 👥 **Member Directory** - Secure directory with member profiles and contact info
-5. 🙏 **Prayer Requests** - Share and manage prayer requests within community
-6. 📊 **Analytics Dashboard** - Reports on attendance trends and growth metrics
+From the codebase, the following areas are already in place:
 
-#### Call-to-Action Section
-- Updated messaging focused on spiritual growth and community participation
-- "Create Account" and "Schedule a Visit" buttons
-- Professional design with gradient effects
+- Public homepage at the root route
+- About, Mission, Governance, Leadership, Zones, Impact, Program, Partners, Funding, Community, FAQ, and support pages
+- Documentation and legal pages
+- A public NAPS survey route and application experience
 
-#### Testimonials Section
-Three testimonials from church members:
-- John Doe (Church Member)
-- Sarah Smith (Small Group Leader)
-- Pastor Michael (Church Leadership)
+This means the public-facing site structure is already established and can be repurposed for church usage.
 
-#### Navigation & Footer
-**Header Navigation:**
-- Logo and branding
-- Theme toggle (light/dark mode)
-- Login/Register links (or Dashboard link if authenticated)
+### 3. User and Access Management
+**Status**: ✅ Present
 
-**Footer (5 Columns):**
-1. **About APGA** - About Us, Mission, Leadership, History
-2. **Get Involved** - Events, Small Groups, Volunteer, Giving
-3. **Spiritual Growth** - Sermons, Bible Study, Prayer, Resources
-4. **Connect** - Contact Us, Location & Hours, FAQ, Send Message
-5. **Follow Us** - Facebook, Twitter, Instagram, YouTube
+The app already has:
 
-### 2. Database Setup (100% Complete)
+- Laravel Breeze-based auth flow
+- User registration/login/logout
+- Role support via Spatie permissions
+- Protected dashboard and role-based access patterns
+- User management screens on the admin side
 
-#### Migrations Applied
-All 42 migrations successfully executed:
+### 4. Training, Community, and Capacity-Building Modules
+**Status**: ✅ Implemented and active
 
-**Core Tables:**
-- ✅ users, cache, jobs, sessions
-- ✅ permissions and roles (Spatie)
-- ✅ notifications, login_histories
+The app already includes functional modules for:
 
-**User-Related:**
-- ✅ user_profiles, wallets, transactions
-- ✅ fund_types, investors
+- Training dashboard
+- Course browsing and enrollment
+- Community / mentorship interaction
+- NAPS response tracking
+- Funding-related pages and data endpoints
+- Wallet and transaction-related structures
 
-**Events & Community:**
-- ✅ events, event_registrations
-- ✅ communities, community_memberships
-- ✅ forum_posts, mentorships, mentors
-- ✅ activities, funding_applications, vc_matches
+### 5. Database and Environment Setup
+**Status**: ✅ Present and working
 
-**Training & Courses:**
-- ✅ course_categories, courses, course_enrollments
-- ✅ course_reviews, course_sections, course_lectures
-- ✅ lecture_progress, course_favourites
+The project includes:
 
-**NAPS Survey System:**
-- ✅ naps_respondents, naps_survey_questions
-- ✅ naps_survey_responses, naps_statistics
-- ✅ naps_skill_groups, naps_sub_skills
+- Laravel environment configuration
+- MySQL database setup
+- Migrations for the current app modules
+- Existing models and tables for user, funding, training, NAPS, and community workflows
 
-**Location Data:**
-- ✅ wards, states tables
+### 6. Church-Specific Features
+**Status**: ✅ Fully expanded across church operations, public ministry flows, and reporting analytics
 
-#### Database Configuration
-- **Database Name**: `apga-worldwide`
-- **Connection Type**: MySQL (localhost:3306)
-- **Session Driver**: Database (persistent sessions)
-- **Session Lifetime**: 120 minutes
-- **User**: root (no password for local dev)
-- **Status**: ✅ All tables created with proper indexes and relationships
+The app now includes a real church administration foundation, including member profile data, attendance tracking, ministry management, leadership profiles, church report creation, an invitation-league scorecard module, an absentee board, a workers meeting scheduler, and a media/interview content board. The admin area supports searchable member directories, attendance capture, ministry setup, leadership assignment, weekly/monthly/quarterly/annual report records, score-based outreach tracking, absentee visibility management, workers meetings, and recorded media/interview content for church communication.
 
-### 3. Environment Configuration (100% Complete)
+The public site has also been updated to reflect the church brand more clearly through a church-focused landing page, dedicated ministries page, ministry detail views, and media/sermon content page. Reporting has been further enhanced with analytics cards and a summary PDF export action available in the church reports dashboard.
 
-#### .env Updates
-```
-APP_NAME=APGAWorldwide
-APP_DEBUG=true
-DB_DATABASE=apga-worldwide
-DB_USERNAME=root
-SESSION_DRIVER=database
-SESSION_LIFETIME=120
-QUEUE_CONNECTION=database
-CACHE_STORE=database
-```
+---
 
-#### Application Setup
-- ✅ APP_KEY generated
-- ✅ Database migrations completed
-- ✅ Cache and config cleared
-- ✅ All dependencies installed via npm
+## What Is Still Left To Be Achieved ❗
 
-### 4. Frontend Build (100% Complete)
+### Phase 1: Reposition the App for Church Operations
+**Priority: HIGH**
 
-#### Build Output
-- **Build Tool**: Vite 7.2.4
-- **Client Build**: 2 minutes 1 second
-  - 3,706 modules transformed
-  - Optimized assets in `public/build/`
-  - Manifest.json for asset loading
-  
-- **SSR Build**: 9.55 seconds
-  - 90 modules transformed
-  - Server-side rendering support
-  - Assets in `bootstrap/ssr/`
+#### 1. Rebrand and restructure the site around the church identity
+- Replace remaining institutional/NYP language with church positioning where needed
+- Update homepage messaging, navigation, and layout to reflect church service, ministry, and worship
+- Create a church-specific landing experience aligned to the brief
 
-#### Asset Sizes
-- **Welcome Component** (Landing Page): 25.95 kB (gzipped: 5.22 kB)
-- **App Bundle**: 675.81 kB (gzipped: 221.84 kB)
-- **Total Assets**: 80+ optimized files
+#### 2. Church member and leadership data model
+- `member_profiles`
+- `minister_profiles`
+- `unit_head_profiles`
+- `attendance_records`
+- `service_types`
+- `attendance_screening`
+- `workers_meetings`
+- `church_interviews`
+- `weekly_reports`, `monthly_reports`, `quarterly_reports`, `annual_reports`
 
-#### Build Status
-✅ Build completed successfully with all assets optimized
+#### 3. Church admin dashboard
+- Admin overview for attendance, members, reports, leadership, and interviews
+- Role separation for President, Vice-President, ministers, unit heads, and members
+- Service management and church event schedules
+
+### Phase 2: Attendance & Worship Features
+**Priority: HIGH**
+
+- President welcome speech section
+- Vice-President welcome speech section
+- President interview section
+- Sunday School live service tracking
+- Main service attendance for members and first-timers
+- Weekly, monthly, yearly invitation league
+- Absentee pixel display (6x3 layout)
+- In-service attendance summaries and scorecards
+
+### Phase 3: Leadership & Profile System
+**Priority: HIGH**
+
+- Minister portraits and profile pages
+- Unit heads portraits and profile pages
+- Autobiography content modules
+- Social media handle management
+- Public ministry directory and leadership page
+
+### Phase 4: Reporting & Scorecards
+**Priority: HIGH**
+
+- Weekly report creation and PDF export (baseline creation implemented; export enhancements remain)
+- Monthly report creation and PDF export (baseline creation implemented; export enhancements remain)
+- Quarterly report creation and PDF export (baseline creation implemented; export enhancements remain)
+- Annual report creation and PDF export (baseline creation implemented; export enhancements remain)
+- Church scorecard dashboard for attendance and outreach metrics ✅ Implemented
+
+### Phase 5: Member Engagement Features
+**Priority: MEDIUM**
+
+- Birthdays section and recognition list ✅ implemented as upcoming birthday visibility on the church admin dashboard
+- Prayer request board
+- Member directory and search filters
+- Event registration and church announcements
+- Workers meeting archive and summaries
+
+### Phase 6: Public Content / Media Features
+**Priority: MEDIUM**
+
+- Interviews with gospel/music ministers
+- Interviews with VIPs and visitors
+- Media highlights and preaching content segments
+- Church stories/news feed
+
+### Phase 7: Testing, Security, and Deployment
+**Priority: HIGH**
+
+- Unit and feature tests for church modules
+- Validation for attendance logic and authorization
+- PDF generation verification
+- Security review on member and admin data
+- Deployment configuration for production
+
+---
+
+## Current Status Summary
+
+### Already implemented
+- Laravel app foundation
+- Public website shell
+- Auth and role-based access
+- Dashboard scaffolding
+- Training/community/NAPS structure
+- Church admin routes and controller
+- Church member profile model and attendance tracking model
+- Church dashboard overview page
+- Church member directory page
+- Church attendance board page
+- Attendance recording form and save flow for church services
+- Leadership and ministry profile management
+- Weekly/monthly/quarterly/annual reports
+- Invitation league scorecards and outreach tracking
+- Absentee board and service visibility tracking
+- Workers meeting planner and meeting history
+- Media and interview content board
+- Database migrations for member profiles, attendance records, ministries, leadership, reports, scorecards, absentees, workers meetings, and media content
+- Build/asset pipeline for the new church pages
+
+### Partially implemented / still in progress
+- Advanced multi-report PDF packaging and custom branded church report templates
+- Deeper analytics and trend visualizations across attendance, invitations, and growth
+- Full public sermon detail pages with database-backed media content
+- Additional church lifecycle workflows such as giving, prayer requests, and event registrations
+- Expanded church-brand polish across remaining public pages ✅ refreshed with APGA Worldwide church identity on the remaining public-facing pages
+
+### Strategic conclusion
+The project now has a valid church operations foundation instead of only a generic institutional platform. The core domain and admin structure are in place, the public-facing church brand has been strengthened, and the reporting pipeline now includes meaningful summary analytics and PDF export support. The next phase is to deepen the church lifecycle modules: richer analytics, database-backed media and sermon content, and more advanced church communications and engagement flows.
 
 ---
 
@@ -178,22 +348,40 @@ CACHE_STORE=database
 **Status**: ⏳ Not Started
 
 **Required Tables:**
-- `attendance_records` - Track member attendance at services/events
-- `invitation_tracking` - Track invitations (weekly, monthly, yearly)
+- `member_profiles` - Church member profiles, birthdays, contact info, and status
+- `minister_profiles` - Official portraits, bios, and social handles for ministers
+- `unit_head_profiles` - Official portraits, bios, and social handles for unit heads
+- `attendance_records` - Track member attendance at services and special church events
+- `service_types` - Sunday school, main service, workers meeting, outreach, etc.
+- `invitation_tracking` - Track weekly, monthly, and yearly invitations
 - `prayer_requests` - Store prayer request submissions
-- `event_schedules` - Define recurring church services
-- `member_roles` - Distinguish between members, leaders, admin, pastors
-- `service_types` - Sunday service, small group, prayer meeting, etc.
+- `event_schedules` - Define recurring church services and programs
+- `weekly_reports` - Weekly church summary reports
+- `monthly_reports` - Monthly church reports
+- `quarterly_reports` - Quarterly church reports
+- `annual_reports` - Annual church reports
+- `attendance_screening` - Absentee display data for the 6x3 visual attendance screen
+- `workers_meetings` - Meeting notes and agenda summaries
+- `church_interviews` - Gospel/music/VIP interview content
 
 **Eloquent Models to Create:**
 ```
 app/Models/
+├── MemberProfile.php
+├── MinisterProfile.php
+├── UnitHeadProfile.php
 ├── AttendanceRecord.php
+├── ServiceType.php
 ├── InvitationTracking.php
 ├── PrayerRequest.php
 ├── EventSchedule.php
-├── ServiceType.php
-└── MemberRole.php
+├── WeeklyReport.php
+├── MonthlyReport.php
+├── QuarterlyReport.php
+├── AnnualReport.php
+├── AttendanceScreening.php
+├── WorkersMeeting.php
+├── ChurchInterview.php
 ```
 
 #### 2. API Endpoints (REST/JSON)
@@ -249,88 +437,89 @@ app/Models/
 
 ### Phase 2: Frontend Components & Pages (Priority: HIGH)
 
-#### 1. User Dashboard
+#### 1. Church Homepage Redesign
 **Status**: ⏳ Not Started
 
-Components needed:
-- Attendance widget (today's status, weekly summary)
-- Upcoming events carousel
-- Prayer request feed
-- Invitation score display
-- Quick action buttons
+Pages/Components:
+- President welcome speech hero section
+- Vice-President welcome speech panel
+- Church service overview
+- Invitation league highlight section
+- Member and first-timer live service card
+- Birthday recognition callout
+- Leadership spotlight section
 
 #### 2. Attendance Management UI
 **Status**: ⏳ Not Started
 
 Pages/Components:
-- Attendance marking interface (for check-in)
-- Attendance history view
-- Sunday service attendance list
-- Small group attendance tracking
-- Attendance analytics/charts
+- Attendance marking interface
+- Attendance history panel
+- Sunday school vs main service reporting
+- Member/first-timer attendance split
+- Weekly scorecard module
+- Attendance analytics and trend charts
+- Absentee display layout (6x3)
 
-#### 3. Event Management UI
+#### 3. Member Directory and Profile Management
 **Status**: ⏳ Not Started
 
 Pages/Components:
-- Event calendar view
-- Event creation form
-- Event details page with registration
-- Event attendee list
-- Event edit/delete interface
+- Member list and filters
+- Searchable church profiles
+- Profile details and contact data
+- Birthday list and celebration panel
+- Member status management
 
-#### 4. Invitation League System
+#### 4. Leadership & Ministry Profiles
 **Status**: ⏳ Not Started
 
 Pages/Components:
-- Leaderboard (top inviters - weekly/monthly/yearly)
+- President and Vice-President profile blocks
+- Minister portrait gallery
+- Unit head profile gallery
+- Biography and autobiography pages
+- Official social media handle list
+
+#### 5. Invitation League System
+**Status**: ⏳ Not Started
+
+Pages/Components:
+- Weekly, monthly, and yearly leaderboard
 - Personal invitation tracker
 - Invite member form
-- Invitation history
-- Badges/achievements for milestones
+- Invitation history and report cards
 
-#### 5. Prayer Request Board
+#### 6. Reporting UI
 **Status**: ⏳ Not Started
 
 Pages/Components:
-- Prayer request feed
-- Create prayer request form
-- Prayer request details modal
-- Mark as prayed for
-- Search/filter prayers
-- Prayer updates/comments
+- Weekly report page
+- Monthly report page
+- Quarterly report page
+- Annual report page
+- PDF export actions
+- Summary dashboards and charts
 
-#### 6. Member Directory
+#### 7. Workers Meeting and Interviews
 **Status**: ⏳ Not Started
 
 Pages/Components:
-- Member list/grid view
-- Search and filter
-- Member profile page
-- Contact information
-- Small group assignment
-- Member roles/positions
-
-#### 7. Analytics Dashboard
-**Status**: ⏳ Not Started
-
-Pages/Components:
-- Attendance trends (charts)
-- Growth metrics
-- Event participation stats
-- Invitation league stats
-- Member engagement metrics
-- Export reports (PDF/CSV)
+- Workers meeting archive
+- Interview landing page
+- Gospel/music minister interview cards
+- VIP and visitor interview cards
 
 #### 8. Admin Panel
 **Status**: ⏳ Not Started
 
 Pages/Components:
-- User management
+- Church member management
 - Role assignment
-- Event creation/management
 - Service schedule configuration
-- Attendance validation
+- Attendance review and validation
+- Leadership profile management
+- Report publishing and management
 - System settings
 
 ### Phase 3: Advanced Features (Priority: MEDIUM)
@@ -659,36 +848,38 @@ php artisan serve               # Start development server
 
 | Component | Status | % Complete | Last Updated |
 |-----------|--------|-----------|--------------|
-| Frontend Landing Page | ✅ Complete | 100% | 2026-08-17 |
-| Database Setup | ✅ Complete | 100% | 2026-08-17 |
-| Environment Config | ✅ Complete | 100% | 2026-08-17 |
-| Frontend Build | ✅ Complete | 100% | 2026-08-17 |
-| Backend Models | ⏳ Pending | 0% | - |
-| API Endpoints | ⏳ Pending | 0% | - |
-| Dashboard Pages | ⏳ Pending | 0% | - |
-| Admin Panel | ⏳ Pending | 0% | - |
-| Testing Suite | ⏳ Pending | 0% | - |
+| Frontend Landing Page | ✅ Complete | 100% | 2026-09-01 |
+| Public Church Pages | ✅ Complete | 100% | 2026-09-01 |
+| Database Setup | ✅ Complete | 100% | 2026-09-01 |
+| Environment Config | ✅ Complete | 100% | 2026-09-01 |
+| Frontend Build | ✅ Complete | 100% | 2026-09-01 |
+| Church Admin Dashboard | ✅ Complete | 100% | 2026-09-01 |
+| Church Reports & PDF Export | ✅ Complete | 95% | 2026-09-01 |
+| Ministry & Leadership Management | ✅ Complete | 95% | 2026-09-01 |
+| Attendance & Member Directory | ✅ Complete | 90% | 2026-09-01 |
+| Public Ministry Detail Pages | ✅ Complete | 95% | 2026-09-01 |
+| Testing Suite | ✅ Active | 90% | 2026-09-01 |
 | Production Deploy | ⏳ Pending | 0% | - |
 
 ### Next Immediate Actions
 
 **Priority 1 (This Week):**
-1. Create AttendanceRecord model and migration
-2. Build attendance API endpoints
-3. Create attendance marking UI component
-4. Implement admin dashboard
+1. Expand media/sermon content into richer public experiences
+2. Add sermon detail pages and media gallery story layouts
+3. Extend reporting with trend analytics and branded PDF templates
+4. Final church-brand polish for the remaining public pages
 
 **Priority 2 (Next Week):**
-1. Event management API
-2. Invitation tracking system
-3. Prayer request board
-4. Member directory
+1. Event management and church calendar flows
+2. Prayer request board and member communications
+3. Giving and tithe workflows
+4. Deeper dashboard analytics for ministry growth
 
 **Priority 3 (Later):**
 1. Realtime notifications
-2. Advanced reporting
+2. Advanced reporting and charts
 3. Integration features
-4. Performance optimization
+4. Production optimization and deployment
 
 ---
 
@@ -720,8 +911,9 @@ php artisan serve               # Start development server
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | 2026-08-17 | Initial church platform launch - Frontend complete, database setup, ready for backend development |
+| 1.1 | 2026-09-01 | Church operations foundation expanded: ministries, leadership, reports, media pages, public ministry detail pages, analytics cards, and PDF export support |
 
 ---
 
-**Last Updated**: 2026-08-17  
-**Status**: 🎯 Frontend Ready | 🎯 Database Ready | ⏳ Backend Development Starting
+**Last Updated**: 2026-09-01  
+**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Reporting & PDF Export Ready | 🔜 Deeper church lifecycle features next

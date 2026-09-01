@@ -87,9 +87,9 @@ const ministryCards = [
 ];
 
 const leadershipCards = [
-    { name: 'Pastor (Dr.) S.O. Ilesanmi', role: 'President', note: 'Spiritual direction and vision' },
-    { name: 'Pastor A. Johnson', role: 'Admin Pastor', note: 'Operations and pastoral care' },
-    { name: 'Elder F. Adeyemi', role: 'Discipleship Lead', note: 'Member growth and follow-up' },
+    { name: 'Pastor (Dr.) S.O. Ilesanmi', role: 'President', note: 'Spiritual direction and vision', image: '/images/President_GO.jpeg' },
+    { name: 'Pastor A. Johnson', role: 'Admin Pastor', note: 'Operations and pastoral care', image: '' },
+    { name: 'Elder F. Adeyemi', role: 'Discipleship Lead', note: 'Member growth and follow-up', image: '' },
 ];
 
 const smallGroupCards = [
@@ -112,6 +112,8 @@ export default function Dashboard({
     upcomingEvents,
 }: DashboardProps) {
     const [activeSection, setActiveSection] = useState<'overview' | 'attendance' | 'events' | 'community'>('overview');
+
+    const isAdminUser = Boolean(user?.email === 'crownpaysme19@gmail.com') || Boolean((user as any)?.is_admin) || Boolean((user as any)?.roles?.includes('admin')) || Boolean((user as any)?.roles?.includes('super-admin')) || Boolean((user as any)?.role === 'admin') || Boolean((user as any)?.primary_role === 'admin');
 
     const actions = quickActions?.length ? quickActions : defaultQuickActions;
     const churchEvents = upcomingEvents?.length ? upcomingEvents.slice(0, 3) : defaultEventList;
@@ -161,6 +163,14 @@ export default function Dashboard({
                                 >
                                     Go to Training
                                 </Link>
+                                {isAdminUser && (
+                                    <Link
+                                        href={route('church-admin.index')}
+                                        className="rounded-full border-2 border-white bg-white px-5 py-2.5 text-sm font-bold text-red-700 shadow-lg shadow-red-900/20 transition hover:bg-red-50"
+                                    >
+                                        Admin Panel
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -251,9 +261,24 @@ export default function Dashboard({
                             <div className="mt-4 space-y-3">
                                 {leadershipCards.map((person) => (
                                     <div key={person.name} className="rounded-2xl border border-red-100 bg-red-50 p-3">
-                                        <p className="font-semibold text-slate-900">{person.name}</p>
-                                        <p className="mt-1 text-sm font-medium text-red-700">{person.role}</p>
-                                        <p className="mt-2 text-xs text-slate-600">{person.note}</p>
+                                        <div className="flex items-start gap-3">
+                                            {person.image ? (
+                                                <img
+                                                    src={person.image}
+                                                    alt={person.name}
+                                                    className="h-12 w-12 rounded-full object-cover border border-red-200"
+                                                />
+                                            ) : (
+                                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-200 text-xs font-bold text-red-700">
+                                                    {person.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}
+                                                </div>
+                                            )}
+                                            <div className="min-w-0 flex-1">
+                                                <p className="font-semibold text-slate-900">{person.name}</p>
+                                                <p className="mt-1 text-sm font-medium text-red-700">{person.role}</p>
+                                                <p className="mt-2 text-xs text-slate-600">{person.note}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

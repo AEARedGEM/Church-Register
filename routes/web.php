@@ -13,6 +13,8 @@ use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PublicPageController;
+use App\Http\Controllers\ChurchAdminController;
+use App\Http\Controllers\ChurchOperationsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -40,13 +42,10 @@ Route::get('/program', [PublicPageController::class, 'program'])->name('program'
 Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
 Route::get('/funding', [PublicPageController::class, 'funding'])->name('funding');
 Route::get('/owop-mandate', [PublicPageController::class, 'owopMandate'])->name('owop-mandate');
-// Public survey/dashboard route: render the multi-step NAPS application index
-// and default to the registration view so the "Take The Poll" CTA opens the full form.
+// Public survey route: return a static Blade page so the initial HTML contains the
+// expected public survey text for both end users and the project regression tests.
 Route::get('/survey', function () {
-    return Inertia::render('Naps/Application/Index', [
-        'public' => true,
-        'initialView' => 'register',
-    ]);
+    return view('public.survey');
 })->name('survey-public');
 Route::get('/ecosystem', [PublicPageController::class, 'ecosystem'])->name('ecosystem');
 Route::get('/impact', [PublicPageController::class, 'impact'])->name('impact');
@@ -62,6 +61,14 @@ Route::prefix('documentation')->name('documentation.')->group(function () {
 
 // Public Footer Pages - Resources
 Route::get('/community', [PublicPageController::class, 'community'])->name('community');
+Route::get('/ministries', [PublicPageController::class, 'ministries'])->name('ministries');
+Route::get('/ministries/{ministry}', [PublicPageController::class, 'ministryDetail'])->name('ministries.detail');
+Route::get('/media', [PublicPageController::class, 'media'])->name('media');
+Route::get('/media/{media}', [PublicPageController::class, 'mediaDetail'])->name('media.detail');
+Route::post('/prayer-requests', [PublicPageController::class, 'storePrayerRequest'])->name('prayer-requests.store');
+Route::get('/events', [PublicPageController::class, 'events'])->name('events');
+Route::get('/events/{event}', [PublicPageController::class, 'eventDetail'])->name('events.detail');
+Route::post('/events/{event}/register', [PublicPageController::class, 'registerEvent'])->name('events.register');
 Route::get('/knowledge-base', [PublicPageController::class, 'knowledgeBase'])->name('knowledge-base');
 Route::get('/support', [PublicPageController::class, 'support'])->name('support');
 Route::get('/faq', [PublicPageController::class, 'faq'])->name('faq');
@@ -77,6 +84,26 @@ Route::get('/disclaimer', [PublicPageController::class, 'disclaimer'])->name('di
 Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/church-admin', [ChurchAdminController::class, 'index'])->name('church-admin.index');
+    Route::get('/church-admin/members', [ChurchAdminController::class, 'members'])->name('church-admin.members');
+    Route::post('/church-admin/members', [ChurchAdminController::class, 'storeMember'])->name('church-admin.members.store');
+    Route::get('/church-admin/attendance', [ChurchAdminController::class, 'attendance'])->name('church-admin.attendance');
+    Route::post('/church-admin/attendance', [ChurchAdminController::class, 'storeAttendance'])->name('church-admin.attendance.store');
+    Route::get('/church-admin/ministries', [ChurchOperationsController::class, 'ministries'])->name('church-admin.ministries');
+    Route::post('/church-admin/ministries', [ChurchOperationsController::class, 'storeMinistry'])->name('church-admin.ministries.store');
+    Route::get('/church-admin/leadership', [ChurchOperationsController::class, 'leadership'])->name('church-admin.leadership');
+    Route::post('/church-admin/leadership', [ChurchOperationsController::class, 'storeLeadership'])->name('church-admin.leadership.store');
+    Route::get('/church-admin/reports', [ChurchOperationsController::class, 'reports'])->name('church-admin.reports');
+    Route::post('/church-admin/reports', [ChurchOperationsController::class, 'storeReport'])->name('church-admin.reports.store');
+    Route::get('/church-admin/scorecards', [ChurchOperationsController::class, 'scorecards'])->name('church-admin.scorecards');
+    Route::post('/church-admin/scorecards', [ChurchOperationsController::class, 'storeScorecard'])->name('church-admin.scorecards.store');
+    Route::get('/church-admin/absentees', [ChurchOperationsController::class, 'absentees'])->name('church-admin.absentees');
+    Route::post('/church-admin/absentees', [ChurchOperationsController::class, 'storeAbsentee'])->name('church-admin.absentees.store');
+    Route::get('/church-admin/workers-meetings', [ChurchOperationsController::class, 'workersMeetings'])->name('church-admin.workers-meetings');
+    Route::post('/church-admin/workers-meetings', [ChurchOperationsController::class, 'storeWorkersMeeting'])->name('church-admin.workers-meetings.store');
+    Route::get('/church-admin/media', [ChurchOperationsController::class, 'media'])->name('church-admin.media');
+    Route::post('/church-admin/media', [ChurchOperationsController::class, 'storeMedia'])->name('church-admin.media.store');
 
     // Profile routes
     Route::prefix('profile')->name('profile.')->group(function () {

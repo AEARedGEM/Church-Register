@@ -22,8 +22,10 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.tsx'),
         ),
     setup({ el, App, props }: { el: HTMLElement; App: React.FC; props: any }) {
+        const initialTheme = props?.initialPage?.props?.theme ?? 'light';
+
         const appElement = (
-            <ThemeProvider initialTheme={props.initialPage.props.theme ?? 'light'}>
+            <ThemeProvider initialTheme={initialTheme}>
                 <App {...props} />
             </ThemeProvider>
         );
