@@ -16,6 +16,11 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
 
+    public function churchContactMessages()
+    {
+        return $this->hasMany(\App\Models\ChurchContactMessage::class);
+    }
+
     protected static function booted(): void
     {
         static::saving(function (self $user) {
@@ -191,6 +196,16 @@ class User extends Authenticatable
     public function forumPosts()
     {
         return $this->hasMany(ForumPost::class);
+    }
+
+    public function sentDirectMessages()
+    {
+        return $this->hasMany(DirectMessage::class, 'sender_id');
+    }
+
+    public function receivedDirectMessages()
+    {
+        return $this->hasMany(DirectMessage::class, 'recipient_id');
     }
 
     // Mentorship relationships

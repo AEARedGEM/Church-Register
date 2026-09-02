@@ -139,6 +139,9 @@ export default function EventDetail({
                                 <Link href={route('events')} className="rounded-full border border-red-700 px-6 py-3 font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">
                                     Back to events
                                 </Link>
+                                <a href={route('events.calendar', event.id)} className="rounded-full border border-slate-600 px-6 py-3 font-semibold text-slate-200 transition hover:border-slate-400 hover:text-white">
+                                    Add to calendar
+                                </a>
                             </div>
                         </div>
 

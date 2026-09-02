@@ -89,6 +89,18 @@ export default function Authenticated({
                                         >
                                             Profile
                                         </Dropdown.Link>
+                                        <Dropdown.Link href={route('member.messages')}>
+                                            My Messages
+                                        </Dropdown.Link>
+                                        <Dropdown.Link href={route('member.notifications')}>
+                                            Notifications
+                                        </Dropdown.Link>
+                                        <Dropdown.Link href={route('community.feed')}>
+                                            Community Feed
+                                        </Dropdown.Link>
+                                        <Dropdown.Link href={route('member.direct-messages')}>
+                                            Direct Messages
+                                        </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('logout')}
                                             method="post"

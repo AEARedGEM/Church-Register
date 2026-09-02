@@ -12,6 +12,7 @@ use App\Models\EventRegistration;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
@@ -885,22 +886,81 @@ class PublicPageController extends Controller
         ]);
     }
 
+    public function eventCalendar(Event $event)
+    {
+        $escape = static fn (string $value): string => str_replace(["\\", ";", ",", "\r", "\n"], ["\\\\", "\\;", "\\,", '', '\\n'], $value);
+        $formatDate = static fn ($date): string => $date->utc()->format('Ymd\\THis\\Z');
+        $description = $escape((string) $event->description);
+        $location = $escape((string) ($event->location ?: ($event->is_virtual ? 'Online gathering' : 'Church campus')));
+        $ics = implode("\r\n", [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//APGA Worldwide//Church Events//EN',
+            'BEGIN:VEVENT',
+            'UID:church-event-' . $event->id . '@apga-worldwide',
+            'DTSTAMP:' . now()->utc()->format('Ymd\THis\Z'),
+            'DTSTART:' . $formatDate($event->start_date),
+            'DTEND:' . $formatDate($event->end_date),
+            'SUMMARY:' . $escape((string) $event->title),
+            'DESCRIPTION:' . $description,
+            'LOCATION:' . $location,
+            'END:VEVENT',
+            'END:VCALENDAR',
+            '',
+        ]);
+
+        return response($ics, 200, [
+            'Content-Type' => 'text/calendar; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="event-' . $event->id . '.ics"',
+        ]);
+    }
+
     public function registerEvent(Event $event, Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        if ($event->registrations()->where('user_id', Auth::id())->exists()) {
+        $registrationResult = DB::transaction(function () use ($event) {
+            $lockedEvent = Event::query()->lockForUpdate()->findOrFail($event->id);
+
+            if ($lockedEvent->registrations()->where('user_id', Auth::id())->exists()) {
+                return 'duplicate';
+            }
+
+            if ($lockedEvent->registration_deadline?->isPast()) {
+                return 'deadline';
+            }
+
+            $activeRegistrations = $lockedEvent->registrations()
+                ->whereIn('status', ['registered', 'confirmed', 'attended'])
+                ->count();
+
+            if ($lockedEvent->max_participants !== null && $activeRegistrations >= $lockedEvent->max_participants) {
+                return 'capacity';
+            }
+
+            EventRegistration::create([
+                'user_id' => Auth::id(),
+                'event_id' => $lockedEvent->id,
+                'status' => 'registered',
+                'registered_at' => now(),
+            ]);
+
+            return 'registered';
+        });
+
+        if ($registrationResult === 'duplicate') {
             return redirect()->route('events.detail', $event)->with('info', 'You are already registered for this event.');
         }
 
-        EventRegistration::create([
-            'user_id' => Auth::id(),
-            'event_id' => $event->id,
-            'status' => 'registered',
-            'registered_at' => now(),
-        ]);
+        if ($registrationResult === 'deadline') {
+            return redirect()->route('events.detail', $event)->with('info', 'Registration for this event has closed.');
+        }
+
+        if ($registrationResult === 'capacity') {
+            return redirect()->route('events.detail', $event)->with('info', 'This event has reached its registration capacity.');
+        }
 
         return redirect()->route('events.detail', $event)->with('success', 'You have successfully registered for ' . $event->title . '.');
     }

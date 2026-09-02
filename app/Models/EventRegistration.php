@@ -10,4 +10,14 @@ class EventRegistration extends Model
         'user_id', 'event_id', 'registered_at', 'status',
         'team_name', 'project_submission'
     ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

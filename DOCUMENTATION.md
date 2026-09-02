@@ -26,6 +26,16 @@ The public church experience has been refined further:
 - Restricted public media detail pages to published content so drafts and archived items remain private.
 - Added report period filtering so analytics and leadership PDF summaries can be scoped to weekly, monthly, quarterly, annual, or all reports.
 - Added a publishable church announcements board with public published notices and authenticated admin management.
+- Added admin event editing and transaction-safe registration controls for deadlines and capacity.
+- Added downloadable iCalendar reminders for public events and registration reporting for church administrators.
+- Added member message history with ownership filtering and database notifications when church messages are resolved.
+- Added an authenticated member notification inbox with unread state and ownership-safe mark-as-read actions.
+- Added an authenticated community feed with active-membership privacy and permission-controlled member posting.
+- Added private direct messaging with member search, isolated threads, unread tracking, and self-message protection.
+- Updated all public homepage footer navigation links to open their destination pages in new tabs with safe opener protection.
+- Activated the six homepage platform feature cards with live links to prayer requests, small groups, events, member care, and church administration pages.
+- Added newsletter subscription management with idempotent signup, tokenized unsubscribe, and an admin consent board.
+- Added admin newsletter campaign drafting and queued per-recipient delivery to active subscribers with delivery counters.
 
 
 ## Reality Check: Current App vs Church Goal
@@ -111,6 +121,12 @@ The project has now progressed beyond the generic app shell into a church-aligne
 - dashboard analytics and church summary cards for reporting visibility
 - active church dashboard and admin access checks aligned to real church operations
 - public announcements and authenticated announcement management
+- event editing and registration deadline/capacity enforcement
+- public calendar downloads and admin registration status/member summaries
+- member message history and resolution notifications
+- authenticated notification inbox with read-state controls
+- private community feed and member forum posting
+- newsletter campaign composition and queued delivery
 
 ---
 
@@ -336,7 +352,7 @@ The public site now includes:
 - Birthdays section and recognition list ✅ implemented as upcoming birthday visibility on the church admin dashboard
 - Prayer request board ✅ implemented with authenticated review and status management
 - Member directory and search filters ✅ implemented
-- Event registration and church announcements ✅ implemented; calendar refinements remain
+- Event registration and church announcements ✅ implemented; calendar reminders and registration reporting implemented
 - Workers meeting archive and summaries ✅ implemented
 
 ### Phase 6: Public Content / Media Features
@@ -390,7 +406,7 @@ The public site now includes:
 - Advanced multi-report PDF packaging and custom branded church report templates
 - Deeper analytics and trend visualizations across attendance, invitations, and growth
 - Full public sermon detail pages with database-backed media content and responsive YouTube embeds ✅ implemented; richer gallery/story layouts remain
-- Additional church lifecycle workflows such as verified bank account presentation and richer member communications; event registration and announcements are implemented
+- Additional church lifecycle workflows such as verified bank account presentation and richer member communications; event registration, reminders, announcements, member follow-up, notifications, community posting, newsletter campaigns, and direct messaging are implemented
 - Expanded church-brand polish across remaining public pages ✅ refreshed with APGA Worldwide church identity on the remaining public-facing pages
 
 ### Strategic conclusion
@@ -599,14 +615,17 @@ Implementation options:
 - SMS notifications (optional)
 
 #### 2. Member Communication
-**Status**: ⏳ Not Started
+**Status**: ⏳ Partially implemented
 
 Features:
-- Announcements system
-- Discussion forums
-- Small group messaging
-- Direct messaging between members
-- Email newsletters
+- Announcements system ✅ implemented
+- Member message history and resolution notifications ✅ implemented
+- Notification inbox and mark-as-read workflow ✅ implemented
+- Community feed and member forum posting ✅ implemented
+- Discussion forums ✅ community feed and posting implemented
+- Small group messaging ⏳ remaining
+- Direct messaging between members ✅ implemented
+- Newsletter subscription management and campaign composition ✅ implemented; production SMTP/queue configuration remains
 
 #### 3. Giving & Tithes (Optional)
 **Status**: ⏳ Deferred; awaiting verified church bank account details
@@ -928,7 +947,7 @@ php artisan serve               # Start development server
 3. Complete remaining church-brand content review and copy refinement
 
 **Priority 2 (Next Week):**
-1. Calendar refinements, including event editing and registration controls
+1. Configure production newsletter mail/queue operations, then expand small-group messaging
 2. Prayer request board and member communications
 3. Publish verified church bank account details
 4. Deeper dashboard analytics for ministry growth

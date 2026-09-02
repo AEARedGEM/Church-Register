@@ -208,6 +208,72 @@ class ChurchAdminDashboardTest extends TestCase
         ]);
     }
 
+    public function test_church_admin_can_update_a_church_event(): void
+    {
+        $user = User::factory()->create();
+        $event = \App\Models\Event::create([
+            'title' => 'Original Service',
+            'description' => 'Original event details.',
+            'event_type' => 'workshop',
+            'start_date' => '2026-09-13 09:00:00',
+            'end_date' => '2026-09-13 11:00:00',
+            'registration_deadline' => '2026-09-13 08:30:00',
+            'status' => 'upcoming',
+        ]);
+
+        $response = $this->actingAs($user)->patch('/church-admin/events/' . $event->id, [
+            'title' => 'Updated Service',
+            'description' => 'Updated event details.',
+            'event_type' => 'conference',
+            'start_date' => '2026-09-14 10:00:00',
+            'end_date' => '2026-09-14 13:00:00',
+            'location' => 'Fellowship hall',
+            'is_virtual' => false,
+            'max_participants' => 250,
+            'registration_deadline' => '2026-09-14 09:30:00',
+            'status' => 'registration_open',
+        ]);
+
+        $response->assertRedirect('/church-admin/events');
+        $this->assertDatabaseHas('events', [
+            'id' => $event->id,
+            'title' => 'Updated Service',
+            'event_type' => 'conference',
+            'max_participants' => 250,
+            'status' => 'registration_open',
+        ]);
+    }
+
+    public function test_church_admin_event_page_reports_registration_statuses_and_members(): void
+    {
+        $admin = User::factory()->create();
+        $registrant = User::factory()->create(['name' => 'Grace Member', 'email' => 'grace@example.com']);
+        $event = \App\Models\Event::create([
+            'title' => 'Leadership Breakfast',
+            'description' => 'A leadership gathering.',
+            'event_type' => 'conference',
+            'start_date' => '2026-09-20 08:00:00',
+            'end_date' => '2026-09-20 10:00:00',
+            'registration_deadline' => '2026-09-20 07:00:00',
+            'status' => 'upcoming',
+        ]);
+        \App\Models\EventRegistration::create([
+            'event_id' => $event->id,
+            'user_id' => $registrant->id,
+            'status' => 'confirmed',
+            'registered_at' => now(),
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/church-admin/events')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('events.0.registration_summary.confirmed', 1)
+                ->where('events.0.registrants.0.name', 'Grace Member')
+                ->where('events.0.registrants.0.email', 'grace@example.com')
+            );
+    }
+
 
     public function test_church_admin_can_record_member_attendance(): void
     {

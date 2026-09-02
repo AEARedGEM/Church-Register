@@ -62,6 +62,7 @@ export default function AdminDashboard({ churchData }: { churchData: ChurchData 
                             <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.workers-meetings')} className="font-semibold text-red-700 underline">Open Workers Meetings</a></li>
                             <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.media')} className="font-semibold text-red-700 underline">Open Media & Interviews</a></li>
                             <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.announcements')} className="font-semibold text-red-700 underline">Open Church Announcements</a></li>
+                            <li className="rounded-xl bg-red-50 px-4 py-3"><a href={route('church-admin.newsletter-subscribers')} className="font-semibold text-red-700 underline">Open Newsletter Subscribers</a></li>
                         </ul>
                     </div>
 

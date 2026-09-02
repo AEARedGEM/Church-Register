@@ -1,6 +1,6 @@
 import { logo } from '@/images';
 import { PageProps } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -9,6 +9,7 @@ export default function Welcome({
     laravelVersion,
     phpVersion,
     churchSummary,
+    flash,
 }: PageProps<{
     laravelVersion: string;
     phpVersion: string;
@@ -19,9 +20,17 @@ export default function Welcome({
         active_ministries?: number;
         upcoming_events?: number;
     };
+    flash?: {
+        newsletter_success?: string;
+    };
 }>) {
     const { theme, toggleTheme } = useTheme();
     const isDark = theme === 'dark';
+    const newsletterForm = useForm({ email: '' });
+    const submitNewsletter = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        newsletterForm.post(route('newsletter.subscribe'), { onSuccess: () => newsletterForm.reset() });
+    };
     const [highlightFooter, setHighlightFooter] = useState(false);
     const highlightTimeoutRef = useRef<number | null>(null);
 
@@ -399,6 +408,7 @@ export default function Welcome({
                             {[
                                 {
                                     title: "Worship & Prayer",
+                                    href: route('prayer-requests'),
                                     description: "Create a vibrant rhythm of worship, prayer, and spiritual growth every week.",
                                     icon: "✝️",
                                     accent: "from-rose-500/40 via-red-500/15 to-transparent",
@@ -406,6 +416,7 @@ export default function Welcome({
                                 },
                                 {
                                     title: "Family & Discipleship",
+                                    href: route('small-groups'),
                                     description: "Encourage meaningful discipleship with mentoring, teaching, and life-group connection.",
                                     icon: "🤝",
                                     accent: "from-orange-400/40 via-amber-500/15 to-transparent",
@@ -413,6 +424,7 @@ export default function Welcome({
                                 },
                                 {
                                     title: "Events & Outreach",
+                                    href: route('events'),
                                     description: "Plan memorable gatherings, serve the city, and launch powerful ministry moments.",
                                     icon: "📅",
                                     accent: "from-sky-500/40 via-blue-500/15 to-transparent",
@@ -420,6 +432,7 @@ export default function Welcome({
                                 },
                                 {
                                     title: "Member Care",
+                                    href: route('contact'),
                                     description: "Keep every member supported through pastoral presence, prayer, and belonging.",
                                     icon: "👥",
                                     accent: "from-violet-500/40 via-fuchsia-500/15 to-transparent",
@@ -427,6 +440,7 @@ export default function Welcome({
                                 },
                                 {
                                     title: "Prayer Requests",
+                                    href: route('prayer-requests'),
                                     description: "Lift every need before God and surround people with care, hope, and support.",
                                     icon: "🙏",
                                     accent: "from-pink-500/40 via-rose-500/15 to-transparent",
@@ -434,16 +448,18 @@ export default function Welcome({
                                 },
                                 {
                                     title: "Church Insight",
+                                    href: route('church-admin.index'),
                                     description: "Track attendance and growth with tools built for healthy, strategic ministry.",
                                     icon: "📊",
                                     accent: "from-emerald-500/40 via-teal-500/15 to-transparent",
                                     glow: "shadow-[0_0_40px_rgba(16,185,129,0.18)]"
                                 }
                             ].map((feature, index) => (
-                                <div
+                                <Link
                                     key={index}
+                                    href={feature.href}
                                     className={[
-                                        "group relative overflow-hidden rounded-[30px] border border-white/10 bg-slate-900/80 p-7 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-red-400/60 hover:shadow-[0_28px_80px_rgba(30,41,59,0.8)]",
+                                        "group relative block overflow-hidden rounded-[30px] border border-white/10 bg-slate-900/80 p-7 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-red-400/60 hover:shadow-[0_28px_80px_rgba(30,41,59,0.8)] focus:outline-none focus:ring-2 focus:ring-red-300/80 focus:ring-offset-2 focus:ring-offset-slate-950",
                                         index % 2 === 0 ? "lg:col-span-4" : "lg:col-span-4",
                                         index === 3 || index === 4 ? "lg:translate-y-8" : "",
                                         feature.glow
@@ -470,7 +486,7 @@ export default function Welcome({
                                             {feature.description}
                                         </p>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -638,19 +654,19 @@ export default function Welcome({
                                 </div>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <Link href={route('about')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">About Us</Link>
+                                        <a href={route('about')} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-red-400 transition-colors font-medium">About Us</a>
                                     </li>
                                     <li>
-                                        <Link href={route('church-board')} className="text-gray-400 hover:text-red-400 transition-colors">Board Of Trustees</Link>
+                                        <a href={route('church-board')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Board Of Trustees</a>
                                     </li>
                                     <li>
-                                        <Link href={route('mission')} className="text-gray-400 hover:text-red-400 transition-colors">Our Mission</Link>
+                                        <a href={route('mission')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Our Mission</a>
                                     </li>
                                     <li>
-                                        <Link href={route('leadership')} className="text-gray-400 hover:text-red-400 transition-colors">Leadership</Link>
+                                        <a href={route('leadership')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Leadership</a>
                                     </li>
                                     <li>
-                                        <Link href={route('church-history')} className="text-gray-400 hover:text-red-400 transition-colors">Church History</Link>
+                                        <a href={route('church-history')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Church History</a>
                                     </li>
                                 </ul>
                             </div>
@@ -660,16 +676,16 @@ export default function Welcome({
                                 <h3 className="text-lg font-bold text-red-400 mb-6">Get Involved</h3>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <Link href={route('events')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Events</Link>
+                                        <a href={route('events')} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-red-400 transition-colors font-medium">Events</a>
                                     </li>
                                     <li>
-                                        <Link href={route('small-groups')} className="text-gray-400 hover:text-red-400 transition-colors">Small Groups</Link>
+                                        <a href={route('small-groups')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Small Groups</a>
                                     </li>
                                     <li>
-                                        <Link href={route('volunteer')} className="text-gray-400 hover:text-red-400 transition-colors">Volunteer</Link>
+                                        <a href={route('volunteer')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Volunteer</a>
                                     </li>
                                     <li>
-                                        <Link href={route('giving')} className="text-gray-400 hover:text-red-400 transition-colors">Giving</Link>
+                                        <a href={route('giving')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Giving</a>
                                     </li>
                                 </ul>
                             </div>
@@ -679,19 +695,19 @@ export default function Welcome({
                                 <h3 className="text-lg font-bold text-red-400 mb-6">Spiritual Growth</h3>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <Link href={route('media')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Sermons</Link>
+                                        <a href={route('media')} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-red-400 transition-colors font-medium">Sermons</a>
                                     </li>
                                     <li>
-                                        <Link href={route('ministries')} className="text-gray-400 hover:text-red-400 transition-colors">Ministries</Link>
+                                        <a href={route('ministries')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Ministries</a>
                                     </li>
                                     <li>
-                                        <Link href={route('units')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Church Units</Link>
+                                        <a href={route('units')} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-red-400 transition-colors font-medium">Church Units</a>
                                     </li>
                                     <li>
-                                        <Link href={route('prayer-requests')} className="text-gray-400 hover:text-red-400 transition-colors">Prayer Requests</Link>
+                                        <a href={route('prayer-requests')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Prayer Requests</a>
                                     </li>
                                     <li>
-                                        <Link href={route('resources')} className="text-gray-400 hover:text-red-400 transition-colors">Resources</Link>
+                                        <a href={route('resources')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Resources</a>
                                     </li>
                                 </ul>
                             </div>
@@ -701,16 +717,16 @@ export default function Welcome({
                                 <h3 className="text-lg font-bold text-red-400 mb-6">Connect</h3>
                                 <ul className="space-y-3 text-sm">
                                     <li>
-                                        <Link href={route('contact')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">Contact Us</Link>
+                                        <a href={route('contact')} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-red-400 transition-colors font-medium">Contact Us</a>
                                     </li>
                                     <li>
-                                        <Link href={route('location-hours')} className="text-gray-400 hover:text-red-400 transition-colors">Location & Hours</Link>
+                                        <a href={route('location-hours')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Location & Hours</a>
                                     </li>
                                     <li>
-                                        <Link href={route('faq')} className="text-gray-400 hover:text-red-400 transition-colors">FAQ</Link>
+                                        <a href={route('faq')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">FAQ</a>
                                     </li>
                                     <li>
-                                        <Link href={route('send-message')} className="text-gray-400 hover:text-red-400 transition-colors">Send Message</Link>
+                                        <a href={route('send-message')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Send Message</a>
                                     </li>
                                 </ul>
                             </div>
@@ -735,6 +751,20 @@ export default function Welcome({
                             </div>
                         </div>
 
+                        <div className="border-t border-red-800/70 py-8">
+                            <div className="max-w-xl">
+                                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-300">Church newsletter</p>
+                                <h3 className="mt-2 text-2xl font-bold text-white">Receive church updates</h3>
+                                <p className="mt-2 text-sm text-slate-300">Get service notices, ministry news, and upcoming church moments in your inbox.</p>
+                                {flash?.newsletter_success && <p className="mt-3 text-sm font-medium text-emerald-300">{flash.newsletter_success}</p>}
+                                <form onSubmit={submitNewsletter} className="mt-4 flex flex-col gap-3 sm:flex-row">
+                                    <input type="email" value={newsletterForm.data.email} onChange={(event) => newsletterForm.setData('email', event.target.value)} placeholder="you@example.com" required className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white placeholder:text-slate-500" />
+                                    <button type="submit" disabled={newsletterForm.processing} className="rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-500 disabled:bg-red-400">{newsletterForm.processing ? 'Subscribing...' : 'Subscribe'}</button>
+                                </form>
+                                {newsletterForm.errors.email && <p className="mt-2 text-xs text-red-300">{newsletterForm.errors.email}</p>}
+                            </div>
+                        </div>
+
                         {/* Church Information */}
                         <div className="py-8 border-t border-red-800/70">
                             <div className="bg-slate-900/90 border border-red-800/70 rounded-lg p-6">
@@ -753,9 +783,9 @@ export default function Welcome({
                         {/* Bottom Footer */}
                         <div className="py-8 border-t border-red-800/70 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
                             <div className="flex gap-6">
-                                <Link href={route('privacy')} className="hover:text-slate-100 transition-colors">Privacy Policy</Link>
-                                <Link href={route('terms')} className="hover:text-slate-100 transition-colors">Terms of Service</Link>
-                                <Link href={route('support')} className="hover:text-slate-100 transition-colors">Contact</Link>
+                                <a href={route('privacy')} target="_blank" rel="noopener noreferrer" className="hover:text-slate-100 transition-colors">Privacy Policy</a>
+                                <a href={route('terms')} target="_blank" rel="noopener noreferrer" className="hover:text-slate-100 transition-colors">Terms of Service</a>
+                                <a href={route('support')} target="_blank" rel="noopener noreferrer" className="hover:text-slate-100 transition-colors">Contact</a>
                             </div>
                             <p className="text-slate-400">© {new Date().getFullYear()} APGA Worldwide. All Rights Reserved.</p>
                         </div>

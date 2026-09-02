@@ -8,6 +8,7 @@ use App\Models\ChurchMinistry;
 use App\Models\ChurchContactMessage;
 use App\Models\ChurchPrayerRequest;
 use App\Models\Event;
+use App\Models\EventRegistration;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -203,5 +204,76 @@ class ChurchPublicEngagementFeatureTest extends TestCase
             'event_id' => $event->id,
             'status' => 'registered',
         ]);
+    }
+
+    public function test_event_registration_rejects_expired_deadline(): void
+    {
+        $user = User::factory()->create();
+        $event = Event::create([
+            'title' => 'Closed Registration Event',
+            'description' => 'Registration is closed.',
+            'event_type' => 'workshop',
+            'start_date' => now()->addDay(),
+            'end_date' => now()->addDay()->addHours(2),
+            'registration_deadline' => now()->subMinute(),
+            'status' => 'registration_open',
+        ]);
+
+        $this->actingAs($user)->post('/events/' . $event->id . '/register')
+            ->assertRedirect('/events/' . $event->id);
+
+        $this->assertDatabaseMissing('event_registrations', ['event_id' => $event->id, 'user_id' => $user->id]);
+    }
+
+    public function test_event_registration_rejects_full_capacity_but_ignores_cancelled_registrations(): void
+    {
+        $existingUser = User::factory()->create();
+        $newUser = User::factory()->create();
+        $event = Event::create([
+            'title' => 'Limited Seating Event',
+            'description' => 'A limited seating gathering.',
+            'event_type' => 'conference',
+            'start_date' => now()->addDay(),
+            'end_date' => now()->addDay()->addHours(2),
+            'registration_deadline' => now()->addHours(12),
+            'max_participants' => 1,
+            'status' => 'registration_open',
+        ]);
+
+        EventRegistration::create(['event_id' => $event->id, 'user_id' => $existingUser->id, 'status' => 'cancelled', 'registered_at' => now()]);
+
+        $this->actingAs($newUser)->post('/events/' . $event->id . '/register')
+            ->assertRedirect('/events/' . $event->id);
+
+        $this->assertDatabaseHas('event_registrations', ['event_id' => $event->id, 'user_id' => $newUser->id, 'status' => 'registered']);
+
+        $anotherUser = User::factory()->create();
+        $this->actingAs($anotherUser)->post('/events/' . $event->id . '/register')
+            ->assertRedirect('/events/' . $event->id);
+
+        $this->assertDatabaseMissing('event_registrations', ['event_id' => $event->id, 'user_id' => $anotherUser->id]);
+    }
+
+    public function test_event_calendar_download_contains_event_details(): void
+    {
+        $event = Event::create([
+            'title' => 'Worship Night, Main Campus',
+            'description' => 'An evening of worship and prayer.',
+            'event_type' => 'workshop',
+            'start_date' => '2026-09-20 18:00:00',
+            'end_date' => '2026-09-20 20:00:00',
+            'location' => 'Main sanctuary',
+            'registration_deadline' => '2026-09-20 17:00:00',
+            'status' => 'upcoming',
+        ]);
+
+        $response = $this->get('/events/' . $event->id . '/calendar');
+
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'text/calendar; charset=UTF-8');
+        $response->assertHeader('Content-Disposition', 'attachment; filename="event-' . $event->id . '.ics"');
+        $response->assertSee('SUMMARY:Worship Night\\, Main Campus');
+        $response->assertSee('DTSTART:20260920T180000Z');
+        $response->assertSee('DTEND:20260920T200000Z');
     }
 }

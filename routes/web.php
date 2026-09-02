@@ -15,6 +15,10 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\ChurchAdminController;
 use App\Http\Controllers\ChurchOperationsController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\NewsletterCampaignController;
+use App\Http\Controllers\DirectMessageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -89,6 +93,7 @@ Route::get('/media/{media}', [PublicPageController::class, 'mediaDetail'])->name
 Route::post('/prayer-requests', [PublicPageController::class, 'storePrayerRequest'])->name('prayer-requests.store');
 Route::get('/events', [PublicPageController::class, 'events'])->name('events');
 Route::get('/announcements', [PublicPageController::class, 'announcements'])->name('announcements');
+Route::get('/events/{event}/calendar', [PublicPageController::class, 'eventCalendar'])->name('events.calendar');
 Route::get('/events/{event}', [PublicPageController::class, 'eventDetail'])->name('events.detail');
 Route::post('/events/{event}/register', [PublicPageController::class, 'registerEvent'])->name('events.register');
 Route::get('/knowledge-base', [PublicPageController::class, 'knowledgeBase'])->name('knowledge-base');
@@ -99,6 +104,8 @@ Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact'
 Route::get('/location-hours', [PublicPageController::class, 'locationHours'])->name('location-hours');
 Route::get('/send-message', [PublicPageController::class, 'sendMessage'])->name('send-message');
 Route::post('/send-message', [PublicPageController::class, 'storeMessage'])->name('send-message.store');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 Route::get('/faq', [PublicPageController::class, 'faq'])->name('faq');
 Route::get('/feedback', [PublicPageController::class, 'feedback'])->name('feedback');
 
@@ -112,6 +119,11 @@ Route::get('/disclaimer', [PublicPageController::class, 'disclaimer'])->name('di
 Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('member.notifications');
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('member.notifications.read');
+    Route::get('/messages', [DirectMessageController::class, 'index'])->name('member.direct-messages');
+    Route::get('/messages/{user}', [DirectMessageController::class, 'show'])->name('member.direct-messages.show');
+    Route::post('/messages/{user}', [DirectMessageController::class, 'store'])->name('member.direct-messages.store');
 
     Route::get('/church-admin', [ChurchAdminController::class, 'index'])->name('church-admin.index');
     Route::get('/church-admin/members', [ChurchAdminController::class, 'members'])->name('church-admin.members');
@@ -140,10 +152,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/church-admin/media', [ChurchOperationsController::class, 'storeMedia'])->name('church-admin.media.store');
     Route::get('/church-admin/messages', [ChurchOperationsController::class, 'messages'])->name('church-admin.messages');
     Route::post('/church-admin/messages/{message}/status', [ChurchOperationsController::class, 'updateMessageStatus'])->name('church-admin.messages.status');
+    Route::get('/my-messages', [ChurchOperationsController::class, 'memberMessages'])->name('member.messages');
     Route::get('/church-admin/events', [ChurchOperationsController::class, 'events'])->name('church-admin.events');
     Route::post('/church-admin/events', [ChurchOperationsController::class, 'storeEvent'])->name('church-admin.events.store');
+    Route::patch('/church-admin/events/{event}', [ChurchOperationsController::class, 'updateEvent'])->name('church-admin.events.update');
     Route::get('/church-admin/announcements', [ChurchOperationsController::class, 'announcements'])->name('church-admin.announcements');
     Route::post('/church-admin/announcements', [ChurchOperationsController::class, 'storeAnnouncement'])->name('church-admin.announcements.store');
+    Route::get('/church-admin/newsletter-subscribers', [NewsletterController::class, 'subscribers'])->name('church-admin.newsletter-subscribers');
+    Route::middleware('auth')->group(function () {
+        Route::get('/church-admin/newsletter-campaigns', [NewsletterCampaignController::class, 'index'])->name('church-admin.newsletter-campaigns');
+        Route::post('/church-admin/newsletter-campaigns', [NewsletterCampaignController::class, 'store'])->name('church-admin.newsletter-campaigns.store');
+        Route::post('/church-admin/newsletter-campaigns/{campaign}/send', [NewsletterCampaignController::class, 'send'])->name('church-admin.newsletter-campaigns.send');
+    });
 
     // Profile routes
     Route::prefix('profile')->name('profile.')->group(function () {
@@ -174,6 +194,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('community')->name('community.')->group(function () {
         // Internal community data endpoint - moved off the public '/community' path
         Route::get('/data', [CommunityController::class, 'index'])->name('index');
+        Route::get('/feed', [CommunityController::class, 'feed'])->name('feed');
+        Route::post('/posts', [CommunityController::class, 'storePost'])->name('posts.store');
         Route::post('/join/{community}', [CommunityController::class, 'join'])->name('join');
         Route::post('/mentorship/request', [CommunityController::class, 'requestMentorship'])->name('mentorship.request');
     });

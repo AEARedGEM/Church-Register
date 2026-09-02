@@ -16,6 +16,7 @@ use App\Models\ChurchUnitLeader;
 use App\Models\ChurchUnitMember;
 use App\Models\ChurchWorkersMeeting;
 use App\Models\Event;
+use App\Notifications\ContactMessageResolved;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -440,33 +441,56 @@ class ChurchOperationsController extends Controller
             'status' => ['required', 'in:open,resolved'],
         ]);
 
+        $wasResolved = $message->status === 'resolved';
         $message->update(['status' => $validated['status']]);
+
+        if (!$wasResolved && $message->status === 'resolved' && $message->user) {
+            $message->user->notify(new ContactMessageResolved($message));
+        }
 
         return redirect()->route('church-admin.messages')->with('success', 'Message status updated successfully.');
     }
 
+    public function memberMessages(Request $request)
+    {
+        return Inertia::render('Member/Messages', [
+            'messages' => $request->user()->churchContactMessages()->latest()->get(),
+        ]);
+    }
+
     public function events(Request $request)
     {
+        $events = Event::query()
+            ->with('registrations.user')
+            ->orderBy('start_date')
+            ->get()
+            ->map(function (Event $event) {
+                $event->registration_summary = $event->registrations
+                    ->groupBy('status')
+                    ->map(fn ($registrations) => $registrations->count())
+                    ->all();
+                $event->registrants = $event->registrations
+                    ->sortBy('registered_at')
+                    ->map(fn ($registration) => [
+                        'name' => $registration->user?->name ?? 'Unknown member',
+                        'email' => $registration->user?->email,
+                        'status' => $registration->status,
+                    ])
+                    ->values()
+                    ->all();
+
+                return $event;
+            });
+
         return Inertia::render('Church/EventManagement', [
-            'events' => Event::query()->orderBy('start_date')->get(),
+            'events' => $events,
             'flash' => ['success' => $request->session()->get('success')],
         ]);
     }
 
     public function storeEvent(Request $request)
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'event_type' => ['required', 'in:workshop,conference,competition,bootcamp,hackathon'],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'is_virtual' => ['nullable', 'boolean'],
-            'max_participants' => ['nullable', 'integer', 'min:1'],
-            'registration_deadline' => ['required', 'date', 'before_or_equal:start_date'],
-            'status' => ['required', 'in:upcoming,registration_open,ongoing,cancelled'],
-        ]);
+        $validated = $request->validate($this->eventValidationRules());
 
         Event::create([
             ...$validated,
@@ -475,6 +499,34 @@ class ChurchOperationsController extends Controller
         ]);
 
         return redirect()->route('church-admin.events')->with('success', 'Church event created successfully.');
+    }
+
+    public function updateEvent(Request $request, Event $event)
+    {
+        $validated = $request->validate($this->eventValidationRules());
+
+        $event->update([
+            ...$validated,
+            'is_virtual' => (bool) ($validated['is_virtual'] ?? false),
+        ]);
+
+        return redirect()->route('church-admin.events')->with('success', 'Church event updated successfully.');
+    }
+
+    private function eventValidationRules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'event_type' => ['required', 'in:workshop,conference,competition,bootcamp,hackathon'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'is_virtual' => ['nullable', 'boolean'],
+            'max_participants' => ['nullable', 'integer', 'min:1'],
+            'registration_deadline' => ['required', 'date', 'before_or_equal:start_date'],
+            'status' => ['required', 'in:upcoming,registration_open,ongoing,cancelled'],
+        ];
     }
 
     public function storeMedia(Request $request)
