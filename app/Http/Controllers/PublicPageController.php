@@ -15,6 +15,102 @@ use Inertia\Inertia;
 
 class PublicPageController extends Controller
 {
+    private function boardTrustees(): array
+    {
+        return [
+            [
+                'slug' => 'prophet-dr-samuel-olugbenga-ilesanmi',
+                'name' => 'Prophet (Dr.) Samuel Olugbenga Ilesanmi',
+                'role' => 'Chairman, Board Of Trustees',
+                'title' => 'Chairman, Board Of Trustees',
+                'summary' => 'A spiritual father and visionary servant-leader guiding the church in prayer, unity, and apostolic direction.',
+                'biography' => 'Prophet (Dr.) Samuel Olugbenga Ilesanmi is the spiritual leader and chairman of the Board of Trustees. He is known for his prayerful leadership, pastoral wisdom, and unwavering commitment to the spiritual growth, unity, and mission of APGA Worldwide.',
+                'experience' => '20+ Years of Spiritual Leadership',
+                'email' => 'chairman@apga.org',
+                'phone' => 'Available upon request',
+                'linkedin' => '#',
+                'twitter' => '#',
+                'areas' => ['Spiritual Leadership', 'Church Governance', 'Discipleship', 'Vision Casting'],
+                'education' => [
+                    ['degree' => 'Doctorate in Theology', 'school' => 'APGA Spiritual Leadership Institute', 'year' => '2010 - 2014'],
+                ],
+                'avatar' => ['image' => 'President_GO.jpeg', 'gradients' => 'from-violet-600 to-indigo-700', 'initials' => 'SO'],
+            ],
+            [
+                'slug' => 'evangelist-mrs-esther-omobolanriwa-ilesanmi',
+                'name' => 'Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi',
+                'role' => 'Member, Board Of Trustees',
+                'title' => 'Member, Board Of Trustees',
+                'summary' => 'A devoted minister and prayer warrior committed to discipleship, outreach, and spiritual nurture within the church.',
+                'biography' => 'Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi is a committed servant of God whose life reflects prayer, compassion, and deep spiritual conviction. She contributes to the church through mentoring, spiritual care, and a strong passion for evangelism and discipleship.',
+                'experience' => '18+ Years of Ministry',
+                'email' => 'esther.ilesanmi@apga.org',
+                'phone' => 'Available upon request',
+                'linkedin' => '#',
+                'twitter' => '#',
+                'areas' => ['Women’s Ministry', 'Prayer', 'Outreach', 'Mentorship'],
+                'education' => [
+                    ['degree' => 'Diploma in Christian Education', 'school' => 'APGA Ministry College', 'year' => '2008 - 2011'],
+                ],
+                'avatar' => ['image' => 'Firstlady.jpeg', 'gradients' => 'from-cyan-600 to-sky-700', 'initials' => 'EI'],
+            ],
+            [
+                'slug' => 'elder-daniel-ayomide-ilesanmi',
+                'name' => 'Elder Daniel Ayomide Ilesanmi',
+                'role' => 'Member, Board Of Trustees',
+                'title' => 'Member, Board Of Trustees',
+                'summary' => 'A faithful elder whose leadership reflects discipline, service, and spiritual accountability in the church community.',
+                'biography' => 'Elder Daniel Ayomide Ilesanmi brings wisdom, structure, and humility to the Board of Trustees. His life of service supports the church’s focus on unity, obedience, discipleship, and practical stewardship in every sphere of ministry.',
+                'experience' => '12+ Years of Service',
+                'email' => 'daniel.ilesanmi@apga.org',
+                'phone' => 'Available upon request',
+                'linkedin' => '#',
+                'twitter' => '#',
+                'areas' => ['Stewardship', 'Administration', 'Discipleship', 'Leadership Development'],
+                'education' => [
+                    ['degree' => 'Bachelor of Science in Business Administration', 'school' => 'APGA Leadership Academy', 'year' => '2011 - 2015'],
+                ],
+                'avatar' => ['gradients' => 'from-amber-500 to-orange-600', 'initials' => 'DI'],
+            ],
+            [
+                'slug' => 'overseer-anthony-adebayo-olayinka',
+                'name' => 'Overseer Anthony Adebayo Olayinka',
+                'role' => 'Member, Board Of Trustees',
+                'title' => 'Member, Board Of Trustees',
+                'summary' => 'A committed church leader supporting pastoral care, spiritual oversight, and service to the church family.',
+                'biography' => 'Overseer Anthony Adebayo Olayinka is a dedicated servant of God whose leadership reflects pastoral compassion, oversight, and commitment to church growth. His involvement strengthens the board’s focus on spiritual care, unity, and member development.',
+                'experience' => '15+ Years of Church Leadership',
+                'email' => 'anthony.olayinka@apga.org',
+                'phone' => 'Available upon request',
+                'linkedin' => '#',
+                'twitter' => '#',
+                'areas' => ['Pastoral Care', 'Church Oversight', 'Discipleship', 'Community Service'],
+                'education' => [
+                    ['degree' => 'Bachelor of Arts in Theology', 'school' => 'APGA Leadership Seminary', 'year' => '2006 - 2010'],
+                ],
+                'avatar' => ['gradients' => 'from-rose-600 to-red-700', 'initials' => 'AO'],
+            ],
+            [
+                'slug' => 'engr-oludayo-amele',
+                'name' => 'Engr. Oludayo Amele',
+                'role' => 'Secretary, Board Of Trustees',
+                'title' => 'Secretary, Board Of Trustees',
+                'summary' => 'A strategic administrator and governance steward supporting effective communication, records, and church coordination.',
+                'biography' => 'Engr. Oludayo Amele serves as the secretary of the Board of Trustees, providing faithful administrative leadership, accurate documentation, and structured support for the board’s governance and church operations.',
+                'experience' => '10+ Years in Governance and Administration',
+                'email' => 'secretary@apga.org',
+                'phone' => 'Available upon request',
+                'linkedin' => '#',
+                'twitter' => '#',
+                'areas' => ['Governance', 'Administration', 'Planning', 'Documentation'],
+                'education' => [
+                    ['degree' => 'Bachelor of Engineering', 'school' => 'Federal University of Technology', 'year' => '2009 - 2014'],
+                ],
+                'avatar' => ['gradients' => 'from-teal-500 to-cyan-600', 'initials' => 'OA'],
+            ],
+        ];
+    }
+
     // About NYP Institution Pages
     public function about()
     {
@@ -27,6 +123,30 @@ class PublicPageController extends Controller
     {
         return Inertia::render('Public/Leadership', [
             'laravelVersion' => Application::VERSION,
+        ]);
+    }
+
+    public function churchBoard()
+    {
+        return Inertia::render('Public/ChurchBoard', [
+            'laravelVersion' => Application::VERSION,
+            'trustees' => $this->boardTrustees(),
+        ]);
+    }
+
+    public function churchBoardDetail(string $member)
+    {
+        $trustees = $this->boardTrustees();
+        $trustee = collect($trustees)->firstWhere('slug', $member);
+
+        if (! $trustee) {
+            abort(404, 'Board member not found.');
+        }
+
+        return Inertia::render('Public/ChurchBoardDetail', [
+            'laravelVersion' => Application::VERSION,
+            'trustee' => $trustee,
+            'trustees' => $trustees,
         ]);
     }
 

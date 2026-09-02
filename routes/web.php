@@ -45,6 +45,8 @@ Route::get('/', function () {
 
 // Public Footer Pages - Church Foundation
 Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+Route::get('/church-board', [PublicPageController::class, 'churchBoard'])->name('church-board');
+Route::get('/church-board/{member}', [PublicPageController::class, 'churchBoardDetail'])->name('church-board.member');
 Route::get('/mission', [PublicPageController::class, 'mission'])->name('mission');
 Route::get('/leadership', [PublicPageController::class, 'leadership'])->name('leadership');
 Route::get('/church-history', [PublicPageController::class, 'churchHistory'])->name('church-history');

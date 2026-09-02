@@ -217,27 +217,32 @@ export default function Welcome({
                 </section>
 
                 {/* Church service schedule */}
-                <section className="relative py-20 overflow-hidden bg-[#120d0d]">
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-950/40 via-transparent to-red-950/30"></div>
-                    <div className="relative max-w-7xl mx-auto px-6 z-10">
+                <section className="relative overflow-hidden bg-[#120d0d] py-20 md:py-24">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(239,68,68,0.18),_transparent_30%),linear-gradient(90deg,_rgba(69,10,10,0.52),_transparent_40%,_rgba(69,10,10,0.52))]"></div>
+                    <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="mb-10 text-center">
-                            <span className="inline-block rounded-full border border-red-700/70 bg-red-900/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-red-200">
+                            <span className="inline-block rounded-full border border-red-700/70 bg-red-900/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-red-200 sm:text-xs">
                                 Weekly rhythm
                             </span>
-                            <h2 className="mt-5 text-3xl font-bold text-white md:text-4xl">This Week at APGA Worldwide</h2>
+                            <h2 className="mt-5 text-3xl font-bold text-white md:text-5xl">This Week at APGA Worldwide</h2>
                         </div>
 
-                        <div className="grid gap-5 md:grid-cols-3">
+                        <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-5">
                             {[
-                                { title: 'Sunday Worship', time: '9:00 AM', detail: 'Main Sanctuary · Family worship service', tone: 'from-red-600 to-red-700' },
-                                { title: 'Midweek Prayer', time: 'Wednesday · 6:00 PM', detail: 'Prayer & deliverance meeting', tone: 'from-rose-600 to-orange-500' },
-                                { title: 'Youth & Teens', time: 'Friday · 5:30 PM', detail: 'Discipleship, teaching & fellowship', tone: 'from-red-700 to-rose-600' },
+                                { title: 'Sunday Worship', time: 'Weekly', detail: 'Main Sanctuary · Family worship service', tone: 'from-red-600 to-red-700' },
+                                { title: 'Monday Program', time: 'Occasional Special Program', detail: 'Special church gathering & fellowship', tone: 'from-orange-500 to-amber-500' },
+                                { title: 'Tuesday Meeting', time: 'Every First & Last Tuesday Of The Month', detail: 'Monthly leadership and community rhythm', tone: 'from-rose-600 to-pink-500' },
+                                { title: 'Wednesday Prayer', time: 'Weekly', detail: 'Prayer & deliverance meeting', tone: 'from-red-700 to-orange-500' },
+                                { title: 'Friday Fellowship', time: 'Every First & Last Friday of The Month', detail: 'Youth & teens discipleship and fellowship', tone: 'from-red-700 to-rose-600' },
                             ].map((service) => (
-                                <div key={service.title} className="rounded-3xl border border-red-800/70 bg-slate-900/80 p-6 shadow-lg shadow-red-950/20">
-                                    <div className={`mb-4 inline-flex rounded-full bg-gradient-to-r ${service.tone} px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-white`}>
+                                <div
+                                    key={service.title}
+                                    className="group min-h-[220px] rounded-[28px] border border-red-800/70 bg-slate-900/80 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.5)] transition duration-300 hover:-translate-y-1 hover:border-red-600 hover:shadow-[0_22px_55px_rgba(127,29,29,0.35)]"
+                                >
+                                    <div className={`mb-5 inline-flex rounded-full bg-gradient-to-r ${service.tone} px-3 py-2 text-[9px] font-bold uppercase tracking-[0.22em] text-white shadow-lg shadow-red-950/30`}>
                                         {service.time}
                                     </div>
-                                    <h3 className="text-2xl font-bold text-white">{service.title}</h3>
+                                    <h3 className="text-2xl font-bold leading-tight text-white xl:text-[1.8rem]">{service.title}</h3>
                                     <p className="mt-3 text-sm leading-relaxed text-slate-300">{service.detail}</p>
                                 </div>
                             ))}
@@ -326,12 +331,12 @@ export default function Welcome({
 
                             {/* Image / Visual */}
                             <div className="relative">
-                                <div className="backdrop-blur-sm bg-gradient-to-br from-slate-900/85 to-slate-900/95 border border-red-800/70 rounded-2xl p-8 shadow-2xl">
+                                <div className="p-8">
                                     <div className="text-center space-y-4">
                                         <img
                                             src="/images/President_GO.jpeg"
                                             alt="Pastor (Dr.) S.O. Ilesanmi"
-                                            className="mx-auto h-64 w-64 rounded-full border-4 border-red-500 object-cover shadow-lg shadow-red-950/30"
+                                            className="mx-auto h-64 w-64 rounded-2xl border-4 border-red-500 object-contain shadow-lg shadow-red-950/30"
                                         />
                                         <h3 className="text-2xl font-bold text-white">Pastor (Dr.) S.O. Ilesanmi</h3>
                                         <p className="text-red-300 font-semibold">President</p>
@@ -617,6 +622,9 @@ export default function Welcome({
                                 <ul className="space-y-3 text-sm">
                                     <li>
                                         <Link href={route('about')} className="text-gray-300 hover:text-red-400 transition-colors font-medium">About Us</Link>
+                                    </li>
+                                    <li>
+                                        <Link href={route('church-board')} className="text-gray-400 hover:text-red-400 transition-colors">Board Of Trustees</Link>
                                     </li>
                                     <li>
                                         <Link href={route('mission')} className="text-gray-400 hover:text-red-400 transition-colors">Our Mission</Link>
