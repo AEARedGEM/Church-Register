@@ -88,6 +88,7 @@ Route::get('/media', [PublicPageController::class, 'media'])->name('media');
 Route::get('/media/{media}', [PublicPageController::class, 'mediaDetail'])->name('media.detail');
 Route::post('/prayer-requests', [PublicPageController::class, 'storePrayerRequest'])->name('prayer-requests.store');
 Route::get('/events', [PublicPageController::class, 'events'])->name('events');
+Route::get('/announcements', [PublicPageController::class, 'announcements'])->name('announcements');
 Route::get('/events/{event}', [PublicPageController::class, 'eventDetail'])->name('events.detail');
 Route::post('/events/{event}/register', [PublicPageController::class, 'registerEvent'])->name('events.register');
 Route::get('/knowledge-base', [PublicPageController::class, 'knowledgeBase'])->name('knowledge-base');
@@ -97,6 +98,7 @@ Route::get('/support', [PublicPageController::class, 'support'])->name('support'
 Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');
 Route::get('/location-hours', [PublicPageController::class, 'locationHours'])->name('location-hours');
 Route::get('/send-message', [PublicPageController::class, 'sendMessage'])->name('send-message');
+Route::post('/send-message', [PublicPageController::class, 'storeMessage'])->name('send-message.store');
 Route::get('/faq', [PublicPageController::class, 'faq'])->name('faq');
 Route::get('/feedback', [PublicPageController::class, 'feedback'])->name('feedback');
 
@@ -126,6 +128,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/church-admin/leadership', [ChurchOperationsController::class, 'storeLeadership'])->name('church-admin.leadership.store');
     Route::get('/church-admin/reports', [ChurchOperationsController::class, 'reports'])->name('church-admin.reports');
     Route::post('/church-admin/reports', [ChurchOperationsController::class, 'storeReport'])->name('church-admin.reports.store');
+    Route::get('/church-admin/prayer-requests', [ChurchOperationsController::class, 'prayerRequests'])->name('church-admin.prayer-requests');
+    Route::post('/church-admin/prayer-requests/{prayerRequest}/status', [ChurchOperationsController::class, 'updatePrayerRequestStatus'])->name('church-admin.prayer-requests.status');
     Route::get('/church-admin/scorecards', [ChurchOperationsController::class, 'scorecards'])->name('church-admin.scorecards');
     Route::post('/church-admin/scorecards', [ChurchOperationsController::class, 'storeScorecard'])->name('church-admin.scorecards.store');
     Route::get('/church-admin/absentees', [ChurchOperationsController::class, 'absentees'])->name('church-admin.absentees');
@@ -134,6 +138,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/church-admin/workers-meetings', [ChurchOperationsController::class, 'storeWorkersMeeting'])->name('church-admin.workers-meetings.store');
     Route::get('/church-admin/media', [ChurchOperationsController::class, 'media'])->name('church-admin.media');
     Route::post('/church-admin/media', [ChurchOperationsController::class, 'storeMedia'])->name('church-admin.media.store');
+    Route::get('/church-admin/messages', [ChurchOperationsController::class, 'messages'])->name('church-admin.messages');
+    Route::post('/church-admin/messages/{message}/status', [ChurchOperationsController::class, 'updateMessageStatus'])->name('church-admin.messages.status');
+    Route::get('/church-admin/events', [ChurchOperationsController::class, 'events'])->name('church-admin.events');
+    Route::post('/church-admin/events', [ChurchOperationsController::class, 'storeEvent'])->name('church-admin.events.store');
+    Route::get('/church-admin/announcements', [ChurchOperationsController::class, 'announcements'])->name('church-admin.announcements');
+    Route::post('/church-admin/announcements', [ChurchOperationsController::class, 'storeAnnouncement'])->name('church-admin.announcements.store');
 
     // Profile routes
     Route::prefix('profile')->name('profile.')->group(function () {

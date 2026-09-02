@@ -12,51 +12,38 @@ This documentation reflects the actual project state:
 
 The current project is no longer a placeholder for a church site; it is a practical church operations platform with working backend and frontend flows.
 
----
+### Latest Progress Update - 2026-09-02
+
+The public church experience has been refined further:
+
+- Replaced the static Send Message page with a working church contact form and added an admin inbox for open/resolved message follow-up.
+- Giving remains intentionally informational only; verified bank account details will be added when supplied by the church.
+- Added live attendance summary cards for total records, present/late attendance, first-timers, Sunday School, and main service.
+- Added a latest-service attendance snapshot showing the most recent service date and recorded attendee total.
+- Added a professional Vice-President welcome panel without inventing personal identity details before official information is supplied.
+- Added authenticated church-admin event scheduling with public-calendar-compatible event records.
+- Added optional Scripture references to media records and public sermon detail pages.
+- Restricted public media detail pages to published content so drafts and archived items remain private.
+- Added report period filtering so analytics and leadership PDF summaries can be scoped to weekly, monthly, quarterly, annual, or all reports.
+- Added a publishable church announcements board with public published notices and authenticated admin management.
+
 
 ## Reality Check: Current App vs Church Goal
 
 ### What the application currently does
 The live codebase already contains the following real features:
 
-- Public landing page and marketing homepage
-- About, leadership, governance, mission, program, partners, funding, community, and support pages
-- Authentication and basic user registration/login
-- Role-based dashboard and access patterns
-- Training and course management flows
-- Community, mentorship, and funding modules
-- NAPS survey flow and public application pages
-- Admin pages for training and users
-- Laravel + Inertia + React frontend structure with Tailwind styling
 
 ### What the church website brief requires
 The church brief adds a different set of needs:
 
-- Church administration and attendance operations
-- President/Vice-President public welcome sections
-- Live worship service tracking
-- Member and first-timer service reporting
-- Invitation league and weekly/monthly/quarterly/annual scorecards
-- Leadership and unit-head profiles with portraits, bios, and socials
-- Birthday recognition and absentee display
-- Weekly and annual church reporting in PDF-ready format
-- Workers meeting records, interviews, and media highlights
 
 ### Current reality after implementation
 The project is now a church operations platform with active admin and public layers, including:
 
-- Church admin dashboard and member directory routes
-- Church attendance board routes and pages
-- Church ministries management and public ministry detail pages
-- Leadership profile management and public ministry leadership display
-- Church reporting dashboard with PDF summary export
-- Public ministry and media pages for church engagement
-- Church-brand landing page and public navigation flow
-- Verified admin access logic for super admin testing and church operations
 
 The app now has a working church domain foundation, and the remaining work is focused on deeper analytics, richer sermon/media content, and more complete church-lifecycle workflows.
 
----
 
 ## Church Administration Feature Requirements
 
@@ -64,11 +51,8 @@ The website must support a leadership-led digital church experience that combine
 
 ### 1. Attendance & Worship Experience
 - Church President Welcome Speech
-- Church Vice-President Welcome Speech
-- Church President Interview
-- Live In Service (Sunday School)
-- Live In Service (Actual Service After Sunday School: Member)
-- Live In Service (Actual Service After Sunday School: First Timer)
+- Church Vice-President Welcome Speech ✅ implemented as a general pastoral welcome panel; official identity details remain pending
+- Member contact messaging ✅ implemented with public submission and authenticated admin resolution
 - Weekly-Monthly-Yearly Invitation League
 - Church member profiles
 - Birthday celebrations
@@ -115,7 +99,7 @@ The website must support a leadership-led digital church experience that combine
 2. Extend public ministry detail pages and church content experience
 3. Add richer church reporting analytics and stronger PDF-ready summaries
 4. Expand sermon/media storytelling and public-facing church content
-5. Add life-cycle features such as giving, prayer requests, and events
+5. Add life-cycle features such as prayer requests, events, and member communications
 
 ### 2026 Church Expansion Update
 The project has now progressed beyond the generic app shell into a church-aligned platform with:
@@ -126,6 +110,7 @@ The project has now progressed beyond the generic app shell into a church-aligne
 - admin-facing church operations for ministries, leadership, reports, absentee tracking, workers meetings, and media content
 - dashboard analytics and church summary cards for reporting visibility
 - active church dashboard and admin access checks aligned to real church operations
+- public announcements and authenticated announcement management
 
 ---
 
@@ -264,6 +249,18 @@ The remaining public-facing pages that still carried APGA Worldwide language wer
 
 The site now reads consistently as APGA Worldwide rather than a prior institutional platform.
 
+### Public Board of Trustees Experience
+**Status**: ✅ Implemented
+
+The public site now includes:
+
+- `/church-board` listing all five trustees in the approved church governance order
+- Individual `/church-board/{member}` profile routes
+- Church-specific institutional copy and trustee roles
+- Official President and First Lady portraits from `public/images`
+- Softly rounded square portrait frames that preserve the full images
+- Responsive cards and profile layouts aligned with the APGA visual system
+
 ---
 
 ## What Is Still Left To Be Achieved ❗
@@ -271,12 +268,15 @@ The site now reads consistently as APGA Worldwide rather than a prior institutio
 ### Phase 1: Reposition the App for Church Operations
 **Priority: HIGH**
 
+**Status**: ✅ Core church repositioning implemented; final content polish remains
+
 #### 1. Rebrand and restructure the site around the church identity
-- Replace remaining institutional/NYP language with church positioning where needed
-- Update homepage messaging, navigation, and layout to reflect church service, ministry, and worship
-- Create a church-specific landing experience aligned to the brief
+- Replace remaining institutional/NYP language with church positioning where needed ✅ substantially implemented
+- Update homepage messaging, navigation, and layout to reflect church service, ministry, and worship ✅ implemented
+- Create a church-specific landing experience aligned to the brief ✅ implemented
 
 #### 2. Church member and leadership data model
+**Status**: ✅ Core models implemented; additional lifecycle models remain
 - `member_profiles`
 - `minister_profiles`
 - `unit_head_profiles`
@@ -288,6 +288,7 @@ The site now reads consistently as APGA Worldwide rather than a prior institutio
 - `weekly_reports`, `monthly_reports`, `quarterly_reports`, `annual_reports`
 
 #### 3. Church admin dashboard
+**Status**: ✅ Implemented; deeper analytics and role refinement remain
 - Admin overview for attendance, members, reports, leadership, and interviews
 - Role separation for President, Vice-President, ministers, unit heads, and members
 - Service management and church event schedules
@@ -295,23 +296,28 @@ The site now reads consistently as APGA Worldwide rather than a prior institutio
 ### Phase 2: Attendance & Worship Features
 **Priority: HIGH**
 
-- President welcome speech section
-- Vice-President welcome speech section
-- President interview section
-- Sunday School live service tracking
-- Main service attendance for members and first-timers
-- Weekly, monthly, yearly invitation league
-- Absentee pixel display (6x3 layout)
-- In-service attendance summaries and scorecards
+**Status**: ⏳ Partially implemented
+
+- President welcome speech section ✅ implemented
+- Vice-President welcome speech section (remaining)
+- President interview section (remaining)
+- Sunday School live service tracking ⏳ in progress
+- Main service attendance for members and first-timers ⏳ in progress; summary and latest-service visibility implemented
+- Weekly, monthly, yearly invitation league ✅ implemented
+- Absentee pixel display (6x3 layout) ✅ implemented
+- In-service attendance summaries and scorecards ✅ implemented
 
 ### Phase 3: Leadership & Profile System
 **Priority: HIGH**
 
-- Minister portraits and profile pages
-- Unit heads portraits and profile pages
-- Autobiography content modules
-- Social media handle management
-- Public ministry directory and leadership page
+**Status**: ⏳ Partially implemented
+
+- Minister portraits and profile pages ⏳ in progress
+- Unit heads portraits and profile pages ⏳ in progress
+- Autobiography content modules ⏳ in progress
+- Social media handle management ⏳ in progress
+- Public ministry directory and leadership page ✅ implemented
+- Board of Trustees public listing and detail pages ✅ implemented
 
 ### Phase 4: Reporting & Scorecards
 **Priority: HIGH**
@@ -325,28 +331,34 @@ The site now reads consistently as APGA Worldwide rather than a prior institutio
 ### Phase 5: Member Engagement Features
 **Priority: MEDIUM**
 
+**Status**: ⏳ Partially implemented
+
 - Birthdays section and recognition list ✅ implemented as upcoming birthday visibility on the church admin dashboard
-- Prayer request board
-- Member directory and search filters
-- Event registration and church announcements
-- Workers meeting archive and summaries
+- Prayer request board ✅ implemented with authenticated review and status management
+- Member directory and search filters ✅ implemented
+- Event registration and church announcements ✅ implemented; calendar refinements remain
+- Workers meeting archive and summaries ✅ implemented
 
 ### Phase 6: Public Content / Media Features
 **Priority: MEDIUM**
 
-- Interviews with gospel/music ministers
-- Interviews with VIPs and visitors
-- Media highlights and preaching content segments
-- Church stories/news feed
+**Status**: ⏳ Partially implemented
+
+- Interviews with gospel/music ministers ⏳ in progress
+- Interviews with VIPs and visitors ⏳ in progress
+- Media highlights and preaching content segments ⏳ in progress
+- Church stories/news feed ⏳ remaining
 
 ### Phase 7: Testing, Security, and Deployment
 **Priority: HIGH**
 
-- Unit and feature tests for church modules
-- Validation for attendance logic and authorization
-- PDF generation verification
-- Security review on member and admin data
-- Deployment configuration for production
+**Status**: ⏳ In progress
+
+- Unit and feature tests for church modules ⏳ in progress
+- Validation for attendance logic and authorization ⏳ in progress
+- PDF generation verification ✅ baseline verified
+- Security review on member and admin data ⏳ remaining
+- Deployment configuration for production ⏳ remaining
 
 ---
 
@@ -370,14 +382,15 @@ The site now reads consistently as APGA Worldwide rather than a prior institutio
 - Absentee board and service visibility tracking
 - Workers meeting planner and meeting history
 - Media and interview content board
+- Church announcements board and public notices page
 - Database migrations for member profiles, attendance records, ministries, leadership, reports, scorecards, absentees, workers meetings, and media content
 - Build/asset pipeline for the new church pages
 
 ### Partially implemented / still in progress
 - Advanced multi-report PDF packaging and custom branded church report templates
 - Deeper analytics and trend visualizations across attendance, invitations, and growth
-- Full public sermon detail pages with database-backed media content
-- Additional church lifecycle workflows such as giving, prayer requests, and event registrations
+- Full public sermon detail pages with database-backed media content and responsive YouTube embeds ✅ implemented; richer gallery/story layouts remain
+- Additional church lifecycle workflows such as verified bank account presentation and richer member communications; event registration and announcements are implemented
 - Expanded church-brand polish across remaining public pages ✅ refreshed with APGA Worldwide church identity on the remaining public-facing pages
 
 ### Strategic conclusion
@@ -390,7 +403,7 @@ The project now has a valid church operations foundation instead of only a gener
 ### Phase 1: Backend Core Features (Priority: HIGH)
 
 #### 1. Church-Specific Models & Database Tables
-**Status**: ⏳ Not Started
+**Status**: ✅ Core church models implemented; additional lifecycle models remain
 
 **Required Tables:**
 - `member_profiles` - Church member profiles, birthdays, contact info, and status
@@ -430,7 +443,7 @@ app/Models/
 ```
 
 #### 2. API Endpoints (REST/JSON)
-**Status**: ⏳ Not Started
+**Status**: ⏳ Partial; current church workflows primarily use Laravel web/Inertia routes
 
 **Attendance Management:**
 - `POST /api/attendance/mark` - Mark member attendance
@@ -463,7 +476,7 @@ app/Models/
 - `GET /api/members/search` - Search members
 
 #### 3. Authentication & Authorization
-**Status**: ⏳ Not Started (Partial - Base Laravel Auth Exists)
+**Status**: ⏳ In progress (base Laravel authentication and Spatie permissions exist)
 
 **Tasks:**
 - [ ] Create role-based access control for church positions
@@ -483,7 +496,7 @@ app/Models/
 ### Phase 2: Frontend Components & Pages (Priority: HIGH)
 
 #### 1. Church Homepage Redesign
-**Status**: ⏳ Not Started
+**Status**: ✅ Core redesign implemented; remaining welcome and live-service sections remain
 
 Pages/Components:
 - President welcome speech hero section
@@ -495,7 +508,7 @@ Pages/Components:
 - Leadership spotlight section
 
 #### 2. Attendance Management UI
-**Status**: ⏳ Not Started
+**Status**: ⏳ Partially implemented
 
 Pages/Components:
 - Attendance marking interface
@@ -503,11 +516,11 @@ Pages/Components:
 - Sunday school vs main service reporting
 - Member/first-timer attendance split
 - Weekly scorecard module
-- Attendance analytics and trend charts
+- Attendance analytics and trend charts ✅ summary cards and latest-service snapshot implemented; deeper trends remain
 - Absentee display layout (6x3)
 
 #### 3. Member Directory and Profile Management
-**Status**: ⏳ Not Started
+**Status**: ✅ Core directory and profile management implemented
 
 Pages/Components:
 - Member list and filters
@@ -517,7 +530,7 @@ Pages/Components:
 - Member status management
 
 #### 4. Leadership & Ministry Profiles
-**Status**: ⏳ Not Started
+**Status**: ⏳ Partially implemented
 
 Pages/Components:
 - President and Vice-President profile blocks
@@ -527,7 +540,7 @@ Pages/Components:
 - Official social media handle list
 
 #### 5. Invitation League System
-**Status**: ⏳ Not Started
+**Status**: ✅ Implemented; deeper leaderboard and reporting refinements remain
 
 Pages/Components:
 - Weekly, monthly, and yearly leaderboard
@@ -536,7 +549,7 @@ Pages/Components:
 - Invitation history and report cards
 
 #### 6. Reporting UI
-**Status**: ⏳ Not Started
+**Status**: ✅ Core reporting UI implemented; branded exports and advanced analytics remain
 
 Pages/Components:
 - Weekly report page
@@ -547,7 +560,7 @@ Pages/Components:
 - Summary dashboards and charts
 
 #### 7. Workers Meeting and Interviews
-**Status**: ⏳ Not Started
+**Status**: ⏳ Partially implemented; interview content expansion remains
 
 Pages/Components:
 - Workers meeting archive
@@ -556,7 +569,7 @@ Pages/Components:
 - VIP and visitor interview cards
 
 #### 8. Admin Panel
-**Status**: ⏳ Not Started
+**Status**: ✅ Core church administration panel implemented; further role and settings refinement remains
 
 Pages/Components:
 - Church member management
@@ -596,14 +609,13 @@ Features:
 - Email newsletters
 
 #### 3. Giving & Tithes (Optional)
-**Status**: ⏳ Not Started
+**Status**: ⏳ Deferred; awaiting verified church bank account details
 
 Features:
-- Online giving/tithing portal
-- Payment processing (Stripe/Flutterwave)
-- Giving history/receipts
-- Fund allocation
-- Giving analytics
+- Publish verified bank account details for the banks used by the church ⏳ awaiting account information
+- Online giving/tithing payment portal deferred
+- Payment processing deferred
+- Giving history, receipts, fund allocation, and analytics deferred
 
 #### 4. Small Group Management
 **Status**: ⏳ Not Started
@@ -618,7 +630,7 @@ Features:
 ### Phase 4: Testing & Deployment (Priority: HIGH)
 
 #### 1. Testing
-**Status**: ⏳ Not Started
+**Status**: ⏳ In progress
 
 - [ ] Unit tests for models
 - [ ] Feature tests for API endpoints
@@ -903,21 +915,22 @@ php artisan serve               # Start development server
 | Ministry & Leadership Management | ✅ Complete | 95% | 2026-09-01 |
 | Attendance & Member Directory | ✅ Complete | 90% | 2026-09-01 |
 | Public Ministry Detail Pages | ✅ Complete | 95% | 2026-09-01 |
+| Public Board of Trustees Pages | ✅ Complete | 100% | 2026-09-02 |
+| President and Trustee Portrait Presentation | ✅ Complete | 100% | 2026-09-02 |
 | Testing Suite | ✅ Active | 90% | 2026-09-01 |
 | Production Deploy | ⏳ Pending | 0% | - |
 
 ### Next Immediate Actions
 
 **Priority 1 (This Week):**
-1. Expand media/sermon content into richer public experiences
-2. Add sermon detail pages and media gallery story layouts
-3. Extend reporting with trend analytics and branded PDF templates
-4. Final church-brand polish for the remaining public pages
+1. Expand media/sermon content into richer public experiences and gallery story layouts
+2. Extend reporting with branded PDF templates and deeper trend analytics
+3. Complete remaining church-brand content review and copy refinement
 
 **Priority 2 (Next Week):**
-1. Event management and church calendar flows
+1. Calendar refinements, including event editing and registration controls
 2. Prayer request board and member communications
-3. Giving and tithe workflows
+3. Publish verified church bank account details
 4. Deeper dashboard analytics for ministry growth
 
 **Priority 3 (Later):**
@@ -957,8 +970,9 @@ php artisan serve               # Start development server
 |---------|------|---------|
 | 1.0 | 2026-08-17 | Initial church platform launch - Frontend complete, database setup, ready for backend development |
 | 1.1 | 2026-09-01 | Church operations foundation expanded: ministries, leadership, reports, media pages, public ministry detail pages, analytics cards, and PDF export support |
+| 1.2 | 2026-09-02 | Board of Trustees pages, trustee portraits, institutional church copy, and refined President image presentation completed |
 
 ---
 
-**Last Updated**: 2026-09-01  
-**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Reporting & PDF Export Ready | 🔜 Deeper church lifecycle features next
+**Last Updated**: 2026-09-02
+**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Board of Trustees Experience Live | ✅ Reporting & PDF Export Ready | 🔜 Deeper church lifecycle features next

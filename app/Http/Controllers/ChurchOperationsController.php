@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChurchAbsentee;
+use App\Models\ChurchAnnouncement;
+use App\Models\ChurchContactMessage;
 use App\Models\ChurchLeadershipProfile;
 use App\Models\ChurchMediaContent;
 use App\Models\ChurchMinistry;
+use App\Models\ChurchPrayerRequest;
 use App\Models\ChurchReport;
 use App\Models\ChurchScorecard;
 use App\Models\ChurchUnit;
 use App\Models\ChurchUnitLeader;
 use App\Models\ChurchUnitMember;
 use App\Models\ChurchWorkersMeeting;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -36,7 +40,7 @@ class ChurchOperationsController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'description' => ['required', 'string'],
             'leader_name' => ['nullable', 'string', 'max:255'],
             'is_active' => ['nullable', 'boolean'],
         ]);
@@ -181,12 +185,20 @@ class ChurchOperationsController extends Controller
 
     public function reports(Request $request)
     {
-        $reports = ChurchReport::query()
-            ->orderByDesc('report_date')
-            ->get();
+        $periodType = $request->validate([
+            'period_type' => ['nullable', 'in:all,weekly,monthly,quarterly,annual'],
+        ])['period_type'] ?? 'all';
+
+        $reportsQuery = ChurchReport::query()
+            ->orderByDesc('report_date');
+
+        if ($periodType !== 'all') {
+            $reportsQuery->where('period_type', $periodType);
+        }
 
         return Inertia::render('Church/ReportsDashboard', [
-            'reports' => $reports,
+            'reports' => $reportsQuery->get(),
+            'periodType' => $periodType,
             'analyticsLabels' => [
                 'attendanceTrend' => 'Attendance trend',
                 'weeklyGrowth' => 'Weekly growth',
@@ -196,6 +208,53 @@ class ChurchOperationsController extends Controller
                 'success' => $request->session()->get('success'),
             ],
         ]);
+    }
+
+    public function prayerRequests(Request $request)
+    {
+        $prayerRequests = ChurchPrayerRequest::query()
+            ->latest()
+            ->get();
+
+        return Inertia::render('Church/PrayerRequestsBoard', [
+            'prayerRequests' => $prayerRequests,
+            'flash' => [
+                'success' => $request->session()->get('success'),
+            ],
+        ]);
+    }
+
+    public function announcements(Request $request)
+    {
+        return Inertia::render('Church/AnnouncementsBoard', [
+            'announcements' => ChurchAnnouncement::query()->latest('published_at')->latest()->get(),
+            'flash' => ['success' => $request->session()->get('success')],
+        ]);
+    }
+
+    public function storeAnnouncement(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string'],
+            'published_at' => ['nullable', 'date'],
+            'status' => ['required', 'in:draft,published,archived'],
+        ]);
+
+        ChurchAnnouncement::create($validated);
+
+        return redirect()->route('church-admin.announcements')->with('success', 'Announcement saved successfully.');
+    }
+
+    public function updatePrayerRequestStatus(Request $request, ChurchPrayerRequest $prayerRequest)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'in:pending,prayed,closed'],
+        ]);
+
+        $prayerRequest->update(['status' => $validated['status']]);
+
+        return redirect()->route('church-admin.prayer-requests')->with('success', 'Prayer request status updated successfully.');
     }
 
     private function parseList(string $value): array
@@ -365,6 +424,59 @@ class ChurchOperationsController extends Controller
         ]);
     }
 
+    public function messages(Request $request)
+    {
+        return Inertia::render('Church/MessagesBoard', [
+            'messages' => ChurchContactMessage::query()->latest()->get(),
+            'flash' => [
+                'success' => $request->session()->get('success'),
+            ],
+        ]);
+    }
+
+    public function updateMessageStatus(Request $request, ChurchContactMessage $message)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'in:open,resolved'],
+        ]);
+
+        $message->update(['status' => $validated['status']]);
+
+        return redirect()->route('church-admin.messages')->with('success', 'Message status updated successfully.');
+    }
+
+    public function events(Request $request)
+    {
+        return Inertia::render('Church/EventManagement', [
+            'events' => Event::query()->orderBy('start_date')->get(),
+            'flash' => ['success' => $request->session()->get('success')],
+        ]);
+    }
+
+    public function storeEvent(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'event_type' => ['required', 'in:workshop,conference,competition,bootcamp,hackathon'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'is_virtual' => ['nullable', 'boolean'],
+            'max_participants' => ['nullable', 'integer', 'min:1'],
+            'registration_deadline' => ['required', 'date', 'before_or_equal:start_date'],
+            'status' => ['required', 'in:upcoming,registration_open,ongoing,cancelled'],
+        ]);
+
+        Event::create([
+            ...$validated,
+            'is_virtual' => (bool) ($validated['is_virtual'] ?? false),
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->route('church-admin.events')->with('success', 'Church event created successfully.');
+    }
+
     public function storeMedia(Request $request)
     {
         $validated = $request->validate([
@@ -374,6 +486,7 @@ class ChurchOperationsController extends Controller
             'published_at' => ['required', 'date'],
             'video_url' => ['nullable', 'url', 'max:255'],
             'summary' => ['nullable', 'string'],
+            'scripture_reference' => ['nullable', 'string', 'max:255'],
             'featured' => ['nullable', 'boolean'],
             'status' => ['required', 'in:draft,published,archived'],
         ]);
@@ -385,6 +498,7 @@ class ChurchOperationsController extends Controller
             'published_at' => $validated['published_at'],
             'video_url' => $validated['video_url'] ?? null,
             'summary' => $validated['summary'] ?? null,
+            'scripture_reference' => $validated['scripture_reference'] ?? null,
             'featured' => (bool) ($validated['featured'] ?? false),
             'status' => $validated['status'],
         ]);

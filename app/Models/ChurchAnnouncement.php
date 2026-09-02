@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ChurchMediaContent extends Model
+class ChurchAnnouncement extends Model
 {
     use HasFactory;
 
-    protected $table = 'church_media_content';
+    protected $table = 'church_announcements';
 
     protected $fillable = [
-        'content_type',
         'title',
-        'speaker_name',
+        'body',
         'published_at',
-        'video_url',
-        'summary',
-        'scripture_reference',
-        'featured',
         'status',
     ];
 
@@ -27,7 +22,6 @@ class ChurchMediaContent extends Model
     {
         return [
             'published_at' => 'date',
-            'featured' => 'boolean',
         ];
     }
 }

@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import jsPDF from 'jspdf';
 import { useMemo } from 'react';
 
@@ -19,9 +19,11 @@ export default function ReportsDashboard({
     reports,
     flash,
     analyticsLabels,
+    periodType = 'all',
 }: {
     reports: Report[];
     flash?: { success?: string };
+    periodType?: string;
     analyticsLabels?: {
         attendanceTrend?: string;
         weeklyGrowth?: string;
@@ -55,9 +57,18 @@ export default function ReportsDashboard({
         const attendanceTrendValue = sortedReports.length > 1
             ? Number(sortedReports[sortedReports.length - 1].attendance_count ?? 0) - Number(sortedReports[0].attendance_count ?? 0)
             : Number(sortedReports[0]?.attendance_count ?? 0);
-        const previousAttendance = sortedReports.length > 1 ? Number(sortedReports[sortedReports.length - 2].attendance_count ?? 0) : Number(sortedReports[0]?.attendance_count ?? 0);
-        const latestAttendance = Number(sortedReports[sortedReports.length - 1]?.attendance_count ?? 0);
+        const growthReports = weeklyReports.length > 1 ? weeklyReports : sortedReports;
+        const previousAttendance = growthReports.length > 1 ? Number(growthReports[growthReports.length - 2].attendance_count ?? 0) : Number(growthReports[0]?.attendance_count ?? 0);
+        const latestAttendance = Number(growthReports[growthReports.length - 1]?.attendance_count ?? 0);
         const weeklyGrowth = previousAttendance > 0 ? Math.round(((latestAttendance - previousAttendance) / previousAttendance) * 100) : 0;
+        const maxAttendance = Math.max(...sortedReports.map((report) => Number(report.attendance_count ?? 0)), 0);
+        const attendanceSeries = sortedReports.map((report) => ({
+            id: report.id,
+            label: new Date(report.report_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+            period: report.period_type,
+            value: Number(report.attendance_count ?? 0),
+            width: maxAttendance ? Math.max((Number(report.attendance_count ?? 0) / maxAttendance) * 100, 4) : 4,
+        }));
         const strongestPeriod = reports.reduce<Record<string, number>>((acc, report) => {
             acc[report.period_type] = (acc[report.period_type] ?? 0) + Number(report.attendance_count ?? 0);
             return acc;
@@ -77,6 +88,7 @@ export default function ReportsDashboard({
             annualReports: annualReports.length,
             attendanceTrend: attendanceTrendValue >= 0 ? `+${attendanceTrendValue}` : `${attendanceTrendValue}`,
             weeklyGrowth: `${weeklyGrowth >= 0 ? '+' : ''}${weeklyGrowth}%`,
+            attendanceSeries,
             strongestPeriod: strongestPeriodLabel ? `${strongestPeriodLabel[0].toUpperCase()}${strongestPeriodLabel[0].slice(1)} (${strongestPeriodLabel[1]})` : 'No data',
             leadershipSummary: latestReport
                 ? `Latest church pulse: ${latestReport.title} (${latestReport.report_date}) - attendance ${latestReport.attendance_count}, first timers ${latestReport.first_timers_count}, prayer requests ${latestReport.prayer_requests_count}.`
@@ -95,17 +107,25 @@ export default function ReportsDashboard({
     const exportReportsPdf = () => {
         const pdf = new jsPDF({ unit: 'pt', format: 'a4' });
         const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
 
-        pdf.setFillColor(120, 16, 23);
-        pdf.rect(0, 0, pageWidth, 64, 'F');
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(20);
-        pdf.text('APGA Worldwide Church Leadership Report', 40, 38);
+        const drawHeader = () => {
+            pdf.setFillColor(120, 16, 23);
+            pdf.rect(0, 0, pageWidth, 64, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(20);
+            pdf.text('APGA Worldwide Church Leadership Report', 40, 38);
+            pdf.setFont('helvetica', 'normal');
+        };
+
+        drawHeader();
 
         pdf.setTextColor(30, 41, 59);
         pdf.setFontSize(11);
 
         const summaryLines = [
+            `Report scope: ${periodType === 'all' ? 'All periods' : periodType.charAt(0).toUpperCase() + periodType.slice(1)}`,
             `Total attendance: ${analytics.totalAttendance}`,
             `First timers: ${analytics.totalFirstTimers}`,
             `New members: ${analytics.totalNewMembers}`,
@@ -120,6 +140,7 @@ export default function ReportsDashboard({
         summaryLines.forEach((line) => {
             if (y > 760) {
                 pdf.addPage();
+                drawHeader();
                 y = 60;
             }
             pdf.text(line, 40, y);
@@ -135,6 +156,7 @@ export default function ReportsDashboard({
         summaryText.forEach((line: string) => {
             if (y > 760) {
                 pdf.addPage();
+                drawHeader();
                 y = 60;
             }
             pdf.text(line, 40, y);
@@ -150,6 +172,7 @@ export default function ReportsDashboard({
         reports.forEach((report, index) => {
             if (y > 720) {
                 pdf.addPage();
+                drawHeader();
                 y = 60;
             }
 
@@ -172,6 +195,7 @@ export default function ReportsDashboard({
                 summaryLines.forEach((line: string) => {
                     if (y > 760) {
                         pdf.addPage();
+                        drawHeader();
                         y = 60;
                     }
                     pdf.text(line, 40, y);
@@ -185,6 +209,18 @@ export default function ReportsDashboard({
         if (!reports.length) {
             pdf.setFontSize(12);
             pdf.text('No church reports available yet.', 40, 120);
+        }
+
+        const totalPages = pdf.getNumberOfPages();
+        for (let page = 1; page <= totalPages; page += 1) {
+            pdf.setPage(page);
+            pdf.setDrawColor(226, 232, 240);
+            pdf.line(40, pageHeight - 42, pageWidth - 40, pageHeight - 42);
+            pdf.setTextColor(100, 116, 139);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(9);
+            pdf.text('APGA Worldwide | Church Leadership and Stewardship', 40, pageHeight - 25);
+            pdf.text(`Page ${page} of ${totalPages}`, pageWidth - 100, pageHeight - 25);
         }
 
         pdf.save('apga-church-leadership-summary.pdf');
@@ -206,6 +242,20 @@ export default function ReportsDashboard({
                 )}
 
                 <div className="mb-6 flex justify-end">
+                    <label className="mr-auto text-sm font-medium text-slate-700">
+                        Report scope
+                        <select
+                            value={periodType}
+                            onChange={(event) => router.get('/church-admin/reports', { period_type: event.target.value }, { preserveState: true, replace: true })}
+                            className="ml-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm"
+                        >
+                            <option value="all">All periods</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="annual">Annual</option>
+                        </select>
+                    </label>
                     <button
                         type="button"
                         onClick={exportReportsPdf}
@@ -286,6 +336,35 @@ export default function ReportsDashboard({
                         </div>
                     </div>
                 )}
+
+                <section className="mb-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-600">Attendance movement</p>
+                            <h2 className="mt-2 text-xl font-bold text-slate-900">Reported attendance by period</h2>
+                        </div>
+                        <p className="text-sm text-slate-500">Oldest to latest report</p>
+                    </div>
+
+                    {analytics.attendanceSeries.length ? (
+                        <div className="mt-6 space-y-4">
+                            {analytics.attendanceSeries.map((point) => (
+                                <div key={point.id} className="grid grid-cols-[76px_1fr_44px] items-center gap-3 text-sm">
+                                    <div className="text-slate-500">
+                                        <div className="font-medium text-slate-700">{point.label}</div>
+                                        <div className="text-xs capitalize">{point.period}</div>
+                                    </div>
+                                    <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                                        <div className="h-full rounded-full bg-gradient-to-r from-red-600 to-amber-400" style={{ width: `${point.width}%` }} />
+                                    </div>
+                                    <div className="text-right font-semibold text-slate-900">{point.value}</div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="mt-6 text-sm text-slate-500">Attendance trends will appear after the first church report is recorded.</p>
+                    )}
+                </section>
 
                 <div className="mb-8 rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
                     <h2 className="mb-4 text-lg font-semibold text-slate-900">Add a report</h2>

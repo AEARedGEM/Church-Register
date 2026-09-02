@@ -24,6 +24,7 @@ class ChurchMediaInterviewFeatureTest extends TestCase
                 'published_at' => '2026-09-01',
                 'video_url' => 'https://example.com/video',
                 'summary' => 'A powerful teaching on prayer and discipleship.',
+                'scripture_reference' => 'Matthew 28:19-20',
                 'featured' => true,
                 'status' => 'published',
             ])
@@ -33,6 +34,7 @@ class ChurchMediaInterviewFeatureTest extends TestCase
             'content_type' => 'interview',
             'title' => 'Pastor Interview: Discipleship and Prayer',
             'speaker_name' => 'Pastor A. Johnson',
+            'scripture_reference' => 'Matthew 28:19-20',
             'status' => 'published',
         ]);
     }

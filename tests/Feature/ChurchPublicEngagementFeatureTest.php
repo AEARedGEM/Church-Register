@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\AttendanceRecord;
 use App\Models\ChurchMediaContent;
 use App\Models\ChurchMinistry;
+use App\Models\ChurchContactMessage;
 use App\Models\ChurchPrayerRequest;
 use App\Models\Event;
 use App\Models\User;
@@ -24,6 +25,7 @@ class ChurchPublicEngagementFeatureTest extends TestCase
             'published_at' => '2026-09-01',
             'video_url' => 'https://example.com/sermon',
             'summary' => 'A powerful sermon on prayer and faith.',
+            'scripture_reference' => 'Luke 18:1',
             'featured' => true,
             'status' => 'published',
         ]);
@@ -34,7 +36,20 @@ class ChurchPublicEngagementFeatureTest extends TestCase
         $response->assertInertia(fn ($page) => $page
             ->where('media.title', 'The Power of Persistent Prayer')
             ->where('media.speaker_name', 'Pastor Grace')
+            ->where('media.scripture_reference', 'Luke 18:1')
         );
+    }
+
+    public function test_unpublished_media_is_not_available_on_public_detail_pages(): void
+    {
+        $media = ChurchMediaContent::create([
+            'content_type' => 'sermon',
+            'title' => 'Unpublished Message',
+            'published_at' => '2026-09-01',
+            'status' => 'draft',
+        ]);
+
+        $this->get('/media/' . $media->id)->assertNotFound();
     }
 
     public function test_public_homepage_uses_live_church_summary_data(): void
@@ -113,6 +128,26 @@ class ChurchPublicEngagementFeatureTest extends TestCase
             'request_type' => 'healing',
         ]);
     }
+
+    public function test_public_contact_message_can_be_submitted(): void
+    {
+        $response = $this
+            ->from('/send-message')
+            ->post('/send-message', [
+                'full_name' => 'Grace Member',
+                'email' => 'grace@example.com',
+                'subject' => 'Ministry enquiry',
+                'message' => 'Please share more information about joining a ministry.',
+            ]);
+
+        $response->assertRedirect('/send-message');
+        $this->assertDatabaseHas('church_contact_messages', [
+            'email' => 'grace@example.com',
+            'subject' => 'Ministry enquiry',
+            'status' => 'open',
+        ]);
+    }
+
 
     public function test_public_events_page_lists_upcoming_church_events(): void
     {

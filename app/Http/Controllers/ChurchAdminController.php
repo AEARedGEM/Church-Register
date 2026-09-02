@@ -6,6 +6,7 @@ use App\Models\AttendanceRecord;
 use App\Models\MemberProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class ChurchAdminController extends Controller
@@ -156,6 +157,17 @@ class ChurchAdminController extends Controller
 
     public function attendance(Request $request)
     {
+        $latestServiceDate = AttendanceRecord::max('service_date');
+        $latestServiceDateOnly = $latestServiceDate ? Carbon::parse($latestServiceDate)->format('Y-m-d') : null;
+        $attendanceStats = [
+            'total' => AttendanceRecord::count(),
+            'present_or_late' => AttendanceRecord::whereIn('status', ['present', 'late'])->count(),
+            'first_timers' => AttendanceRecord::where('first_timer', true)->count(),
+            'sunday_school' => AttendanceRecord::where('service_type', 'sunday_school')->count(),
+            'main_service' => AttendanceRecord::where('service_type', 'main_service')->count(),
+            'latest_service_date' => $latestServiceDateOnly,
+            'latest_service_total' => $latestServiceDateOnly ? AttendanceRecord::whereDate('service_date', $latestServiceDateOnly)->count() : 0,
+        ];
         $records = AttendanceRecord::with(['user', 'memberProfile'])
             ->orderByDesc('service_date')
             ->limit(20)
@@ -182,6 +194,7 @@ class ChurchAdminController extends Controller
 
         return Inertia::render('Church/AttendanceBoard', [
             'attendance' => $records,
+            'attendanceStats' => $attendanceStats,
             'members' => $members,
             'flash' => [
                 'success' => $request->session()->get('success'),

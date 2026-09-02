@@ -15,7 +15,17 @@ interface ChurchMember {
     name: string;
 }
 
-export default function AttendanceBoard({ attendance, members, flash }: { attendance: AttendanceRow[]; members: ChurchMember[]; flash?: { success?: string } }) {
+interface AttendanceStats {
+    total: number;
+    present_or_late: number;
+    first_timers: number;
+    sunday_school: number;
+    main_service: number;
+    latest_service_date: string | null;
+    latest_service_total: number;
+}
+
+export default function AttendanceBoard({ attendance, attendanceStats, members, flash }: { attendance: AttendanceRow[]; attendanceStats: AttendanceStats; members: ChurchMember[]; flash?: { success?: string } }) {
     const { data, setData, post, processing } = useForm<{
         member_profile_id: string;
         service_type: string;
@@ -53,6 +63,29 @@ export default function AttendanceBoard({ attendance, members, flash }: { attend
                         {flash.success}
                     </div>
                 )}
+
+                <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                    {[
+                        ['Total records', attendanceStats.total],
+                        ['Present or late', attendanceStats.present_or_late],
+                        ['First timers', attendanceStats.first_timers],
+                        ['Sunday School', attendanceStats.sunday_school],
+                        ['Main service', attendanceStats.main_service],
+                    ].map(([label, value]) => (
+                        <div key={label} className="rounded-2xl border border-red-100 bg-white p-4 shadow-sm">
+                            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{label}</p>
+                            <p className="mt-3 text-2xl font-bold text-slate-900">{value}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mb-8 rounded-3xl border border-red-100 bg-gradient-to-r from-red-50 to-amber-50 p-5 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-700">Latest service snapshot</p>
+                    <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                        <p className="text-2xl font-bold text-slate-900">{attendanceStats.latest_service_total} recorded attendees</p>
+                        <p className="text-sm text-slate-600">{attendanceStats.latest_service_date ?? 'No service date recorded yet'}</p>
+                    </div>
+                </div>
 
                 <div className="mb-8 rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
                     <h2 className="mb-4 text-lg font-semibold text-slate-900">Record attendance</h2>

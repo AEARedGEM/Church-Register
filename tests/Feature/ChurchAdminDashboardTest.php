@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\ChurchPrayerRequest;
+use App\Models\ChurchContactMessage;
 use App\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -118,6 +120,95 @@ class ChurchAdminDashboardTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_church_admin_can_review_and_update_prayer_request_status(): void
+    {
+        $user = User::factory()->create();
+        $request = ChurchPrayerRequest::create([
+            'full_name' => 'Grace Member',
+            'email' => 'grace@example.com',
+            'request_type' => 'healing',
+            'message' => 'Please pray for healing and renewed strength.',
+            'is_public' => false,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($user)
+            ->get('/church-admin/prayer-requests')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('prayerRequests.0.full_name', 'Grace Member')
+                ->where('prayerRequests.0.status', 'pending')
+            );
+
+        $this->actingAs($user)
+            ->post('/church-admin/prayer-requests/' . $request->id . '/status', ['status' => 'prayed'])
+            ->assertRedirect('/church-admin/prayer-requests');
+
+        $this->assertDatabaseHas('church_prayer_requests', [
+            'id' => $request->id,
+            'status' => 'prayed',
+        ]);
+    }
+
+    public function test_church_admin_can_review_and_resolve_contact_messages(): void
+    {
+        $user = User::factory()->create();
+        $message = ChurchContactMessage::create([
+            'full_name' => 'Grace Member',
+            'email' => 'grace@example.com',
+            'subject' => 'Ministry enquiry',
+            'message' => 'Please share more information about joining a ministry.',
+            'status' => 'open',
+        ]);
+
+        $this->actingAs($user)
+            ->get('/church-admin/messages')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('messages.0.subject', 'Ministry enquiry')
+                ->where('messages.0.status', 'open')
+            );
+
+        $this->actingAs($user)
+            ->post('/church-admin/messages/' . $message->id . '/status', ['status' => 'resolved'])
+            ->assertRedirect('/church-admin/messages');
+
+        $this->assertDatabaseHas('church_contact_messages', [
+            'id' => $message->id,
+            'status' => 'resolved',
+        ]);
+    }
+
+    public function test_church_admin_can_create_a_church_event(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->from('/church-admin/events')
+            ->post('/church-admin/events', [
+                'title' => 'Sunday Worship Encounter',
+                'description' => 'A worship gathering for the whole church.',
+                'event_type' => 'workshop',
+                'start_date' => '2026-09-13 09:00:00',
+                'end_date' => '2026-09-13 12:00:00',
+                'location' => 'Main sanctuary',
+                'is_virtual' => false,
+                'max_participants' => 300,
+                'registration_deadline' => '2026-09-13 08:30:00',
+                'status' => 'registration_open',
+            ]);
+
+        $response->assertRedirect('/church-admin/events');
+        $this->assertDatabaseHas('events', [
+            'title' => 'Sunday Worship Encounter',
+            'description' => 'A worship gathering for the whole church.',
+            'event_type' => 'workshop',
+            'status' => 'registration_open',
+        ]);
+    }
+
+
     public function test_church_admin_can_record_member_attendance(): void
     {
         $user = User::factory()->create();
@@ -148,6 +239,13 @@ class ChurchAdminDashboardTest extends TestCase
             'service_type' => 'main_service',
             'status' => 'present',
         ]);
+
+        $this->actingAs($user)
+            ->get('/church-admin/attendance')
+            ->assertInertia(fn ($page) => $page
+                ->where('attendanceStats.latest_service_date', '2026-09-01')
+                ->where('attendanceStats.latest_service_total', 1)
+            );
     }
 
     public function test_church_admin_can_create_a_new_member_profile(): void

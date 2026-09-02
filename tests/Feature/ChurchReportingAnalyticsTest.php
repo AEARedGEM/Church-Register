@@ -45,4 +45,32 @@ class ChurchReportingAnalyticsTest extends TestCase
         $response->assertSee('Weekly growth');
         $response->assertSee('Strongest period');
     }
+
+    public function test_church_reports_dashboard_can_filter_analytics_by_period_type(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/church-admin/reports', [
+            'period_type' => 'weekly',
+            'title' => 'Weekly Worship Report',
+            'report_date' => '2026-09-08',
+            'attendance_count' => 160,
+        ]);
+
+        $this->actingAs($user)->post('/church-admin/reports', [
+            'period_type' => 'monthly',
+            'title' => 'Monthly Worship Report',
+            'report_date' => '2026-09-30',
+            'attendance_count' => 620,
+        ]);
+
+        $response = $this->actingAs($user)->get('/church-admin/reports?period_type=weekly');
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('periodType', 'weekly')
+            ->has('reports', 1)
+            ->where('reports.0.title', 'Weekly Worship Report')
+        );
+    }
 }

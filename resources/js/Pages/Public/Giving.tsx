@@ -11,7 +11,7 @@ export default function Giving() {
                         <Link href="/" className="text-red-200 transition hover:text-white">Back to Home</Link>
                     </div>
                 </nav>
-                <div className="container mx-auto max-w-4xl px-6 py-16">
+                <main className="container mx-auto max-w-4xl px-6 py-16">
                     <h1 className="mb-6 text-4xl font-bold text-white">Giving</h1>
                     <div className="space-y-6 text-slate-300">
                         <p>
@@ -25,7 +25,12 @@ export default function Giving() {
                             <li>Community care and humanitarian efforts</li>
                         </ul>
                     </div>
-                </div>
+                    <div className="mt-10 rounded-3xl border border-red-800/70 bg-slate-900/80 p-6 text-slate-300 shadow-xl shadow-red-950/20 sm:p-8">
+                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-300">Official church accounts</p>
+                        <h2 className="mt-3 text-2xl font-bold text-white">Bank transfer details</h2>
+                        <p className="mt-3 text-sm leading-relaxed text-slate-400">Verified bank account details for APGA Worldwide will be published here. Please contact the church office for current transfer instructions until the official account list is posted.</p>
+                    </div>
+                </main>
             </div>
         </>
     );

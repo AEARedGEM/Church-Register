@@ -8,12 +8,31 @@ type MediaItem = {
     content_type: string;
     published_at?: string;
     video_url?: string | null;
+    scripture_reference?: string | null;
     featured?: boolean;
     status?: string;
 };
 
+const getYouTubeId = (url: string) => {
+    try {
+        const parsedUrl = new URL(url);
+        if (parsedUrl.hostname === 'youtu.be') {
+            return parsedUrl.pathname.slice(1) || null;
+        }
+
+        if (parsedUrl.hostname.endsWith('youtube.com')) {
+            return parsedUrl.searchParams.get('v') || parsedUrl.pathname.split('/').filter(Boolean).pop() || null;
+        }
+    } catch {
+        return null;
+    }
+
+    return null;
+};
+
 export default function MediaDetail({ media, relatedMedia = [] }: { media: MediaItem; relatedMedia?: MediaItem[] }) {
     const formatType = (type: string) => type.charAt(0).toUpperCase() + type.slice(1);
+    const youTubeId = media.video_url ? getYouTubeId(media.video_url) : null;
 
     return (
         <>
@@ -48,11 +67,30 @@ export default function MediaDetail({ media, relatedMedia = [] }: { media: Media
                                 <p className="text-lg leading-relaxed text-slate-200">{media.summary || 'This message is part of our church teaching and worship experience.'}</p>
                             </div>
 
+                            {media.scripture_reference && (
+                                <div className="mt-5 rounded-2xl border border-amber-700/50 bg-amber-950/30 px-5 py-4">
+                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">Scripture</p>
+                                    <p className="mt-2 text-lg font-semibold text-amber-100">{media.scripture_reference}</p>
+                                </div>
+                            )}
+
                             {media.video_url && (
                                 <div className="mt-8 overflow-hidden rounded-2xl border border-red-800/70 bg-black">
-                                    <a href={media.video_url} target="_blank" rel="noreferrer" className="block p-5 text-center text-red-200 hover:text-white">
-                                        Watch or open the media resource
-                                    </a>
+                                    {youTubeId ? (
+                                        <div className="aspect-video">
+                                            <iframe
+                                                className="h-full w-full"
+                                                src={`https://www.youtube.com/embed/${youTubeId}?rel=0&modestbranding=1`}
+                                                title={media.title}
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            />
+                                        </div>
+                                    ) : (
+                                        <a href={media.video_url} target="_blank" rel="noreferrer" className="block p-5 text-center text-red-200 hover:text-white">
+                                            Watch or open the media resource
+                                        </a>
+                                    )}
                                 </div>
                             )}
 
@@ -82,6 +120,7 @@ export default function MediaDetail({ media, relatedMedia = [] }: { media: Media
                                         <dt className="text-slate-400">Published</dt>
                                         <dd className="font-medium text-white">{media.published_at ? new Date(media.published_at).toLocaleDateString() : 'Recently'}</dd>
                                     </div>
+                                    {media.scripture_reference && <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-2"><dt className="text-slate-400">Scripture</dt><dd className="text-right font-medium text-amber-200">{media.scripture_reference}</dd></div>}
                                     <div className="flex items-center justify-between gap-3">
                                         <dt className="text-slate-400">Status</dt>
                                         <dd className="font-medium text-emerald-300">{media.status || 'Published'}</dd>

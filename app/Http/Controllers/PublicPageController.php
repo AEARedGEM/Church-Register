@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChurchMediaContent;
+use App\Models\ChurchAnnouncement;
 use App\Models\ChurchMinistry;
+use App\Models\ChurchContactMessage;
 use App\Models\ChurchPrayerRequest;
 use App\Models\Event;
 use App\Models\EventRegistration;
@@ -239,6 +241,9 @@ class PublicPageController extends Controller
     {
         return Inertia::render('Public/Giving', [
             'laravelVersion' => Application::VERSION,
+            'flash' => [
+                'success' => request()->session()->get('success'),
+            ],
         ]);
     }
 
@@ -799,6 +804,8 @@ class PublicPageController extends Controller
 
     public function mediaDetail(ChurchMediaContent $media)
     {
+        abort_unless($media->status === 'published', 404);
+
         if (!Schema::hasTable('church_media_content')) {
             return Inertia::render('Public/MediaDetail', [
                 'laravelVersion' => Application::VERSION,
@@ -842,6 +849,21 @@ class PublicPageController extends Controller
         return Inertia::render('Public/Events', [
             'laravelVersion' => Application::VERSION,
             'events' => $events,
+        ]);
+    }
+
+    public function announcements()
+    {
+        $announcements = ChurchAnnouncement::query()
+            ->where('status', 'published')
+            ->where(function ($query) {
+                $query->whereNull('published_at')->orWhereDate('published_at', '<=', now());
+            })
+            ->orderByDesc('published_at')
+            ->get();
+
+        return Inertia::render('Public/Announcements', [
+            'announcements' => $announcements,
         ]);
     }
 
@@ -953,6 +975,24 @@ class PublicPageController extends Controller
         return Inertia::render('Public/SendMessage', [
             'laravelVersion' => Application::VERSION,
         ]);
+    }
+
+    public function storeMessage(Request $request)
+    {
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'subject' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string', 'min:10', 'max:3000'],
+        ]);
+
+        ChurchContactMessage::create([
+            ...$validated,
+            'user_id' => $request->user()?->id,
+            'status' => 'open',
+        ]);
+
+        return redirect()->route('send-message')->with('success', 'Your message has been received by the church team.');
     }
 
     public function faq()

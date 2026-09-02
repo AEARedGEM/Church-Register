@@ -352,6 +352,23 @@ export default function Welcome({
                     </div>
                 </section>
 
+                {/* Vice-President Welcome */}
+                <section className="relative overflow-hidden bg-[#050816] py-20">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,_rgba(239,68,68,0.16),_transparent_28%),radial-gradient(circle_at_15%_80%,_rgba(14,165,233,0.12),_transparent_25%)]"></div>
+                    <div className="relative z-10 mx-auto max-w-6xl px-6">
+                        <div className="max-w-3xl border-l-2 border-red-500/70 pl-6 md:pl-8">
+                            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-red-300">Pastoral welcome</p>
+                            <h2 className="mt-4 text-3xl font-bold text-white md:text-4xl">A Word from the Vice-President</h2>
+                            <p className="mt-6 text-lg leading-relaxed text-slate-300">
+                                We welcome you into a fellowship where faith is strengthened, gifts are stewarded, and every believer is encouraged to serve God and His people with humility and excellence.
+                            </p>
+                            <p className="mt-4 text-lg leading-relaxed text-slate-300">
+                                May your walk with Christ find encouragement through worship, prayer, sound teaching, and meaningful fellowship across the APGA Worldwide family.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Features Section */}
                 <section className="relative overflow-hidden bg-[#050816] py-28">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.18),_transparent_22%),radial-gradient(circle_at_15%_80%,_rgba(239,68,68,0.18),_transparent_24%),radial-gradient(circle_at_85%_15%,_rgba(59,130,246,0.18),_transparent_22%)]"></div>

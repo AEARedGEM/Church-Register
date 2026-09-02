@@ -9,6 +9,7 @@ interface MediaContent {
     published_at: string;
     video_url?: string;
     summary?: string;
+    scripture_reference?: string;
     featured: boolean;
     status: string;
 }
@@ -21,6 +22,7 @@ export default function MediaContentBoard({ media, flash }: { media: MediaConten
         published_at: string;
         video_url: string;
         summary: string;
+        scripture_reference: string;
         featured: boolean;
         status: string;
     }>({
@@ -30,6 +32,7 @@ export default function MediaContentBoard({ media, flash }: { media: MediaConten
         published_at: new Date().toISOString().slice(0, 10),
         video_url: '',
         summary: '',
+        scripture_reference: '',
         featured: true,
         status: 'published',
     });
@@ -114,6 +117,15 @@ export default function MediaContentBoard({ media, flash }: { media: MediaConten
                                 onChange={(event) => setData('summary', event.target.value)}
                                 rows={3}
                                 className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+                            />
+                        </label>
+                        <label className="text-sm font-medium text-slate-700">
+                            Scripture reference
+                            <input
+                                value={data.scripture_reference}
+                                onChange={(event) => setData('scripture_reference', event.target.value)}
+                                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+                                placeholder="John 3:16"
                             />
                         </label>
                         <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
