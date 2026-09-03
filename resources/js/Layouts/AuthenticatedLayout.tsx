@@ -18,7 +18,7 @@ export default function Authenticated({
     mobileNavItems,
 }: PropsWithChildren<{ header?: ReactNode; mobileNavItems?: MobileNavItem[] }>) {
     const user = usePage().props.auth.user as any;
-    const canAccessChurchAdmin = true;
+    const canAccessChurchAdmin = user?.roles?.some((role: string) => ['admin', 'super_admin'].includes(role)) ?? false;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);

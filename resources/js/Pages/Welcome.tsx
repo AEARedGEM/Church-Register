@@ -344,11 +344,11 @@ export default function Welcome({
                                     <div className="text-center space-y-4">
                                         <img
                                             src="/images/President_GO.jpeg"
-                                            alt="Pastor (Dr.) S.O. Ilesanmi"
+                                            alt="Prophet (Dr.) Samuel Olugbenga Ilesanmi"
                                             className="mx-auto h-64 w-64 rounded-2xl border-4 border-red-500 object-contain shadow-lg shadow-red-950/30"
                                         />
-                                        <h3 className="text-2xl font-bold text-white">Pastor (Dr.) S.O. Ilesanmi</h3>
-                                        <p className="text-red-300 font-semibold">President</p>
+                                        <h3 className="text-2xl font-bold text-white">Prophet (Dr.) Samuel Olugbenga Ilesanmi</h3>
+                                        <p className="text-red-300 font-semibold">President &amp; General Overseer, APGAW</p>
                                         <div className="pt-4 border-t border-red-800/50">
                                             <p className="text-slate-300 text-sm leading-relaxed">
                                                 Leading with vision, integrity, and a heart for God's kingdom. Our leadership is committed to fostering spiritual growth and community transformation through faith and service.
@@ -374,6 +374,10 @@ export default function Welcome({
                             <p className="mt-4 text-lg leading-relaxed text-slate-300">
                                 May your walk with Christ find encouragement through worship, prayer, sound teaching, and meaningful fellowship across the APGA Worldwide family.
                             </p>
+                            <div className="mt-6 space-y-2 text-sm text-red-200">
+                                <p><span className="font-semibold">Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi</span> &mdash; Vice-President, APGAW</p>
+                                <p><span className="font-semibold">Pastor Michael Olanrewaju</span> &mdash; Senior Pastor, Church Administration</p>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -664,6 +668,12 @@ export default function Welcome({
                                     </li>
                                     <li>
                                         <a href={route('leadership')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Leadership</a>
+                                    </li>
+                                    <li className="border-t border-red-800/50 pt-3 text-xs leading-relaxed text-gray-400">
+                                        <p className="font-semibold text-red-300">Church Leadership</p>
+                                        <p className="mt-2">Prophet (Dr.) Samuel Olugbenga Ilesanmi</p>
+                                        <p>Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi</p>
+                                        <p>Pastor Michael Olanrewaju</p>
                                     </li>
                                     <li>
                                         <a href={route('church-history')} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-400 transition-colors">Church History</a>

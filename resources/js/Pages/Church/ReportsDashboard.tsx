@@ -63,8 +63,6 @@ export default function ReportsDashboard({
         title: '',
         report_date: new Date().toISOString().slice(0, 10),
         summary: '',
-        attendance_count: 0,
-        first_timers_count: 0,
         new_members_count: 0,
         prayer_requests_count: 0,
     });
@@ -467,26 +465,10 @@ export default function ReportsDashboard({
                                 required
                             />
                         </label>
-                        <label className="text-sm font-medium text-slate-700">
-                            Attendance count
-                            <input
-                                type="number"
-                                min={0}
-                                value={data.attendance_count}
-                                onChange={(event) => setData('attendance_count', Number(event.target.value) || 0)}
-                                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-                            />
-                        </label>
-                        <label className="text-sm font-medium text-slate-700">
-                            First timers
-                            <input
-                                type="number"
-                                min={0}
-                                value={data.first_timers_count}
-                                onChange={(event) => setData('first_timers_count', Number(event.target.value) || 0)}
-                                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-                            />
-                        </label>
+                        <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-slate-700">
+                            <p className="font-semibold text-red-700">Attendance totals are calculated automatically</p>
+                            <p className="mt-1 text-xs text-slate-600">Present and late records within the selected period are used when this report is created.</p>
+                        </div>
                         <label className="text-sm font-medium text-slate-700">
                             New members
                             <input

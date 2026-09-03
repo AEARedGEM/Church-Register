@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
+import jsPDF from 'jspdf';
 
 interface PrayerRequest {
     id: number;
@@ -31,6 +32,50 @@ export default function PrayerRequestsBoard({ prayerRequests, flash }: { prayerR
         router.post(`/church-admin/prayer-requests/${requestId}/status`, { status });
     };
 
+    const exportPdf = () => {
+        const pdf = new jsPDF();
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        let y = 22;
+
+        pdf.setFontSize(18);
+        pdf.setTextColor(150, 17, 38);
+        pdf.text('APGA Worldwide', 20, y);
+        y += 10;
+        pdf.setFontSize(14);
+        pdf.setTextColor(30, 41, 59);
+        pdf.text(`Prayer Requests - ${filter === 'all' ? 'All' : filter}`, 20, y);
+        y += 10;
+        pdf.setFontSize(9);
+        pdf.setTextColor(100, 116, 139);
+        pdf.text(`Generated ${new Date().toLocaleString()} | ${visibleRequests.length} request(s)`, 20, y);
+        y += 12;
+
+        visibleRequests.forEach((request, index) => {
+            const lines = pdf.splitTextToSize(request.message, pageWidth - 40);
+            const blockHeight = 34 + lines.length * 5;
+            if (y + blockHeight > 275) {
+                pdf.addPage();
+                y = 20;
+            }
+
+            pdf.setDrawColor(226, 232, 240);
+            pdf.rect(20, y - 5, pageWidth - 40, blockHeight);
+            pdf.setFontSize(10);
+            pdf.setTextColor(15, 23, 42);
+            pdf.text(`${index + 1}. ${request.full_name}`, 25, y + 3);
+            pdf.setFontSize(8);
+            pdf.setTextColor(100, 116, 139);
+            pdf.text(`${request.request_type} | ${request.status} | ${new Date(request.created_at).toLocaleDateString()}`, 25, y + 10);
+            if (request.email) pdf.text(request.email, 25, y + 16);
+            pdf.setFontSize(9);
+            pdf.setTextColor(51, 65, 85);
+            pdf.text(lines, 25, y + 24);
+            y += blockHeight + 8;
+        });
+
+        pdf.save(`apga-prayer-requests-${new Date().toISOString().slice(0, 10)}.pdf`);
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Prayer Requests" />
@@ -39,6 +84,9 @@ export default function PrayerRequestsBoard({ prayerRequests, flash }: { prayerR
                     <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Pastoral care</p>
                     <h1 className="mt-2 text-3xl font-bold text-slate-900">Prayer Request Board</h1>
                     <p className="mt-2 max-w-2xl text-sm text-slate-600">Review requests received through the church website and keep their prayer-care status up to date.</p>
+                    <button type="button" onClick={exportPdf} disabled={!visibleRequests.length} className="mt-4 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50">
+                        Export visible requests as PDF
+                    </button>
                 </div>
 
                 {flash?.success && (

@@ -14,6 +14,17 @@ The current project is no longer a placeholder for a church site; it is a practi
 
 ### Latest Progress Update - 2026-09-03
 
+The admin attendance workflows were reviewed against the live routes and backend behavior:
+
+- `/church-admin/service-register?month=YYYY-MM` is a database-backed monthly register of active members and Sunday main-service attendance. Present and late marks are persisted per member/Sunday and repeated marks update the existing record.
+- `/church-admin/attendance` is a database-backed attendance board for main service, Sunday School, workers meetings, and prayer meetings. Re-submitting the same member, service, and date updates the existing record instead of creating a duplicate.
+- Attendance summaries count present and late records as attendees; absent and excused records remain available for correction history but do not inflate attendee totals.
+- Sunday present/late attendance entered through either admin page can validate a pending invitation, keeping the invitation league aligned with attendance capture.
+- Both pages and their write actions are restricted to authenticated `admin` and `super_admin` users.
+- The shared browser session redirected unauthenticated requests to `/login`; authenticated visual verification requires an admin session.
+- Church report titles, summaries, member counts, prayer-request counts, and scorecards remain manually authored records. Their analytics and PDF export summarize those saved rows.
+- New church reports now automatically derive attendance and first-timer totals from raw present/late attendance records. Weekly reports use Monday-Sunday, monthly reports use the calendar month, quarterly reports use the calendar quarter, and annual reports use the calendar year containing the report date.
+
 The public church experience has been refined further:
 
 - Replaced the static Send Message page with a working church contact form and added an admin inbox for open/resolved message follow-up.
@@ -129,7 +140,7 @@ The live codebase already contains the following real features:
 ### Current reality after implementation
 The project is now a church operations platform with active admin and public layers, including:
 - The core church data model and admin/public workflows are implemented and backed by live database data.
-- Reporting has baseline PDF export and summary analytics; branded templates and deeper trends remain.
+- Reporting has baseline PDF export and summary analytics over saved report and scorecard rows, with attendance and first-timer totals automatically generated from raw attendance when a report is created; branded templates and deeper trends remain.
 - Media, interviews, and communications are functional; richer editorial layouts and small-group workflows remain.
 - Production readiness is the immediate priority, especially mail/queue configuration, security verification, testing, and deployment documentation.
 

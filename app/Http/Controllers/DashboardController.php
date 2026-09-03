@@ -6,21 +6,18 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Event;
 use App\Models\Activity;
-use App\Models\FundingApplication;
 use App\Models\Course;
-use App\Models\CourseEnrollment;
-use App\Models\VcMatch;
 use App\Models\Community;
-use App\Models\CommunityMembership;
 use App\Models\ForumPost;
-use App\Models\Mentorship;
-use App\Models\Transaction;
-use App\Models\Wallet;
 use App\Models\User;
+use App\Models\MemberProfile;
+use App\Models\ChurchContactMessage;
+use App\Models\ChurchPrayerRequest;
+use App\Models\SmallGroup;
 use App\Enum\RolesEnum;
 use App\Enum\PermissionsEnum;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
@@ -48,12 +45,14 @@ class DashboardController extends Controller
             'stats' => $this->getDashboardStats($user),
             'recentActivity' => $this->getRecentActivity($user),
             'upcomingEvents' => $this->getUpcomingEvents($user),
-            'walletData' => $this->getWalletData($user),
-            'fundingData' => $this->getFundingData($user),
             'trainingData' => $this->getTrainingData($user),
             'communityData' => $this->getCommunityData($user),
             'quickActions' => $this->getQuickActions($user, $currentRole),
             'churchSummary' => $this->getChurchSummary(),
+            'churchHealth' => $this->getChurchHealth(),
+            'churchLeadership' => $this->getChurchLeadership(),
+            'churchGroups' => $this->getChurchGroups(),
+            'recentChurchActivity' => $this->getRecentChurchActivity(),
         ]);
     }
 
@@ -98,7 +97,6 @@ class DashboardController extends Controller
             'isVerified' => $user->isVerified(),
             'needsProfileCompletion' => $user->needsProfileCompletion(),
             'communityRank' => $user->community_rank,
-            'wallet' => $this->getWalletBalances($user),
             'profile' => $user->profile,
             'activeRoles' => $user->active_roles ?? [],
             'referral' => [
@@ -114,12 +112,6 @@ class DashboardController extends Controller
     private function getDashboardStats(User $user): array
     {
         $stats = [
-            'totalFunding' => $user->fundingApplications()
-                ->where('status', 'approved')
-                ->sum('amount_requested'),
-            'activeFunds' => $user->fundingApplications()
-                ->whereIn('status', ['approved', 'disbursed'])
-                ->count(),
             'trainingCompleted' => $user->enrollments()
                 ->where('status', 'completed')
                 ->count(),
@@ -150,9 +142,6 @@ class DashboardController extends Controller
                 break;
         }
 
-        // Format currency values
-        $stats['totalFunding'] = '₦' . number_format($stats['totalFunding'], 0);
-
         return $stats;
     }
 
@@ -160,8 +149,6 @@ class DashboardController extends Controller
     {
         return [
             'pitchViews' => $user->profile?->pitch_views ?? 0,
-            'investorMatches' => $user->vcMatches()->count(),
-            'fundingRounds' => count($user->profile?->funding_history ?? []),
             'activeIncubation' => $user->hasRole('incubator_member'),
         ];
     }
@@ -169,10 +156,6 @@ class DashboardController extends Controller
     private function getSMEStats(User $user): array
     {
         return [
-            'loanApplications' => $user->fundingApplications()
-                ->whereHas('fundType', fn($q) => $q->where('category', 'tradefi'))
-                ->count(),
-            'businessGrowth' => $this->calculateBusinessGrowth($user),
             'supplierNetwork' => $user->supplierConnections()->count() ?? 0,
         ];
     }
@@ -180,9 +163,7 @@ class DashboardController extends Controller
     private function getInvestorStats(User $user): array
     {
         return [
-            'portfolioValue' => $this->calculatePortfolioValue($user),
             'activeInvestments' => $user->investments()->where('status', 'active')->count() ?? 0,
-            'roi' => $this->calculateROI($user),
         ];
     }
 
@@ -191,7 +172,6 @@ class DashboardController extends Controller
         return [
             'oversight_reports' => $user->oversightReports()->count() ?? 0,
             'initiatives_approved' => $user->approvedInitiatives()->count() ?? 0,
-            'youth_impacted' => $this->calculateYouthImpact($user),
         ];
     }
 
@@ -200,7 +180,6 @@ class DashboardController extends Controller
         return [
             'active_partnerships' => $user->partnerships()->where('status', 'active')->count() ?? 0,
             'programs_supported' => $user->supportedPrograms()->count() ?? 0,
-            'beneficiaries' => $this->calculateBeneficiaries($user),
         ];
     }
 
@@ -214,37 +193,9 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getWalletBalances(User $user): array
-    {
-        $wallets = $user->wallets()->get()->keyBy('currency_type');
-
-        return [
-            'usdi' => number_format($wallets->get('USDI')?->balance ?? 0, 2),
-            'ind' => number_format($wallets->get('IND')?->balance ?? 0, 2),
-            'ngn' => number_format($wallets->get('NGN')?->balance ?? 0, 2),
-            'ngni' => number_format($wallets->get('NGNI')?->balance ?? 0, 2),
-        ];
-    }
-
     private function getRecentActivity(User $user): array
     {
         $activities = collect();
-
-        // Get recent funding activities
-        $fundingActivities = $user->fundingApplications()
-            ->with('fundType')
-            ->latest()
-            ->take(3)
-            ->get()
-            ->map(function ($application) {
-                return [
-                    'type' => 'funding',
-                    'message' => $application->title . ' ' . $this->getStatusText($application->status),
-                    'amount' => '₦' . number_format($application->amount_requested),
-                    'time' => $application->created_at->diffForHumans(),
-                    'status' => $this->mapStatus($application->status),
-                ];
-            });
 
         // Get recent training activities
         $trainingActivities = $user->enrollments()
@@ -303,7 +254,6 @@ class DashboardController extends Controller
 
         // Merge and sort all activities
         return $activities
-            ->merge($fundingActivities)
             ->merge($trainingActivities)
             ->merge($communityActivities)
             ->merge($roleActivities)
@@ -318,8 +268,10 @@ class DashboardController extends Controller
         return Event::query()->where('start_date', '>', now())
             ->where('status', 'registration_open')
             ->when($user->sector, function($query, $sector) {
-                return $query->where('target_sector', $sector)
-                    ->orWhereNull('target_sector');
+                return $query->where(function ($query) use ($sector) {
+                    $query->where('target_sector', $sector)
+                        ->orWhereNull('target_sector');
+                });
             })
             ->orderBy('start_date')
             ->take(3)
@@ -340,89 +292,6 @@ class DashboardController extends Controller
                 ];
             })
             ->toArray();
-    }
-
-    private function getWalletData(User $user): array
-    {
-        $transactions = $user->transactions()
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(function ($transaction) {
-                return [
-                    'id' => $transaction->id,
-                    'type' => ucfirst($transaction->transaction_type),
-                    'amount' => $this->formatTransactionAmount($transaction),
-                    'description' => $transaction->description,
-                    'time' => $transaction->created_at->diffForHumans(),
-                    'status' => $transaction->status,
-                    'currency' => $transaction->currency,
-                ];
-            });
-
-        // Get wallet overview
-        $walletOverview = [
-            'total_balance_ngn' => $user->getWalletBalance('NGN'),
-            'total_balance_usdi' => $user->getWalletBalance('USDI'),
-            'total_balance_ind' => $user->getWalletBalance('IND'),
-            'recent_transactions_count' => $transactions->count(),
-        ];
-
-        return [
-            'overview' => $walletOverview,
-            'transactions' => $transactions->toArray(),
-        ];
-    }
-
-    private function getFundingData(User $user): array
-    {
-        // TradeFi applications
-        $tradefiApplications = $user->fundingApplications()
-            ->with('fundType')
-            ->whereHas('fundType', function($query) {
-                $query->where('category', 'tradefi');
-            })
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(function ($application) {
-                return [
-                    'id' => $application->id,
-                    'title' => $application->title,
-                    'amount' => '₦' . number_format($application->amount_requested),
-                    'status' => ucfirst($application->status),
-                    'date' => 'Applied: ' . $application->created_at->format('M d, Y'),
-                    'fund_type' => $application->fundType->name ?? 'General',
-                ];
-            });
-
-        // VC/Equity matches
-        $vcMatches = $user->vcMatches()
-            ->with('investor')
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(function ($match) {
-                return [
-                    'id' => $match->id,
-                    'investor' => $match->investor->name,
-                    'stage' => ucfirst(str_replace('_', ' ', $match->funding_stage)),
-                    'amount' => $match->amount_offered ? '₦' . number_format($match->amount_offered) : 'TBD',
-                    'status' => ucfirst($match->status),
-                    'match_percentage' => $match->match_percentage . '%',
-                    'date' => $match->created_at->format('M d, Y'),
-                ];
-            });
-
-        return [
-            'tradefi_applications' => $tradefiApplications->toArray(),
-            'vc_matches' => $vcMatches->toArray(),
-            'funding_summary' => [
-                'total_applied' => $user->fundingApplications()->sum('amount_requested'),
-                'total_approved' => $user->fundingApplications()->where('status', 'approved')->sum('amount_requested'),
-                'pending_applications' => $user->fundingApplications()->whereIn('status', ['pending', 'under_review'])->count(),
-            ],
-        ];
     }
 
     private function getTrainingData(User $user): array
@@ -558,35 +427,161 @@ class DashboardController extends Controller
         ];
     }
 
+    private function getChurchHealth(): array
+    {
+        $attendance = Schema::hasTable('attendance_records')
+            ? \App\Models\AttendanceRecord::query()->count()
+            : 0;
+        $prayerRequests = Schema::hasTable('church_prayer_requests')
+            ? ChurchPrayerRequest::query()->whereIn('status', ['pending', 'prayed'])->count()
+            : 0;
+        $newVisits = Schema::hasTable('member_profiles')
+            ? MemberProfile::query()->where('created_at', '>=', now()->startOfMonth())->count()
+            : 0;
+        $nextEvent = Schema::hasTable('events')
+            ? Event::query()->where('start_date', '>=', now())->orderBy('start_date')->first()
+            : null;
+        $currentWeekAttendance = Schema::hasTable('attendance_records')
+            ? \App\Models\AttendanceRecord::query()->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count()
+            : 0;
+        $previousWeekAttendance = Schema::hasTable('attendance_records')
+            ? \App\Models\AttendanceRecord::query()->whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])->count()
+            : 0;
+        $attendanceChange = $previousWeekAttendance > 0
+            ? round((($currentWeekAttendance - $previousWeekAttendance) / $previousWeekAttendance) * 100)
+            : null;
+
+        return [
+            'attendance' => $attendance,
+            'attendance_change' => $attendanceChange,
+            'prayer_requests' => $prayerRequests,
+            'new_visits' => $newVisits,
+            'next_service' => $nextEvent?->title,
+            'next_service_date' => $nextEvent?->start_date?->format('l'),
+        ];
+    }
+
+    private function getChurchLeadership(): array
+    {
+        return [
+            [
+                'name' => 'Prophet (Dr.) Samuel Olugbenga Ilesanmi',
+                'role' => 'President & General Overseer, APGAW',
+                'note' => 'Providing spiritual direction and apostolic oversight for APGAW.',
+                'image' => '/images/President_GO.jpeg',
+            ],
+            [
+                'name' => 'Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi',
+                'role' => 'Vice-President, APGAW',
+                'note' => 'Serving through prayer, evangelism, discipleship, and spiritual care.',
+                'image' => '/images/Firstlady.jpeg',
+            ],
+            [
+                'name' => 'Pastor Michael Olanrewaju',
+                'role' => 'Senior Pastor, Church Administration',
+                'note' => 'Leading pastoral care, teaching, and church administration.',
+                'image' => null,
+            ],
+        ];
+    }
+
+    private function getChurchGroups(): array
+    {
+        if (!Schema::hasTable('small_groups')) {
+            return [];
+        }
+
+        return SmallGroup::query()
+            ->where('is_active', true)
+            ->withCount(['memberships as active_member_count' => fn ($query) => $query->where('status', 'active')])
+            ->orderBy('name')
+            ->limit(6)
+            ->get()
+            ->map(fn ($group) => [
+                'id' => $group->id,
+                'name' => $group->name,
+                'members' => $group->active_member_count . ' active',
+                'time' => trim(($group->meeting_day ?? '') . ' ' . ($group->meeting_time ?? '')) ?: 'Schedule to be announced',
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function getRecentChurchActivity(): array
+    {
+        $activity = collect();
+
+        if (Schema::hasTable('attendance_records')) {
+            $activity = $activity->merge(\App\Models\AttendanceRecord::query()->latest()->limit(3)->get()->map(fn ($record) => [
+                'title' => 'Attendance recorded',
+                'detail' => ucfirst(str_replace('_', ' ', $record->service_type)) . ' service attendance',
+                'created_at' => $record->created_at,
+                'time' => $record->created_at->diffForHumans(),
+                'status' => 'recorded',
+                'action_url' => route('dashboard') . '#attendance',
+                'action_label' => 'View attendance health',
+            ]));
+        }
+
+        if (Schema::hasTable('church_prayer_requests')) {
+            $activity = $activity->merge(ChurchPrayerRequest::query()->latest()->limit(2)->get()->map(fn ($request) => [
+                'title' => 'Prayer request received',
+                'detail' => ucfirst((string) $request->request_type) . ' prayer request',
+                'created_at' => $request->created_at,
+                'time' => $request->created_at->diffForHumans(),
+                'status' => $request->status,
+                'action_url' => route('prayer-requests'),
+                'action_label' => 'View prayer requests',
+            ]));
+        }
+
+        if (Schema::hasTable('church_contact_messages')) {
+            $activity = $activity->merge(ChurchContactMessage::query()->latest()->limit(2)->get()->map(fn ($message) => [
+                'title' => 'Church message received',
+                'detail' => $message->subject,
+                'created_at' => $message->created_at,
+                'time' => $message->created_at->diffForHumans(),
+                'status' => $message->status,
+                'action_url' => route('contact'),
+                'action_label' => 'View contact page',
+            ]));
+        }
+
+        return $activity->sortByDesc('created_at')->take(5)->map(function ($item) {
+            unset($item['created_at']);
+            return $item;
+        })->values()->all();
+    }
+
     private function getQuickActions(User $user, RolesEnum $currentRole): array
     {
         $baseActions = [
             [
-                'id' => 'apply_tradefi',
-                'title' => 'Apply TradeFi',
-                'description' => 'Apply for trade financing',
+                'id' => 'church-community',
+                'title' => 'Church Community',
+                'description' => 'Connect with members and ministries',
                 'icon' => 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z',
-                'color' => 'emerald',
-                'permission' => PermissionsEnum::ApplyTradeFi->value,
-                'route' => 'https://luxuryxtech.org.ng/#financing',
+                'color' => 'red',
+                'permission' => PermissionsEnum::ViewDashboard->value,
+                'route' => 'community',
             ],
             [
-                'id' => 'browse_courses',
-                'title' => 'Browse Courses',
-                'description' => 'Explore training opportunities',
+                'id' => 'word-ministry',
+                'title' => 'Word Ministry',
+                'description' => 'Open Sunday School and Bible Study',
                 'icon' => 'M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z',
                 'color' => 'blue',
-                'permission' => PermissionsEnum::AccessTraining->value,
-                'route' => 'training.courses',
+                'permission' => PermissionsEnum::ViewDashboard->value,
+                'route' => 'training.dashboard',
             ],
             [
-                'id' => 'join_community',
-                'title' => 'Join Community',
-                'description' => 'Connect with sector clusters',
+                'id' => 'small-groups',
+                'title' => 'Small Groups',
+                'description' => 'Connect with a church fellowship',
                 'icon' => 'M16 4C18.2 4 20 5.8 20 8S18.2 12 16 12 12 10.2 12 8 13.8 4 16 4M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M8 6C9.1 6 10 6.9 10 8S9.1 10 8 10 6 9.1 6 8 6.9 6 8 6M8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12Z',
                 'color' => 'teal',
-                'permission' => PermissionsEnum::JoinCommunities->value,
-                'route' => 'https://t.me/nypipcommunity',
+                'permission' => PermissionsEnum::ViewDashboard->value,
+                'route' => 'small-groups',
             ],
         ];
 
@@ -600,7 +595,7 @@ class DashboardController extends Controller
                     'icon' => 'M9 12L11 14L15 10M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12Z',
                     'color' => 'purple',
                     'permission' => PermissionsEnum::UploadPitchDeck->value,
-                    'route' => 'profile.upload-document',
+                    'route' => 'profile.edit',
                 ],
                 [
                     'id' => 'view_investor_matches',
@@ -609,7 +604,7 @@ class DashboardController extends Controller
                     'icon' => 'M17 8C17 10.76 14.76 13 12 13S7 10.76 7 8C7 5.24 9.24 3 12 3S17 5.24 17 8ZM12 15C16.42 15 20 16.79 20 19V21H4V19C4 16.79 7.58 15 12 15Z',
                     'color' => 'indigo',
                     'permission' => PermissionsEnum::ViewInvestorMatches->value,
-                    'route' => 'startup.investor-matches',
+                    'route' => 'community.index',
                 ],
             ],
             RolesEnum::SMEOwner => [
@@ -620,7 +615,7 @@ class DashboardController extends Controller
                     'icon' => 'M20 6L9 17L4 12L5.41 10.59L9 14.17L18.59 4.59L20 6Z',
                     'color' => 'orange',
                     'permission' => PermissionsEnum::AccessSMETools->value,
-                    'route' => 'sme.tools.index',
+                    'route' => 'profile.edit',
                 ],
             ],
             RolesEnum::Investor => [
@@ -631,7 +626,7 @@ class DashboardController extends Controller
                     'icon' => 'M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 4L13.5 7H7V9H13.5L15 12L21 9ZM7 12V22H9V18H11V22H13V12H7Z',
                     'color' => 'green',
                     'permission' => PermissionsEnum::ViewInvestmentOpportunities->value,
-                    'route' => 'investor.opportunities.index',
+                    'route' => 'community.index',
                 ],
                 [
                     'id' => 'portfolio_dashboard',
@@ -640,7 +635,7 @@ class DashboardController extends Controller
                     'icon' => 'M3 3H21C21.55 3 22 3.45 22 4V20C22 20.55 21.55 21 21 21H3C2.45 21 2 20.55 2 20V4C2 3.45 2.45 3 3 3ZM4 5V19H20V5H4Z',
                     'color' => 'emerald',
                     'permission' => PermissionsEnum::ManagePortfolio->value,
-                    'route' => 'investor.portfolio.index',
+                    'route' => 'profile.edit',
                 ],
             ],
             RolesEnum::TrainerMentorExpert => [
@@ -651,7 +646,7 @@ class DashboardController extends Controller
                     'icon' => 'M12 2L2 7V10C2 16 6 20.5 12 22C18 20.5 22 16 22 10V7L12 2Z',
                     'color' => 'cyan',
                     'permission' => PermissionsEnum::CreateCourses->value,
-                    'route' => 'trainer.courses.create',
+                    'route' => 'training.courses',
                 ],
                 [
                     'id' => 'manage_mentees',
@@ -660,7 +655,7 @@ class DashboardController extends Controller
                     'icon' => 'M16 4C18.2 4 20 5.8 20 8C20 10.2 18.2 12 16 12C13.8 12 12 10.2 12 8C12 5.8 13.8 4 16 4ZM8 6C9.1 6 10 6.9 10 8C10 9.1 9.1 10 8 10C6.9 10 6 9.1 6 8C6 6.9 6.9 6 8 6ZM8 12C10.7 12 16 13.3 16 16V18H0V16C0 13.3 5.3 12 8 12ZM16 14C18.7 14 24 15.3 24 18V20H18V18C18 16.9 17.6 15.4 16 14Z',
                     'color' => 'violet',
                     'permission' => PermissionsEnum::ManageMentorship->value,
-                    'route' => 'trainer.mentees.index',
+                    'route' => 'community.index',
                 ],
             ],
             default => [],
@@ -672,15 +667,6 @@ class DashboardController extends Controller
         return array_values(array_filter($allActions, function ($action) use ($user) {
             return $user->can($action['permission']);
         }));
-    }
-
-    // Helper methods
-    private function formatTransactionAmount(Transaction $transaction): string
-    {
-        $sign = in_array($transaction->transaction_type, ['received', 'deposit']) ? '+' : '-';
-        $symbol = $transaction->currency === 'NGN' ? '₦' : '';
-
-        return $sign . $symbol . number_format($transaction->amount, 2) . ' ' . $transaction->currency;
     }
 
     private function formatEnrollment(): \Closure
@@ -702,63 +688,6 @@ class DashboardController extends Controller
     {
         $words = explode(' ', $name);
         return strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
-    }
-
-    private function getStatusText(string $status): string
-    {
-        return match($status) {
-            'pending' => 'application submitted',
-            'under_review' => 'under review',
-            'approved' => 'application approved',
-            'rejected' => 'application rejected',
-            'disbursed' => 'funds disbursed',
-            'matched' => 'has been matched',
-            'interested' => 'showing interest',
-            'reviewing' => 'under review',
-            default => 'status updated'
-        };
-    }
-
-    private function mapStatus(string $status): string
-    {
-        return match($status) {
-            'approved', 'disbursed', 'completed', 'matched', 'active' => 'success',
-            'pending', 'under_review', 'reviewing', 'interested', 'in_progress' => 'pending',
-            'rejected', 'failed', 'cancelled', 'suspended' => 'failed',
-            default => 'info'
-        };
-    }
-
-    // Calculation helper methods
-    private function calculateBusinessGrowth(User $user): string
-    {
-        // This would calculate based on revenue comparison
-        // For now, return a placeholder
-        return '+12.5%';
-    }
-
-    private function calculatePortfolioValue(User $user): string
-    {
-        // Calculate total portfolio value
-        return '₦' . number_format(0); // Placeholder
-    }
-
-    private function calculateROI(User $user): string
-    {
-        // Calculate return on investment
-        return '+8.7%'; // Placeholder
-    }
-
-    private function calculateYouthImpact(User $user): int
-    {
-        // Calculate total youth impacted through senator's initiatives
-        return 1250; // Placeholder
-    }
-
-    private function calculateBeneficiaries(User $user): int
-    {
-        // Calculate beneficiaries of institutional partnerships
-        return 850; // Placeholder
     }
 
     private function calculateCompletionRate(User $user): string

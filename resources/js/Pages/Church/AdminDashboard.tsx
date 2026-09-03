@@ -48,6 +48,15 @@ export default function AdminDashboard({ churchData }: { churchData: ChurchData 
                     ))}
                 </div>
 
+                <div className="mt-6 flex flex-col gap-5 rounded-3xl border border-red-200 bg-red-50 p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Sunday service</p>
+                        <h2 className="mt-2 text-2xl font-bold text-slate-900">Take attendance</h2>
+                        <p className="mt-2 max-w-2xl text-sm text-slate-600">Open the monthly service register and mark each member present or late as they arrive.</p>
+                    </div>
+                    <a href={route('church-admin.service-register')} className="inline-flex shrink-0 items-center justify-center rounded-xl bg-red-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-red-800">Open attendance register</a>
+                </div>
+
                 <div className="mt-8 grid gap-6 lg:grid-cols-2">
                     <div className="rounded-3xl border border-red-100 bg-white p-6 shadow-sm">
                         <h2 className="text-xl font-bold text-slate-900">Ministry Snapshot</h2>

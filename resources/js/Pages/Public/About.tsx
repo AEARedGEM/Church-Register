@@ -24,12 +24,12 @@ export default function About() {
                         <div className="grid items-center gap-8 md:grid-cols-[220px_1fr]">
                             <img
                                 src="/images/President_GO.jpeg"
-                                alt="Pastor (Dr.) S.O. Ilesanmi"
+                                alt="Prophet (Dr.) Samuel Olugbenga Ilesanmi"
                                 className="h-52 w-full rounded-2xl border border-red-700 object-cover md:h-60"
                             />
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-red-300">President</p>
-                                <h2 className="mt-3 text-2xl font-bold text-white">Pastor (Dr.) S.O. Ilesanmi</h2>
+                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-red-300">President &amp; General Overseer, APGAW</p>
+                                <h2 className="mt-3 text-2xl font-bold text-white">Prophet (Dr.) Samuel Olugbenga Ilesanmi</h2>
                                 <p className="mt-3 text-slate-300">
                                     A visionary church leader committed to prayer, spiritual growth, and building a Christ-centered community rooted in faith, compassion, and purposeful service.
                                 </p>

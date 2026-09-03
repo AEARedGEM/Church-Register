@@ -3,24 +3,14 @@ import { Head, Link } from '@inertiajs/react';
 export default function Leadership() {
     const leaders = [
         {
-            role: 'Senior Pastor',
-            name: 'Pastor in Charge',
-            bio: 'Providing spiritual direction, pastoral care, and visionary leadership for the church family.'
+            role: 'Vice-President, APGAW',
+            name: 'Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi',
+            bio: 'Serving the church through prayer, evangelism, discipleship, and compassionate spiritual care.'
         },
         {
-            role: 'Associate Pastor',
-            name: 'Pastorate Team',
-            bio: 'Supporting worship life, discipleship, pastoral care, and ministry alignment across the congregation.'
-        },
-        {
-            role: 'Youth & Teens Leader',
-            name: 'Youth Ministry Leadership',
-            bio: 'Guiding the next generation in faith, service, culture, and biblical discipleship.'
-        },
-        {
-            role: 'Women & Outreach Leader',
-            name: 'Women & Community Outreach',
-            bio: 'Leading prayer, fellowship, care ministries, and church outreach to families and communities.'
+            role: 'Senior Pastor, Church Administration',
+            name: 'Pastor Michael Olanrewaju',
+            bio: 'Leading church administration, pastoral care, teaching, and the day-to-day shepherding of the church family.'
         }
     ];
 
@@ -50,12 +40,12 @@ export default function Leadership() {
                         <div className="grid items-center gap-8 md:grid-cols-[220px_1fr]">
                             <img
                                 src="/images/President_GO.jpeg"
-                                alt="Pastor (Dr.) S.O. Ilesanmi"
+                                alt="Prophet (Dr.) Samuel Olugbenga Ilesanmi"
                                 className="h-52 w-full rounded-2xl border border-red-700 object-cover md:h-60"
                             />
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-red-300">President</p>
-                                <h2 className="mt-3 text-3xl font-bold text-white">Pastor (Dr.) S.O. Ilesanmi</h2>
+                                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-red-300">President &amp; General Overseer, APGAW</p>
+                                <h2 className="mt-3 text-3xl font-bold text-white">Prophet (Dr.) Samuel Olugbenga Ilesanmi</h2>
                                 <p className="mt-3 text-slate-300">
                                     The president provides spiritual direction, pastoral oversight, and a clear vision for worship, discipleship, and church growth across the fellowship.
                                 </p>

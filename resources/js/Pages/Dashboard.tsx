@@ -66,8 +66,6 @@ interface DashboardProps {
     stats: any;
     recentActivity: any[];
     upcomingEvents: UpcomingEvent[];
-    walletData: any;
-    fundingData: any;
     trainingData: any;
     communityData: any;
     quickActions: QuickAction[];
@@ -77,46 +75,53 @@ interface DashboardProps {
         active_ministries?: number;
         upcoming_events?: number;
     };
+    churchHealth: {
+        attendance: number;
+        attendance_change: number | null;
+        prayer_requests: number;
+        new_visits: number;
+        next_service: string | null;
+        next_service_date: string | null;
+    };
+    churchLeadership: LeadershipCard[];
+    churchGroups: SmallGroupCard[];
+    recentChurchActivity: ChurchActivity[];
 }
 
-const defaultQuickActions: QuickAction[] = [
-    { id: 'attendance', title: 'Record Attendance', description: 'Update today’s service count', icon: '✓', color: 'bg-red-600', permission: 'view_dashboard', route: 'training.dashboard' },
-    { id: 'event', title: 'Create Event', description: 'Plan a church gathering', icon: '📅', color: 'bg-rose-600', permission: 'view_dashboard', route: 'community' },
-    { id: 'prayer', title: 'Prayer Request', description: 'Share prayer needs', icon: '🙏', color: 'bg-orange-600', permission: 'view_dashboard', route: 'profile.edit' },
-    { id: 'members', title: 'Members', description: 'Manage your community', icon: '👥', color: 'bg-red-700', permission: 'view_dashboard', route: 'community' },
-];
+interface LeadershipCard {
+    name: string;
+    role?: string | null;
+    note?: string | null;
+    image?: string | null;
+}
 
-const defaultEventList: UpcomingEvent[] = [
-    { id: 1, title: 'Sunday Worship Service', date: 'This Sunday · 9:00 AM', type: 'Service', location: 'Main Sanctuary', is_registered: true },
-    { id: 2, title: 'Prayer & Healing Night', date: 'Friday · 6:30 PM', type: 'Prayer', location: 'Prayer Hall', is_registered: false },
-    { id: 3, title: 'Youth Revival', date: 'Saturday · 4:00 PM', type: 'Outreach', location: 'Youth Centre', is_registered: false },
-];
+interface SmallGroupCard {
+    id: number;
+    name: string;
+    members: string;
+    time: string;
+}
 
-const leadershipCards = [
-    { name: 'Pastor (Dr.) S.O. Ilesanmi', role: 'President', note: 'Spiritual direction and vision', image: '/images/President_GO.jpeg' },
-    { name: 'Pastor A. Johnson', role: 'Admin Pastor', note: 'Operations and pastoral care', image: '' },
-    { name: 'Elder F. Adeyemi', role: 'Discipleship Lead', note: 'Member growth and follow-up', image: '' },
-];
-
-const smallGroupCards = [
-    { name: 'Men’s Fellowship', members: '48 active', time: 'Every Saturday · 7:00 AM' },
-    { name: 'Women’s Prayer Circle', members: '62 active', time: 'Every Tuesday · 6:00 PM' },
-    { name: 'Youth Ignite', members: '74 active', time: 'Every Friday · 5:30 PM' },
-    { name: 'Children’s Sunday School', members: '93 active', time: 'Every Sunday · 9:00 AM' },
-];
-
-const recentChurchActivity = [
-    { title: 'Attendance recorded for Sunday worship', detail: '312 members joined service', time: '2 hours ago', status: 'success' },
-    { title: 'Prayer request submitted', detail: 'A member requested healing prayers', time: 'Today', status: 'info' },
-    { title: 'Volunteer rota updated', detail: 'Children’s ministry team scheduled', time: 'Yesterday', status: 'pending' },
-];
+interface ChurchActivity {
+    title: string;
+    detail: string;
+    time: string;
+    status: string;
+    action_url?: string;
+    action_label?: string;
+}
 
 export default function Dashboard({
     user,
-    roleLabel,
     quickActions,
     upcomingEvents,
     churchSummary,
+    churchHealth,
+    churchLeadership,
+    churchGroups,
+    recentChurchActivity,
+    trainingData,
+    communityData,
 }: DashboardProps) {
     const [activeSection, setActiveSection] = useState<'overview' | 'attendance' | 'events' | 'community'>('overview');
     const [copiedReferral, setCopiedReferral] = useState(false);
@@ -150,8 +155,8 @@ export default function Dashboard({
         },
     ];
 
-    const actions = quickActions?.length ? quickActions : defaultQuickActions;
-    const churchEvents = upcomingEvents?.length ? upcomingEvents.slice(0, 3) : defaultEventList;
+    const actions = quickActions ?? [];
+    const churchEvents = upcomingEvents?.slice(0, 3) ?? [];
 
     const navItems = [
         { id: 'overview', label: 'Overview' },
@@ -215,7 +220,11 @@ export default function Dashboard({
                             <button
                                 key={item.id}
                                 type="button"
-                                onClick={() => setActiveSection(item.id as typeof activeSection)}
+                                onClick={() => {
+                                    setActiveSection(item.id as typeof activeSection);
+                                    document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }}
+                                aria-current={activeSection === item.id ? 'page' : undefined}
                                 className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
                                     activeSection === item.id
                                         ? 'bg-red-600 text-white shadow-sm'
@@ -227,7 +236,7 @@ export default function Dashboard({
                         ))}
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div id="overview" className="grid scroll-mt-36 gap-4 md:grid-cols-2 xl:grid-cols-4">
                         {summaryCards.map((card) => (
                             <div key={card.title} className="rounded-2xl border border-red-100 bg-white p-4 shadow-sm">
                                 <div className={`mb-4 h-2.5 rounded-full bg-gradient-to-r ${card.tone}`} />
@@ -260,23 +269,35 @@ export default function Dashboard({
                         <p className="mt-2 text-xs text-slate-500">Referral code: <span className="font-semibold tracking-wider text-slate-700">{user.referral?.code}</span></p>
                     </div>
 
-                    <div className="mt-6 grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
+                    <div className="mt-6 grid gap-4 md:grid-cols-2">
+                        <Link href={route('training.dashboard')} className="rounded-2xl border border-red-100 bg-white p-5 shadow-sm transition hover:border-red-300 hover:bg-red-50">
+                            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Learning</p>
+                            <h2 className="mt-2 text-lg font-bold text-slate-900">Training progress</h2>
+                            <p className="mt-3 text-sm text-slate-600">{trainingData?.stats?.total_enrolled ?? 0} enrolled, {trainingData?.stats?.in_progress ?? 0} in progress, {trainingData?.stats?.completed ?? 0} completed</p>
+                        </Link>
+                        <Link href={route('community.index')} className="rounded-2xl border border-red-100 bg-white p-5 shadow-sm transition hover:border-red-300 hover:bg-red-50">
+                            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Community</p>
+                            <h2 className="mt-2 text-lg font-bold text-slate-900">Your community activity</h2>
+                            <p className="mt-3 text-sm text-slate-600">{communityData?.community_stats?.total_communities ?? 0} communities, {communityData?.community_stats?.total_posts ?? 0} posts, {communityData?.community_stats?.mentorship_sessions ?? 0} mentorship sessions</p>
+                        </Link>
+                    </div>
+
+                    <div id="attendance" className="mt-6 grid scroll-mt-36 gap-6 xl:grid-cols-[1.3fr_0.7fr]">
                         <div className="rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
                             <div className="mb-5 flex items-center justify-between gap-3">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Overview</p>
                                     <h2 className="mt-2 text-xl font-bold text-slate-900">Church health at a glance</h2>
                                 </div>
-                                <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">{roleLabel}</span>
                             </div>
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="rounded-2xl border border-red-100 bg-red-50 p-4">
                                     <div className="flex items-center justify-between text-sm text-red-700">
                                         <span className="font-semibold">Attendance</span>
-                                        <span>+18% vs last week</span>
+                                        <span>{churchHealth.attendance_change === null ? 'No prior data' : `${churchHealth.attendance_change >= 0 ? '+' : ''}${churchHealth.attendance_change}% vs last week`}</span>
                                     </div>
-                                    <div className="mt-4 text-3xl font-bold text-slate-900">312</div>
+                                    <div className="mt-4 text-3xl font-bold text-slate-900">{churchHealth.attendance.toLocaleString()}</div>
                                     <p className="mt-2 text-sm text-slate-600">Members present in worship</p>
                                 </div>
 
@@ -285,7 +306,7 @@ export default function Dashboard({
                                         <span className="font-semibold">Prayer coverage</span>
                                         <span>Live</span>
                                     </div>
-                                    <div className="mt-4 text-3xl font-bold text-slate-900">86</div>
+                                    <div className="mt-4 text-3xl font-bold text-slate-900">{churchHealth.prayer_requests.toLocaleString()}</div>
                                     <p className="mt-2 text-sm text-slate-600">Prayer requests being supported</p>
                                 </div>
 
@@ -294,17 +315,17 @@ export default function Dashboard({
                                         <span className="font-semibold">New visits</span>
                                         <span>This month</span>
                                     </div>
-                                    <div className="mt-4 text-3xl font-bold text-slate-900">47</div>
+                                    <div className="mt-4 text-3xl font-bold text-slate-900">{churchHealth.new_visits.toLocaleString()}</div>
                                     <p className="mt-2 text-sm text-slate-600">Visitors connected to the church</p>
                                 </div>
 
                                 <div className="rounded-2xl border border-red-100 bg-red-50 p-4">
                                     <div className="flex items-center justify-between text-sm text-red-700">
                                         <span className="font-semibold">Service plan</span>
-                                        <span>Sunday</span>
+                                        <span>{churchHealth.next_service_date ?? 'To be announced'}</span>
                                     </div>
-                                    <div className="mt-4 text-xl font-bold text-slate-900">Worship, prayer, outreach</div>
-                                    <p className="mt-2 text-sm text-slate-600">Flow for today’s gathering</p>
+                                    <div className="mt-4 text-xl font-bold text-slate-900">{churchHealth.next_service ?? 'No upcoming service scheduled'}</div>
+                                    <p className="mt-2 text-sm text-slate-600">Next scheduled church activity</p>
                                 </div>
                             </div>
                         </div>
@@ -314,8 +335,8 @@ export default function Dashboard({
                             <h2 className="mt-2 text-xl font-bold text-slate-900">Pastoral leadership</h2>
 
                             <div className="mt-4 space-y-3">
-                                {leadershipCards.map((person) => (
-                                    <div key={person.name} className="rounded-2xl border border-red-100 bg-red-50 p-3">
+                                {churchLeadership.length > 0 ? churchLeadership.map((person) => (
+                                    <Link key={person.name} href={route('leadership')} className="block rounded-2xl border border-red-100 bg-red-50 p-3 transition hover:border-red-300 hover:bg-red-100">
                                         <div className="flex items-start gap-3">
                                             {person.image ? (
                                                 <img
@@ -330,39 +351,43 @@ export default function Dashboard({
                                             )}
                                             <div className="min-w-0 flex-1">
                                                 <p className="font-semibold text-slate-900">{person.name}</p>
-                                                <p className="mt-1 text-sm font-medium text-red-700">{person.role}</p>
-                                                <p className="mt-2 text-xs text-slate-600">{person.note}</p>
+                                                {person.role && <p className="mt-1 text-sm font-medium text-red-700">{person.role}</p>}
+                                                {person.note && <p className="mt-2 text-xs text-slate-600">{person.note}</p>}
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    </Link>
+                                )) : <p className="rounded-2xl bg-red-50 p-4 text-sm text-slate-600">No leadership profiles published yet.</p>}
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+                    <div id="events" className="mt-6 grid scroll-mt-36 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
                         <div className="rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
                             <div className="mb-4 flex items-center justify-between gap-3">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Events</p>
                                     <h2 className="mt-2 text-xl font-bold text-slate-900">Upcoming church programs</h2>
                                 </div>
-                                <button type="button" className="rounded-full bg-red-600 px-3 py-1.5 text-xs font-semibold text-white">
-                                    Add Event
-                                </button>
+                                <Link href={route('events')} className="rounded-full bg-gradient-to-r from-blue-600 via-red-500 to-red-600 px-3 py-1.5 text-xs font-semibold text-white">
+                                    View calendar
+                                </Link>
                             </div>
 
                             <div className="space-y-3">
-                                {churchEvents.map((event) => (
-                                    <div key={event.id} className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                {churchEvents.length > 0 ? churchEvents.map((event) => (
+                                    <div key={event.id} className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 transition hover:border-red-300 hover:bg-red-50">
                                         <div>
-                                            <p className="font-semibold text-slate-900">{event.title}</p>
+                                            <Link href={route('events.detail', event.id)} className="font-semibold text-slate-900 hover:text-red-700">{event.title}</Link>
                                             <p className="mt-1 text-sm text-slate-600">{event.date}</p>
                                             <p className="mt-1 text-xs text-slate-500">{event.location}</p>
+                                            <p className="mt-2 text-xs text-slate-500">{event.registration_deadline ? `Register by ${event.registration_deadline}` : 'Registration open'}</p>
                                         </div>
-                                        <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700">{event.type}</span>
+                                        <div className="flex shrink-0 flex-col items-end gap-2">
+                                            <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700">{event.type}</span>
+                                            {event.is_registered ? <span className="text-xs font-semibold text-red-700">Registered</span> : <button type="button" onClick={() => router.post(route('events.register', event.id))} className="rounded-full border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100">Register</button>}
+                                        </div>
                                     </div>
-                                ))}
+                                )) : <p className="rounded-2xl bg-red-50 p-4 text-sm text-slate-600">No upcoming church programs scheduled.</p>}
                             </div>
                         </div>
 
@@ -389,20 +414,20 @@ export default function Dashboard({
                         </div>
                     </div>
 
-                    <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_1fr]">
+                    <div id="community" className="mt-6 grid scroll-mt-36 gap-6 xl:grid-cols-[1fr_1fr]">
                         <div className="rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
                             <div className="mb-4 flex items-center justify-between gap-3">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Community</p>
                                     <h2 className="mt-2 text-xl font-bold text-slate-900">Small groups</h2>
                                 </div>
-                                <button type="button" className="rounded-full border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700">
-                                    Manage
-                                </button>
+                                <Link href={route('small-groups')} className="rounded-full border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700">
+                                    View groups
+                                </Link>
                             </div>
 
                             <div className="space-y-3">
-                                {smallGroupCards.map((group) => (
+                                {churchGroups.length > 0 ? churchGroups.map((group) => (
                                     <div key={group.name} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                                         <div className="flex items-center justify-between gap-3">
                                             <p className="font-semibold text-slate-900">{group.name}</p>
@@ -412,8 +437,11 @@ export default function Dashboard({
                                         </div>
                                         <p className="mt-2 text-sm text-slate-600">{group.members}</p>
                                         <p className="mt-1 text-xs text-slate-500">{group.time}</p>
+                                        <button type="button" onClick={() => router.post(route('small-groups.join', group.id))} className="mt-3 rounded-full border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100">
+                                            Join group
+                                        </button>
                                     </div>
-                                ))}
+                                )) : <p className="rounded-2xl bg-red-50 p-4 text-sm text-slate-600">No active small groups published yet.</p>}
                             </div>
                         </div>
 
@@ -423,13 +451,13 @@ export default function Dashboard({
                                     <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Latest</p>
                                     <h2 className="mt-2 text-xl font-bold text-slate-900">Recent activity</h2>
                                 </div>
-                                <button type="button" className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-semibold text-red-700">
-                                    View all
-                                </button>
+                                <Link href={route('dashboard')} className="rounded-full bg-red-100 px-3 py-1.5 text-xs font-semibold text-red-700">
+                                    Refresh
+                                </Link>
                             </div>
 
                             <div className="space-y-3">
-                                {recentChurchActivity.map((item) => (
+                                {recentChurchActivity.length > 0 ? recentChurchActivity.map((item) => (
                                     <div key={item.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                                         <div className="flex items-center justify-between gap-3">
                                             <p className="font-semibold text-slate-900">{item.title}</p>
@@ -445,8 +473,9 @@ export default function Dashboard({
                                         </div>
                                         <p className="mt-2 text-sm text-slate-600">{item.detail}</p>
                                         <p className="mt-2 text-xs text-slate-500">{item.time}</p>
+                                        {item.action_url && <a href={item.action_url} className="mt-3 inline-block text-xs font-semibold text-red-700 hover:text-red-900">{item.action_label}</a>}
                                     </div>
-                                ))}
+                                )) : <p className="rounded-2xl bg-red-50 p-4 text-sm text-slate-600">No recent church activity recorded yet.</p>}
                             </div>
                         </div>
                     </div>

@@ -152,7 +152,7 @@ class ChurchPublicEngagementFeatureTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->from('/media')
+            ->from('/prayer-requests')
             ->post('/prayer-requests', [
                 'full_name' => 'Joy Adebayo',
                 'email' => 'joy@example.com',
@@ -161,11 +161,21 @@ class ChurchPublicEngagementFeatureTest extends TestCase
                 'is_public' => false,
             ]);
 
-        $response->assertRedirect('/media');
+        $response->assertRedirect('/prayer-requests');
         $this->assertDatabaseHas('church_prayer_requests', [
             'full_name' => 'Joy Adebayo',
             'request_type' => 'healing',
         ]);
+    }
+
+    public function test_public_prayer_requests_page_is_available_with_flash_data(): void
+    {
+        $this->withSession(['success' => 'Prayer request received.'])
+            ->get('/prayer-requests')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('flash.success', 'Prayer request received.')
+            );
     }
 
     public function test_public_contact_message_can_be_submitted(): void

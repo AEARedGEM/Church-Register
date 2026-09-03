@@ -165,11 +165,13 @@ class ChurchAdminController extends Controller
         $attendanceStats = [
             'total' => AttendanceRecord::count(),
             'present_or_late' => AttendanceRecord::whereIn('status', ['present', 'late'])->count(),
-            'first_timers' => AttendanceRecord::where('first_timer', true)->count(),
-            'sunday_school' => AttendanceRecord::where('service_type', 'sunday_school')->count(),
-            'main_service' => AttendanceRecord::where('service_type', 'main_service')->count(),
+            'first_timers' => AttendanceRecord::where('first_timer', true)->whereIn('status', ['present', 'late'])->count(),
+            'sunday_school' => AttendanceRecord::where('service_type', 'sunday_school')->whereIn('status', ['present', 'late'])->count(),
+            'main_service' => AttendanceRecord::where('service_type', 'main_service')->whereIn('status', ['present', 'late'])->count(),
             'latest_service_date' => $latestServiceDateOnly,
-            'latest_service_total' => $latestServiceDateOnly ? AttendanceRecord::whereDate('service_date', $latestServiceDateOnly)->count() : 0,
+            'latest_service_total' => $latestServiceDateOnly
+                ? AttendanceRecord::whereDate('service_date', $latestServiceDateOnly)->whereIn('status', ['present', 'late'])->count()
+                : 0,
         ];
         $records = AttendanceRecord::with(['user', 'memberProfile'])
             ->orderByDesc('service_date')
@@ -288,6 +290,8 @@ class ChurchAdminController extends Controller
             ]);
         }
 
+        $this->validateInvitationAttendance($record, $memberProfile);
+
         return redirect()->route('church-admin.service-register', ['month' => $selectedMonth->format('Y-m')])->with('success', 'Service register updated successfully.');
     }
 
@@ -321,17 +325,37 @@ class ChurchAdminController extends Controller
 
         $memberProfile = MemberProfile::findOrFail($validated['member_profile_id']);
 
-        $attendance = AttendanceRecord::create([
+        $attendance = AttendanceRecord::query()
+            ->where('member_profile_id', $memberProfile->id)
+            ->where('service_type', $validated['service_type'])
+            ->whereDate('service_date', $validated['service_date'])
+            ->first();
+        $attributes = [
             'user_id' => $memberProfile->user_id ?? $request->user()->id,
-            'member_profile_id' => $memberProfile->id,
-            'service_type' => $validated['service_type'],
-            'service_date' => $validated['service_date'],
             'status' => $validated['status'],
             'first_timer' => (bool) ($validated['first_timer'] ?? false),
             'recorded_by' => $request->user()->id,
             'notes' => $validated['notes'] ?? null,
-        ]);
+        ];
 
+        if ($attendance) {
+            $attendance->update($attributes);
+        } else {
+            $attendance = AttendanceRecord::create([
+                'member_profile_id' => $memberProfile->id,
+                'service_type' => $validated['service_type'],
+                'service_date' => $validated['service_date'],
+                ...$attributes,
+            ]);
+        }
+
+        $this->validateInvitationAttendance($attendance, $memberProfile);
+
+        return redirect()->route('church-admin.attendance')->with('success', 'Attendance recorded successfully.');
+    }
+
+    private function validateInvitationAttendance(AttendanceRecord $attendance, MemberProfile $memberProfile): void
+    {
         if ($attendance->service_type === 'main_service'
             && in_array($attendance->status, ['present', 'late'], true)
             && $attendance->service_date->isSunday()) {
@@ -344,7 +368,5 @@ class ChurchAdminController extends Controller
                     'validation_attendance_id' => $attendance->id,
                 ]);
         }
-
-        return redirect()->route('church-admin.attendance')->with('success', 'Attendance recorded successfully.');
     }
 }

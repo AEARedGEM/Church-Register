@@ -346,6 +346,34 @@ class ChurchAdminDashboardTest extends TestCase
         ]);
     }
 
+    public function test_repeated_attendance_submission_updates_the_existing_service_record(): void
+    {
+        $admin = $this->admin();
+        $profile = $admin->memberProfile()->create([
+            'first_name' => 'Grace',
+            'last_name' => 'Member',
+            'membership_status' => 'member',
+            'is_active' => true,
+        ]);
+
+        foreach (['present', 'late'] as $status) {
+            $this->actingAs($admin)->post('/church-admin/attendance', [
+                'member_profile_id' => $profile->id,
+                'service_type' => 'main_service',
+                'service_date' => '2026-09-06',
+                'status' => $status,
+            ])->assertRedirect('/church-admin/attendance');
+        }
+
+        $this->assertDatabaseCount('attendance_records', 1);
+        $this->assertTrue(AttendanceRecord::query()
+            ->where('member_profile_id', $profile->id)
+            ->where('service_type', 'main_service')
+            ->whereDate('service_date', '2026-09-06')
+            ->where('status', 'late')
+            ->exists());
+    }
+
     public function test_church_admin_service_register_lists_active_members_by_sunday_week(): void
     {
         $admin = $this->admin();
@@ -425,6 +453,34 @@ class ChurchAdminDashboardTest extends TestCase
             ->whereDate('service_date', '2026-09-06')
             ->where('status', 'late')
             ->exists());
+    }
+
+    public function test_service_register_attendance_validates_a_qualifying_invitation(): void
+    {
+        $admin = $this->admin();
+        $invitee = User::factory()->create();
+        $profile = $invitee->memberProfile()->create([
+            'first_name' => 'Invited',
+            'last_name' => 'Member',
+            'membership_status' => 'first_timer',
+            'is_active' => true,
+        ]);
+        $invitation = \App\Models\ChurchInvitation::create([
+            'inviter_id' => $admin->id,
+            'invitee_id' => $invitee->id,
+            'referral_code' => $admin->referral_code,
+            'registered_at' => now(),
+        ]);
+
+        $this->actingAs($admin)->post('/church-admin/service-register/attendance', [
+            'member_profile_id' => $profile->id,
+            'month' => '2026-09',
+            'week' => 1,
+            'status' => 'present',
+        ])->assertRedirect('/church-admin/service-register?month=2026-09');
+
+        $this->assertNotNull($invitation->fresh()->validated_at);
+        $this->assertNotNull($invitation->fresh()->validation_attendance_id);
     }
 
     public function test_church_admin_can_create_a_new_member_profile(): void

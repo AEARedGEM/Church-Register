@@ -1011,7 +1011,7 @@ class PublicPageController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('media')->with('success', 'Your prayer request has been received and will be lifted in prayer.');
+        return redirect()->route('prayer-requests')->with('success', 'Your prayer request has been received and will be lifted in prayer.');
     }
 
     public function knowledgeBase()
@@ -1028,10 +1028,13 @@ class PublicPageController extends Controller
         ]);
     }
 
-    public function prayerRequests()
+    public function prayerRequests(Request $request)
     {
         return Inertia::render('Public/PrayerRequests', [
             'laravelVersion' => Application::VERSION,
+            'flash' => [
+                'success' => $request->session()->get('success'),
+            ],
         ]);
     }
 

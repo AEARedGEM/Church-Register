@@ -24,6 +24,7 @@ use App\Models\SmallGroupMembership;
 use App\Models\SmallGroupMeeting;
 use App\Notifications\ContactMessageResolved;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class ChurchOperationsController extends Controller
@@ -433,24 +434,47 @@ class ChurchOperationsController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'report_date' => ['required', 'date'],
             'summary' => ['nullable', 'string'],
-            'attendance_count' => ['nullable', 'integer', 'min:0'],
-            'first_timers_count' => ['nullable', 'integer', 'min:0'],
             'new_members_count' => ['nullable', 'integer', 'min:0'],
             'prayer_requests_count' => ['nullable', 'integer', 'min:0'],
         ]);
+
+        [$periodStart, $periodEnd] = $this->reportPeriodBounds(
+            $validated['period_type'],
+            Carbon::parse($validated['report_date'])
+        );
+        $attendanceQuery = \App\Models\AttendanceRecord::query()
+            ->whereDate('service_date', '>=', $periodStart->toDateString())
+            ->whereDate('service_date', '<=', $periodEnd->toDateString())
+            ->whereIn('status', ['present', 'late']);
+        $attendanceCount = (clone $attendanceQuery)->count();
+        $firstTimersCount = (clone $attendanceQuery)->where('first_timer', true)->count();
 
         ChurchReport::create([
             'period_type' => $validated['period_type'],
             'title' => $validated['title'],
             'report_date' => $validated['report_date'],
             'summary' => $validated['summary'] ?? null,
-            'attendance_count' => (int) ($validated['attendance_count'] ?? 0),
-            'first_timers_count' => (int) ($validated['first_timers_count'] ?? 0),
+            'attendance_count' => $attendanceCount,
+            'first_timers_count' => $firstTimersCount,
             'new_members_count' => (int) ($validated['new_members_count'] ?? 0),
             'prayer_requests_count' => (int) ($validated['prayer_requests_count'] ?? 0),
         ]);
 
         return redirect()->route('church-admin.reports')->with('success', 'Church report created successfully.');
+    }
+
+    private function reportPeriodBounds(string $periodType, Carbon $reportDate): array
+    {
+        return match ($periodType) {
+            'weekly' => (function () use ($reportDate): array {
+                $start = $reportDate->copy()->startOfWeek(Carbon::MONDAY);
+
+                return [$start, $start->copy()->addDays(6)];
+            })(),
+            'monthly' => [$reportDate->copy()->startOfMonth(), $reportDate->copy()->endOfMonth()],
+            'quarterly' => [$reportDate->copy()->firstOfQuarter(), $reportDate->copy()->lastOfQuarter()],
+            'annual' => [$reportDate->copy()->startOfYear(), $reportDate->copy()->endOfYear()],
+        };
     }
 
     public function scorecards(Request $request)

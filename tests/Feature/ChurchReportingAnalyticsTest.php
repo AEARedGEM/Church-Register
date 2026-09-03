@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AttendanceRecord;
 use App\Models\User;
 use App\Models\ChurchScorecard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,6 +16,28 @@ class ChurchReportingAnalyticsTest extends TestCase
     {
         /** @var User $user */
         $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
+
+        foreach (range(1, 120) as $index) {
+            AttendanceRecord::create([
+                'user_id' => $user->id,
+                'service_type' => 'main_service',
+                'service_date' => '2026-09-06',
+                'status' => 'present',
+                'first_timer' => $index <= 15,
+                'recorded_by' => $user->id,
+            ]);
+        }
+
+        foreach (range(1, 160) as $index) {
+            AttendanceRecord::create([
+                'user_id' => $user->id,
+                'service_type' => 'main_service',
+                'service_date' => '2026-09-13',
+                'status' => 'present',
+                'first_timer' => $index <= 18,
+                'recorded_by' => $user->id,
+            ]);
+        }
 
         $this->actingAs($user)
             ->post('/church-admin/reports', [
@@ -109,5 +132,44 @@ class ChurchReportingAnalyticsTest extends TestCase
             ->has('reports', 1)
             ->where('reports.0.title', 'Weekly Worship Report')
         );
+    }
+
+    public function test_report_generation_uses_period_boundaries_and_qualifying_statuses(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
+
+        foreach ([
+            ['2026-08-30', 'present', false],
+            ['2026-09-01', 'present', true],
+            ['2026-09-06', 'late', true],
+            ['2026-09-06', 'absent', true],
+            ['2026-09-07', 'excused', false],
+        ] as [$serviceDate, $status, $firstTimer]) {
+            AttendanceRecord::create([
+                'user_id' => $user->id,
+                'service_type' => 'main_service',
+                'service_date' => $serviceDate,
+                'status' => $status,
+                'first_timer' => $firstTimer,
+                'recorded_by' => $user->id,
+            ]);
+        }
+
+        $this->actingAs($user)
+            ->post('/church-admin/reports', [
+                'period_type' => 'weekly',
+                'title' => 'Boundary Report',
+                'report_date' => '2026-09-03',
+                'attendance_count' => 999,
+                'first_timers_count' => 999,
+            ])
+            ->assertRedirect('/church-admin/reports');
+
+        $this->assertDatabaseHas('church_reports', [
+            'title' => 'Boundary Report',
+            'attendance_count' => 2,
+            'first_timers_count' => 2,
+        ]);
     }
 }
