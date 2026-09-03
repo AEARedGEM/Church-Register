@@ -14,6 +14,8 @@ type EventItem = {
     is_virtual?: boolean;
     agenda?: string[] | null;
     requirements?: string[] | null;
+    active_registration_count?: number;
+    can_register?: boolean;
 };
 
 export default function EventDetail({
@@ -119,14 +121,14 @@ export default function EventDetail({
 
                             <div className="mt-8 flex flex-wrap gap-4">
                                 {isRegistered ? (
-                                    <button
+                                        <button
                                         type="button"
                                         disabled
                                         className="rounded-full border border-emerald-700 bg-emerald-900/40 px-6 py-3 font-semibold text-emerald-100"
                                     >
                                         Registered
                                     </button>
-                                ) : (
+                                ) : event.can_register ? (
                                     <button
                                         type="button"
                                         onClick={register}
@@ -135,6 +137,8 @@ export default function EventDetail({
                                     >
                                         {processing ? 'Registering...' : 'Register for this event'}
                                     </button>
+                                ) : (
+                                    <span className="rounded-full border border-slate-700 bg-slate-900 px-6 py-3 font-semibold text-slate-400">Registration unavailable</span>
                                 )}
                                 <Link href={route('events')} className="rounded-full border border-red-700 px-6 py-3 font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">
                                     Back to events

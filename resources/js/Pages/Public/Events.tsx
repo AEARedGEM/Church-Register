@@ -10,6 +10,8 @@ type EventItem = {
     status?: string | null;
     location?: string | null;
     max_participants?: number | null;
+    active_registration_count?: number;
+    can_register?: boolean;
 };
 
 export default function Events({ events = [] }: { events?: EventItem[] }) {
@@ -44,15 +46,14 @@ export default function Events({ events = [] }: { events?: EventItem[] }) {
                                     <li><span className="font-semibold text-white">Date:</span> {event.start_date ? new Date(event.start_date).toLocaleString() : 'TBA'}</li>
                                     <li><span className="font-semibold text-white">Location:</span> {event.location || 'Church campus'}</li>
                                     <li><span className="font-semibold text-white">Status:</span> {event.status || 'upcoming'}</li>
-                                    {event.max_participants && <li><span className="font-semibold text-white">Capacity:</span> {event.max_participants} people</li>}
+                                    {event.max_participants && <li><span className="font-semibold text-white">Capacity:</span> {event.active_registration_count ?? 0} / {event.max_participants} registered</li>}
                                 </ul>
                                 <div className="mt-6 flex gap-3">
                                     <Link href={route('events.detail', event.id)} className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">
                                         View details
                                     </Link>
-                                    <Link href={route('events.detail', event.id)} className="rounded-full border border-red-700 px-4 py-2 text-sm font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">
-                                        Register
-                                    </Link>
+                                    {event.can_register && <Link href={route('events.detail', event.id)} className="rounded-full border border-red-700 px-4 py-2 text-sm font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">Register</Link>}
+                                    <a href={route('events.calendar', event.id)} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500 hover:text-white">Calendar</a>
                                 </div>
                             </article>
                         )) : (

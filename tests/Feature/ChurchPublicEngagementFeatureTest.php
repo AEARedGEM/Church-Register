@@ -220,6 +220,47 @@ class ChurchPublicEngagementFeatureTest extends TestCase
         );
     }
 
+    public function test_public_events_page_hides_past_and_cancelled_events(): void
+    {
+        Event::create([
+            'title' => 'Past Service',
+            'description' => 'A past service.',
+            'event_type' => 'workshop',
+            'start_date' => now()->subDay(),
+            'end_date' => now()->subDay()->addHours(2),
+            'registration_deadline' => now()->subDays(2),
+            'status' => 'upcoming',
+        ]);
+        Event::create([
+            'title' => 'Cancelled Gathering',
+            'description' => 'A cancelled gathering.',
+            'event_type' => 'workshop',
+            'start_date' => now()->addDay(),
+            'end_date' => now()->addDay()->addHours(2),
+            'registration_deadline' => now()->addHours(12),
+            'status' => 'cancelled',
+        ]);
+
+        $this->get('/events')
+            ->assertInertia(fn ($page) => $page->has('events', 0));
+    }
+
+    public function test_contact_page_receives_configured_contact_details(): void
+    {
+        config()->set('church.contact', [
+            'email' => 'office@example.com',
+            'phone' => '+2348000000000',
+            'office_hours' => 'Tuesday - Saturday, 10:00 AM - 4:00 PM',
+        ]);
+
+        $this->get('/contact')
+            ->assertInertia(fn ($page) => $page
+                ->where('contact.email', 'office@example.com')
+                ->where('contact.phone', '+2348000000000')
+                ->where('contact.office_hours', 'Tuesday - Saturday, 10:00 AM - 4:00 PM')
+            );
+    }
+
     public function test_public_event_detail_page_and_registration_flow_work(): void
     {
         /** @var User $user */

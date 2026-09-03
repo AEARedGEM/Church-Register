@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Carbon\Carbon;
 use Inertia\Inertia;
 
 class PublicPageController extends Controller
@@ -208,17 +209,21 @@ class PublicPageController extends Controller
 
         $groups = [];
 
-        if ($smallGroupsTableExists && $smallGroupMembershipsTableExists && $smallGroupMeetingsTableExists) {
-            $groups = SmallGroup::query()
-                ->where('is_active', true)
-                ->withCount(['memberships as active_member_count' => fn ($query) => $query->where('status', 'active')])
-                ->with(['meetings' => fn ($query) => $query
+        if ($smallGroupsTableExists) {
+            $query = SmallGroup::query()->where('is_active', true)->orderBy('name');
+
+            if ($smallGroupMembershipsTableExists) {
+                $query->withCount(['memberships as active_member_count' => fn ($query) => $query->where('status', 'active')]);
+            }
+            if ($smallGroupMeetingsTableExists) {
+                $query->with(['meetings' => fn ($query) => $query
                     ->where('status', 'scheduled')
                     ->where('starts_at', '>=', now())
                     ->orderBy('starts_at')
-                    ->limit(3)])
-                ->orderBy('name')
-                ->get();
+                    ->limit(3)]);
+            }
+
+            $groups = $query->get();
         }
 
         return Inertia::render('Public/SmallGroups', [
@@ -867,11 +872,17 @@ class PublicPageController extends Controller
 
     public function events()
     {
-        $events = Event::query()
-            ->where('start_date', '>=', now()->startOfDay())
-            ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
+        $events = Event::upcoming()
+            ->withCount(['registrations as active_registration_count' => fn ($query) => $query->whereIn('status', ['registered', 'confirmed', 'attended'])])
             ->orderBy('start_date')
-            ->get();
+            ->get()
+            ->map(function ($event) {
+                $event->can_register = $event->status === 'registration_open'
+                    && Carbon::parse($event->start_date)->isFuture()
+                    && (!$event->registration_deadline || Carbon::parse($event->registration_deadline)->isFuture())
+                    && ($event->max_participants === null || $event->active_registration_count < $event->max_participants);
+                return $event;
+            });
 
         return Inertia::render('Public/Events', [
             'laravelVersion' => Application::VERSION,
@@ -896,10 +907,16 @@ class PublicPageController extends Controller
 
     public function eventDetail(Event $event)
     {
+        abort_unless(Event::upcoming()->whereKey($event->id)->exists(), 404);
+        $event->loadCount(['registrations as active_registration_count' => fn ($query) => $query->whereIn('status', ['registered', 'confirmed', 'attended'])]);
+        $event->can_register = $event->status === 'registration_open'
+            && Carbon::parse($event->start_date)->isFuture()
+            && (!$event->registration_deadline || Carbon::parse($event->registration_deadline)->isFuture())
+            && ($event->max_participants === null || $event->active_registration_count < $event->max_participants);
+
         $relatedEvents = Event::query()
             ->where('id', '!=', $event->id)
-            ->where('start_date', '>=', now()->startOfDay())
-            ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
+            ->upcoming()
             ->orderBy('start_date')
             ->limit(3)
             ->get();
@@ -914,6 +931,8 @@ class PublicPageController extends Controller
 
     public function eventCalendar(Event $event)
     {
+        abort_unless(Event::upcoming()->whereKey($event->id)->exists(), 404);
+
         $escape = static fn (string $value): string => str_replace(["\\", ";", ",", "\r", "\n"], ["\\\\", "\\;", "\\,", '', '\\n'], $value);
         $formatDate = static fn ($date): string => $date->utc()->format('Ymd\\THis\\Z');
         $description = $escape((string) $event->description);
@@ -949,6 +968,10 @@ class PublicPageController extends Controller
 
         $registrationResult = DB::transaction(function () use ($event) {
             $lockedEvent = Event::query()->lockForUpdate()->findOrFail($event->id);
+
+            if ($lockedEvent->status !== 'registration_open' || $lockedEvent->start_date?->isPast()) {
+                return 'closed';
+            }
 
             if ($lockedEvent->registrations()->where('user_id', Auth::id())->exists()) {
                 return 'duplicate';
@@ -986,6 +1009,10 @@ class PublicPageController extends Controller
 
         if ($registrationResult === 'capacity') {
             return redirect()->route('events.detail', $event)->with('info', 'This event has reached its registration capacity.');
+        }
+
+        if ($registrationResult === 'closed') {
+            return redirect()->route('events')->with('info', 'Registration is not open for this event.');
         }
 
         return redirect()->route('events.detail', $event)->with('success', 'You have successfully registered for ' . $event->title . '.');
@@ -1049,6 +1076,7 @@ class PublicPageController extends Controller
     {
         return Inertia::render('Public/Contact', [
             'laravelVersion' => Application::VERSION,
+            'contact' => config('church.contact'),
         ]);
     }
 
