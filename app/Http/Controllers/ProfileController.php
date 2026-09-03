@@ -9,6 +9,7 @@ use App\Services\LocationService;
 use App\Models\MemberProfile;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Models\ChurchInvitation;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -176,6 +177,7 @@ class ProfileController extends Controller
 
         // Update or create user profile based on current role
         $this->updateProfileForRole($user, $request);
+        $this->updateReferralInvitation($user, $request);
 
         if ($request->hasFile('profile_photo') && $user->memberProfile) {
             if ($user->memberProfile->avatar_path) {
@@ -197,6 +199,38 @@ class ProfileController extends Controller
         $user->refresh();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    private function updateReferralInvitation(User $user, ProfileUpdateRequest $request): void
+    {
+        if (!$request->has('referral_code')) {
+            return;
+        }
+
+        $referralCode = strtoupper(trim((string) $request->input('referral_code')));
+        $invitation = $user->receivedChurchInvitation()->first();
+
+        if ($referralCode === '') {
+            $invitation?->delete();
+            return;
+        }
+
+        $inviter = User::query()->where('referral_code', $referralCode)->firstOrFail();
+
+        if ($invitation && $invitation->inviter_id === $inviter->id) {
+            return;
+        }
+
+        ChurchInvitation::updateOrCreate(
+            ['invitee_id' => $user->id],
+            [
+                'inviter_id' => $inviter->id,
+                'referral_code' => $inviter->referral_code,
+                'registered_at' => $invitation?->registered_at ?? now(),
+                'validated_at' => null,
+                'validation_attendance_id' => null,
+            ]
+        );
     }
 
     /**

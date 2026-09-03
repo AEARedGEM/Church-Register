@@ -33,7 +33,7 @@ interface PageProps extends BasePageProps {
   [key: string]: any; // Index signature for Inertia compatibility
 }
 
-type FilterType = 'all' | 'upcoming' | 'hackathon' | 'bootcamp' | 'competition';
+type FilterType = 'all' | 'upcoming' | 'word_drill' | 'bible_quiz' | 'competition';
 
 interface FilterOption {
   key: FilterType;
@@ -57,15 +57,24 @@ export default function EventsPage() {
     if (selectedFilter === 'all') return true;
     if (selectedFilter === 'upcoming') return new Date(event.start_date) > new Date();
 
-    return event.type.toLowerCase().includes(selectedFilter);
+    const filterTerms: Record<'word_drill' | 'bible_quiz', string[]> = {
+      word_drill: ['word drill', 'word_drill', 'workshop'],
+      bible_quiz: ['bible quiz', 'bible_quiz', 'bootcamp'],
+    };
+
+    if (selectedFilter === 'competition') {
+      return event.type.toLowerCase().includes('competition');
+    }
+
+    return filterTerms[selectedFilter].some((term) => event.type.toLowerCase().includes(term));
   });
 
   // Event counts
   const eventCounts: Record<FilterType, number> = {
     all: events.data.length,
     upcoming: events.data.filter((e) => new Date(e.start_date) > new Date()).length,
-    hackathon: events.data.filter((e) => e.type.toLowerCase().includes('hackathon')).length,
-    bootcamp: events.data.filter((e) => e.type.toLowerCase().includes('bootcamp')).length,
+    word_drill: events.data.filter((e) => ['word drill', 'word_drill', 'workshop'].some((term) => e.type.toLowerCase().includes(term))).length,
+    bible_quiz: events.data.filter((e) => ['bible quiz', 'bible_quiz', 'bootcamp'].some((term) => e.type.toLowerCase().includes(term))).length,
     competition: events.data.filter((e) => e.type.toLowerCase().includes('competition')).length
   };
 
@@ -80,12 +89,24 @@ export default function EventsPage() {
 
   const getEventTypeColor = (type: string): string => {
     const typeMap: Record<string, string> = {
-      hackathon: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      bootcamp: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      hackathon: 'bg-gradient-to-r from-blue-100 to-red-100 text-red-800 dark:from-blue-800 dark:to-red-900 dark:text-red-100',
+      bootcamp: 'bg-gradient-to-r from-blue-100 to-red-100 text-red-800 dark:from-blue-800 dark:to-red-900 dark:text-red-100',
       competition: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-      workshop: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      workshop: 'bg-gradient-to-r from-blue-100 to-red-100 text-red-800 dark:from-blue-800 dark:to-red-900 dark:text-red-100',
     };
     return typeMap[type.toLowerCase()] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+  };
+
+  const getEventTypeLabel = (type: string): string => {
+    const labels: Record<string, string> = {
+      workshop: 'Word Drill',
+      bootcamp: 'Bible Quiz',
+      competition: 'Church Competition',
+      word_drill: 'Word Drill',
+      bible_quiz: 'Bible Quiz',
+    };
+
+    return labels[type.toLowerCase()] || type;
   };
 
   const isEventRegistered = (eventId: number): boolean => {
@@ -95,26 +116,26 @@ export default function EventsPage() {
   const filterOptions: FilterOption[] = [
     { key: 'all', label: 'All Events', count: eventCounts.all },
     { key: 'upcoming', label: 'Upcoming', count: eventCounts.upcoming },
-    { key: 'hackathon', label: 'Hackathons', count: eventCounts.hackathon },
-    { key: 'bootcamp', label: 'Bootcamps', count: eventCounts.bootcamp },
-    { key: 'competition', label: 'Competitions', count: eventCounts.competition }
+    { key: 'word_drill', label: 'Word Drills', count: eventCounts.word_drill },
+    { key: 'bible_quiz', label: 'Bible Quizzes', count: eventCounts.bible_quiz },
+    { key: 'competition', label: 'Church Competitions', count: eventCounts.competition }
   ];
 
   return (
     <ModernLayout>
         <Head title="Event"/>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-white via-rose-50 to-red-50 dark:from-blue-950 dark:via-slate-950 dark:to-red-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
-          <div className="rounded-lg p-6 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-white mb-6">
-            <h1 className="text-3xl font-bold mb-2">Events & Competitions</h1>
+          <div className="mb-6 rounded-xl border border-red-100 bg-gradient-to-r from-white via-rose-50 to-red-50 p-6 text-gray-700 dark:border-blue-700 dark:from-blue-950 dark:via-slate-900 dark:to-red-950 dark:text-white">
+            <h1 className="text-3xl font-bold mb-2">Church Activities & Competitions</h1>
             <p className="text-lg opacity-90">
-              Participate in hackathons, bootcamps, and competitions
+              Join Word Drills, Bible Quizzes, fellowship gatherings, and church competitions.
             </p>
           </div>
 
           {/* Search and Filters */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
+          <div className="mb-6 rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950">
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               {/* Search */}
               <div className="flex-1">
@@ -124,7 +145,7 @@ export default function EventsPage() {
                     placeholder="Search events..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-4 pr-4 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:ring-2 focus:ring-red-500 dark:text-white"
+                    className="w-full rounded-lg border border-red-200 bg-gradient-to-r from-white via-rose-50 to-red-50 py-2 pl-4 pr-4 text-sm focus:ring-2 focus:ring-red-500 dark:border-blue-700 dark:from-blue-900 dark:via-slate-900 dark:to-red-950 dark:text-white"
                   />
                 </div>
               </div>
@@ -137,8 +158,8 @@ export default function EventsPage() {
                     onClick={() => setSelectedFilter(filter.key)}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       selectedFilter === filter.key
-                        ? 'bg-red-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                        ? 'bg-gradient-to-r from-blue-600 via-red-500 to-red-600 text-white'
+                        : 'bg-gradient-to-r from-blue-50 to-red-50 text-gray-700 hover:from-blue-100 hover:to-red-100 dark:from-blue-900 dark:to-red-950 dark:text-gray-300 dark:hover:from-blue-800 dark:hover:to-red-900'
                     }`}
                   >
                     {filter.label}
@@ -146,7 +167,7 @@ export default function EventsPage() {
                       <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                         selectedFilter === filter.key
                           ? 'bg-white/20 text-white'
-                          : 'bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-gray-300'
+                          : 'bg-gradient-to-r from-blue-100 to-red-100 text-gray-600 dark:from-blue-800 dark:to-red-900 dark:text-gray-200'
                       }`}>
                         {filter.count}
                       </span>
@@ -159,7 +180,7 @@ export default function EventsPage() {
 
           {/* Events Grid */}
           {filteredEvents.length === 0 ? (
-            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 py-12 text-center dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950">
               <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 No events found
@@ -167,7 +188,7 @@ export default function EventsPage() {
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {searchTerm || selectedFilter !== 'all'
                   ? "Try adjusting your search or filter criteria"
-                  : "Check back later for new events and competitions"}
+                  : "Check back later for new church activities and competitions"}
               </p>
               {(searchTerm || selectedFilter !== 'all') && (
                 <button
@@ -175,7 +196,7 @@ export default function EventsPage() {
                     setSearchTerm('');
                     setSelectedFilter('all');
                   }}
-                  className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                  className="rounded-lg bg-gradient-to-r from-blue-600 via-red-500 to-red-600 px-4 py-2 font-medium text-white transition-colors hover:from-blue-700 hover:to-red-700"
                 >
                   Clear Filters
                 </button>
@@ -186,13 +207,13 @@ export default function EventsPage() {
               {filteredEvents.map((event) => (
                 <div
                   key={event.id}
-                  className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300"
+                  className="overflow-hidden rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 transition-all duration-300 hover:shadow-lg dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950"
                 >
                   {/* Event Header */}
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getEventTypeColor(event.type)}`}>
-                        {event.type}
+                        {getEventTypeLabel(event.type)}
                       </span>
                       {isEventRegistered(event.id) && (
                         <span className="flex items-center space-x-1 text-red-600 dark:text-red-400 text-sm">
@@ -240,8 +261,8 @@ export default function EventsPage() {
                         isEventRegistered(event.id)
                           ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 cursor-not-allowed'
                           : event.registered_count >= event.max_participants
-                          ? 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400 cursor-not-allowed'
-                          : 'bg-red-600 hover:bg-red-700 text-white'
+                          ? 'bg-gradient-to-r from-blue-100 to-red-100 text-red-600 dark:from-blue-800 dark:to-red-900 dark:text-red-300 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-blue-600 via-red-500 to-red-600 text-white hover:from-blue-700 hover:to-red-700'
                       }`}
                     >
                       {isEventRegistered(event.id)
@@ -258,7 +279,7 @@ export default function EventsPage() {
 
           {/* Quick Stats */}
           {events.data.length > 0 && (
-            <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <div className="mt-8 rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-6 dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950">
               <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
                 Event Statistics
               </h3>
@@ -289,10 +310,10 @@ export default function EventsPage() {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                    {eventCounts.hackathon}
+                    {eventCounts.word_drill}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Hackathons
+                    Word Drills
                   </div>
                 </div>
               </div>

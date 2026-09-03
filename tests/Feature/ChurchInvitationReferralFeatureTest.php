@@ -61,6 +61,61 @@ class ChurchInvitationReferralFeatureTest extends TestCase
         ]);
     }
 
+    public function test_registration_without_referral_code_is_allowed(): void
+    {
+        $this->post('/register', [
+            'name' => 'Unreferred Member',
+            'email' => 'unreferred-member@example.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+        ])->assertRedirect('/dashboard');
+
+        $this->assertDatabaseHas('users', ['email' => 'unreferred-member@example.com']);
+        $this->assertDatabaseCount('church_invitations', 0);
+    }
+
+    public function test_member_can_set_and_change_referrer_from_profile(): void
+    {
+        $firstInviter = User::factory()->create(['name' => 'First Inviter']);
+        $secondInviter = User::factory()->create(['name' => 'Second Inviter']);
+        /** @var User $member */
+        $member = User::factory()->create(['name' => 'Referred Member']);
+
+        $this->actingAs($member)
+            ->patch('/profile', [
+                'name' => $member->name,
+                'email' => $member->email,
+                'referral_code' => $firstInviter->referral_code,
+            ])
+            ->assertRedirect('/profile');
+
+        $this->assertDatabaseHas('church_invitations', [
+            'inviter_id' => $firstInviter->id,
+            'invitee_id' => $member->id,
+            'referral_code' => $firstInviter->referral_code,
+        ]);
+        $this->assertSame(1, $firstInviter->sentChurchInvitations()->count());
+
+        $this->actingAs($member)
+            ->patch('/profile', [
+                'name' => $member->name,
+                'email' => $member->email,
+                'referral_code' => $secondInviter->referral_code,
+            ])
+            ->assertRedirect('/profile');
+
+        $this->assertDatabaseMissing('church_invitations', [
+            'inviter_id' => $firstInviter->id,
+            'invitee_id' => $member->id,
+        ]);
+        $this->assertDatabaseHas('church_invitations', [
+            'inviter_id' => $secondInviter->id,
+            'invitee_id' => $member->id,
+        ]);
+        $this->assertSame(0, $firstInviter->sentChurchInvitations()->count());
+        $this->assertSame(1, $secondInviter->sentChurchInvitations()->count());
+    }
+
     public function test_registration_alone_does_not_validate_invitation_and_only_sunday_attendance_does(): void
     {
         /** @var User $admin */

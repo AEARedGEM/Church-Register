@@ -8,6 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('church_newsletter_campaign_recipients')) {
+            $indexExists = collect(Schema::getIndexes('church_newsletter_campaign_recipients'))
+                ->contains(fn (array $index): bool => $index['name'] === 'newsletter_campaign_recipient_unique');
+
+            if (!$indexExists) {
+                Schema::table('church_newsletter_campaign_recipients', function (Blueprint $table) {
+                    $table->unique(['campaign_id', 'subscriber_id'], 'newsletter_campaign_recipient_unique');
+                });
+            }
+
+            return;
+        }
+
         Schema::create('church_newsletter_campaign_recipients', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained('church_newsletter_campaigns')->cascadeOnDelete();
@@ -18,7 +31,7 @@ return new class extends Migration
             $table->text('error')->nullable();
             $table->timestamps();
 
-            $table->unique(['campaign_id', 'subscriber_id']);
+            $table->unique(['campaign_id', 'subscriber_id'], 'newsletter_campaign_recipient_unique');
             $table->index(['campaign_id', 'status']);
         });
     }

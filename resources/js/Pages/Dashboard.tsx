@@ -19,6 +19,7 @@ interface User {
         link: string;
         pending: number;
         validated: number;
+        total: number;
     };
     wallet: {
         usdi: string;
@@ -195,7 +196,7 @@ export default function Dashboard({
                                     href={route('training.dashboard')}
                                     className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-50"
                                 >
-                                    Go to Training
+                                    Word Ministry
                                 </Link>
                                 {isAdminUser && (
                                     <Link
@@ -247,6 +248,7 @@ export default function Dashboard({
                                 <p className="mt-2 text-sm text-slate-600">An invitation counts only after registration through your link and qualifying Sunday attendance.</p>
                             </div>
                             <div className="flex gap-5 text-sm">
+                                <span><strong className="block text-xl text-slate-900">{user.referral?.total ?? 0}</strong><span className="text-slate-500">Total invited</span></span>
                                 <span><strong className="block text-xl text-slate-900">{user.referral?.validated ?? 0}</strong><span className="text-slate-500">Validated</span></span>
                                 <span><strong className="block text-xl text-slate-900">{user.referral?.pending ?? 0}</strong><span className="text-slate-500">Pending</span></span>
                             </div>

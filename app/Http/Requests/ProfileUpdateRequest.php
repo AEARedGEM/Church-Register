@@ -38,6 +38,13 @@ class ProfileUpdateRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:20', 'regex:/^[\+]?[0-9\-\(\)\s]*$/'],
             'address' => ['nullable', 'string', 'max:1000'],
             'sector' => ['nullable', 'string', 'max:100'],
+            'referral_code' => [
+                'nullable',
+                'string',
+                'size:10',
+                Rule::exists(User::class, 'referral_code'),
+                Rule::notIn([(string) $this->user()->referral_code]),
+            ],
 
             // Common business profile information
             'business_name' => ['nullable', 'string', 'max:255'],

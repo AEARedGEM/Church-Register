@@ -71,7 +71,7 @@ export default function CertificateDetail() {
 
       // Add certificate title
       pdf.setFontSize(48);
-      pdf.text('Certificate of Completion', pageWidth / 2, 40, { align: 'center' });
+      pdf.text('Certificate of Christian Education', pageWidth / 2, 40, { align: 'center' });
 
       // Add certificate number
       pdf.setFontSize(10);
@@ -92,32 +92,32 @@ export default function CertificateDetail() {
       // Add "has successfully completed" text
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'normal');
-      pdf.text('has successfully completed', pageWidth / 2, 100, { align: 'center' });
+      pdf.text('has successfully completed the Word Ministry programme', pageWidth / 2, 100, { align: 'center' });
 
       // Add course name
       pdf.setFontSize(18);
       pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(25, 103, 210); // Blue color
+      pdf.setTextColor(180, 25, 55);
       pdf.text(certificateData.course_name, pageWidth / 2, 115, { align: 'center' });
 
       // Add course description
       pdf.setFontSize(11);
       pdf.setTextColor(0, 0, 0);
       pdf.setFont('helvetica', 'normal');
-      pdf.text(`A ${certificateData.course_hours}-hour comprehensive training course`, pageWidth / 2, 125, { align: 'center' });
+      pdf.text(`A ${certificateData.course_hours}-hour Sunday School and Bible Study programme`, pageWidth / 2, 125, { align: 'center' });
 
       // Add completion date
       pdf.setFontSize(11);
       pdf.text(`Completion Date: ${certificateData.completion_date}`, pageWidth / 2, 145, { align: 'center' });
 
-      // Add instructor name
-      pdf.text(`Instructor: ${certificateData.instructor_name}`, pageWidth / 2, 155, { align: 'center' });
+      pdf.text(`Facilitator: ${certificateData.instructor_name}`, pageWidth / 2, 155, { align: 'center' });
 
       // Add signature line
       pdf.setDrawColor(0, 0, 0);
-      pdf.line(30, 170, 70, 170);
+      pdf.line(30, 170, 90, 170);
       pdf.setFontSize(9);
-      pdf.text('Authorized Signature', 50, 175, { align: 'center' });
+      pdf.text('Prophet (Dr.) Samuel Olugbenga Ilesanmi', 60, 175, { align: 'center' });
+      pdf.text('President, APGA Worldwide Church', 60, 180, { align: 'center' });
 
       // Add verification URL
       pdf.setFontSize(8);
@@ -125,7 +125,7 @@ export default function CertificateDetail() {
       pdf.text(`Verify: ${certificateData.verification_url}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
 
       // Save the PDF
-      pdf.save(`Certificate-${certificateData.certificate_id}.pdf`);
+      pdf.save(`APGA-Word-Ministry-Certificate-${certificateData.certificate_id}.pdf`);
 
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -153,7 +153,7 @@ export default function CertificateDetail() {
 
   return (
     <ModernLayout>
-        <Head title="Certificate"/>
+            <Head title="Church Certificate"/>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
@@ -290,7 +290,7 @@ export default function CertificateDetail() {
                 <div className="flex items-center justify-center space-x-3 mb-6">
                   <Award className="w-16 h-16 text-yellow-500" />
                   <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
-                    Certificate of Completion
+                    Certificate of Christian Education
                   </h1>
                 </div>
 
@@ -312,7 +312,7 @@ export default function CertificateDetail() {
                   </h2>
 
                   <p className="text-xl text-gray-600 dark:text-gray-400">
-                    has successfully completed
+                    has successfully completed the Word Ministry programme
                   </p>
 
                   <h3 className="text-3xl md:text-4xl font-semibold text-red-600 dark:text-red-400 px-8">
@@ -320,7 +320,7 @@ export default function CertificateDetail() {
                   </h3>
 
                   <p className="text-lg text-gray-600 dark:text-gray-400">
-                    A {certificateData.course_hours}-hour comprehensive training course
+                    A {certificateData.course_hours}-hour Sunday School and Bible Study programme
                   </p>
                 </div>
 
@@ -346,7 +346,7 @@ export default function CertificateDetail() {
                   </div>
                 </div>
 
-                {/* Instructor Signature */}
+                {/* Church signatures */}
                 <div className="flex flex-col md:flex-row justify-around items-center gap-8 pt-8">
                   <div className="text-center">
                     <div className="mb-4">
@@ -355,7 +355,7 @@ export default function CertificateDetail() {
                         {certificateData.instructor_name}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Course Instructor
+                        Sunday School / Bible Study Facilitator
                       </p>
                     </div>
                   </div>
@@ -364,10 +364,10 @@ export default function CertificateDetail() {
                     <div className="mb-4">
                       <div className="h-px w-48 bg-gray-400 mb-2"></div>
                       <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                        Platform Director
+                        Prophet (Dr.) Samuel Olugbenga Ilesanmi
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Learning Platform
+                        President, APGA Worldwide Church
                       </p>
                     </div>
                   </div>
@@ -389,10 +389,10 @@ export default function CertificateDetail() {
                   </div>
                 </div>
 
-                {/* Blockchain Badge */}
+                {/* Church authenticity badge */}
                 <div className="flex items-center justify-center space-x-2 text-red-600 dark:text-red-400 pt-4">
                   <Shield className="w-5 h-5" />
-                  <span className="text-sm font-medium">Blockchain Verified & Secure</span>
+                  <span className="text-sm font-medium">Official APGA Worldwide Church Certificate</span>
                 </div>
               </div>
             </div>
@@ -417,8 +417,7 @@ export default function CertificateDetail() {
               <div className="flex items-start space-x-2 bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
                 <Shield className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
                 <p className="text-red-800 dark:text-red-200">
-                  This certificate is permanently recorded and cryptographically secured, ensuring its authenticity
-                  and making it tamper-proof. Anyone can verify its authenticity using the QR code or verification portal.
+                  This certificate is issued by APGA Worldwide Church and may be verified using the certificate ID or QR code.
                 </p>
               </div>
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -426,15 +425,15 @@ export default function CertificateDetail() {
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start space-x-2">
                     <span className="text-red-600 dark:text-red-400">•</span>
-                    <span>Add to your LinkedIn profile to showcase your achievement</span>
+                    <span>Share your growth in the Word with your church fellowship</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-red-600 dark:text-red-400">•</span>
-                    <span>Include in your resume or CV as proof of skill development</span>
+                    <span>Present it as recognition of your Sunday School and Bible Study commitment</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-red-600 dark:text-red-400">•</span>
-                    <span>Share the verification link with employers or colleagues</span>
+                    <span>Keep the verification link for church records</span>
                   </li>
                 </ul>
               </div>

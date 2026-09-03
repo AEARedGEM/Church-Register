@@ -106,6 +106,7 @@ class DashboardController extends Controller
                 'link' => $referralBase . '/register?ref=' . urlencode($referralCode),
                 'pending' => $user->sentChurchInvitations()->whereNull('validated_at')->count(),
                 'validated' => $user->sentChurchInvitations()->whereNotNull('validated_at')->count(),
+                'total' => $user->sentChurchInvitations()->count(),
             ],
         ];
     }

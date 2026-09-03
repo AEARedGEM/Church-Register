@@ -142,7 +142,7 @@ function ImageWithFallback({ src, alt, className, fallbackText }: ImageWithFallb
   return (
     <>
       {loading && (
-        <div className={`${className} bg-gray-200 dark:bg-gray-700 animate-pulse`}></div>
+        <div className={`${className} animate-pulse bg-gradient-to-br from-blue-100 via-white to-red-100 dark:from-blue-900 dark:via-slate-800 dark:to-red-900`}></div>
       )}
       <img
         src={src}
@@ -167,72 +167,72 @@ export default function TrainingDashboard({
   enrolledCourses = [
     {
       id: 1,
-      title: "Advanced React Patterns",
-      category: "Web Development",
+      title: "Foundations of Christian Faith",
+      category: "Bible Foundations",
       progress: 65,
       thumbnail: "",
-      nextLesson: "Lesson 8: Custom Hooks",
-      timeRemaining: "2h 30m",
-      instructor: "John Doe"
+      nextLesson: "Lesson 8: Walking in Faith",
+      timeRemaining: "35m",
+      instructor: "Pastor John"
     },
     {
       id: 2,
-      title: "UI/UX Design Fundamentals",
-      category: "Design",
+      title: "New Testament Bible Study",
+      category: "Bible Study",
       progress: 40,
       thumbnail: "",
-      nextLesson: "Lesson 5: Color Theory",
-      timeRemaining: "4h 15m",
-      instructor: "Jane Smith"
+      nextLesson: "Lesson 5: The Ministry of Jesus",
+      timeRemaining: "45m",
+      instructor: "Sister Jane"
     }
   ],
   upcomingEvents = [
     {
       id: 1,
-      title: "Web Dev Workshop",
+      title: "Sunday School Teachers' Meeting",
       date: "Oct 15, 2025",
-      type: "Workshop"
+      type: "Teachers"
     },
     {
       id: 2,
-      title: "Design Challenge",
+      title: "Bible Study Fellowship",
       date: "Oct 20, 2025",
-      type: "Competition"
+      type: "Bible Study"
     }
   ],
   recentAchievements = [
     {
-      title: "Completed React Course",
+      title: "Completed a Bible lesson",
       date: "2 days ago"
     },
     {
-      title: "7 Day Streak",
+      title: "Seven-day study streak",
       date: "Today"
     }
   ],
   categories = [
-    { id: 1, name: "Web Development", slug: "web-dev", courses_count: 45 },
-    { id: 2, name: "Design", slug: "design", courses_count: 32 },
-    { id: 3, name: "Data Science", slug: "data-science", courses_count: 28 },
-    { id: 4, name: "Business", slug: "business", courses_count: 24 }
+    { id: 1, name: "Bible Foundations", slug: "bible-foundations", courses_count: 45 },
+    { id: 2, name: "Sunday School", slug: "sunday-school", courses_count: 32 },
+    { id: 3, name: "Christian Living", slug: "christian-living", courses_count: 28 },
+    { id: 4, name: "Leadership & Service", slug: "leadership-service", courses_count: 24 }
   ],
   featuredCourses = [
     {
       id: 1,
-      title: "Complete JavaScript Bootcamp",
+      title: "Old Testament Survey",
       thumbnail: "",
       instructor: { name: "Mike Johnson" },
-      course_category: { name: "Programming" },
+      course_category: { name: "Bible Foundations" },
       price: 49.99,
       rating: 4.8,
       enrolled_count: 1250
     },
     {
       id: 2,
-      title: "Figma UI Design Course",
+      title: "Living the Word Daily",
       thumbnail: "",
       instructor: { name: "Sarah Lee" },
-      course_category: { name: "Design" },
+      course_category: { name: "Christian Living" },
       price: 39.99,
       rating: 4.9,
       enrolled_count: 890
@@ -276,17 +276,23 @@ export default function TrainingDashboard({
 
   return (
     <ModernLayout>
-        <Head title="Dashboard"/>
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+        <Head title="Sunday School & Bible Study"/>
+      <div className="min-h-screen bg-gradient-to-br from-white via-rose-50 to-red-50 transition-colors dark:from-blue-950 dark:via-slate-950 dark:to-red-950">
       <div className="mx-auto  sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Welcome back, {auth?.user?.name}
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-            Continue your learning journey and achieve your goals
-          </p>
+          {/* Dashboard-style Word Ministry banner */}
+          <div className="mb-6 overflow-hidden rounded-3xl border border-red-200 bg-gradient-to-r from-red-700 via-red-600 to-rose-700 p-6 text-white shadow-lg shadow-red-900/20 dark:border-blue-700 dark:from-blue-950 dark:via-blue-900 dark:to-red-900 sm:mb-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-red-100">APGA Worldwide</p>
+                <h1 className="mt-3 text-2xl font-bold sm:text-3xl">Sunday School & Bible Study</h1>
+                <p className="mt-2 max-w-2xl text-sm text-red-50 sm:text-base">
+                  Welcome back, {auth?.user?.name}. Grow in the Word through lessons, study groups, and faithful practice.
+                </p>
+              </div>
+              <div className="hidden rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-sm font-semibold text-white lg:block">
+                Learn. Reflect. Live the Word.
+              </div>
+            </div>
         </div>
 
         {/* Stats Grid - Horizontal scroll on mobile */}
@@ -296,10 +302,10 @@ export default function TrainingDashboard({
               <div className="w-64 flex-shrink-0">
                 <StatCard
                   icon={BookOpen}
-                  label="Enrolled Courses"
+                  label="Enrolled Lessons"
                   value={stats.enrolledCourses}
                   iconColor="text-red-600"
-                  bgColor="bg-red-50"
+                  bgColor="bg-gradient-to-br from-red-50 to-rose-50"
                   darkBgColor="dark:bg-red-900/20"
                   darkIconColor="dark:text-red-400"
                 />
@@ -307,10 +313,10 @@ export default function TrainingDashboard({
               <div className="w-64 flex-shrink-0">
                 <StatCard
                   icon={CheckCircle2}
-                  label="Completed"
+                  label="Lessons Completed"
                   value={stats.completedCourses}
                   iconColor="text-red-600"
-                  bgColor="bg-red-50"
+                  bgColor="bg-gradient-to-br from-red-50 to-rose-50"
                   darkBgColor="dark:bg-red-900/20"
                   darkIconColor="dark:text-red-400"
                 />
@@ -318,10 +324,10 @@ export default function TrainingDashboard({
               <div className="w-64 flex-shrink-0">
                 <StatCard
                   icon={Clock}
-                  label="Hours Learned"
+                  label="Hours Studied"
                   value={stats.hoursLearned}
                   iconColor="text-orange-600"
-                  bgColor="bg-orange-50"
+                  bgColor="bg-gradient-to-br from-amber-50 to-red-50"
                   darkBgColor="dark:bg-orange-900/20"
                   darkIconColor="dark:text-orange-400"
                 />
@@ -332,7 +338,7 @@ export default function TrainingDashboard({
                   label="Certificates"
                   value={stats.certificatesEarned}
                   iconColor="text-red-600"
-                  bgColor="bg-red-50"
+                  bgColor="bg-gradient-to-br from-red-50 to-rose-50"
                   darkBgColor="dark:bg-red-900/20"
                   darkIconColor="dark:text-red-400"
                 />
@@ -343,28 +349,28 @@ export default function TrainingDashboard({
           <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             <StatCard
               icon={BookOpen}
-              label="Enrolled Courses"
+              label="Enrolled Lessons"
               value={stats.enrolledCourses}
               iconColor="text-red-600"
-              bgColor="bg-red-50"
+              bgColor="bg-gradient-to-br from-red-50 to-rose-50"
               darkBgColor="dark:bg-red-900/20"
               darkIconColor="dark:text-red-400"
             />
             <StatCard
               icon={CheckCircle2}
-              label="Completed"
+              label="Lessons Completed"
               value={stats.completedCourses}
               iconColor="text-red-600"
-              bgColor="bg-red-50"
+              bgColor="bg-gradient-to-br from-red-50 to-rose-50"
               darkBgColor="dark:bg-red-900/20"
               darkIconColor="dark:text-red-400"
             />
             <StatCard
               icon={Clock}
-              label="Hours Learned"
+              label="Hours Studied"
               value={stats.hoursLearned}
               iconColor="text-orange-600"
-              bgColor="bg-orange-50"
+              bgColor="bg-gradient-to-br from-amber-50 to-red-50"
               darkBgColor="dark:bg-orange-900/20"
               darkIconColor="dark:text-orange-400"
             />
@@ -373,7 +379,7 @@ export default function TrainingDashboard({
               label="Certificates"
               value={stats.certificatesEarned}
               iconColor="text-red-600"
-              bgColor="bg-red-50"
+              bgColor="bg-gradient-to-br from-red-50 to-rose-50"
               darkBgColor="dark:bg-red-900/20"
               darkIconColor="dark:text-red-400"
             />
@@ -385,10 +391,10 @@ export default function TrainingDashboard({
           {/* Left Column - Continue Learning & Featured Courses */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Continue Learning Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
               <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                  Continue Learning
+                  Continue Studying
                 </h2>
                 <Link
                   href={route('training.courses')}
@@ -412,12 +418,12 @@ export default function TrainingDashboard({
                 ) : (
                   <div className="text-center py-8">
                     <BookOpen className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-500 dark:text-gray-400">No enrolled courses yet</p>
+                    <p className="text-gray-500 dark:text-gray-400">No lessons started yet</p>
                     <Link
                       href={route('training.courses')}
                       className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm font-medium mt-2 inline-block"
                     >
-                      Browse courses to get started
+                      Browse lessons to get started
                     </Link>
                   </div>
                 )}
@@ -425,10 +431,10 @@ export default function TrainingDashboard({
             </div>
 
             {/* Featured Courses Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
               <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                  Featured Courses
+                  Featured Bible Studies
                 </h2>
                 <Link
                   href={route('training.courses')}
@@ -447,15 +453,15 @@ export default function TrainingDashboard({
             </div>
 
             {/* Learning Activity Chart */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                  Learning Activity
+                  Study Activity
                 </h2>
                 <select
                   value={activityRange}
                   onChange={(e) => setActivityRange(Number(e.target.value))}
-                  className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-3 py-1.5 w-full sm:w-auto"
+                  className="w-full rounded-lg border border-red-200 bg-gradient-to-r from-white via-rose-50 to-red-50 px-3 py-1.5 text-sm text-slate-700 dark:border-blue-700 dark:from-blue-900 dark:via-slate-900 dark:to-red-950 dark:text-slate-200 sm:w-auto"
                 >
                   <option value={7}>Last 7 days</option>
                   <option value={14}>Last 14 days</option>
@@ -470,9 +476,9 @@ export default function TrainingDashboard({
           {/* Right Sidebar */}
           <div className="space-y-4 sm:space-y-6">
             {/* Current Streak */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-amber-100 to-red-100 dark:from-blue-800 dark:to-red-900">
                   <TrendingUp className="w-6 h-6 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
@@ -482,9 +488,9 @@ export default function TrainingDashboard({
                   </p>
                 </div>
               </div>
-              <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
+              <div className="h-2 w-full rounded-full bg-blue-100 dark:bg-blue-800">
                 <div
-                  className="bg-orange-500 dark:bg-orange-400 h-2 rounded-full transition-all"
+                  className="h-2 rounded-full bg-gradient-to-r from-blue-500 via-red-500 to-red-600 transition-all"
                   style={{
                     width: `${Math.min((stats.currentStreak / 10) * 100, 100)}%`
                   }}
@@ -498,25 +504,25 @@ export default function TrainingDashboard({
             </div>
 
             {/* Categories Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Browse Categories
+                Browse Study Topics
               </h3>
               <div className="space-y-2">
                 {categories.map((category) => (
                   <button
                     key={category.id}
-                    className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
+                    className="group flex w-full items-center justify-between rounded-lg bg-gradient-to-r from-transparent via-rose-50/40 to-red-50/60 p-3 transition-colors hover:from-blue-50 hover:to-red-100 dark:from-transparent dark:via-blue-900/30 dark:to-red-950/40 dark:hover:from-blue-900/60 dark:hover:to-red-900/60"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center group-hover:bg-red-100 dark:group-hover:bg-red-900/30 transition-colors">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-red-100 to-rose-50 transition-colors dark:from-blue-800 dark:to-red-900">
                         <BookOpen className="w-4 h-4 text-red-600 dark:text-red-400" />
                       </div>
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-red-600 dark:group-hover:text-red-400">
                         {category.name}
                       </span>
                     </div>
-                    <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-full">
+                    <span className="rounded-full bg-gradient-to-r from-blue-100 to-red-100 px-2 py-1 text-xs text-gray-600 dark:from-blue-800 dark:to-red-900 dark:text-gray-200">
                       {category.courses_count}
                     </span>
                   </button>
@@ -526,12 +532,12 @@ export default function TrainingDashboard({
                 href={route('training.courses')}
                 className="w-full mt-4 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-center block"
               >
-                View All Categories
+                View All Study Topics
               </Link>
             </div>
 
             {/* Recent Achievements */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Recent Achievements
               </h3>
@@ -539,7 +545,7 @@ export default function TrainingDashboard({
                 {recentAchievements.length > 0 ? (
                   recentAchievements.map((achievement, idx) => (
                     <div key={idx} className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-red-50 dark:from-blue-800 dark:to-red-900">
                         <Award className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                       </div>
                       <div>
@@ -553,22 +559,22 @@ export default function TrainingDashboard({
                 ) : (
                   <div className="text-center py-4">
                     <Award className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500 dark:text-gray-400">No achievements yet</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">Complete courses to earn achievements</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">No study milestones yet</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">Complete lessons to build your study record</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Upcoming Events */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Upcoming Events
+                Church Calendar
               </h3>
               <div className="space-y-3">
                 {upcomingEvents.length > 0 ? (
                   upcomingEvents.map((event) => (
-                    <div key={event.id} className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div key={event.id} className="rounded-lg bg-gradient-to-r from-rose-50 via-white to-red-50 p-3 dark:from-blue-900 dark:via-slate-900 dark:to-red-950">
                       <div className="flex items-start justify-between mb-2 gap-2">
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
                           {event.title}
@@ -586,7 +592,7 @@ export default function TrainingDashboard({
                 ) : (
                   <div className="text-center py-4">
                     <Calendar className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500 dark:text-gray-400">No upcoming events</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">No upcoming church activities</p>
                   </div>
                 )}
               </div>
@@ -614,7 +620,7 @@ export default function TrainingDashboard({
 
 function StatCard({ icon: Icon, label, value, iconColor, bgColor, darkBgColor, darkIconColor }: StatCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors h-full">
+    <div className="h-full rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-4 transition-colors dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 sm:p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{label}</p>
@@ -660,9 +666,9 @@ function CourseCard({ course, onCardClick, onAction }: CourseCardProps) {
             {course.progress}%
           </span>
         </div>
-        <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5 mb-3">
+        <div className="mb-3 h-1.5 w-full rounded-full bg-gradient-to-r from-blue-100 via-white to-red-100 dark:from-blue-900 dark:via-slate-800 dark:to-red-900">
           <div
-            className="bg-red-600 dark:bg-red-500 h-1.5 rounded-full transition-all"
+            className="h-1.5 rounded-full bg-gradient-to-r from-blue-500 via-red-500 to-red-600 transition-all"
             style={{ width: `${course.progress}%` }}
           ></div>
         </div>
@@ -814,9 +820,9 @@ function ActivityChart({ activityData, activitySource, activityRange }: { activi
         <div className="flex items-end gap-2 h-36 sm:h-48 min-w-full">
           {days.map((day, idx) => (
             <div key={`${day}-${idx}`} className="flex flex-col items-center w-8 sm:w-12">
-              <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-t-lg flex items-end" style={{ height: '100%' }}>
+              <div className="flex w-full items-end rounded-t-lg bg-gradient-to-t from-blue-100 via-white to-red-100 dark:from-blue-900 dark:via-slate-800 dark:to-red-900" style={{ height: '100%' }}>
                 <div
-                  className="w-full bg-red-600 dark:bg-red-500 rounded-t-lg transition-all flex items-end justify-center"
+                  className="flex w-full items-end justify-center rounded-t-lg bg-gradient-to-t from-blue-600 via-red-500 to-red-400 transition-all"
                   style={{ height: `${(hours[idx] / maxHours) * 100}%`, minHeight: '6px' }}
                   title={`${hours[idx]} hrs`}
                 >
@@ -831,7 +837,7 @@ function ActivityChart({ activityData, activitySource, activityRange }: { activi
 
       <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-1">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-red-600 dark:bg-red-500 rounded" />
+          <div className="h-3 w-3 rounded bg-gradient-to-r from-blue-500 via-red-500 to-red-600" />
           <span>Hours Studied</span>
         </div>
         <div className="flex items-center gap-3">

@@ -8,6 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('small_group_attendances')) {
+            $indexExists = collect(Schema::getIndexes('small_group_attendances'))
+                ->contains(fn (array $index): bool => $index['name'] === 'small_group_attendance_unique');
+
+            if (!$indexExists) {
+                Schema::table('small_group_attendances', function (Blueprint $table) {
+                    $table->unique(['small_group_meeting_id', 'small_group_membership_id'], 'small_group_attendance_unique');
+                });
+            }
+
+            return;
+        }
+
         Schema::create('small_group_attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('small_group_meeting_id')->constrained('small_group_meetings')->cascadeOnDelete();
@@ -17,7 +30,7 @@ return new class extends Migration
             $table->foreignId('recorded_by')->constrained('users');
             $table->timestamps();
 
-            $table->unique(['small_group_meeting_id', 'small_group_membership_id']);
+            $table->unique(['small_group_meeting_id', 'small_group_membership_id'], 'small_group_attendance_unique');
             $table->index(['small_group_meeting_id', 'status']);
         });
     }

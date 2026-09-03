@@ -47,18 +47,18 @@ export default function CertificatesIndex() {
   return (
     <ModernLayout>
     <Head title="Certificate"/>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4">
+      <div className="min-h-screen bg-gradient-to-br from-white via-rose-50 to-red-50 py-4 dark:from-blue-950 dark:via-slate-950 dark:to-red-950">
         <div className=" mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Achievement Stats */}
           {certificates.length > 0 && (
-            <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10">
+            <div className="mb-10 mt-8 rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 p-6 dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950">
               <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white flex items-center space-x-2">
                 <Award className="w-5 h-5 text-yellow-500" />
                 <span>Achievement Summary</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="rounded-lg bg-gradient-to-br from-blue-50 to-red-50 p-4 text-center dark:from-blue-900 dark:to-red-950">
                   <div className="text-3xl font-bold text-red-600 dark:text-red-400">
                     {certificates.length}
                   </div>
@@ -66,7 +66,7 @@ export default function CertificatesIndex() {
                     Certificates
                   </div>
                 </div>
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="rounded-lg bg-gradient-to-br from-blue-50 to-red-50 p-4 text-center dark:from-blue-900 dark:to-red-950">
                   <div className="text-3xl font-bold text-gray-600 dark:text-gray-400">
                     {certificates.reduce((sum, cert) => sum + cert.course.duration_hours, 0)}
                   </div>
@@ -74,7 +74,7 @@ export default function CertificatesIndex() {
                     Hours Learned
                   </div>
                 </div>
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="rounded-lg bg-gradient-to-br from-blue-50 to-red-50 p-4 text-center dark:from-blue-900 dark:to-red-950">
                   <div className="text-3xl font-bold text-gray-600 dark:text-gray-400">
                     100%
                   </div>
@@ -82,7 +82,7 @@ export default function CertificatesIndex() {
                     Completion Rate
                   </div>
                 </div>
-                <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="rounded-lg bg-gradient-to-br from-blue-50 to-red-50 p-4 text-center dark:from-blue-900 dark:to-red-950">
                   <div className="text-3xl font-bold text-gray-600 dark:text-gray-400">
                     {new Set(certificates.map(c => c.course.course_category.name)).size}
                   </div>
@@ -112,7 +112,7 @@ export default function CertificatesIndex() {
 
           {/* Certificates Grid */}
           {certificates.length === 0 ? (
-            <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <div className="rounded-xl border border-red-100 bg-gradient-to-br from-white via-white to-rose-50 py-16 text-center dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950">
               <Award className="w-20 h-20 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 No Certificates Yet
@@ -122,7 +122,7 @@ export default function CertificatesIndex() {
               </p>
               <Link
                 href={route('training.courses')}
-                className="inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                className="inline-block rounded-lg bg-gradient-to-r from-blue-600 via-red-500 to-red-600 px-6 py-3 font-medium text-white transition-colors hover:from-blue-700 hover:to-red-700"
               >
                 Browse Courses
               </Link>
@@ -132,7 +132,7 @@ export default function CertificatesIndex() {
               {certificates.map((certificate) => (
                 <div
                   key={certificate.id}
-                  className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:border-yellow-400 dark:hover:border-yellow-500 transition-all duration-300 group"
+                  className="group overflow-hidden rounded-xl border-2 border-red-100 bg-gradient-to-br from-white via-white to-rose-50 transition-all duration-300 hover:border-yellow-400 hover:shadow-xl dark:border-blue-700 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 dark:hover:border-yellow-500"
                 >
                   {/* Certificate Badge */}
                   <div className="relative h-48 bg-gradient-to-br from-gray-500 via-gray-500 to-gray-500 p-6 flex flex-col justify-between">
@@ -184,20 +184,20 @@ export default function CertificatesIndex() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleViewCertificate(certificate.id)}
-                        className="flex-1 flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
+                        className="flex flex-1 items-center justify-center space-x-2 rounded-lg bg-gradient-to-r from-blue-600 via-red-500 to-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:from-blue-700 hover:to-red-700"
                       >
                         <Eye className="w-4 h-4" />
                         <span>View</span>
                       </button>
                       <button
                         onClick={() => handleViewCertificate(certificate.id)}
-                        className="flex items-center justify-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 p-2.5 rounded-lg transition-colors"
+                        className="flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-50 to-red-50 p-2.5 text-gray-700 transition-colors hover:from-blue-100 hover:to-red-100 dark:from-blue-900 dark:to-red-950 dark:text-gray-300 dark:hover:from-blue-800 dark:hover:to-red-900"
                         title="Download PDF"
                       >
                         <Download className="w-4 h-4" />
                       </button>
                       <button
-                        className="flex items-center justify-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 p-2.5 rounded-lg transition-colors"
+                        className="flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-50 to-red-50 p-2.5 text-gray-700 transition-colors hover:from-blue-100 hover:to-red-100 dark:from-blue-900 dark:to-red-950 dark:text-gray-300 dark:hover:from-blue-800 dark:hover:to-red-900"
                         title="Share"
                       >
                         <Share2 className="w-4 h-4" />

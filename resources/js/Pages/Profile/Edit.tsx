@@ -25,6 +25,7 @@ interface User {
     passport_number?: string;
     community_rank?: number;
     active_roles?: string[];
+    referral_code?: string;
     email_verified_at?: string;
     created_at: string;
     updated_at: string;

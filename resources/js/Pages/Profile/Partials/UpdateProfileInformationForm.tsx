@@ -20,6 +20,7 @@ interface User {
     lga?: string;
     nin?: string;
     passport_number?: string;
+    referral_code?: string;
     email_verified_at?: string;
     memberProfile?: { avatar_path?: string | null };
 }
@@ -63,6 +64,7 @@ export default function UpdateProfileInformationForm({
         lga: string;
         nin: string;
         passport_number: string;
+        referral_code: string;
         profile_photo: File | null;
     }>({
         name: user.name,
@@ -77,6 +79,7 @@ export default function UpdateProfileInformationForm({
         lga: user.lga || '',
         nin: user.nin || '',
         passport_number: user.passport_number || '',
+        referral_code: user.referral_code || '',
         profile_photo: null,
     });
 
@@ -192,6 +195,20 @@ export default function UpdateProfileInformationForm({
                         />
                         <InputError className="mt-2" message={errors.email} />
                     </div>
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="referral_code" value="Referred by (optional member code)" />
+                    <TextInput
+                        id="referral_code"
+                        className="mt-1 block w-full uppercase"
+                        value={data.referral_code}
+                        onChange={(e) => setData('referral_code', e.target.value.toUpperCase())}
+                        placeholder="Enter the referring member's code"
+                        maxLength={10}
+                    />
+                    <p className="mt-1 text-xs text-gray-500">You can add or change this later from your profile.</p>
+                    <InputError className="mt-2" message={errors.referral_code} />
                 </div>
 
                 {/* Contact Information */}

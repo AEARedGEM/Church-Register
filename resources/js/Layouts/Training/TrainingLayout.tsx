@@ -95,7 +95,7 @@ const getNavigationGroups = (userRole: UserRole): NavigationGroup[] => {
       ]
     },
         {
-          label: 'Training',
+          label: 'Sunday School & Bible Study',
           items: [
             {
               id: 'training.dashboard',
@@ -106,14 +106,14 @@ const getNavigationGroups = (userRole: UserRole): NavigationGroup[] => {
             },
             {
               id: 'training.courses',
-              label: 'Browse Courses',
+              label: 'Lesson Library',
               icon: Search,
               route: 'training.courses',
               badge: null,
             },
             {
               id: 'training.events',
-              label: 'Events',
+              label: 'Church Calendar',
               icon: Calendar,
               route: 'training.events',
               badge: null,
@@ -229,7 +229,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                 flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                 transition-all duration-200
                 ${active
-                  ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+                  ? 'bg-gradient-to-r from-red-50 to-rose-100 text-red-700 dark:from-blue-900/80 dark:to-red-900/80 dark:text-white'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }
                 ${depth > 0 ? 'ml-4' : ''}
@@ -250,7 +250,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                 flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                 transition-all duration-200
                 ${active
-                  ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+                  ? 'bg-gradient-to-r from-red-50 to-rose-100 text-red-700 dark:from-blue-900/80 dark:to-red-900/80 dark:text-white'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }
                 ${depth > 0 ? 'ml-4' : ''}
@@ -289,7 +289,7 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                     w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
                     transition-all duration-200
                     ${isActive(subItem.route)
-                      ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+                      ? 'bg-gradient-to-r from-red-50 to-rose-100 text-red-700 dark:from-blue-900/80 dark:to-red-900/80 dark:text-white'
                       : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }
                   `}
@@ -311,27 +311,27 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gradient-to-br from-white via-rose-50 to-red-50 dark:from-blue-950 dark:via-slate-950 dark:to-red-950 transition-colors duration-200">
       {/* Top Navigation Bar */}
-      <nav className="fixed top-0 z-50 w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <nav className="fixed top-0 z-50 w-full border-b border-red-200 bg-gradient-to-r from-red-700 via-red-600 to-rose-700 text-white shadow-lg shadow-red-900/20 dark:border-blue-800 dark:from-blue-950 dark:via-blue-900 dark:to-red-900">
         <div className="px-4 lg:px-6">
           <div className="flex items-center justify-between h-16">
             {/* Left Section */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="lg:hidden rounded-lg p-2 text-white/90 transition-colors hover:bg-white/10"
               >
                 {sidebarOpen ? (
-                  <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <X className="h-5 w-5 text-white" />
                 ) : (
-                  <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <Menu className="h-5 w-5 text-white" />
                 )}
               </button>
 
               <Link href={route('dashboard')} className="flex items-center gap-2">
-                <span className="text-xl font-bold text-gray-900 dark:text-white hidden sm:block">
-                  APGA Worldwide Dashboard
+                <span className="hidden text-xl font-bold text-white sm:block">
+                  APGA Worldwide Word Ministry
                 </span>
               </Link>
             </div>
@@ -340,8 +340,8 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
             <div className="flex items-center gap-2">
               {/* Credits */}
               {user && (
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-red-50 to-red-50 dark:from-yellow-900/20 dark:to-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                  <CreditCard className="w-4 h-4 text-red-600 dark:text-red-400" />
+                <div className="hidden items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 sm:flex">
+                  <CreditCard className="h-4 w-4 text-white" />
                   {/* <span className="text-sm font-semibold text-red-700 dark:text-red-300">
                     {user.credit || 0}
                   </span> */}
@@ -351,12 +351,12 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
               {/* Theme Toggle */}
               <button
                 onClick={toggleDarkMode}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="rounded-lg p-2 text-white transition-colors hover:bg-white/10"
               >
                 {darkMode ? (
-                  <Sun className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <Sun className="h-5 w-5 text-white" />
                 ) : (
-                  <Moon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <Moon className="h-5 w-5 text-white" />
                 )}
               </button>
 
@@ -365,19 +365,19 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                 <div className="relative">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    className="flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-white/10"
                   >
                     <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-semibold">
                         {user.name.split(' ').map((n: string) => n[0]).join('')}
                       </span>
                     </div>
-                    <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-300 hidden sm:block" />
+                    <ChevronDown className="hidden h-4 w-4 text-white/80 sm:block" />
                   </button>
 
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2">
-                      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <div className="absolute right-0 mt-2 w-56 rounded-lg border border-red-100 bg-gradient-to-br from-white via-rose-50 to-red-50 py-2 text-slate-900 shadow-lg dark:border-blue-800 dark:from-slate-900 dark:via-blue-950 dark:to-red-950 dark:text-white">
+                      <div className="border-b border-red-100 px-4 py-3 dark:border-blue-800">
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">
                           {user.name}
                         </p>
@@ -391,17 +391,17 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
                           <Link
                             key={item.id}
                             href={route(item.route)}
-                            className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                            className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-700 hover:bg-red-50 dark:text-slate-200 dark:hover:bg-blue-900/40"
                           >
                             <Icon className="w-4 h-4" />
                             {item.label}
                           </Link>
                         );
                       })}
-                      <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
+                      <div className="mt-2 border-t border-red-100 pt-2 dark:border-blue-800">
                         <button
                           onClick={handleLogout}
-                          className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                          className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-300 dark:hover:bg-blue-900/40"
                         >
                           <LogOut className="w-4 h-4" />
                           Log out
@@ -418,13 +418,13 @@ export default function ModernLayout({ children }: ModernLayoutProps): JSX.Eleme
       {/* Sidebar */}
       <aside className={`
         fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] w-64
-        bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
+        border-r border-red-100 bg-gradient-to-b from-white via-rose-50 to-red-50 dark:border-blue-800 dark:from-blue-950 dark:via-slate-900 dark:to-red-950
         transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <nav className="h-full overflow-y-auto p-4">
           {navigationGroups.map((group, idx) => (
-            <div key={idx} className={idx > 0 ? 'mt-8 pt-8 border-t border-gray-200 dark:border-gray-700' : ''}>
+            <div key={idx} className={idx > 0 ? 'mt-8 border-t border-red-100 pt-8 dark:border-blue-800' : ''}>
               {group.label && (
                 <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
                   {group.label}
