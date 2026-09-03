@@ -8,11 +8,11 @@ This documentation reflects the actual project state:
 
 1. The app already contains a working church operations foundation.
 2. The public-facing church experience is now active and branded.
-3. Remaining work is focused on deeper content, richer analytics, and more advanced church-life workflows.
+3. Remaining work is focused on production hardening, richer analytics, and deeper public content.
 
 The current project is no longer a placeholder for a church site; it is a practical church operations platform with working backend and frontend flows.
 
-### Latest Progress Update - 2026-09-02
+### Latest Progress Update - 2026-09-03
 
 The public church experience has been refined further:
 
@@ -36,23 +36,63 @@ The public church experience has been refined further:
 - Activated the six homepage platform feature cards with live links to prayer requests, small groups, events, member care, and church administration pages.
 - Added newsletter subscription management with idempotent signup, tokenized unsubscribe, and an admin consent board.
 - Added admin newsletter campaign drafting and queued per-recipient delivery to active subscribers with delivery counters.
+- Completed the small-group workflow: public directory, admin creation, member joining, scheduled meetings, attendance capture, and private member communication.
+
+### Next Implementation Focus - 2026-09-03
+
+The foundation is complete enough to move from feature accumulation to operational readiness and content quality. The next work is ordered as follows:
+
+1. Newsletter mail and queue verification is intentionally skipped/deferred; the existing campaign workflow remains available for later production configuration.
+2. Complete authorization, validation, privacy, and regression coverage across church administration and member workflows.
+3. Extend reporting with deeper attendance, invitation, and ministry-growth trends plus branded report templates.
+4. Improve public media with richer sermon galleries, story layouts, and editorial content workflows.
+5. Prepare deployment documentation, backups, monitoring, rollback procedures, and verified giving information when the church supplies it.
+
+### Progress Update - 2026-09-03
+
+The next roadmap slice is now underway:
+
+- Added a database-backed public small-group directory with active-group filtering, name ordering, meeting details, leader information, contact links, and an empty state.
+- Added regression coverage for report filtering, public media related-content behavior, and small-group visibility.
+- Focused reporting, public engagement, and small-group tests pass: 15 tests passed.
+
+Remaining work includes deeper server-backed reporting trends and branded PDF templates, richer media gallery/story presentation. Public joining, active-member tracking, meeting scheduling, attendance tracking, and small-group communication are now implemented.
+
+### Progress Update - 2026-09-03
+
+The first security and regression slice is complete:
+
+- Protected all `/church-admin/*` routes with the existing `super_admin|admin` role middleware.
+- Fixed nested role argument handling in the custom `User::hasRole()` override so Spatie role middleware does not produce a server error.
+- Added coverage proving administrators retain access and regular authenticated members receive `403 Forbidden`.
+- Updated legacy church-admin feature fixtures to use the established admin identity.
+- Verified the affected church feature suite: 25 tests passed with 227 assertions.
+
+Newsletter infrastructure is intentionally skipped for now. The active path is security coverage, server-backed reporting analytics, richer public media storytelling, and deployment readiness.
+
+### Progress Update - 2026-09-03
+
+- Report summary metrics now come from the Laravel controller response instead of relying only on client-side calculations.
+- Server analytics include totals, attendance trend, weekly growth, average attendance, report-period counts, and strongest period.
+- Reporting regression coverage verifies exact server values for totals, `+40` attendance trend, `+33%` weekly growth, and `Weekly (280)` strongest period.
+- Focused reporting tests pass: 2 tests passed with 39 assertions.
 
 
 ## Reality Check: Current App vs Church Goal
 
 ### What the application currently does
 The live codebase already contains the following real features:
-
-
-### What the church website brief requires
-The church brief adds a different set of needs:
-
-
+- Public church pages, ministries, media, events, announcements, prayer requests, and board/trustee profiles.
+- Authenticated church administration for members, attendance, reports, scorecards, leadership, meetings, media, events, messages, and newsletters.
+- Member notifications, community posting, direct messaging, message resolution, event registration, and calendar downloads.
 ### Current reality after implementation
 The project is now a church operations platform with active admin and public layers, including:
+- The core church data model and admin/public workflows are implemented and backed by live database data.
+- Reporting has baseline PDF export and summary analytics; branded templates and deeper trends remain.
+- Media, interviews, and communications are functional; richer editorial layouts and small-group workflows remain.
+- Production readiness is the immediate priority, especially mail/queue configuration, security verification, testing, and deployment documentation.
 
-
-The app now has a working church domain foundation, and the remaining work is focused on deeper analytics, richer sermon/media content, and more complete church-lifecycle workflows.
+The app now has a working church domain foundation, and the remaining work is focused first on production readiness, then on deeper analytics, richer sermon/media content, and more complete church-lifecycle workflows.
 
 
 ## Church Administration Feature Requirements
@@ -60,9 +100,6 @@ The app now has a working church domain foundation, and the remaining work is fo
 The website must support a leadership-led digital church experience that combines worship visibility, member management, and reporting.
 
 ### 1. Attendance & Worship Experience
-- Church President Welcome Speech
-- Church Vice-President Welcome Speech ✅ implemented as a general pastoral welcome panel; official identity details remain pending
-- Member contact messaging ✅ implemented with public submission and authenticated admin resolution
 - Weekly-Monthly-Yearly Invitation League
 - Church member profiles
 - Birthday celebrations
@@ -70,44 +107,14 @@ The website must support a leadership-led digital church experience that combine
 - Weekly Sunday reports (PDF)
 - Monthly report (PDF)
 - Quarterly report (PDF)
-- Annual report (PDF)
-- Weekly scorecard
-- Workers meeting
-- Opportunistic interview with Word/Gospel/Music Ministers
-- Opportunistic interview with VIPs/Visitors
 
 ### 2. Leadership & Ministry Profiles
 - All ministers' official portraits
 - All ministers' official autobiographies
 - All ministers' official social media handles
 - All unit heads' official portraits
-- All unit heads' official autobiographies
-- All unit heads' official social media handles
-
-### 3. Church Administration Modules
-- Attendance capture and summary dashboards
-- Member directory and searchable profile records
-- Birthday recognition section for church members
-- Absentee display and visual attendance reports
-- Reports library for weekly, monthly, quarterly, and annual church performance
-- Leadership and unit head visibility pages
-- Scoreboard and league tracking for invitation and outreach activity
-- Workers meeting archive and summaries
-- Media and interview content for church broadcasting and engagement
-
-### 4. Functional Design Expectations
-- Clean church branding with professional presentation
-- Dynamic leadership showcase with portraits, bios, and social links
-- Attendance and service data presented in clear visual formats
-- PDF-ready reporting for weekly/monthly/quarterly/annual church updates
-- Searchable and filterable member profiles
 - Mobile-responsive presentation for website visitors and church admins
 - A structured backend for managing members, attendance, reports, and ministry profiles
-
-### 5. Priority Implementation Sequence
-1. Stabilize the church operations foundation and admin flows
-2. Extend public ministry detail pages and church content experience
-3. Add richer church reporting analytics and stronger PDF-ready summaries
 4. Expand sermon/media storytelling and public-facing church content
 5. Add life-cycle features such as prayer requests, events, and member communications
 
@@ -309,6 +316,12 @@ The public site now includes:
 - Role separation for President, Vice-President, ministers, unit heads, and members
 - Service management and church event schedules
 
+#### Authorization hardening update - 2026-09-03
+- Church administration routes now require the existing `super_admin` or `admin` role middleware.
+- Regular authenticated members are denied access to `/church-admin` with HTTP 403.
+- Existing church-admin feature fixtures now use an explicit admin identity.
+- Remaining security work covers member communications, privacy review, validation edge cases, and production configuration.
+
 ### Phase 2: Attendance & Worship Features
 **Priority: HIGH**
 
@@ -354,6 +367,7 @@ The public site now includes:
 - Member directory and search filters ✅ implemented
 - Event registration and church announcements ✅ implemented; calendar reminders and registration reporting implemented
 - Workers meeting archive and summaries ✅ implemented
+- Public active-small-group directory, authenticated group creation, membership, meetings, attendance, and communication ✅ implemented
 
 ### Phase 6: Public Content / Media Features
 **Priority: MEDIUM**
@@ -364,6 +378,7 @@ The public site now includes:
 - Interviews with VIPs and visitors ⏳ in progress
 - Media highlights and preaching content segments ⏳ in progress
 - Church stories/news feed ⏳ remaining
+- Published related-media regression coverage ✅ implemented; richer gallery and story layouts remain
 
 ### Phase 7: Testing, Security, and Deployment
 **Priority: HIGH**
@@ -373,6 +388,7 @@ The public site now includes:
 - Unit and feature tests for church modules ⏳ in progress
 - Validation for attendance logic and authorization ⏳ in progress
 - PDF generation verification ✅ baseline verified
+- Church-admin route authorization and member-denial regression coverage ✅ implemented
 - Security review on member and admin data ⏳ remaining
 - Deployment configuration for production ⏳ remaining
 
@@ -399,6 +415,7 @@ The public site now includes:
 - Workers meeting planner and meeting history
 - Media and interview content board
 - Church announcements board and public notices page
+- Small-group directory, administration, member joining, meeting scheduling, attendance tracking, and private group communication
 - Database migrations for member profiles, attendance records, ministries, leadership, reports, scorecards, absentees, workers meetings, and media content
 - Build/asset pipeline for the new church pages
 
@@ -410,7 +427,7 @@ The public site now includes:
 - Expanded church-brand polish across remaining public pages ✅ refreshed with APGA Worldwide church identity on the remaining public-facing pages
 
 ### Strategic conclusion
-The project now has a valid church operations foundation instead of only a generic institutional platform. The core domain and admin structure are in place, the public-facing church brand has been strengthened, and the reporting pipeline now includes meaningful summary analytics and PDF export support. The next phase is to deepen the church lifecycle modules: richer analytics, database-backed media and sermon content, and more advanced church communications and engagement flows.
+The project now has a valid church operations foundation instead of only a generic institutional platform. The core domain and admin structure are in place, the public-facing church brand has been strengthened, and the reporting pipeline now includes meaningful server-backed analytics and PDF export support. The next phase is focused security and regression testing, richer reporting and media, and deployment readiness; newsletter infrastructure is deferred by direction.
 
 ---
 
@@ -623,7 +640,7 @@ Features:
 - Notification inbox and mark-as-read workflow ✅ implemented
 - Community feed and member forum posting ✅ implemented
 - Discussion forums ✅ community feed and posting implemented
-- Small group messaging ⏳ remaining
+- Small group messaging ✅ private member-only group conversations with membership checks
 - Direct messaging between members ✅ implemented
 - Newsletter subscription management and campaign composition ✅ implemented; production SMTP/queue configuration remains
 
@@ -637,19 +654,20 @@ Features:
 - Giving history, receipts, fund allocation, and analytics deferred
 
 #### 4. Small Group Management
-**Status**: ⏳ Not Started
+**Status**: ✅ Public directory, authenticated group creation, member tracking, meeting scheduling, attendance, and communication implemented
 
 Features:
-- Group creation and management
-- Group member tracking
-- Group meeting scheduling
-- Group attendance
-- Group communication
+- Public active-group directory ✅ implemented
+- Group creation and management ✅ initial admin creation implemented
+- Group member tracking ✅ authenticated, idempotent joining with active-member counts
+- Group meeting scheduling ✅ scheduled meeting records with public upcoming-meeting visibility
+- Group attendance ✅ admin capture with correction-safe records tied to meetings and memberships
+- Group communication ✅ private member-only group conversations with membership checks
 
 ### Phase 4: Testing & Deployment (Priority: HIGH)
 
 #### 1. Testing
-**Status**: ⏳ In progress
+**Status**: ⏳ In progress; small-group workflow complete for the current scope
 
 - [ ] Unit tests for models
 - [ ] Feature tests for API endpoints
@@ -669,7 +687,7 @@ Features:
 - [ ] Image optimization
 
 #### 3. Deployment
-**Status**: ⏳ Not Started
+**Status**: ⏳ Not started
 
 - [ ] Setup production environment
 - [ ] Configure database backup strategy
@@ -941,22 +959,20 @@ php artisan serve               # Start development server
 
 ### Next Immediate Actions
 
-**Priority 1 (This Week):**
-1. Expand media/sermon content into richer public experiences and gallery story layouts
-2. Extend reporting with branded PDF templates and deeper trend analytics
-3. Complete remaining church-brand content review and copy refinement
+**Priority 1 (Current):**
+1. Extend report analytics with server-backed attendance, invitation, and ministry-growth trends.
+2. Complete authorization, validation, privacy, and regression coverage across church administration and member workflows.
+3. Complete the production security review for member, attendance, prayer-request, and administrative data.
 
-**Priority 2 (Next Week):**
-1. Configure production newsletter mail/queue operations, then expand small-group messaging
-2. Prayer request board and member communications
-3. Publish verified church bank account details
-4. Deeper dashboard analytics for ministry growth
+**Priority 2 (After operational verification):**
+1. Add branded weekly/monthly/quarterly/annual PDF templates and richer report comparisons.
+2. Expand database-backed media into sermon galleries, story layouts, and richer interview publishing workflows.
+3. Document backups, monitoring, deployment, and rollback procedures.
 
 **Priority 3 (Later):**
-1. Realtime notifications
-2. Advanced reporting and charts
-3. Integration features
-4. Production optimization and deployment
+1. Add realtime delivery where it provides clear value beyond the existing notification inbox.
+2. Publish verified giving information when the church supplies the approved bank details.
+3. Add further integrations based on confirmed church operational needs.
 
 ---
 
@@ -990,8 +1006,15 @@ php artisan serve               # Start development server
 | 1.0 | 2026-08-17 | Initial church platform launch - Frontend complete, database setup, ready for backend development |
 | 1.1 | 2026-09-01 | Church operations foundation expanded: ministries, leadership, reports, media pages, public ministry detail pages, analytics cards, and PDF export support |
 | 1.2 | 2026-09-02 | Board of Trustees pages, trustee portraits, institutional church copy, and refined President image presentation completed |
+| 1.3 | 2026-09-03 | Roadmap refreshed: production mail/queues, security/testing, analytics, and richer media are now the next implementation priorities |
+| 1.4 | 2026-09-03 | Public small-group directory and authenticated admin group creation with validation and access tests completed |
+| 1.5 | 2026-09-03 | Small-group membership tracking and scheduled meeting records with public upcoming-meeting visibility completed |
+| 1.6 | 2026-09-03 | Small-group attendance records, admin capture, correction-safe updates, and group-membership integrity checks completed |
+| 1.7 | 2026-09-03 | Private small-group conversations with active-membership authorization and public directory entry points completed |
+| 1.8 | 2026-09-03 | Roadmap advanced after small-group completion: production hardening, security, analytics, media, and deployment are now next |
+| 1.9 | 2026-09-03 | Newsletter infrastructure deferred by direction; server-backed report analytics and exact regression coverage added as the next active work |
 
 ---
 
-**Last Updated**: 2026-09-02
-**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Board of Trustees Experience Live | ✅ Reporting & PDF Export Ready | 🔜 Deeper church lifecycle features next
+**Last Updated**: 2026-09-03
+**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Board of Trustees Experience Live | ✅ Reporting & PDF Export Ready | 🔜 Operational hardening and richer church content next

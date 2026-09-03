@@ -15,11 +15,31 @@ interface Report {
     prayer_requests_count: number;
 }
 
+interface ReportAnalytics {
+    totalAttendance: number;
+    totalFirstTimers: number;
+    totalNewMembers: number;
+    totalPrayerRequests: number;
+    averageAttendance: number;
+    latestReport?: Report;
+    weeklyReports: number;
+    monthlyReports: number;
+    quarterlyReports: number;
+    annualReports: number;
+    attendanceTrend: string;
+    weeklyGrowth: string;
+    attendanceSeries: { id: number; label: string; period: string; value: number; width: number }[];
+    strongestPeriod: string;
+    leadershipSummary: string;
+    leadershipInsight: string;
+}
+
 export default function ReportsDashboard({
     reports,
     flash,
     analyticsLabels,
     periodType = 'all',
+    analytics: serverAnalytics,
 }: {
     reports: Report[];
     flash?: { success?: string };
@@ -29,6 +49,7 @@ export default function ReportsDashboard({
         weeklyGrowth?: string;
         strongestPeriod?: string;
     };
+    analytics?: Partial<ReportAnalytics>;
 }) {
     const { data, setData, post, processing } = useForm({
         period_type: 'weekly',
@@ -41,7 +62,7 @@ export default function ReportsDashboard({
         prayer_requests_count: 0,
     });
 
-    const analytics = useMemo(() => {
+    const getLocalAnalytics = () => {
         const totalAttendance = reports.reduce((sum, report) => sum + Number(report.attendance_count ?? 0), 0);
         const totalFirstTimers = reports.reduce((sum, report) => sum + Number(report.first_timers_count ?? 0), 0);
         const totalNewMembers = reports.reduce((sum, report) => sum + Number(report.new_members_count ?? 0), 0);
@@ -97,7 +118,9 @@ export default function ReportsDashboard({
                 ? `The strongest reporting period is ${strongestPeriodLabel[0]} with ${strongestPeriodLabel[1]} recorded attendees.`
                 : 'No attendance trend data yet.',
         };
-    }, [reports]);
+    };
+
+    const analytics = { ...useMemo(getLocalAnalytics, [reports]), ...serverAnalytics };
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

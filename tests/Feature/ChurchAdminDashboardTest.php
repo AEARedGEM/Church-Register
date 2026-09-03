@@ -14,9 +14,14 @@ class ChurchAdminDashboardTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function admin(): User
+    {
+        return User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
+    }
+
     public function test_church_admin_dashboard_is_accessible_to_authenticated_users(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         $response = $this
             ->actingAs($user)
@@ -27,7 +32,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_dashboard_summary_cards_are_driven_by_real_church_data(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         \App\Models\AttendanceRecord::create([
             'user_id' => $user->id,
@@ -95,7 +100,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_dashboard_handles_missing_church_prayer_requests_table_gracefully(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         Schema::dropIfExists('church_prayer_requests');
 
@@ -111,7 +116,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_member_directory_is_accessible_to_authenticated_users(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         $response = $this
             ->actingAs($user)
@@ -122,7 +127,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_can_review_and_update_prayer_request_status(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
         $request = ChurchPrayerRequest::create([
             'full_name' => 'Grace Member',
             'email' => 'grace@example.com',
@@ -152,7 +157,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_can_review_and_resolve_contact_messages(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
         $message = ChurchContactMessage::create([
             'full_name' => 'Grace Member',
             'email' => 'grace@example.com',
@@ -181,7 +186,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_can_create_a_church_event(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         $response = $this
             ->actingAs($user)
@@ -210,7 +215,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_can_update_a_church_event(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
         $event = \App\Models\Event::create([
             'title' => 'Original Service',
             'description' => 'Original event details.',
@@ -246,7 +251,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_event_page_reports_registration_statuses_and_members(): void
     {
-        $admin = User::factory()->create();
+        $admin = $this->admin();
         $registrant = User::factory()->create(['name' => 'Grace Member', 'email' => 'grace@example.com']);
         $event = \App\Models\Event::create([
             'title' => 'Leadership Breakfast',
@@ -277,7 +282,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_can_record_member_attendance(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
         $profile = $user->memberProfile()->create([
             'first_name' => 'Grace',
             'last_name' => 'Member',
@@ -316,7 +321,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_can_create_a_new_member_profile(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         $response = $this
             ->actingAs($user)
@@ -343,7 +348,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_member_directory_can_filter_and_search_members(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         $user->memberProfile()->create([
             'first_name' => 'Alice',
@@ -430,9 +435,20 @@ class ChurchAdminDashboardTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_regular_authenticated_member_cannot_access_church_admin(): void
+    {
+        $member = User::factory()->create([
+            'email' => 'member@example.com',
+        ]);
+
+        $this->actingAs($member)
+            ->get('/church-admin')
+            ->assertForbidden();
+    }
+
     public function test_church_admin_dashboard_lists_upcoming_birthdays(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         $user->memberProfile()->create([
             'first_name' => 'Grace',
@@ -457,7 +473,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_church_admin_can_manage_leadership_ministries_and_reports(): void
     {
-        $user = User::factory()->create();
+        $user = $this->admin();
 
         $ministryResponse = $this
             ->actingAs($user)

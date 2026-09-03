@@ -44,7 +44,7 @@ class MemberCommunicationFeatureTest extends TestCase
 
     public function test_resolving_a_member_message_creates_a_database_notification_once(): void
     {
-        $admin = User::factory()->create();
+        $admin = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
         $member = User::factory()->create();
         $message = ChurchContactMessage::create([
             'user_id' => $member->id,

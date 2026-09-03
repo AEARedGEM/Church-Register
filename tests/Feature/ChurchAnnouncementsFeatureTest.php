@@ -37,7 +37,7 @@ class ChurchAnnouncementsFeatureTest extends TestCase
 
     public function test_authenticated_admin_can_create_an_announcement(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
 
         $response = $this->actingAs($user)->post('/church-admin/announcements', [
             'title' => 'Workers Meeting Reminder',

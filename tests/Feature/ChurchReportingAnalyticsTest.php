@@ -12,7 +12,7 @@ class ChurchReportingAnalyticsTest extends TestCase
 
     public function test_church_reports_dashboard_shows_trend_analytics(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
 
         $this->actingAs($user)
             ->post('/church-admin/reports', [
@@ -44,11 +44,19 @@ class ChurchReportingAnalyticsTest extends TestCase
         $response->assertSee('Attendance trend');
         $response->assertSee('Weekly growth');
         $response->assertSee('Strongest period');
+        $response->assertInertia(fn ($page) => $page
+            ->where('reports.0.attendance_count', 160)
+            ->where('reports.1.attendance_count', 120)
+            ->where('analytics.totalAttendance', 280)
+            ->where('analytics.attendanceTrend', '+40')
+            ->where('analytics.weeklyGrowth', '+33%')
+            ->where('analytics.strongestPeriod', 'Weekly (280)')
+        );
     }
 
     public function test_church_reports_dashboard_can_filter_analytics_by_period_type(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
 
         $this->actingAs($user)->post('/church-admin/reports', [
             'period_type' => 'weekly',

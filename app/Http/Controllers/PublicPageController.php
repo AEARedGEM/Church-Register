@@ -9,6 +9,10 @@ use App\Models\ChurchContactMessage;
 use App\Models\ChurchPrayerRequest;
 use App\Models\Event;
 use App\Models\EventRegistration;
+use App\Models\SmallGroup;
+use App\Models\SmallGroupMembership;
+use App\Models\SmallGroupMeeting;
+use App\Models\SmallGroupMessage;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -224,11 +228,87 @@ class PublicPageController extends Controller
         ]);
     }
 
-    public function smallGroups()
+    public function smallGroups(Request $request)
     {
         return Inertia::render('Public/SmallGroups', [
             'laravelVersion' => Application::VERSION,
+            'groups' => SmallGroup::query()
+                ->where('is_active', true)
+                ->withCount(['memberships as active_member_count' => fn ($query) => $query->where('status', 'active')])
+                ->with(['meetings' => fn ($query) => $query
+                    ->where('status', 'scheduled')
+                    ->where('starts_at', '>=', now())
+                    ->orderBy('starts_at')
+                    ->limit(3)])
+                ->orderBy('name')
+                ->get(),
+            'authenticated' => $request->user() !== null,
+            'joinedGroupIds' => $request->user()
+                ? $request->user()->smallGroupMemberships()->where('status', 'active')->pluck('small_group_id')->values()
+                : [],
+            'flash' => ['success' => $request->session()->get('success')],
         ]);
+    }
+
+    public function joinSmallGroup(Request $request, SmallGroup $smallGroup)
+    {
+        abort_unless($smallGroup->is_active, 422, 'This small group is not accepting members.');
+
+        SmallGroupMembership::updateOrCreate(
+            [
+                'small_group_id' => $smallGroup->id,
+                'user_id' => $request->user()->id,
+            ],
+            [
+                'status' => 'active',
+                'joined_at' => now(),
+            ]
+        );
+
+        return redirect()->route('small-groups')->with('success', 'You joined the small group successfully.');
+    }
+
+    public function smallGroupMessages(Request $request, SmallGroup $smallGroup)
+    {
+        abort_unless($smallGroup->is_active, 404);
+        abort_unless($this->activeSmallGroupMembership($request, $smallGroup), 403);
+
+        return Inertia::render('Member/SmallGroupMessages', [
+            'group' => $smallGroup,
+            'messages' => $smallGroup->messages()
+                ->with('user:id,name')
+                ->latest()
+                ->limit(50)
+                ->get()
+                ->reverse()
+                ->values(),
+        ]);
+    }
+
+    public function storeSmallGroupMessage(Request $request, SmallGroup $smallGroup)
+    {
+        abort_unless($smallGroup->is_active, 404);
+        abort_unless($this->activeSmallGroupMembership($request, $smallGroup), 403);
+
+        $validated = $request->validate([
+            'body' => ['required', 'string', 'min:2', 'max:5000'],
+        ]);
+
+        SmallGroupMessage::create([
+            'small_group_id' => $smallGroup->id,
+            'user_id' => $request->user()->id,
+            'body' => $validated['body'],
+        ]);
+
+        return redirect()->route('small-groups.messages', $smallGroup)->with('success', 'Message posted to the group.');
+    }
+
+    private function activeSmallGroupMembership(Request $request, SmallGroup $smallGroup): bool
+    {
+        return $smallGroup->memberships()
+            ->where('user_id', $request->user()->id)
+            ->where('status', 'active')
+            ->exists();
     }
 
     public function volunteer()

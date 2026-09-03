@@ -53,6 +53,42 @@ class ChurchPublicEngagementFeatureTest extends TestCase
         $this->get('/media/' . $media->id)->assertNotFound();
     }
 
+    public function test_public_media_detail_prefers_published_related_content_and_excludes_drafts(): void
+    {
+        $media = ChurchMediaContent::create([
+            'content_type' => 'sermon',
+            'title' => 'Faith for the Journey',
+            'published_at' => '2026-09-01',
+            'status' => 'published',
+        ]);
+        $related = ChurchMediaContent::create([
+            'content_type' => 'sermon',
+            'title' => 'Walking in Hope',
+            'published_at' => '2026-09-02',
+            'status' => 'published',
+        ]);
+        ChurchMediaContent::create([
+            'content_type' => 'sermon',
+            'title' => 'Draft Teaching',
+            'published_at' => '2026-09-03',
+            'status' => 'draft',
+        ]);
+        ChurchMediaContent::create([
+            'content_type' => 'testimony',
+            'title' => 'A Published Testimony',
+            'published_at' => '2026-09-04',
+            'status' => 'published',
+        ]);
+
+        $this->get('/media/' . $media->id)
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->has('relatedMedia', 1)
+                ->where('relatedMedia.0.id', $related->id)
+                ->where('relatedMedia.0.title', 'Walking in Hope')
+            );
+    }
+
     public function test_public_homepage_uses_live_church_summary_data(): void
     {
         $user = User::factory()->create();

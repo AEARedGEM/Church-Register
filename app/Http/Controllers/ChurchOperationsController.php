@@ -16,6 +16,10 @@ use App\Models\ChurchUnitLeader;
 use App\Models\ChurchUnitMember;
 use App\Models\ChurchWorkersMeeting;
 use App\Models\Event;
+use App\Models\SmallGroup;
+use App\Models\SmallGroupAttendance;
+use App\Models\SmallGroupMembership;
+use App\Models\SmallGroupMeeting;
 use App\Notifications\ContactMessageResolved;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -35,6 +39,91 @@ class ChurchOperationsController extends Controller
                 'success' => $request->session()->get('success'),
             ],
         ]);
+    }
+
+    public function smallGroups(Request $request)
+    {
+        return Inertia::render('Church/SmallGroupManagement', [
+            'groups' => SmallGroup::query()
+                ->withCount(['memberships as active_member_count' => fn ($query) => $query->where('status', 'active')])
+                ->with(['meetings' => fn ($query) => $query->orderByDesc('starts_at')->limit(5)])
+                ->with(['memberships' => fn ($query) => $query->where('status', 'active')->with('user')])
+                ->orderByDesc('is_active')
+                ->orderBy('name')
+                ->get(),
+            'flash' => ['success' => $request->session()->get('success')],
+        ]);
+    }
+
+    public function storeSmallGroup(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'meeting_day' => ['nullable', 'string', 'max:50'],
+            'meeting_time' => ['nullable', 'string', 'max:50'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'leader_name' => ['nullable', 'string', 'max:255'],
+            'contact_email' => ['nullable', 'email', 'max:255'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        SmallGroup::create([
+            ...$validated,
+            'is_active' => (bool) ($validated['is_active'] ?? true),
+        ]);
+
+        return redirect()->route('church-admin.small-groups')->with('success', 'Small group saved successfully.');
+    }
+
+    public function storeSmallGroupMeeting(Request $request)
+    {
+        $validated = $request->validate([
+            'small_group_id' => ['required', 'exists:small_groups,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'starts_at' => ['required', 'date'],
+            'ends_at' => ['nullable', 'date', 'after:starts_at'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'notes' => ['nullable', 'string'],
+            'status' => ['required', 'in:scheduled,completed,cancelled'],
+        ]);
+
+        SmallGroupMeeting::create([
+            ...$validated,
+            'ends_at' => $validated['ends_at'] ?? null,
+            'location' => $validated['location'] ?? null,
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        return redirect()->route('church-admin.small-groups')->with('success', 'Small group meeting scheduled successfully.');
+    }
+
+    public function storeSmallGroupAttendance(Request $request)
+    {
+        $validated = $request->validate([
+            'small_group_meeting_id' => ['required', 'exists:small_group_meetings,id'],
+            'small_group_membership_id' => ['required', 'exists:small_group_memberships,id'],
+            'status' => ['required', 'in:present,absent,excused'],
+            'notes' => ['nullable', 'string'],
+        ]);
+
+        $meeting = SmallGroupMeeting::findOrFail($validated['small_group_meeting_id']);
+        $membership = SmallGroupMembership::findOrFail($validated['small_group_membership_id']);
+        abort_unless($meeting->small_group_id === $membership->small_group_id, 422, 'Attendance member does not belong to this group.');
+
+        SmallGroupAttendance::updateOrCreate(
+            [
+                'small_group_meeting_id' => $meeting->id,
+                'small_group_membership_id' => $membership->id,
+            ],
+            [
+                'status' => $validated['status'],
+                'notes' => $validated['notes'] ?? null,
+                'recorded_by' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('church-admin.small-groups')->with('success', 'Small group attendance saved successfully.');
     }
 
     public function storeMinistry(Request $request)
@@ -197,8 +286,11 @@ class ChurchOperationsController extends Controller
             $reportsQuery->where('period_type', $periodType);
         }
 
+        $reports = $reportsQuery->get();
+
         return Inertia::render('Church/ReportsDashboard', [
-            'reports' => $reportsQuery->get(),
+            'reports' => $reports,
+            'analytics' => $this->reportAnalytics($reports),
             'periodType' => $periodType,
             'analyticsLabels' => [
                 'attendanceTrend' => 'Attendance trend',
@@ -209,6 +301,36 @@ class ChurchOperationsController extends Controller
                 'success' => $request->session()->get('success'),
             ],
         ]);
+    }
+
+    private function reportAnalytics($reports): array
+    {
+        $sorted = $reports->sortBy('report_date')->values();
+        $weekly = $reports->where('period_type', 'weekly')->sortBy('report_date')->values();
+        $totalAttendance = (int) $reports->sum('attendance_count');
+        $previous = $weekly->count() > 1 ? (int) $weekly->get($weekly->count() - 2)->attendance_count : (int) ($weekly->first()->attendance_count ?? 0);
+        $latest = $weekly->count() > 1 ? (int) $weekly->last()->attendance_count : (int) ($sorted->last()->attendance_count ?? 0);
+        $growth = $previous > 0 ? (int) round((($latest - $previous) / $previous) * 100) : 0;
+        $periodTotals = $reports->groupBy('period_type')->map(fn ($periodReports) => (int) $periodReports->sum('attendance_count'));
+        $strongest = $periodTotals->sortDesc()->keys()->first();
+        $trend = $sorted->count() > 1
+            ? (int) $sorted->last()->attendance_count - (int) $sorted->first()->attendance_count
+            : (int) ($sorted->first()->attendance_count ?? 0);
+
+        return [
+            'totalAttendance' => $totalAttendance,
+            'totalFirstTimers' => (int) $reports->sum('first_timers_count'),
+            'totalNewMembers' => (int) $reports->sum('new_members_count'),
+            'totalPrayerRequests' => (int) $reports->sum('prayer_requests_count'),
+            'averageAttendance' => $reports->count() ? (int) round($totalAttendance / $reports->count()) : 0,
+            'attendanceTrend' => $trend >= 0 ? "+{$trend}" : (string) $trend,
+            'weeklyGrowth' => ($growth >= 0 ? '+' : '') . "{$growth}%",
+            'strongestPeriod' => $strongest ? ucfirst($strongest) . ' (' . $periodTotals->get($strongest) . ')' : 'No data',
+            'weeklyReports' => $weekly->count(),
+            'monthlyReports' => $reports->where('period_type', 'monthly')->count(),
+            'quarterlyReports' => $reports->where('period_type', 'quarterly')->count(),
+            'annualReports' => $reports->where('period_type', 'annual')->count(),
+        ];
     }
 
     public function prayerRequests(Request $request)

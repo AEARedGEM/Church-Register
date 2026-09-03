@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use App\Enum\RolesEnum;
 use App\Enum\PermissionsEnum;
+use Illuminate\Support\Arr;
 
 class User extends Authenticatable
 {
@@ -46,7 +47,7 @@ class User extends Authenticatable
         if (is_string($roles)) {
             $normalizedRequest = array_map('trim', preg_split('/\s*\|\s*/', $roles));
         } elseif (is_array($roles)) {
-            $normalizedRequest = array_map('trim', $roles);
+            $normalizedRequest = array_map('trim', Arr::flatten($roles));
         }
 
         foreach ($normalizedRequest as $roleName) {
@@ -147,6 +148,11 @@ class User extends Authenticatable
     public function memberProfile()
     {
         return $this->hasOne(MemberProfile::class);
+    }
+
+    public function smallGroupMemberships()
+    {
+        return $this->hasMany(SmallGroupMembership::class);
     }
 
     public function attendanceRecords()

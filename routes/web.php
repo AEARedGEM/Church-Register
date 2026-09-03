@@ -60,6 +60,11 @@ Route::get('/zones', [PublicPageController::class, 'zones'])->name('zones');
 // Public Footer Pages - Church Life & Ministry
 Route::get('/program', [PublicPageController::class, 'program'])->name('program');
 Route::get('/small-groups', [PublicPageController::class, 'smallGroups'])->name('small-groups');
+Route::middleware('auth')->post('/small-groups/{smallGroup}/join', [PublicPageController::class, 'joinSmallGroup'])->name('small-groups.join');
+Route::middleware('auth')->group(function () {
+    Route::get('/small-groups/{smallGroup}/messages', [PublicPageController::class, 'smallGroupMessages'])->name('small-groups.messages');
+    Route::post('/small-groups/{smallGroup}/messages', [PublicPageController::class, 'storeSmallGroupMessage'])->name('small-groups.messages.store');
+});
 Route::get('/volunteer', [PublicPageController::class, 'volunteer'])->name('volunteer');
 Route::get('/giving', [PublicPageController::class, 'giving'])->name('giving');
 Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
@@ -125,45 +130,49 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/messages/{user}', [DirectMessageController::class, 'show'])->name('member.direct-messages.show');
     Route::post('/messages/{user}', [DirectMessageController::class, 'store'])->name('member.direct-messages.store');
 
-    Route::get('/church-admin', [ChurchAdminController::class, 'index'])->name('church-admin.index');
-    Route::get('/church-admin/members', [ChurchAdminController::class, 'members'])->name('church-admin.members');
-    Route::post('/church-admin/members', [ChurchAdminController::class, 'storeMember'])->name('church-admin.members.store');
-    Route::get('/church-admin/attendance', [ChurchAdminController::class, 'attendance'])->name('church-admin.attendance');
-    Route::post('/church-admin/attendance', [ChurchAdminController::class, 'storeAttendance'])->name('church-admin.attendance.store');
-    Route::get('/church-admin/ministries', [ChurchOperationsController::class, 'ministries'])->name('church-admin.ministries');
-    Route::post('/church-admin/ministries', [ChurchOperationsController::class, 'storeMinistry'])->name('church-admin.ministries.store');
-    Route::get('/church-admin/units', [ChurchOperationsController::class, 'churchUnits'])->name('church-admin.units');
-    Route::post('/church-admin/units', [ChurchOperationsController::class, 'storeChurchUnit'])->name('church-admin.units.store');
-    Route::post('/church-admin/units/{unit}/leaders', [ChurchOperationsController::class, 'storeUnitLeader'])->name('church-admin.units.leaders.store');
-    Route::post('/church-admin/units/{unit}/members', [ChurchOperationsController::class, 'storeUnitMember'])->name('church-admin.units.members.store');
-    Route::get('/church-admin/leadership', [ChurchOperationsController::class, 'leadership'])->name('church-admin.leadership');
-    Route::post('/church-admin/leadership', [ChurchOperationsController::class, 'storeLeadership'])->name('church-admin.leadership.store');
-    Route::get('/church-admin/reports', [ChurchOperationsController::class, 'reports'])->name('church-admin.reports');
-    Route::post('/church-admin/reports', [ChurchOperationsController::class, 'storeReport'])->name('church-admin.reports.store');
-    Route::get('/church-admin/prayer-requests', [ChurchOperationsController::class, 'prayerRequests'])->name('church-admin.prayer-requests');
-    Route::post('/church-admin/prayer-requests/{prayerRequest}/status', [ChurchOperationsController::class, 'updatePrayerRequestStatus'])->name('church-admin.prayer-requests.status');
-    Route::get('/church-admin/scorecards', [ChurchOperationsController::class, 'scorecards'])->name('church-admin.scorecards');
-    Route::post('/church-admin/scorecards', [ChurchOperationsController::class, 'storeScorecard'])->name('church-admin.scorecards.store');
-    Route::get('/church-admin/absentees', [ChurchOperationsController::class, 'absentees'])->name('church-admin.absentees');
-    Route::post('/church-admin/absentees', [ChurchOperationsController::class, 'storeAbsentee'])->name('church-admin.absentees.store');
-    Route::get('/church-admin/workers-meetings', [ChurchOperationsController::class, 'workersMeetings'])->name('church-admin.workers-meetings');
-    Route::post('/church-admin/workers-meetings', [ChurchOperationsController::class, 'storeWorkersMeeting'])->name('church-admin.workers-meetings.store');
-    Route::get('/church-admin/media', [ChurchOperationsController::class, 'media'])->name('church-admin.media');
-    Route::post('/church-admin/media', [ChurchOperationsController::class, 'storeMedia'])->name('church-admin.media.store');
-    Route::get('/church-admin/messages', [ChurchOperationsController::class, 'messages'])->name('church-admin.messages');
-    Route::post('/church-admin/messages/{message}/status', [ChurchOperationsController::class, 'updateMessageStatus'])->name('church-admin.messages.status');
-    Route::get('/my-messages', [ChurchOperationsController::class, 'memberMessages'])->name('member.messages');
-    Route::get('/church-admin/events', [ChurchOperationsController::class, 'events'])->name('church-admin.events');
-    Route::post('/church-admin/events', [ChurchOperationsController::class, 'storeEvent'])->name('church-admin.events.store');
-    Route::patch('/church-admin/events/{event}', [ChurchOperationsController::class, 'updateEvent'])->name('church-admin.events.update');
-    Route::get('/church-admin/announcements', [ChurchOperationsController::class, 'announcements'])->name('church-admin.announcements');
-    Route::post('/church-admin/announcements', [ChurchOperationsController::class, 'storeAnnouncement'])->name('church-admin.announcements.store');
-    Route::get('/church-admin/newsletter-subscribers', [NewsletterController::class, 'subscribers'])->name('church-admin.newsletter-subscribers');
-    Route::middleware('auth')->group(function () {
+    Route::middleware('role:super_admin|admin')->group(function () {
+        Route::get('/church-admin', [ChurchAdminController::class, 'index'])->name('church-admin.index');
+        Route::get('/church-admin/members', [ChurchAdminController::class, 'members'])->name('church-admin.members');
+        Route::post('/church-admin/members', [ChurchAdminController::class, 'storeMember'])->name('church-admin.members.store');
+        Route::get('/church-admin/attendance', [ChurchAdminController::class, 'attendance'])->name('church-admin.attendance');
+        Route::post('/church-admin/attendance', [ChurchAdminController::class, 'storeAttendance'])->name('church-admin.attendance.store');
+        Route::get('/church-admin/ministries', [ChurchOperationsController::class, 'ministries'])->name('church-admin.ministries');
+        Route::post('/church-admin/ministries', [ChurchOperationsController::class, 'storeMinistry'])->name('church-admin.ministries.store');
+        Route::get('/church-admin/small-groups', [ChurchOperationsController::class, 'smallGroups'])->name('church-admin.small-groups');
+        Route::post('/church-admin/small-groups', [ChurchOperationsController::class, 'storeSmallGroup'])->name('church-admin.small-groups.store');
+        Route::post('/church-admin/small-groups/meetings', [ChurchOperationsController::class, 'storeSmallGroupMeeting'])->name('church-admin.small-groups.meetings.store');
+        Route::post('/church-admin/small-groups/attendance', [ChurchOperationsController::class, 'storeSmallGroupAttendance'])->name('church-admin.small-groups.attendance.store');
+        Route::get('/church-admin/units', [ChurchOperationsController::class, 'churchUnits'])->name('church-admin.units');
+        Route::post('/church-admin/units', [ChurchOperationsController::class, 'storeChurchUnit'])->name('church-admin.units.store');
+        Route::post('/church-admin/units/{unit}/leaders', [ChurchOperationsController::class, 'storeUnitLeader'])->name('church-admin.units.leaders.store');
+        Route::post('/church-admin/units/{unit}/members', [ChurchOperationsController::class, 'storeUnitMember'])->name('church-admin.units.members.store');
+        Route::get('/church-admin/leadership', [ChurchOperationsController::class, 'leadership'])->name('church-admin.leadership');
+        Route::post('/church-admin/leadership', [ChurchOperationsController::class, 'storeLeadership'])->name('church-admin.leadership.store');
+        Route::get('/church-admin/reports', [ChurchOperationsController::class, 'reports'])->name('church-admin.reports');
+        Route::post('/church-admin/reports', [ChurchOperationsController::class, 'storeReport'])->name('church-admin.reports.store');
+        Route::get('/church-admin/prayer-requests', [ChurchOperationsController::class, 'prayerRequests'])->name('church-admin.prayer-requests');
+        Route::post('/church-admin/prayer-requests/{prayerRequest}/status', [ChurchOperationsController::class, 'updatePrayerRequestStatus'])->name('church-admin.prayer-requests.status');
+        Route::get('/church-admin/scorecards', [ChurchOperationsController::class, 'scorecards'])->name('church-admin.scorecards');
+        Route::post('/church-admin/scorecards', [ChurchOperationsController::class, 'storeScorecard'])->name('church-admin.scorecards.store');
+        Route::get('/church-admin/absentees', [ChurchOperationsController::class, 'absentees'])->name('church-admin.absentees');
+        Route::post('/church-admin/absentees', [ChurchOperationsController::class, 'storeAbsentee'])->name('church-admin.absentees.store');
+        Route::get('/church-admin/workers-meetings', [ChurchOperationsController::class, 'workersMeetings'])->name('church-admin.workers-meetings');
+        Route::post('/church-admin/workers-meetings', [ChurchOperationsController::class, 'storeWorkersMeeting'])->name('church-admin.workers-meetings.store');
+        Route::get('/church-admin/media', [ChurchOperationsController::class, 'media'])->name('church-admin.media');
+        Route::post('/church-admin/media', [ChurchOperationsController::class, 'storeMedia'])->name('church-admin.media.store');
+        Route::get('/church-admin/messages', [ChurchOperationsController::class, 'messages'])->name('church-admin.messages');
+        Route::post('/church-admin/messages/{message}/status', [ChurchOperationsController::class, 'updateMessageStatus'])->name('church-admin.messages.status');
+        Route::get('/church-admin/events', [ChurchOperationsController::class, 'events'])->name('church-admin.events');
+        Route::post('/church-admin/events', [ChurchOperationsController::class, 'storeEvent'])->name('church-admin.events.store');
+        Route::patch('/church-admin/events/{event}', [ChurchOperationsController::class, 'updateEvent'])->name('church-admin.events.update');
+        Route::get('/church-admin/announcements', [ChurchOperationsController::class, 'announcements'])->name('church-admin.announcements');
+        Route::post('/church-admin/announcements', [ChurchOperationsController::class, 'storeAnnouncement'])->name('church-admin.announcements.store');
+        Route::get('/church-admin/newsletter-subscribers', [NewsletterController::class, 'subscribers'])->name('church-admin.newsletter-subscribers');
         Route::get('/church-admin/newsletter-campaigns', [NewsletterCampaignController::class, 'index'])->name('church-admin.newsletter-campaigns');
         Route::post('/church-admin/newsletter-campaigns', [NewsletterCampaignController::class, 'store'])->name('church-admin.newsletter-campaigns.store');
         Route::post('/church-admin/newsletter-campaigns/{campaign}/send', [NewsletterCampaignController::class, 'send'])->name('church-admin.newsletter-campaigns.send');
     });
+        Route::get('/my-messages', [ChurchOperationsController::class, 'memberMessages'])->name('member.messages');
 
     // Profile routes
     Route::prefix('profile')->name('profile.')->group(function () {
