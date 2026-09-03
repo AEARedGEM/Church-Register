@@ -109,6 +109,7 @@ interface EditProps extends PageProps {
     trainingModes: SelectOption[];
     educationLevels: SelectOption[];
     states: SelectOption[];
+    memberProfilePhotoUrl?: string | null;
 }
 
 export default function Edit({
@@ -125,6 +126,7 @@ export default function Edit({
     trainingModes,
     educationLevels,
     states
+    , memberProfilePhotoUrl
 }: EditProps) {
     const [activeSection, setActiveSection] = React.useState<string>('profile');
     const [pageLoaded, setPageLoaded] = React.useState<boolean>(false);
@@ -315,6 +317,7 @@ export default function Edit({
                                             sectors={sectors}
                                             educationLevels={educationLevels}
                                             states={states}
+                                            memberProfilePhotoUrl={memberProfilePhotoUrl}
                                         />
                                     </div>
                                 )}

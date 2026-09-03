@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\ChurchPrayerRequest;
 use App\Models\ChurchContactMessage;
+use App\Models\AttendanceRecord;
 use App\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -319,6 +320,113 @@ class ChurchAdminDashboardTest extends TestCase
             );
     }
 
+    public function test_church_admin_attendance_rejects_unknown_service_types(): void
+    {
+        $admin = $this->admin();
+        $profile = $admin->memberProfile()->create([
+            'first_name' => 'Grace',
+            'last_name' => 'Member',
+            'membership_status' => 'member',
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->from('/church-admin/attendance')
+            ->post('/church-admin/attendance', [
+                'member_profile_id' => $profile->id,
+                'service_type' => 'invented_service',
+                'service_date' => '2026-09-06',
+                'status' => 'present',
+            ])
+            ->assertSessionHasErrors('service_type');
+
+        $this->assertDatabaseMissing('attendance_records', [
+            'member_profile_id' => $profile->id,
+            'service_type' => 'invented_service',
+        ]);
+    }
+
+    public function test_church_admin_service_register_lists_active_members_by_sunday_week(): void
+    {
+        $admin = $this->admin();
+        $member = User::factory()->create(['name' => 'Grace Member']);
+        $member->memberProfile()->create([
+            'first_name' => 'Grace',
+            'last_name' => 'Member',
+            'membership_status' => 'member',
+            'is_active' => true,
+        ]);
+        $inactive = User::factory()->create(['name' => 'Inactive Member']);
+        $inactive->memberProfile()->create([
+            'first_name' => 'Inactive',
+            'last_name' => 'Member',
+            'membership_status' => 'member',
+            'is_active' => false,
+        ]);
+
+        $this->actingAs($admin)->post('/church-admin/attendance', [
+            'member_profile_id' => $member->memberProfile->id,
+            'service_type' => 'main_service',
+            'service_date' => '2026-09-06',
+            'status' => 'present',
+            'first_timer' => false,
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/church-admin/service-register?month=2026-09')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('monthLabel', 'September 2026')
+                ->has('sundays', 4)
+                ->has('rows', 1)
+                ->where('rows.0.name', 'Grace Member')
+                ->where('rows.0.referral_code', $member->referral_code)
+                ->where('rows.0.weeks.0.date', '2026-09-06')
+                ->where('rows.0.weeks.0.status', 'present')
+            );
+    }
+
+    public function test_regular_member_cannot_access_service_register(): void
+    {
+        /** @var User $member */
+        $member = User::factory()->create(['email' => 'member@example.com']);
+
+        $this->actingAs($member)
+            ->get('/church-admin/service-register')
+            ->assertForbidden();
+    }
+
+    public function test_service_register_attendance_updates_the_same_member_week(): void
+    {
+        $admin = $this->admin();
+        $member = User::factory()->create();
+        $profile = $member->memberProfile()->create([
+            'first_name' => 'Amina',
+            'last_name' => 'James',
+            'membership_status' => 'member',
+            'is_active' => true,
+        ]);
+
+        foreach (['present', 'late'] as $status) {
+            $this->actingAs($admin)
+                ->post('/church-admin/service-register/attendance', [
+                    'member_profile_id' => $profile->id,
+                    'month' => '2026-09',
+                    'week' => 1,
+                    'status' => $status,
+                ])
+                ->assertRedirect('/church-admin/service-register?month=2026-09');
+        }
+
+        $this->assertDatabaseCount('attendance_records', 1);
+        $this->assertTrue(AttendanceRecord::query()
+            ->where('member_profile_id', $profile->id)
+            ->where('service_type', 'main_service')
+            ->whereDate('service_date', '2026-09-06')
+            ->where('status', 'late')
+            ->exists());
+    }
+
     public function test_church_admin_can_create_a_new_member_profile(): void
     {
         $user = $this->admin();
@@ -421,6 +529,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_hardcoded_super_admin_email_has_admin_access(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email' => 'crownpaysme19@gmail.com',
             'name' => 'Crown Admin',
@@ -437,6 +546,7 @@ class ChurchAdminDashboardTest extends TestCase
 
     public function test_regular_authenticated_member_cannot_access_church_admin(): void
     {
+        /** @var User $member */
         $member = User::factory()->create([
             'email' => 'member@example.com',
         ]);

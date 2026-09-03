@@ -52,7 +52,8 @@ class ChurchNewsletterSubscriptionFeatureTest extends TestCase
 
     public function test_newsletter_admin_board_lists_subscribers_without_exposing_tokens(): void
     {
-        $admin = User::factory()->create();
+        /** @var User $admin */
+        $admin = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
         $subscriber = ChurchNewsletterSubscriber::create([
             'email' => 'member@example.com',
             'unsubscribe_token' => 'private-token-value',

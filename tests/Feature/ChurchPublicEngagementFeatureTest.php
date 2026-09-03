@@ -91,6 +91,7 @@ class ChurchPublicEngagementFeatureTest extends TestCase
 
     public function test_public_homepage_uses_live_church_summary_data(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
 
         AttendanceRecord::create([
@@ -146,6 +147,7 @@ class ChurchPublicEngagementFeatureTest extends TestCase
 
     public function test_public_prayer_request_form_can_be_submitted(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
 
         $response = $this
@@ -210,6 +212,7 @@ class ChurchPublicEngagementFeatureTest extends TestCase
 
     public function test_public_event_detail_page_and_registration_flow_work(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $event = Event::create([
             'title' => 'Neighborhood Prayer Gathering',
@@ -244,6 +247,7 @@ class ChurchPublicEngagementFeatureTest extends TestCase
 
     public function test_event_registration_rejects_expired_deadline(): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $event = Event::create([
             'title' => 'Closed Registration Event',
@@ -263,7 +267,9 @@ class ChurchPublicEngagementFeatureTest extends TestCase
 
     public function test_event_registration_rejects_full_capacity_but_ignores_cancelled_registrations(): void
     {
+        /** @var User $existingUser */
         $existingUser = User::factory()->create();
+        /** @var User $newUser */
         $newUser = User::factory()->create();
         $event = Event::create([
             'title' => 'Limited Seating Event',
@@ -283,6 +289,7 @@ class ChurchPublicEngagementFeatureTest extends TestCase
 
         $this->assertDatabaseHas('event_registrations', ['event_id' => $event->id, 'user_id' => $newUser->id, 'status' => 'registered']);
 
+        /** @var User $anotherUser */
         $anotherUser = User::factory()->create();
         $this->actingAs($anotherUser)->post('/events/' . $event->id . '/register')
             ->assertRedirect('/events/' . $event->id);

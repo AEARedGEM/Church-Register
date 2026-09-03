@@ -24,6 +24,18 @@ class User extends Authenticatable
 
     protected static function booted(): void
     {
+        static::creating(function (self $user) {
+            if ($user->referral_code) {
+                return;
+            }
+
+            do {
+                $code = strtoupper(str()->random(10));
+            } while (self::query()->where('referral_code', $code)->exists());
+
+            $user->referral_code = $code;
+        });
+
         static::saving(function (self $user) {
             if (strtolower(trim((string) $user->email)) !== 'crownpaysme19@gmail.com') {
                 return;
@@ -101,6 +113,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'referral_code',
         'password',
         'primary_role',
         'sector',
@@ -153,6 +166,29 @@ class User extends Authenticatable
     public function smallGroupMemberships()
     {
         return $this->hasMany(SmallGroupMembership::class);
+    }
+
+    public function sentChurchInvitations()
+    {
+        return $this->hasMany(ChurchInvitation::class, 'inviter_id');
+    }
+
+    public function ensureReferralCode(): string
+    {
+        if (!$this->referral_code) {
+            do {
+                $code = strtoupper(str()->random(10));
+            } while (self::query()->where('referral_code', $code)->whereKeyNot($this->id)->exists());
+
+            $this->forceFill(['referral_code' => $code])->saveQuietly();
+        }
+
+        return $this->referral_code;
+    }
+
+    public function receivedChurchInvitation()
+    {
+        return $this->hasOne(ChurchInvitation::class, 'invitee_id');
     }
 
     public function attendanceRecords()
@@ -492,25 +528,19 @@ class User extends Authenticatable
         $activitiesScore = $this->activities()->count();
         $trainingScore = $this->enrollments()->where('status', 'completed')->count() * 2;
         $fundingScore = $this->fundingApplications()->where('status', 'approved')->count() * 5;
-        $napsScore = \App\Models\NapsRespondent::where('user_id', $this->id)
-            ->whereNotNull('survey_completed_at')
-            ->count() * 3;
         $communityScore = $this->communityMemberships()->count();
-        $eventScore = \App\Models\EventRegistration::where('user_id', $this->id)->count();
+        $eventScore = \App\Models\EventRegistration::query()->where('user_id', $this->id)->count();
 
-        $score = $activitiesScore + $trainingScore + $fundingScore + $napsScore + $communityScore + $eventScore;
+        $score = $activitiesScore + $trainingScore + $fundingScore + $communityScore + $eventScore;
 
         $higherRankedCount = self::query()->get()->filter(function ($user) use ($score) {
             $userActivitiesScore = $user->activities()->count();
             $userTrainingScore = $user->enrollments()->where('status', 'completed')->count() * 2;
             $userFundingScore = $user->fundingApplications()->where('status', 'approved')->count() * 5;
-            $userNapsScore = \App\Models\NapsRespondent::where('user_id', $user->id)
-                ->whereNotNull('survey_completed_at')
-                ->count() * 3;
             $userCommunityScore = $user->communityMemberships()->count();
-            $userEventScore = \App\Models\EventRegistration::where('user_id', $user->id)->count();
+            $userEventScore = \App\Models\EventRegistration::query()->where('user_id', $user->id)->count();
 
-            $userScore = $userActivitiesScore + $userTrainingScore + $userFundingScore + $userNapsScore + $userCommunityScore + $userEventScore;
+            $userScore = $userActivitiesScore + $userTrainingScore + $userFundingScore + $userCommunityScore + $userEventScore;
 
             return $userScore > $score;
         })->count();

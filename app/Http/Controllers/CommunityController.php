@@ -12,16 +12,23 @@ class CommunityController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $communityIds = $user->communityMemberships()
+            ->where('is_active', true)
+            ->whereHas('community', fn ($query) => $query->where('is_active', true))
+            ->pluck('community_id');
 
         return response()->json([
             'userCommunities' => $user->communityMemberships()
+                ->where('is_active', true)
                 ->with('community')
                 ->get(),
             'recentPosts' => ForumPost::with('user', 'community')
+                ->whereIn('community_id', $communityIds)
+                ->where('status', 'active')
                 ->latest()
                 ->take(10)
                 ->get(),
-            'mentors' => Mentor::where('is_active', true)
+            'mentors' => Mentor::query()->where('is_active', true)
                 ->with('user')
                 ->get(),
             'userMentorships' => $user->mentorships()
@@ -38,7 +45,7 @@ class CommunityController extends Controller
             ->pluck('community_id');
 
         return Inertia::render('Member/CommunityFeed', [
-            'communities' => \App\Models\Community::query()->whereIn('id', $communityIds)->where('is_active', true)->orderBy('name')->get(['id', 'name']),
+            'communities' => \App\Models\Community::query()->whereIn('id', $communityIds, 'and', false)->where('is_active', true)->orderBy('name')->get(['id', 'name']),
             'posts' => ForumPost::with(['user:id,name', 'community:id,name'])
                 ->whereIn('community_id', $communityIds)
                 ->where('status', 'active')

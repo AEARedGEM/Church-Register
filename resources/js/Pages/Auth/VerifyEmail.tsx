@@ -60,7 +60,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold">Start Building</h3>
-                                        <p className="text-sm opacity-75">Access your dashboard and begin your industrial journey</p>
+                                        <p className="text-sm opacity-75">Access your dashboard and begin your church journey</p>
                                     </div>
                                 </div>
                             </div>

@@ -15,7 +15,9 @@ use App\Models\ChurchUnit;
 use App\Models\ChurchUnitLeader;
 use App\Models\ChurchUnitMember;
 use App\Models\ChurchWorkersMeeting;
+use App\Models\ChurchInvitation;
 use App\Models\Event;
+use Illuminate\Support\Collection;
 use App\Models\SmallGroup;
 use App\Models\SmallGroupAttendance;
 use App\Models\SmallGroupMembership;
@@ -287,10 +289,15 @@ class ChurchOperationsController extends Controller
         }
 
         $reports = $reportsQuery->get();
+        $scorecardsQuery = ChurchScorecard::query()->orderByDesc('report_date');
+
+        if ($periodType !== 'all') {
+            $scorecardsQuery->where('period_type', $periodType);
+        }
 
         return Inertia::render('Church/ReportsDashboard', [
             'reports' => $reports,
-            'analytics' => $this->reportAnalytics($reports),
+            'analytics' => $this->reportAnalytics($reports, $scorecardsQuery->get()),
             'periodType' => $periodType,
             'analyticsLabels' => [
                 'attendanceTrend' => 'Attendance trend',
@@ -303,7 +310,7 @@ class ChurchOperationsController extends Controller
         ]);
     }
 
-    private function reportAnalytics($reports): array
+    private function reportAnalytics(Collection $reports, Collection $scorecards): array
     {
         $sorted = $reports->sortBy('report_date')->values();
         $weekly = $reports->where('period_type', 'weekly')->sortBy('report_date')->values();
@@ -316,6 +323,23 @@ class ChurchOperationsController extends Controller
         $trend = $sorted->count() > 1
             ? (int) $sorted->last()->attendance_count - (int) $sorted->first()->attendance_count
             : (int) ($sorted->first()->attendance_count ?? 0);
+        $scorecardsSorted = $scorecards->sortBy('report_date')->values();
+        $totalInvitations = (int) $scorecards->sum('invitation_count');
+        $totalVisitors = (int) $scorecards->sum('new_visitors_count');
+        $totalConversions = (int) $scorecards->sum('conversion_count');
+        $scoreTrend = $scorecardsSorted->count() > 1
+            ? (int) $scorecardsSorted->last()->score - (int) $scorecardsSorted->first()->score
+            : (int) ($scorecardsSorted->first()->score ?? 0);
+        $latestReport = $sorted->last();
+        $previousReport = $sorted->count() > 1 ? $sorted->get($sorted->count() - 2) : null;
+        $attendanceComparison = $previousReport
+            ? (int) $latestReport->attendance_count - (int) $previousReport->attendance_count
+            : 0;
+        $latestScorecard = $scorecardsSorted->last();
+        $previousScorecard = $scorecardsSorted->count() > 1 ? $scorecardsSorted->get($scorecardsSorted->count() - 2) : null;
+        $invitationComparison = $previousScorecard
+            ? (int) $latestScorecard->invitation_count - (int) $previousScorecard->invitation_count
+            : 0;
 
         return [
             'totalAttendance' => $totalAttendance,
@@ -330,6 +354,13 @@ class ChurchOperationsController extends Controller
             'monthlyReports' => $reports->where('period_type', 'monthly')->count(),
             'quarterlyReports' => $reports->where('period_type', 'quarterly')->count(),
             'annualReports' => $reports->where('period_type', 'annual')->count(),
+            'totalInvitations' => $totalInvitations,
+            'totalVisitors' => $totalVisitors,
+            'totalConversions' => $totalConversions,
+            'conversionRate' => $totalVisitors > 0 ? (int) round(($totalConversions / $totalVisitors) * 100) . '%' : '0%',
+            'scoreTrend' => $scoreTrend >= 0 ? "+{$scoreTrend}" : (string) $scoreTrend,
+            'attendanceComparison' => $attendanceComparison >= 0 ? "+{$attendanceComparison}" : (string) $attendanceComparison,
+            'invitationComparison' => $invitationComparison >= 0 ? "+{$invitationComparison}" : (string) $invitationComparison,
         ];
     }
 
@@ -428,8 +459,17 @@ class ChurchOperationsController extends Controller
             ->orderByDesc('report_date')
             ->get();
 
+        $validatedInvitationCounts = ChurchInvitation::query()
+            ->whereNotNull('validated_at')
+            ->selectRaw('inviter_id, COUNT(*) as validated_count')
+            ->groupBy('inviter_id')
+            ->with('inviter:id,name,referral_code')
+            ->orderByDesc('validated_count')
+            ->get();
+
         return Inertia::render('Church/ScorecardsDashboard', [
             'scorecards' => $scorecards,
+            'validatedInvitationCounts' => $validatedInvitationCounts,
             'flash' => [
                 'success' => $request->session()->get('success'),
             ],

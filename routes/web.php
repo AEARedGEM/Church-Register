@@ -8,7 +8,6 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\FundingController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\CourseController;
-use App\Http\Controllers\NapsApiController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
@@ -26,16 +25,23 @@ use Inertia\Inertia;
 
 // Public routes
 Route::get('/', function () {
+    $userTableExists = \Illuminate\Support\Facades\Schema::hasTable('users');
+    $attendanceTableExists = \Illuminate\Support\Facades\Schema::hasTable('attendance_records');
+
     $churchSummary = [
-        'member_count' => \App\Models\User::count(),
-        'attendance_total' => \App\Models\AttendanceRecord::count(),
+        'member_count' => $userTableExists ? \App\Models\User::query()->count('*') : 0,
+        'attendance_total' => $attendanceTableExists ? \App\Models\AttendanceRecord::count() : 0,
         'prayer_requests' => \Illuminate\Support\Facades\Schema::hasTable('church_prayer_requests')
             ? \App\Models\ChurchPrayerRequest::whereIn('status', ['pending', 'prayed'])->count()
             : 0,
-        'active_ministries' => \App\Models\ChurchMinistry::where('is_active', true)->count(),
-        'upcoming_events' => \App\Models\Event::where('start_date', '>=', now()->startOfDay())
-            ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
-            ->count(),
+        'active_ministries' => \Illuminate\Support\Facades\Schema::hasTable('church_ministries')
+            ? \App\Models\ChurchMinistry::where('is_active', true)->count()
+            : 0,
+        'upcoming_events' => \Illuminate\Support\Facades\Schema::hasTable('events')
+            ? \App\Models\Event::query()->where('start_date', '>=', now()->startOfDay())
+                ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
+                ->count()
+            : 0,
     ];
 
     return Inertia::render('Welcome', [
@@ -55,7 +61,6 @@ Route::get('/mission', [PublicPageController::class, 'mission'])->name('mission'
 Route::get('/leadership', [PublicPageController::class, 'leadership'])->name('leadership');
 Route::get('/church-history', [PublicPageController::class, 'churchHistory'])->name('church-history');
 Route::get('/governance', [PublicPageController::class, 'governance'])->name('governance');
-Route::get('/zones', [PublicPageController::class, 'zones'])->name('zones');
 
 // Public Footer Pages - Church Life & Ministry
 Route::get('/program', [PublicPageController::class, 'program'])->name('program');
@@ -69,24 +74,6 @@ Route::get('/volunteer', [PublicPageController::class, 'volunteer'])->name('volu
 Route::get('/giving', [PublicPageController::class, 'giving'])->name('giving');
 Route::get('/partners', [PublicPageController::class, 'partners'])->name('partners');
 Route::get('/funding', [PublicPageController::class, 'funding'])->name('funding');
-Route::get('/owop-mandate', [PublicPageController::class, 'owopMandate'])->name('owop-mandate');
-// Public survey route: return a static Blade page so the initial HTML contains the
-// expected public survey text for both end users and the project regression tests.
-Route::get('/survey', function () {
-    return view('public.survey');
-})->name('survey-public');
-Route::get('/ecosystem', [PublicPageController::class, 'ecosystem'])->name('ecosystem');
-Route::get('/impact', [PublicPageController::class, 'impact'])->name('impact');
-
-// Public Footer Pages - Documentation
-Route::prefix('documentation')->name('documentation.')->group(function () {
-    Route::get('/whitepaper', [PublicPageController::class, 'whitepaper'])->name('whitepaper');
-    Route::get('/policy', [PublicPageController::class, 'policy'])->name('policy');
-    Route::get('/funding-framework', [PublicPageController::class, 'fundingFramework'])->name('funding-framework');
-    Route::get('/infrastructure', [PublicPageController::class, 'infrastructure'])->name('infrastructure');
-    Route::get('/specs', [PublicPageController::class, 'specs'])->name('specs');
-});
-
 // Public Footer Pages - Resources
 Route::get('/community', [PublicPageController::class, 'community'])->name('community');
 Route::get('/units', [PublicPageController::class, 'units'])->name('units');
@@ -129,6 +116,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/messages', [DirectMessageController::class, 'index'])->name('member.direct-messages');
     Route::get('/messages/{user}', [DirectMessageController::class, 'show'])->name('member.direct-messages.show');
     Route::post('/messages/{user}', [DirectMessageController::class, 'store'])->name('member.direct-messages.store');
+    Route::get('/member-profiles/{memberProfile}/photo', [ProfileController::class, 'photo'])->name('member-profile.photo');
 
     Route::middleware('role:super_admin|admin')->group(function () {
         Route::get('/church-admin', [ChurchAdminController::class, 'index'])->name('church-admin.index');
@@ -136,6 +124,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/church-admin/members', [ChurchAdminController::class, 'storeMember'])->name('church-admin.members.store');
         Route::get('/church-admin/attendance', [ChurchAdminController::class, 'attendance'])->name('church-admin.attendance');
         Route::post('/church-admin/attendance', [ChurchAdminController::class, 'storeAttendance'])->name('church-admin.attendance.store');
+        Route::get('/church-admin/service-register', [ChurchAdminController::class, 'serviceRegister'])->name('church-admin.service-register');
+        Route::post('/church-admin/service-register/attendance', [ChurchAdminController::class, 'storeServiceRegisterAttendance'])->name('church-admin.service-register.attendance');
         Route::get('/church-admin/ministries', [ChurchOperationsController::class, 'ministries'])->name('church-admin.ministries');
         Route::post('/church-admin/ministries', [ChurchOperationsController::class, 'storeMinistry'])->name('church-admin.ministries.store');
         Route::get('/church-admin/small-groups', [ChurchOperationsController::class, 'smallGroups'])->name('church-admin.small-groups');
@@ -276,8 +266,5 @@ Route::get('/debug/clear-cache', function () {
     }
     return 'Unauthorized';
 });
-
-// Include NAPS routes
-require __DIR__.'/naps.php';
 
 require __DIR__.'/auth.php';

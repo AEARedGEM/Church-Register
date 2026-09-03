@@ -12,6 +12,7 @@ interface Member {
     unit?: string;
     is_active: boolean;
     email?: string;
+    avatar_url?: string | null;
 }
 
 export default function MemberDirectory({ members, flash, departments, filters }: { members: Member[]; flash?: { success?: string }; departments?: string[]; filters?: { search?: string; status?: string; department?: string } }) {
@@ -218,7 +219,7 @@ export default function MemberDirectory({ members, flash, departments, filters }
                             <tbody className="divide-y divide-red-50 bg-white">
                                 {members.length > 0 ? members.map((member) => (
                                     <tr key={member.id} className="hover:bg-red-50/50">
-                                        <td className="px-4 py-3 text-sm font-medium text-slate-800">{member.name}</td>
+                                        <td className="px-4 py-3 text-sm font-medium text-slate-800"><div className="flex items-center gap-3">{member.avatar_url ? <img src={member.avatar_url} alt="" className="h-9 w-9 rounded-full object-cover" /> : <span className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-700">{member.name.slice(0, 1).toUpperCase()}</span>}<span>{member.name}</span></div></td>
                                         <td className="px-4 py-3 text-sm text-slate-600">{member.email ?? '—'}</td>
                                         <td className="px-4 py-3 text-sm text-slate-600">{member.phone ?? '—'}</td>
                                         <td className="px-4 py-3 text-sm">

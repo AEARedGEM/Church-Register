@@ -37,6 +37,17 @@ The public church experience has been refined further:
 - Added newsletter subscription management with idempotent signup, tokenized unsubscribe, and an admin consent board.
 - Added admin newsletter campaign drafting and queued per-recipient delivery to active subscribers with delivery counters.
 - Completed the small-group workflow: public directory, admin creation, member joining, scheduled meetings, attendance capture, and private member communication.
+- Added the admin-only monthly Sunday service register with member rows, referral-code reference, and Week 1-5 attendance columns.
+- Added server-backed report comparison metrics and public media format filtering with clearer editorial metadata.
+- Added mandatory member profile-photo upload at registration, profile-photo replacement in profile settings, and admin directory photo display.
+- Moved member photos to private storage and added authenticated owner/admin-only photo delivery.
+
+### Profile Photo Progress Update - 2026-09-03
+
+- New member registration now requires a JPG, JPEG, PNG, or WebP profile photo up to 5 MB.
+- Existing members can upload or replace their photo from profile settings.
+- Uploaded photos are stored on the public disk and shown in the admin member directory with an initials fallback.
+- Profile-photo and referral registration coverage passes: 8 tests passed with 64 assertions.
 
 ### Next Implementation Focus - 2026-09-03
 
@@ -68,7 +79,7 @@ The first security and regression slice is complete:
 - Updated legacy church-admin feature fixtures to use the established admin identity.
 - Verified the affected church feature suite: 25 tests passed with 227 assertions.
 
-Newsletter infrastructure is intentionally skipped for now. The active path is security coverage, server-backed reporting analytics, richer public media storytelling, and deployment readiness.
+Newsletter infrastructure is intentionally skipped for now. The active path is remaining security coverage, richer public media storytelling, report templates, and deployment readiness.
 
 ### Progress Update - 2026-09-03
 
@@ -76,6 +87,36 @@ Newsletter infrastructure is intentionally skipped for now. The active path is s
 - Server analytics include totals, attendance trend, weekly growth, average attendance, report-period counts, and strongest period.
 - Reporting regression coverage verifies exact server values for totals, `+40` attendance trend, `+33%` weekly growth, and `Weekly (280)` strongest period.
 - Focused reporting tests pass: 2 tests passed with 39 assertions.
+
+### Reporting Progress Update - 2026-09-03
+
+- Added server-backed scorecard analytics to the reporting dashboard.
+- Report analytics now include invitations, new visitors, conversions, conversion rate, and score trend alongside attendance metrics.
+- Added exact regression coverage for scorecard aggregation and period filtering: 2 reporting tests pass with 49 assertions.
+
+### Media Progress Update - 2026-09-03
+
+- Public media now presents format filters, story counts, scripture references, speaker details, publication dates, and video availability.
+- Published-only detail pages and related-content selection remain enforced by the backend.
+- Rich gallery/story layouts and image assets remain future content work.
+
+### Security Progress Update - 2026-09-03
+
+- Scoped the authenticated community data endpoint to active memberships, active communities, and active posts.
+- Added the missing community membership relationships required for safe relationship filtering.
+- Added privacy regression coverage proving members cannot receive posts from communities they have not joined.
+- Community communication tests pass: 4 tests passed with 24 assertions.
+
+### Referral Invitation Progress Update - 2026-09-03
+
+- Every user receives a unique 10-character referral code and dashboard referral link.
+- The referral-code migration backfills existing users, so older accounts are not excluded from the invitation league.
+- Registration accepts and validates a member referral code, prefilled from `/register?ref=CODE`.
+- Registration creates a pending invitation attribution; invalid codes and self-referrals are rejected.
+- An invitation becomes valid only when the referred user has both registered through the member code and records present/late attendance for the Sunday main service.
+- Saturday attendance, Sunday absence, registration alone, and duplicate validation attempts do not count.
+- The invitation league leaderboard reads validated invitation records rather than manually entered scorecard invitation totals.
+- Referral end-to-end coverage passes: 4 tests passed with 40 assertions.
 
 
 ## Reality Check: Current App vs Church Goal
@@ -100,7 +141,7 @@ The app now has a working church domain foundation, and the remaining work is fo
 The website must support a leadership-led digital church experience that combines worship visibility, member management, and reporting.
 
 ### 1. Attendance & Worship Experience
-- Weekly-Monthly-Yearly Invitation League
+- Weekly-Monthly-Yearly Invitation League ✅ validated referral leaderboard with registration-plus-Sunday-attendance confirmation
 - Church member profiles
 - Birthday celebrations
 - Pixelated pictures of all absentees (6x3) on screen
@@ -183,7 +224,6 @@ From the codebase, the following areas are already in place:
 - Public homepage at the root route
 - About, Mission, Governance, Leadership, Zones, Impact, Program, Partners, Funding, Community, FAQ, and support pages
 - Documentation and legal pages
-- A public NAPS survey route and application experience
 
 This means the public-facing site structure is already established and can be repurposed for church usage.
 
@@ -206,7 +246,6 @@ The app already includes functional modules for:
 - Training dashboard
 - Course browsing and enrollment
 - Community / mentorship interaction
-- NAPS response tracking
 - Funding-related pages and data endpoints
 - Wallet and transaction-related structures
 
@@ -218,7 +257,7 @@ The project includes:
 - Laravel environment configuration
 - MySQL database setup
 - Migrations for the current app modules
-- Existing models and tables for user, funding, training, NAPS, and community workflows
+- Existing models and tables for church, training, funding, and community workflows
 
 ### 6. Church-Specific Features
 **Status**: ✅ Fully expanded across church operations, public ministry flows, and reporting analytics
@@ -335,6 +374,8 @@ The public site now includes:
 - Weekly, monthly, yearly invitation league ✅ implemented
 - Absentee pixel display (6x3 layout) ✅ implemented
 - In-service attendance summaries and scorecards ✅ implemented
+- Monthly Sunday service register ✅ admin-only member rows with Week 1-5 columns and referral-code reference
+- Attendance service-type validation ✅ unknown service types are rejected before persistence
 
 ### Phase 3: Leadership & Profile System
 **Priority: HIGH**
@@ -376,7 +417,7 @@ The public site now includes:
 
 - Interviews with gospel/music ministers ⏳ in progress
 - Interviews with VIPs and visitors ⏳ in progress
-- Media highlights and preaching content segments ⏳ in progress
+- Media highlights and preaching content segments ✅ published media library and format filtering implemented; richer gallery/story layouts remain
 - Church stories/news feed ⏳ remaining
 - Published related-media regression coverage ✅ implemented; richer gallery and story layouts remain
 
@@ -389,7 +430,8 @@ The public site now includes:
 - Validation for attendance logic and authorization ⏳ in progress
 - PDF generation verification ✅ baseline verified
 - Church-admin route authorization and member-denial regression coverage ✅ implemented
-- Security review on member and admin data ⏳ remaining
+- Community data privacy boundary ✅ implemented; private member-photo access ✅ implemented; broader security review on member and admin data ⏳ remaining
+- Attendance input boundary ✅ supported service types enforced; broader security review on member and admin data ⏳ remaining
 - Deployment configuration for production ⏳ remaining
 
 ---
@@ -401,29 +443,33 @@ The public site now includes:
 - Public website shell
 - Auth and role-based access
 - Dashboard scaffolding
-- Training/community/NAPS structure
+- Training, community, and church operations structure
 - Church admin routes and controller
 - Church member profile model and attendance tracking model
 - Church dashboard overview page
 - Church member directory page
+- Mandatory member profile photos with public-disk storage and admin directory previews
+- Private member-photo storage with authorized owner/admin delivery
 - Church attendance board page
+- Admin-only monthly Sunday service register with member rows, referral-code column, and Week 1-5 attendance columns
 - Attendance recording form and save flow for church services
 - Leadership and ministry profile management
 - Weekly/monthly/quarterly/annual reports
-- Invitation league scorecards and outreach tracking
+- Invitation league scorecards and validated referral tracking
 - Absentee board and service visibility tracking
 - Workers meeting planner and meeting history
 - Media and interview content board
 - Church announcements board and public notices page
 - Small-group directory, administration, member joining, meeting scheduling, attendance tracking, and private group communication
+- Unique member referral codes, copyable dashboard referral links, registration attribution, and Sunday-attendance invitation validation
 - Database migrations for member profiles, attendance records, ministries, leadership, reports, scorecards, absentees, workers meetings, and media content
 - Build/asset pipeline for the new church pages
 
 ### Partially implemented / still in progress
 - Advanced multi-report PDF packaging and custom branded church report templates
-- Deeper analytics and trend visualizations across attendance, invitations, and growth
-- Full public sermon detail pages with database-backed media content and responsive YouTube embeds ✅ implemented; richer gallery/story layouts remain
-- Additional church lifecycle workflows such as verified bank account presentation and richer member communications; event registration, reminders, announcements, member follow-up, notifications, community posting, newsletter campaigns, and direct messaging are implemented
+- Deeper analytics and trend visualizations across attendance, invitations, and growth ✅ server-backed summary and latest-versus-previous comparison metrics implemented; richer ministry comparisons remain
+- Full public sermon detail pages with database-backed media content and responsive YouTube embeds ✅ implemented; format filtering and editorial metadata added, richer gallery/story layouts remain
+- Additional church lifecycle workflows such as verified bank account presentation; event registration, reminders, announcements, member follow-up, notifications, community posting, newsletter campaigns, direct messaging, and small-group communication are implemented
 - Expanded church-brand polish across remaining public pages ✅ refreshed with APGA Worldwide church identity on the remaining public-facing pages
 
 ### Strategic conclusion
@@ -696,6 +742,24 @@ Features:
 - [ ] Setup monitoring/logging
 - [ ] Create deployment documentation
 
+### Deployment Readiness Checklist
+
+The application is not marked production-deployed until the following operational checks are completed in the target environment:
+
+- Set `APP_ENV=production`, `APP_DEBUG=false`, a valid `APP_URL`, and a production `APP_KEY`.
+- Configure the production MySQL connection and run migrations with `php artisan migrate --force`.
+- Build and publish frontend assets with `npm run build`.
+- Configure HTTPS, secure cookies, trusted proxies, and the production session/cache drivers.
+- Configure the queue connection and a supervised queue worker for jobs that are enabled in production.
+- Configure the scheduler to run `php artisan schedule:run` every minute if scheduled tasks are enabled.
+- Configure mail credentials only when the church approves the provider; newsletter delivery remains intentionally deferred.
+- Create automated database backups and verify a restore before launch.
+- Enable application and web-server error logging without exposing debug traces to visitors.
+- Test login, admin authorization, member privacy, reports, media, events, and small-group workflows after deployment.
+- Document rollback steps: disable traffic, restore the last known-good release/assets, restore data only when required, clear caches, and verify health checks.
+
+Current blocker: production host, database, backup storage, monitoring destination, and approved mail provider details have not been supplied. No production deployment is claimed by this document.
+
 ---
 
 ## Getting Started
@@ -960,14 +1024,14 @@ php artisan serve               # Start development server
 ### Next Immediate Actions
 
 **Priority 1 (Current):**
-1. Extend report analytics with server-backed attendance, invitation, and ministry-growth trends.
-2. Complete authorization, validation, privacy, and regression coverage across church administration and member workflows.
-3. Complete the production security review for member, attendance, prayer-request, and administrative data.
+1. Complete authorization, validation, privacy, and regression coverage across church administration and member workflows.
+2. Complete the production security review for member photos, member, attendance, prayer-request, and administrative data.
+3. Extend report analytics with richer comparison periods and ministry-growth trends.
 
 **Priority 2 (After operational verification):**
 1. Add branded weekly/monthly/quarterly/annual PDF templates and richer report comparisons.
 2. Expand database-backed media into sermon galleries, story layouts, and richer interview publishing workflows.
-3. Document backups, monitoring, deployment, and rollback procedures.
+3. Complete the deployment checklist above with target-environment values, backup evidence, monitoring endpoints, and rollback verification.
 
 **Priority 3 (Later):**
 1. Add realtime delivery where it provides clear value beyond the existing notification inbox.
@@ -1013,8 +1077,19 @@ php artisan serve               # Start development server
 | 1.7 | 2026-09-03 | Private small-group conversations with active-membership authorization and public directory entry points completed |
 | 1.8 | 2026-09-03 | Roadmap advanced after small-group completion: production hardening, security, analytics, media, and deployment are now next |
 | 1.9 | 2026-09-03 | Newsletter infrastructure deferred by direction; server-backed report analytics and exact regression coverage added as the next active work |
+| 2.0 | 2026-09-03 | Community data privacy hardened with active-membership scoping and regression coverage; newsletter infrastructure remains deferred |
+| 2.1 | 2026-09-03 | Server-backed invitation, visitor, conversion-rate, and score-trend analytics added to the reporting dashboard |
+| 2.2 | 2026-09-03 | Added report comparison metrics, public media format filtering, and a concrete deployment-readiness checklist; newsletter infrastructure remains deferred |
+| 2.3 | 2026-09-03 | Added unique referral codes, copyable dashboard links, registration attribution, and invitation validation through Sunday main-service attendance |
+| 2.4 | 2026-09-03 | Backfilled referral codes for existing users and verified the invitation league counts validated records only |
+| 2.5 | 2026-09-03 | Added the admin-only monthly Sunday service register with active members, referral codes, five weekly columns, and correction-safe attendance updates |
+| 2.6 | 2026-09-03 | Advanced public media browsing with editorial metadata and updated the roadmap after the service-register work |
+| 2.7 | 2026-09-03 | Hardened attendance validation by restricting records to supported church service types and added regression coverage |
+| 2.8 | 2026-09-03 | Added mandatory profile-photo upload for new members, existing-member replacement, storage validation, and admin directory display |
+| 2.9 | 2026-09-03 | Roadmap refreshed after profile-photo completion; security review, richer reporting/media, and deployment readiness are next |
+| 3.0 | 2026-09-03 | Secured member profile photos with private storage and authenticated owner/admin-only delivery |
 
 ---
 
 **Last Updated**: 2026-09-03
-**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Board of Trustees Experience Live | ✅ Reporting & PDF Export Ready | 🔜 Operational hardening and richer church content next
+**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Board of Trustees Experience Live | ✅ Reporting & PDF Export Ready | ✅ Mandatory Member Photos Active | 🔜 Security review, richer reporting/media, and deployment readiness next

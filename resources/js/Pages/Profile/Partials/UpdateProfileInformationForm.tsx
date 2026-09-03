@@ -21,6 +21,7 @@ interface User {
     nin?: string;
     passport_number?: string;
     email_verified_at?: string;
+    memberProfile?: { avatar_path?: string | null };
 }
 
 interface SelectOption {
@@ -36,6 +37,7 @@ interface UpdateProfileInformationFormProps {
     sectors: SelectOption[];
     educationLevels: SelectOption[];
     states: SelectOption[];
+    memberProfilePhotoUrl?: string | null;
 }
 
 export default function UpdateProfileInformationForm({
@@ -46,8 +48,23 @@ export default function UpdateProfileInformationForm({
     sectors,
     educationLevels,
     states,
+    memberProfilePhotoUrl,
 }: UpdateProfileInformationFormProps) {
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
+    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<{
+        name: string;
+        email: string;
+        phone: string;
+        address: string;
+        sector: string;
+        date_of_birth: string;
+        education_level: string;
+        skills_of_interest: string;
+        state: string;
+        lga: string;
+        nin: string;
+        passport_number: string;
+        profile_photo: File | null;
+    }>({
         name: user.name,
         email: user.email,
         phone: user.phone || '',
@@ -60,6 +77,7 @@ export default function UpdateProfileInformationForm({
         lga: user.lga || '',
         nin: user.nin || '',
         passport_number: user.passport_number || '',
+        profile_photo: null,
     });
 
     const [statesList, setStatesList] = useState<string[]>([]);
@@ -123,7 +141,7 @@ export default function UpdateProfileInformationForm({
                 : [],
         };
 
-        patch(route('profile.update'));
+        patch(route('profile.update'), { forceFormData: true });
     };
 
     return (
@@ -138,6 +156,13 @@ export default function UpdateProfileInformationForm({
             </header>
 
             <form onSubmit={submit} className="space-y-6">
+                <div className="rounded-xl border border-red-100 bg-red-50/50 p-4">
+                    <InputLabel htmlFor="profile_photo" value="Member profile photo" />
+                    {memberProfilePhotoUrl && <img src={memberProfilePhotoUrl} alt="Current profile" className="mt-3 h-20 w-20 rounded-full object-cover" />}
+                    <input id="profile_photo" name="profile_photo" type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => setData('profile_photo', e.target.files?.[0] ?? null)} className="mt-2 block w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-red-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white" />
+                    <p className="mt-1 text-xs text-gray-500">Upload a clear JPG, PNG, or WebP image up to 5 MB.</p>
+                    <InputError className="mt-2" message={errors.profile_photo} />
+                </div>
                 {/* Basic Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>

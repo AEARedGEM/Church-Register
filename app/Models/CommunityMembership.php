@@ -11,4 +11,14 @@ class CommunityMembership extends Model
     ];
 
     const ROLES = ['member', 'contributor', 'moderator', 'admin', 'observer'];
+
+    public function community()
+    {
+        return $this->belongsTo(Community::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

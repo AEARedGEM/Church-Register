@@ -164,13 +164,6 @@ class PublicPageController extends Controller
         ]);
     }
 
-    public function zones()
-    {
-        return Inertia::render('Public/Zones', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
     public function mission()
     {
         return Inertia::render('Public/Mission', [
@@ -207,32 +200,16 @@ class PublicPageController extends Controller
         ]);
     }
 
-    public function owopMandate()
-    {
-        return Inertia::render('Public/OwopMandate', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
-    public function ecosystem()
-    {
-        return Inertia::render('Public/Ecosystem', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
-    public function impact()
-    {
-        return Inertia::render('Public/Impact', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
     public function smallGroups(Request $request)
     {
-        return Inertia::render('Public/SmallGroups', [
-            'laravelVersion' => Application::VERSION,
-            'groups' => SmallGroup::query()
+        $smallGroupsTableExists = Schema::hasTable('small_groups');
+        $smallGroupMembershipsTableExists = Schema::hasTable('small_group_memberships');
+        $smallGroupMeetingsTableExists = Schema::hasTable('small_group_meetings');
+
+        $groups = [];
+
+        if ($smallGroupsTableExists && $smallGroupMembershipsTableExists && $smallGroupMeetingsTableExists) {
+            $groups = SmallGroup::query()
                 ->where('is_active', true)
                 ->withCount(['memberships as active_member_count' => fn ($query) => $query->where('status', 'active')])
                 ->with(['meetings' => fn ($query) => $query
@@ -241,9 +218,14 @@ class PublicPageController extends Controller
                     ->orderBy('starts_at')
                     ->limit(3)])
                 ->orderBy('name')
-                ->get(),
+                ->get();
+        }
+
+        return Inertia::render('Public/SmallGroups', [
+            'laravelVersion' => Application::VERSION,
+            'groups' => $groups,
             'authenticated' => $request->user() !== null,
-            'joinedGroupIds' => $request->user()
+            'joinedGroupIds' => $request->user() && $smallGroupsTableExists && $smallGroupMembershipsTableExists
                 ? $request->user()->smallGroupMemberships()->where('status', 'active')->pluck('small_group_id')->values()
                 : [],
             'flash' => ['success' => $request->session()->get('success')],
@@ -325,42 +307,6 @@ class PublicPageController extends Controller
             'flash' => [
                 'success' => request()->session()->get('success'),
             ],
-        ]);
-    }
-
-    // Documentation Pages
-    public function whitepaper()
-    {
-        return Inertia::render('Public/Documentation/Whitepaper', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
-    public function policy()
-    {
-        return Inertia::render('Public/Documentation/Policy', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
-    public function fundingFramework()
-    {
-        return Inertia::render('Public/Documentation/FundingFramework', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
-    public function infrastructure()
-    {
-        return Inertia::render('Public/Documentation/Infrastructure', [
-            'laravelVersion' => Application::VERSION,
-        ]);
-    }
-
-    public function specs()
-    {
-        return Inertia::render('Public/Documentation/Specs', [
-            'laravelVersion' => Application::VERSION,
         ]);
     }
 

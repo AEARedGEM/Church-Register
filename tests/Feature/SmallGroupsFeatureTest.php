@@ -54,6 +54,7 @@ class SmallGroupsFeatureTest extends TestCase
 
     public function test_authenticated_member_can_join_an_active_group_once(): void
     {
+        /** @var User $member */
         $member = User::factory()->create();
         $group = SmallGroup::create(['name' => 'Prayer Circle', 'is_active' => true]);
 
@@ -75,6 +76,7 @@ class SmallGroupsFeatureTest extends TestCase
 
     public function test_member_cannot_join_an_inactive_group(): void
     {
+        /** @var User $member */
         $member = User::factory()->create();
         $group = SmallGroup::create(['name' => 'Closed Group', 'is_active' => false]);
 
@@ -117,6 +119,7 @@ class SmallGroupsFeatureTest extends TestCase
 
     public function test_active_group_member_can_view_and_post_private_messages(): void
     {
+        /** @var User $member */
         $member = User::factory()->create(['name' => 'Grace Member']);
         $group = SmallGroup::create(['name' => 'Prayer Circle', 'is_active' => true]);
         SmallGroupMembership::create(['small_group_id' => $group->id, 'user_id' => $member->id, 'status' => 'active']);
@@ -140,6 +143,7 @@ class SmallGroupsFeatureTest extends TestCase
 
     public function test_non_member_cannot_view_or_post_group_messages(): void
     {
+        /** @var User $member */
         $member = User::factory()->create();
         $group = SmallGroup::create(['name' => 'Private Group', 'is_active' => true]);
 

@@ -16,6 +16,7 @@ class CommunityCommunicationFeatureTest extends TestCase
 
     public function test_member_sees_posts_only_from_active_communities(): void
     {
+        /** @var User $member */
         $member = User::factory()->create();
         $joinedCommunity = Community::create(['name' => 'Prayer Circle', 'sector' => 'Worship', 'description' => 'Prayer and worship support.', 'created_by' => $member->id, 'is_active' => true, 'is_private' => true]);
         $otherCommunity = Community::create(['name' => 'Youth Fellowship', 'sector' => 'Youth', 'description' => 'Youth discipleship community.', 'created_by' => $member->id, 'is_active' => true, 'is_private' => true]);
@@ -35,6 +36,7 @@ class CommunityCommunicationFeatureTest extends TestCase
 
     public function test_member_with_forum_permission_can_create_a_community_post(): void
     {
+        /** @var User $member */
         $member = User::factory()->create();
         $permission = Permission::findOrCreate('post_in_forums', 'web');
         $member->givePermissionTo($permission);
@@ -50,6 +52,7 @@ class CommunityCommunicationFeatureTest extends TestCase
 
     public function test_non_member_cannot_post_to_a_community(): void
     {
+        /** @var User $member */
         $member = User::factory()->create();
         $permission = Permission::findOrCreate('post_in_forums', 'web');
         $member->givePermissionTo($permission);
@@ -60,5 +63,23 @@ class CommunityCommunicationFeatureTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseMissing('forum_posts', ['user_id' => $member->id, 'community_id' => $community->id]);
+    }
+
+    public function test_member_community_data_is_scoped_to_active_memberships(): void
+    {
+        /** @var User $member */
+        $member = User::factory()->create();
+        $joinedCommunity = Community::create(['name' => 'Joined Circle', 'sector' => 'Care', 'description' => 'Joined community.', 'created_by' => $member->id, 'is_active' => true, 'is_private' => true]);
+        $hiddenCommunity = Community::create(['name' => 'Hidden Circle', 'sector' => 'Care', 'description' => 'Hidden community.', 'created_by' => $member->id, 'is_active' => true, 'is_private' => true]);
+        CommunityMembership::create(['user_id' => $member->id, 'community_id' => $joinedCommunity->id, 'role' => 'member', 'is_active' => true, 'joined_at' => now()]);
+        ForumPost::create(['user_id' => $member->id, 'community_id' => $joinedCommunity->id, 'title' => 'Visible post', 'content' => 'Visible to this member.', 'status' => 'active']);
+        ForumPost::create(['user_id' => $member->id, 'community_id' => $hiddenCommunity->id, 'title' => 'Hidden post', 'content' => 'Not visible to this member.', 'status' => 'active']);
+
+        $this->actingAs($member)
+            ->get('/community/data')
+            ->assertOk()
+            ->assertJsonCount(1, 'userCommunities')
+            ->assertJsonCount(1, 'recentPosts')
+            ->assertJsonPath('recentPosts.0.title', 'Visible post');
     }
 }

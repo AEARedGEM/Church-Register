@@ -14,6 +14,12 @@ interface User {
     needsProfileCompletion: boolean;
     communityRank: number;
     activeRoles: string[];
+    referral: {
+        code: string;
+        link: string;
+        pending: number;
+        validated: number;
+    };
     wallet: {
         usdi: string;
         ind: string;
@@ -112,6 +118,7 @@ export default function Dashboard({
     churchSummary,
 }: DashboardProps) {
     const [activeSection, setActiveSection] = useState<'overview' | 'attendance' | 'events' | 'community'>('overview');
+    const [copiedReferral, setCopiedReferral] = useState(false);
 
     const isAdminUser = Boolean(user?.email === 'crownpaysme19@gmail.com') || Boolean((user as any)?.is_admin) || Boolean((user as any)?.roles?.includes('admin')) || Boolean((user as any)?.roles?.includes('super-admin')) || Boolean((user as any)?.role === 'admin') || Boolean((user as any)?.primary_role === 'admin');
 
@@ -230,6 +237,25 @@ export default function Dashboard({
                                 <p className="mt-2 text-xs text-slate-500">{card.note}</p>
                             </div>
                         ))}
+                    </div>
+
+                    <div className="mt-6 rounded-3xl border border-red-200 bg-white p-5 shadow-sm">
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">Invitation league</p>
+                                <h2 className="mt-2 text-xl font-bold text-slate-900">Invite someone to APGA</h2>
+                                <p className="mt-2 text-sm text-slate-600">An invitation counts only after registration through your link and qualifying Sunday attendance.</p>
+                            </div>
+                            <div className="flex gap-5 text-sm">
+                                <span><strong className="block text-xl text-slate-900">{user.referral?.validated ?? 0}</strong><span className="text-slate-500">Validated</span></span>
+                                <span><strong className="block text-xl text-slate-900">{user.referral?.pending ?? 0}</strong><span className="text-slate-500">Pending</span></span>
+                            </div>
+                        </div>
+                        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                            <input readOnly value={user.referral?.link ?? ''} aria-label="Referral link" className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-600" />
+                            <button type="button" onClick={async () => { await navigator.clipboard.writeText(user.referral.link); setCopiedReferral(true); window.setTimeout(() => setCopiedReferral(false), 1800); }} className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500">{copiedReferral ? 'Copied' : 'Copy referral link'}</button>
+                        </div>
+                        <p className="mt-2 text-xs text-slate-500">Referral code: <span className="font-semibold tracking-wider text-slate-700">{user.referral?.code}</span></p>
                     </div>
 
                     <div className="mt-6 grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">

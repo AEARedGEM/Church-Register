@@ -16,15 +16,18 @@ use App\Models\ForumPost;
 use App\Models\Mentorship;
 use App\Models\Transaction;
 use App\Models\Wallet;
+use App\Models\User;
 use App\Enum\RolesEnum;
 use App\Enum\PermissionsEnum;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
         $user = $request->user();
+        $user->ensureReferralCode();
         $user->load(['profile', 'roles']);
 
         // Get current role context
@@ -79,8 +82,11 @@ class DashboardController extends Controller
         return redirect()->back()->withErrors(['role' => 'Cannot switch to this role']);
     }
 
-    private function getUserData($user)
+    private function getUserData(User $user): array
     {
+        $referralBase = rtrim((string) config('app.url'), '/');
+        $referralCode = $user->ensureReferralCode();
+
         return [
             'id' => $user->id,
             'name' => $user->name,
@@ -95,10 +101,16 @@ class DashboardController extends Controller
             'wallet' => $this->getWalletBalances($user),
             'profile' => $user->profile,
             'activeRoles' => $user->active_roles ?? [],
+            'referral' => [
+                'code' => $referralCode,
+                'link' => $referralBase . '/register?ref=' . urlencode($referralCode),
+                'pending' => $user->sentChurchInvitations()->whereNull('validated_at')->count(),
+                'validated' => $user->sentChurchInvitations()->whereNotNull('validated_at')->count(),
+            ],
         ];
     }
 
-    private function getDashboardStats($user)
+    private function getDashboardStats(User $user): array
     {
         $stats = [
             'totalFunding' => $user->fundingApplications()
@@ -109,9 +121,6 @@ class DashboardController extends Controller
                 ->count(),
             'trainingCompleted' => $user->enrollments()
                 ->where('status', 'completed')
-                ->count(),
-            'napsCompleted' => \App\Models\NapsRespondent::where('user_id', $user->id)
-                ->whereNotNull('survey_completed_at')
                 ->count(),
             'communityRank' => $user->calculateCommunityRank(),
         ];
@@ -146,7 +155,7 @@ class DashboardController extends Controller
         return $stats;
     }
 
-    private function getStartupStats($user): array
+    private function getStartupStats(User $user): array
     {
         return [
             'pitchViews' => $user->profile?->pitch_views ?? 0,
@@ -156,7 +165,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getSMEStats($user): array
+    private function getSMEStats(User $user): array
     {
         return [
             'loanApplications' => $user->fundingApplications()
@@ -167,7 +176,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getInvestorStats($user): array
+    private function getInvestorStats(User $user): array
     {
         return [
             'portfolioValue' => $this->calculatePortfolioValue($user),
@@ -176,7 +185,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getSenatorStats($user): array
+    private function getSenatorStats(User $user): array
     {
         return [
             'oversight_reports' => $user->oversightReports()->count() ?? 0,
@@ -185,7 +194,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getInstitutionalStats($user): array
+    private function getInstitutionalStats(User $user): array
     {
         return [
             'active_partnerships' => $user->partnerships()->where('status', 'active')->count() ?? 0,
@@ -194,7 +203,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getTrainerStats($user): array
+    private function getTrainerStats(User $user): array
     {
         return [
             'courses_created' => $user->createdCourses()->count(),
@@ -204,7 +213,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getWalletBalances($user)
+    private function getWalletBalances(User $user): array
     {
         $wallets = $user->wallets()->get()->keyBy('currency_type');
 
@@ -216,7 +225,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getRecentActivity($user)
+    private function getRecentActivity(User $user): array
     {
         $activities = collect();
 
@@ -291,37 +300,21 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Get recent NAP/S survey activities
-        $napsActivities = \App\Models\NapsRespondent::where('user_id', $user->id)
-            ->whereNotNull('survey_completed_at')
-            ->latest('survey_completed_at')
-            ->take(1)
-            ->get()
-            ->map(function ($respondent) {
-                return [
-                    'type' => 'naps',
-                    'message' => 'Successfully completed NAP/S survey',
-                    'time' => $respondent->survey_completed_at->diffForHumans(),
-                    'status' => 'success',
-                ];
-            });
-
         // Merge and sort all activities
         return $activities
             ->merge($fundingActivities)
             ->merge($trainingActivities)
             ->merge($communityActivities)
             ->merge($roleActivities)
-            ->merge($napsActivities)
             ->sortByDesc('time')
             ->take(5)
             ->values()
             ->toArray();
     }
 
-    private function getUpcomingEvents($user)
+    private function getUpcomingEvents(User $user): array
     {
-        return Event::where('start_date', '>', now())
+        return Event::query()->where('start_date', '>', now())
             ->where('status', 'registration_open')
             ->when($user->sector, function($query, $sector) {
                 return $query->where('target_sector', $sector)
@@ -348,7 +341,7 @@ class DashboardController extends Controller
             ->toArray();
     }
 
-    private function getWalletData($user)
+    private function getWalletData(User $user): array
     {
         $transactions = $user->transactions()
             ->latest()
@@ -380,7 +373,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getFundingData($user)
+    private function getFundingData(User $user): array
     {
         // TradeFi applications
         $tradefiApplications = $user->fundingApplications()
@@ -431,7 +424,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getTrainingData($user)
+    private function getTrainingData(User $user): array
     {
         $enrollments = $user->enrollments()
             ->with('course')
@@ -445,7 +438,7 @@ class DashboardController extends Controller
         ];
 
         // Get upcoming events
-        $events = Event::whereIn('event_type', ['hackathon', 'bootcamp'])
+        $events = Event::query()->whereIn('event_type', ['hackathon', 'bootcamp'], 'and', false)
             ->where('registration_deadline', '>', now())
             ->orderBy('start_date')
             ->take(4)
@@ -477,7 +470,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getCommunityData($user)
+    private function getCommunityData(User $user): array
     {
         $userCommunities = $user->communityMemberships()
             ->with('community')
@@ -552,7 +545,7 @@ class DashboardController extends Controller
         }
 
         $activeMinistries = \App\Models\ChurchMinistry::where('is_active', true)->count();
-        $upcomingEvents = \App\Models\Event::where('start_date', '>', now())
+        $upcomingEvents = \App\Models\Event::query()->where('start_date', '>', now())
             ->whereIn('status', ['upcoming', 'registration_open', 'ongoing'])
             ->count();
 
@@ -564,7 +557,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getQuickActions($user, RolesEnum $currentRole): array
+    private function getQuickActions(User $user, RolesEnum $currentRole): array
     {
         $baseActions = [
             [
@@ -681,7 +674,7 @@ class DashboardController extends Controller
     }
 
     // Helper methods
-    private function formatTransactionAmount($transaction): string
+    private function formatTransactionAmount(Transaction $transaction): string
     {
         $sign = in_array($transaction->transaction_type, ['received', 'deposit']) ? '+' : '-';
         $symbol = $transaction->currency === 'NGN' ? '₦' : '';
@@ -704,13 +697,13 @@ class DashboardController extends Controller
         };
     }
 
-    private function getInitials($name): string
+    private function getInitials(string $name): string
     {
         $words = explode(' ', $name);
         return strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
     }
 
-    private function getStatusText($status): string
+    private function getStatusText(string $status): string
     {
         return match($status) {
             'pending' => 'application submitted',
@@ -725,7 +718,7 @@ class DashboardController extends Controller
         };
     }
 
-    private function mapStatus($status): string
+    private function mapStatus(string $status): string
     {
         return match($status) {
             'approved', 'disbursed', 'completed', 'matched', 'active' => 'success',
@@ -736,38 +729,38 @@ class DashboardController extends Controller
     }
 
     // Calculation helper methods
-    private function calculateBusinessGrowth($user): string
+    private function calculateBusinessGrowth(User $user): string
     {
         // This would calculate based on revenue comparison
         // For now, return a placeholder
         return '+12.5%';
     }
 
-    private function calculatePortfolioValue($user): string
+    private function calculatePortfolioValue(User $user): string
     {
         // Calculate total portfolio value
         return '₦' . number_format(0); // Placeholder
     }
 
-    private function calculateROI($user): string
+    private function calculateROI(User $user): string
     {
         // Calculate return on investment
         return '+8.7%'; // Placeholder
     }
 
-    private function calculateYouthImpact($user): int
+    private function calculateYouthImpact(User $user): int
     {
         // Calculate total youth impacted through senator's initiatives
         return 1250; // Placeholder
     }
 
-    private function calculateBeneficiaries($user): int
+    private function calculateBeneficiaries(User $user): int
     {
         // Calculate beneficiaries of institutional partnerships
         return 850; // Placeholder
     }
 
-    private function calculateCompletionRate($user): string
+    private function calculateCompletionRate(User $user): string
     {
         $totalEnrollments = $user->enrollments()->count();
         if ($totalEnrollments === 0) return '0%';

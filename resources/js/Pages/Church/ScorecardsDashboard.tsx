@@ -13,7 +13,12 @@ interface Scorecard {
     notes?: string;
 }
 
-export default function ScorecardsDashboard({ scorecards, flash }: { scorecards: Scorecard[]; flash?: { success?: string } }) {
+interface ValidatedInvitationCount {
+    inviter?: { name?: string | null };
+    validated_count: number;
+}
+
+export default function ScorecardsDashboard({ scorecards, validatedInvitationCounts = [], flash }: { scorecards: Scorecard[]; validatedInvitationCounts?: ValidatedInvitationCount[]; flash?: { success?: string } }) {
     const { data, setData, post, processing } = useForm({
         period_type: 'weekly',
         title: '',
@@ -142,6 +147,14 @@ export default function ScorecardsDashboard({ scorecards, flash }: { scorecards:
                             </button>
                         </div>
                     </form>
+                </div>
+
+                <div className="mb-8 rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
+                    <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                        <div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-600">Validated invitation league</p><h2 className="mt-2 text-xl font-bold text-slate-900">Invitations confirmed by Sunday attendance</h2></div>
+                        <p className="text-xs text-slate-500">Registration alone never counts.</p>
+                    </div>
+                    {validatedInvitationCounts.length ? <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{validatedInvitationCounts.map((entry, index) => <div key={`${entry.inviter?.name}-${index}`} className="rounded-2xl border border-red-100 bg-red-50 p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-red-700">#{index + 1}</p><p className="mt-2 font-semibold text-slate-900">{entry.inviter?.name || 'Member'}</p><p className="mt-1 text-2xl font-bold text-slate-900">{entry.validated_count}</p><p className="text-xs text-slate-500">validated invitations</p></div>)}</div> : <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-500">No validated invitations yet.</div>}
                 </div>
 
                 <div className="overflow-hidden rounded-3xl border border-red-100 bg-white shadow-sm">

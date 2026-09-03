@@ -13,7 +13,9 @@ class MemberCommunicationFeatureTest extends TestCase
 
     public function test_member_can_view_only_their_own_church_messages(): void
     {
+        /** @var User $member */
         $member = User::factory()->create();
+        /** @var User $otherMember */
         $otherMember = User::factory()->create();
 
         ChurchContactMessage::create([
@@ -44,7 +46,9 @@ class MemberCommunicationFeatureTest extends TestCase
 
     public function test_resolving_a_member_message_creates_a_database_notification_once(): void
     {
+        /** @var User $admin */
         $admin = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
+        /** @var User $member */
         $member = User::factory()->create();
         $message = ChurchContactMessage::create([
             'user_id' => $member->id,

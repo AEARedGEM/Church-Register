@@ -56,7 +56,10 @@ class ChurchSmallGroupManagementTest extends TestCase
 
     public function test_regular_member_cannot_manage_small_groups(): void
     {
-        $this->actingAs(User::factory()->create(['email' => 'member@example.com']))
+        /** @var User $member */
+        $member = User::factory()->create(['email' => 'member@example.com']);
+
+        $this->actingAs($member)
             ->get('/church-admin/small-groups')
             ->assertForbidden();
     }

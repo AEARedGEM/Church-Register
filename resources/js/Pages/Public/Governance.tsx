@@ -31,7 +31,7 @@ export default function Governance() {
                         <section>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Key Committees</h2>
                             <div className="space-y-4">
-                                {['Economy & Industrialization', 'Education & Skills', 'Health & Social Development', 'Infrastructure & Technology', 'Advocacy & Representation'].map((committee, index) => (
+                                {['Pastoral Care', 'Discipleship & Education', 'Worship & Prayer', 'Community Outreach', 'Administration'].map((committee, index) => (
                                     <div key={index} className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
                                         <h3 className="font-semibold text-gray-900 dark:text-white">{committee}</h3>
                                     </div>

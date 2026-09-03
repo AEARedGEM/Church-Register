@@ -6,10 +6,14 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Enum\RolesEnum;
 use App\Enum\PermissionsEnum;
 use App\Services\LocationService;
+use App\Models\MemberProfile;
+use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +29,8 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
+
+        $user->load('memberProfile');
 
         // Load the user's profile and roles
         $user->load(['profile', 'roles', 'permissions']);
@@ -126,7 +132,23 @@ class ProfileController extends Controller
             'states' => $states,
             'lgas' => $lgas,
             'availableRoles' => $availableRoles,
+            'memberProfilePhotoUrl' => $user->memberProfile?->avatar_path
+                ? route('member-profile.photo', $user->memberProfile)
+                : null,
         ]);
+    }
+
+    public function photo(Request $request, MemberProfile $memberProfile)
+    {
+        abort_unless(
+            $request->user()->id === $memberProfile->user_id
+                || $request->user()->hasRole('super_admin|admin'),
+            403
+        );
+
+        abort_unless($memberProfile->avatar_path && Storage::disk('local')->exists($memberProfile->avatar_path), 404);
+
+        return response()->file(Storage::disk('local')->path($memberProfile->avatar_path));
     }
 
     /**
@@ -154,6 +176,17 @@ class ProfileController extends Controller
 
         // Update or create user profile based on current role
         $this->updateProfileForRole($user, $request);
+
+        if ($request->hasFile('profile_photo') && $user->memberProfile) {
+            if ($user->memberProfile->avatar_path) {
+                Storage::disk('local')->delete($user->memberProfile->avatar_path);
+                Storage::disk('public')->delete($user->memberProfile->avatar_path);
+            }
+
+            $user->memberProfile->update([
+                'avatar_path' => $request->file('profile_photo')->store('member-profiles', 'local'),
+            ]);
+        }
 
         // Ensure profile exists even if empty (for "individual" role users)
         if (!$user->profile) {
@@ -318,7 +351,7 @@ class ProfileController extends Controller
 
         // Perform DB-level deletion directly for test robustness
         try {
-            $deleted = \DB::table('users')->where('id', $user->id)->delete();
+                    $deleted = DB::table('users')->where('id', $user->id)->delete();
             if ($deleted) {
                 Log::info('ProfileController::destroy deleted user via DB query', ['user_id' => $user->id, 'deleted' => $deleted]);
             } else {
@@ -432,7 +465,7 @@ class ProfileController extends Controller
         /**
          * Update profile based on current role
          */
-        private function updateProfileForRole($user, $request): void
+        private function updateProfileForRole(User $user, Request $request): void
         {
             $currentRole = $user->primary_role;
             $profileData = [];
@@ -492,7 +525,7 @@ class ProfileController extends Controller
     /**
      * Get profile completion percentage
      */
-    private function getProfileCompletion($user): array
+    private function getProfileCompletion(User $user): array
     {
         $profile = $user->profile;
         $currentRole = $user->primary_role;
@@ -518,11 +551,12 @@ class ProfileController extends Controller
     /**
      * Clean up user data before deletion.
      */
-    private function cleanupUserData($user): void
+    private function cleanupUserData(User $user): void
     {
         // Handle profile deletion
-        if ($user->profile) {
-            $user->profile->delete();
+        $profile = $user->profile;
+        if ($profile instanceof UserProfile) {
+            UserProfile::query()->whereKey($profile->getKey())->delete();
         }
 
         // Revoke all roles and permissions
@@ -536,7 +570,7 @@ class ProfileController extends Controller
     /**
      * Clean up user files
      */
-    private function cleanupUserFiles($profile): void
+    private function cleanupUserFiles(MemberProfile $profile): void
     {
         $fileFields = ['logo_path', 'pitch_deck_path', 'cv_path'];
 
@@ -612,14 +646,14 @@ class ProfileController extends Controller
             RolesEnum::NYPSenator => 'Access oversight tools to track impact and provide policy direction.',
             RolesEnum::InstitutionalPartner => 'Collaborate, fund, and support APGA Worldwide initiatives.',
             RolesEnum::TrainerMentorExpert => 'Offer training and guidance to youths, startups, and SMEs.',
-            default => 'Join the NYP Industrialization Program.',
+            default => 'Join and serve your church community.',
         };
     }
 
     /**
      * Get recent profile activity
      */
-    private function getRecentProfileActivity($user): array
+    private function getRecentProfileActivity(User $user): array
     {
         return $user->activities()
             ->with(['subject'])
@@ -638,7 +672,7 @@ class ProfileController extends Controller
             ->toArray();
     }
 
-    private function getRoleSpecificFields($role): array
+    private function getRoleSpecificFields(string $role): array
     {
         return match($role) {
             'startup' => [

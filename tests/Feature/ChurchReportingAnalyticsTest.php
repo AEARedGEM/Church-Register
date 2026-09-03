@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\ChurchScorecard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,6 +13,7 @@ class ChurchReportingAnalyticsTest extends TestCase
 
     public function test_church_reports_dashboard_shows_trend_analytics(): void
     {
+        /** @var User $user */
         $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
 
         $this->actingAs($user)
@@ -38,6 +40,25 @@ class ChurchReportingAnalyticsTest extends TestCase
                 'prayer_requests_count' => 10,
             ]);
 
+        ChurchScorecard::create([
+            'period_type' => 'weekly',
+            'title' => 'Week 1 Outreach Scorecard',
+            'report_date' => '2026-09-01',
+            'invitation_count' => 20,
+            'new_visitors_count' => 10,
+            'conversion_count' => 2,
+            'score' => 70,
+        ]);
+        ChurchScorecard::create([
+            'period_type' => 'weekly',
+            'title' => 'Week 2 Outreach Scorecard',
+            'report_date' => '2026-09-08',
+            'invitation_count' => 30,
+            'new_visitors_count' => 15,
+            'conversion_count' => 6,
+            'score' => 82,
+        ]);
+
         $response = $this->actingAs($user)->get('/church-admin/reports');
 
         $response->assertOk();
@@ -51,11 +72,19 @@ class ChurchReportingAnalyticsTest extends TestCase
             ->where('analytics.attendanceTrend', '+40')
             ->where('analytics.weeklyGrowth', '+33%')
             ->where('analytics.strongestPeriod', 'Weekly (280)')
+            ->where('analytics.totalInvitations', 50)
+            ->where('analytics.totalVisitors', 25)
+            ->where('analytics.totalConversions', 8)
+            ->where('analytics.conversionRate', '32%')
+            ->where('analytics.scoreTrend', '+12')
+            ->where('analytics.attendanceComparison', '+40')
+            ->where('analytics.invitationComparison', '+10')
         );
     }
 
     public function test_church_reports_dashboard_can_filter_analytics_by_period_type(): void
     {
+        /** @var User $user */
         $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
 
         $this->actingAs($user)->post('/church-admin/reports', [

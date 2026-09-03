@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
+import { useState } from 'react';
 
 type MediaItem = {
     id: number;
@@ -11,6 +12,7 @@ type MediaItem = {
     video_url?: string | null;
     featured?: boolean;
     status?: string;
+    scripture_reference?: string | null;
 };
 
 const fallbackMedia: MediaItem[] = [
@@ -57,7 +59,10 @@ const fallbackMedia: MediaItem[] = [
 ];
 
 export default function Media({ media = fallbackMedia, flash }: { media?: MediaItem[]; flash?: { success?: string } }) {
+    const [activeType, setActiveType] = useState('all');
     const featured = [...media].filter((item) => item.featured).slice(0, 3);
+    const filteredMedia = activeType === 'all' ? media : media.filter((item) => item.content_type === activeType);
+    const mediaTypes = ['all', ...Array.from(new Set(media.map((item) => item.content_type)))];
     const { data, setData, post, processing, reset } = useForm<{
         full_name: string;
         email: string;
@@ -111,6 +116,20 @@ export default function Media({ media = fallbackMedia, flash }: { media?: MediaI
                         <h1 className="mt-4 text-4xl font-bold text-white md:text-5xl">Sermons, testimonies, and church stories</h1>
                     </div>
 
+                    <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-y border-red-900/70 py-4">
+                        <div>
+                            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Media library</p>
+                            <p className="mt-1 text-sm text-slate-300">{filteredMedia.length} published {filteredMedia.length === 1 ? 'story' : 'stories'}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-2" aria-label="Filter media by format">
+                            {mediaTypes.map((type) => (
+                                <button key={type} type="button" onClick={() => setActiveType(type)} className={`rounded-full px-4 py-2 text-sm font-semibold transition ${activeType === type ? 'bg-red-600 text-white' : 'border border-red-800 text-red-200 hover:bg-red-900/50'}`}>
+                                    {type === 'all' ? 'All stories' : formatType(type)}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className="mb-12 grid gap-6 md:grid-cols-3">
                         {(featured.length ? featured : fallbackMedia.slice(0, 3)).map((item, index) => (
                             <article key={item.id} className={`rounded-3xl border border-red-800/70 bg-slate-900/85 p-6 shadow-lg shadow-red-950/20 ${index === 0 ? 'md:col-span-2 md:p-8' : ''}`}>
@@ -123,6 +142,7 @@ export default function Media({ media = fallbackMedia, flash }: { media?: MediaI
                                 <h2 className={index === 0 ? 'text-3xl font-bold text-white md:text-4xl' : 'text-2xl font-bold text-white'}>{item.title}</h2>
                                 <p className="mt-2 text-xs uppercase tracking-[0.2em] text-slate-400">{item.speaker_name || 'APGA Worldwide'}</p>
                                 <p className="mt-4 text-sm leading-relaxed text-slate-300 md:max-w-3xl">{item.summary}</p>
+                                {item.scripture_reference && <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-amber-300">{item.scripture_reference}</p>}
                                 <div className="mt-6 flex items-center justify-between gap-3">
                                     <span className="text-xs text-slate-400">{item.published_at ? new Date(item.published_at).toLocaleDateString() : 'Recent'}</span>
                                     <Link href={route('media.detail', item.id)} className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">
@@ -134,15 +154,20 @@ export default function Media({ media = fallbackMedia, flash }: { media?: MediaI
                     </div>
 
                     <div className="grid gap-6 md:grid-cols-2">
-                        {media.map((item) => (
+                        {filteredMedia.map((item) => (
                             <article key={item.id} className="rounded-3xl border border-red-800/70 bg-slate-900/85 p-6 shadow-lg shadow-red-950/20">
                                 <div className="mb-4 inline-flex rounded-full bg-red-700/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-red-200">
                                     {formatType(item.content_type)}
                                 </div>
                                 <h2 className="text-2xl font-bold text-white">{item.title}</h2>
                                 <p className="mt-3 text-sm leading-relaxed text-slate-300">{item.summary}</p>
+                                <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+                                    <span>{item.speaker_name || 'APGA Worldwide'}</span>
+                                    {item.scripture_reference && <span className="text-amber-300">{item.scripture_reference}</span>}
+                                    {item.video_url && <span className="text-red-300">Video available</span>}
+                                </div>
                                 <div className="mt-6 flex items-center justify-between gap-3">
-                                    <span className="text-xs text-slate-400">{item.speaker_name || 'APGA Worldwide'}</span>
+                                    <span className="text-xs text-slate-400">{item.published_at ? new Date(item.published_at).toLocaleDateString() : 'Recent'}</span>
                                     <Link href={route('media.detail', item.id)} className="text-sm font-semibold text-red-300 hover:text-red-200">
                                         Open media
                                     </Link>
@@ -150,6 +175,7 @@ export default function Media({ media = fallbackMedia, flash }: { media?: MediaI
                             </article>
                         ))}
                     </div>
+                    {!filteredMedia.length && <div className="mt-6 rounded-3xl border border-dashed border-red-800 bg-slate-900/70 p-8 text-center text-sm text-slate-300">No published stories match this format yet.</div>}
 
                     <div className="mt-14 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                         <div className="rounded-3xl border border-red-800/70 bg-gradient-to-r from-red-900/20 to-slate-900 p-8">

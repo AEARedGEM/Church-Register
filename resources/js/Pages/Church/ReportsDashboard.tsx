@@ -32,6 +32,13 @@ interface ReportAnalytics {
     strongestPeriod: string;
     leadershipSummary: string;
     leadershipInsight: string;
+    totalInvitations: number;
+    totalVisitors: number;
+    totalConversions: number;
+    conversionRate: string;
+    scoreTrend: string;
+    attendanceComparison: string;
+    invitationComparison: string;
 }
 
 export default function ReportsDashboard({
@@ -304,6 +311,42 @@ export default function ReportsDashboard({
                     <div className="rounded-2xl border border-red-100 bg-white p-5 shadow-sm">
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Avg. attendance</p>
                         <p className="mt-3 text-3xl font-bold text-slate-900">{analytics.averageAttendance}</p>
+                    </div>
+                </div>
+
+                <div className="mb-8 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Period comparison</p>
+                            <h2 className="mt-2 text-xl font-bold text-slate-900">Latest report against the previous report</h2>
+                        </div>
+                        <p className="text-xs text-slate-500">{periodType === 'all' ? 'Across all report periods' : `Within ${periodType} reports`}</p>
+                    </div>
+                    <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div className="rounded-2xl bg-white p-4"><p className="text-xs uppercase tracking-[0.16em] text-slate-500">Attendance change</p><p className="mt-2 text-2xl font-bold text-slate-900">{analytics.attendanceComparison}</p></div>
+                        <div className="rounded-2xl bg-white p-4"><p className="text-xs uppercase tracking-[0.16em] text-slate-500">Invitation change</p><p className="mt-2 text-2xl font-bold text-slate-900">{analytics.invitationComparison}</p></div>
+                        <div className="rounded-2xl bg-white p-4"><p className="text-xs uppercase tracking-[0.16em] text-slate-500">Conversion rate</p><p className="mt-2 text-2xl font-bold text-slate-900">{analytics.conversionRate}</p></div>
+                        <div className="rounded-2xl bg-white p-4"><p className="text-xs uppercase tracking-[0.16em] text-slate-500">Score movement</p><p className="mt-2 text-2xl font-bold text-slate-900">{analytics.scoreTrend}</p></div>
+                    </div>
+                </div>
+
+                <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-700">Invitations</p>
+                        <p className="mt-3 text-2xl font-bold text-slate-900">{analytics.totalInvitations}</p>
+                    </div>
+                    <div className="rounded-2xl border border-cyan-100 bg-cyan-50 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700">New visitors</p>
+                        <p className="mt-3 text-2xl font-bold text-slate-900">{analytics.totalVisitors}</p>
+                    </div>
+                    <div className="rounded-2xl border border-lime-100 bg-lime-50 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-lime-700">Conversions</p>
+                        <p className="mt-3 text-2xl font-bold text-slate-900">{analytics.totalConversions}</p>
+                    </div>
+                    <div className="rounded-2xl border border-fuchsia-100 bg-fuchsia-50 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-700">Conversion rate</p>
+                        <p className="mt-3 text-2xl font-bold text-slate-900">{analytics.conversionRate}</p>
+                        <p className="mt-2 text-xs text-fuchsia-800">Score trend: {analytics.scoreTrend}</p>
                     </div>
                 </div>
 

@@ -42,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               NYP Training
             </span>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Industrialization Program
+              Church Training
             </p>
           </div>
         </div>

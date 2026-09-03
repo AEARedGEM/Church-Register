@@ -7,7 +7,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState, useEffect } from 'react';
 import { Eye, EyeOff, Building2, TrendingUp, Users, Shield, BarChart3, Zap, Coins, Users2 } from 'lucide-react';
 
-export default function Register() {
+export default function Register({ referralCode = '' }: { referralCode?: string }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -20,6 +20,8 @@ export default function Register() {
         password_confirmation: '',
         state: '',
         lga: '',
+        referral_code: referralCode,
+        profile_photo: null as File | null,
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -73,6 +75,7 @@ export default function Register() {
         e.preventDefault();
 
         post(route('register'), {
+            forceFormData: true,
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
@@ -140,6 +143,17 @@ export default function Register() {
                             </div>
 
                             <form onSubmit={submit} className="space-y-3.5">
+                                <div>
+                                    <InputLabel htmlFor="profile_photo" value="Profile Photo (required)" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider" />
+                                    <input id="profile_photo" name="profile_photo" type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => setData('profile_photo', e.target.files?.[0] ?? null)} className="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-red-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white" required />
+                                    <p className="mt-1 text-xs text-gray-500">JPG, PNG, or WebP up to 5 MB.</p>
+                                    <InputError message={errors.profile_photo} className="mt-1.5 text-red-600 dark:text-red-400 text-xs" />
+                                </div>
+                                <div>
+                                    <InputLabel htmlFor="referral_code" value="Referral Code (optional)" className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider" />
+                                    <TextInput id="referral_code" name="referral_code" value={data.referral_code} onChange={(e) => setData('referral_code', e.target.value.toUpperCase())} className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 text-sm shadow-sm" placeholder="Enter a member code" maxLength={10} />
+                                    <InputError message={errors.referral_code} className="mt-1.5 text-red-600 dark:text-red-400 text-xs" />
+                                </div>
                                 <div>
                                     <InputLabel
                                         htmlFor="name"

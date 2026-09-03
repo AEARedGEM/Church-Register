@@ -88,7 +88,7 @@ export default function ResetPassword({
                             </div>
 
                             <div className="mt-12 p-4 bg-white bg-opacity-10 dark:bg-white dark:bg-opacity-15 rounded-lg">
-                                <p className="text-sm font-medium">"Your security helps protect Nigeria's industrial ecosystem"</p>
+                                <p className="text-sm font-medium">"Your security helps protect your church community"</p>
                             </div>
                         </div>
                     </div>

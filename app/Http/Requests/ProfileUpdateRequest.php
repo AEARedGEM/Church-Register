@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
@@ -42,6 +43,7 @@ class ProfileUpdateRequest extends FormRequest
             'business_name' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:5000'],
             'website' => ['nullable', 'url', 'max:255'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
 
         // Add role-specific validation rules
@@ -219,7 +221,7 @@ class ProfileUpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      */
-    public function withValidator($validator): void
+    public function withValidator(Validator $validator): void
     {
         $validator->after(function ($validator) {
             // Custom validation logic for cross-field validation
@@ -232,7 +234,7 @@ class ProfileUpdateRequest extends FormRequest
     /**
      * Validate business logic rules
      */
-    private function validateBusinessLogic($validator): void
+    private function validateBusinessLogic(Validator $validator): void
     {
         // Validate employee count makes sense for business age
         if ($this->years_in_business && $this->employee_count) {
@@ -261,7 +263,7 @@ class ProfileUpdateRequest extends FormRequest
     /**
      * Validate website URL format
      */
-    private function validateWebsiteFormat($validator): void
+    private function validateWebsiteFormat(Validator $validator): void
     {
         if ($this->website && !empty($this->website)) {
             $url = $this->website;
@@ -277,7 +279,7 @@ class ProfileUpdateRequest extends FormRequest
     /**
      * Validate phone number format
      */
-    private function validatePhoneFormat($validator): void
+    private function validatePhoneFormat(Validator $validator): void
     {
         if ($this->phone && !empty($this->phone)) {
             $phone = preg_replace('/[^0-9+]/', '', $this->phone);

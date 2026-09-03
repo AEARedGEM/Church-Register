@@ -35,7 +35,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 </div>
                                 <h1 className="text-4xl font-bold mb-2">Password Recovery</h1>
                                 <p className="text-xl opacity-90">Secure & Simple Reset Process</p>
-                                <p className="text-sm opacity-75 mt-2">Get back to building Nigeria's industrial future</p>
+                                <p className="text-sm opacity-75 mt-2">Continue serving and growing with your church community</p>
                             </div>
 
                             <div className="space-y-6">
