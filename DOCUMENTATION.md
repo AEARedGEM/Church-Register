@@ -1,15 +1,75 @@
+CHURCH WEBSITE WITH FEATURES FOR CHURCH ADMINISTRATION:
+ATTENDANCE SECTION: 
+— Church's President Welcome Speech 
+— Church's Vice-President Welcome Speech 
+— Church's President Interview 
+— Live In Service (Sunday School)
+— Live In Service (Actual Service After Sunday School: Member)
+— Live In Service (Actual Service After Sunday School: First Timer)
+— Weekly-Monthly-Yearly Invitation League
+— CHURCH MEMBER PROFILES
+— BIRTHDAY CELEBRATIONS
+— Pixelated Pictures Of All Absentees (6X3) Onscreen 
+— All Minister's Official Portraits 
+— All Minister's Official Autobiography
+— All Minister's Official Social Media Handles
+— All Unit Heads Official Portraits
+— All Unit Heads Official Autobiography
+— All Unit Heads Official Social Media Handles
+— Weekly Sunday Reports (PDF)
+— Monthly Report (PDF)
+— Quarterly Report (PDF)
+— Annual Report (PDF)
+— WEEKLY SCORECARD
+— WORKERS MEETING
+— Opportunistic Interview With Word/Gospel/Music Ministers
+— Opportunistic Interview With VIPS/Visitors
+— SUNDAY SCHOOL & BIBLE STUDY SECTION
+— APGAW BELIEVER'S FOUNDATION CLASS
+— APGAW SCHOOL OF MINISTRY
+
+Church Presbytery 
+Church Administration Unit
+Sunday School Unit
+Choir Unit
+Media Unit
+Evangelism Unit
+Sanitation Unit
+Ushering Unit 
+Protocol Unit
+Technical Team Unit 
+Welfare Unit
+Children Evangelism Unit
+Children Unit/Church
+Youth Unit?Ministry
+Men’s Movement 
+Good Women’s Movement
+
+Church Council (Board Of Trustees):
+— Prophet (Dr.) Samuel Olugbenga Ilesanmi
+Chairman, Board Of Trustees
+— Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi
+— Elder Daniel Ayomide Ilesanmi
+— Overseer Anthony Adebayo Olayinka
+— Engr. Oludayo Amele
+Secretary, Board Of Trustees
+
+Church Leadership
+— Prophet (Dr.) Samuel Olugbenga Ilesanmi
+President & General Overseer, APGAW
+— Evangelist (Mrs.) Esther Omobolanriwa Ilesanmi
+Vice-President, APGAW
+— Pastor Michael Olanrewaju
+Senior Pastor, Church Administration
+
 # APGA Worldwide - Church Management Platform
-
 ## Project Overview
-
 **APGA Worldwide** is now operating as a church-aligned management platform built on a reusable Laravel + React foundation. The application has moved beyond the generic institutional shell and now includes real church-facing public pages, admin workflows, ministry management, leadership visibility, attendance tracking, reporting, and PDF export support.
 
 This documentation reflects the actual project state:
-
 1. The app already contains a working church operations foundation.
 2. The public-facing church experience is now active and branded.
 3. Remaining work is focused on production hardening, richer analytics, and deeper public content.
-
 The current project is no longer a placeholder for a church site; it is a practical church operations platform with working backend and frontend flows.
 
 ### Latest Progress Update - 2026-09-03

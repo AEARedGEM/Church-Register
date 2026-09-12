@@ -38,6 +38,34 @@ export default function Welcome({
     const sundayAttendance = churchSummary?.attendance_total ?? 0;
     const upcomingEventsCount = churchSummary?.upcoming_events ?? 0;
     const smallGroupsCount = churchSummary?.active_ministries ?? 0;
+    const statTargets = [memberCount, sundayAttendance, upcomingEventsCount, smallGroupsCount];
+    const [animatedStats, setAnimatedStats] = useState([0, 0, 0, 0]);
+
+    useEffect(() => {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion) {
+            setAnimatedStats(statTargets);
+            return;
+        }
+
+        const start = performance.now();
+        const duration = 1400;
+        let frameId = 0;
+        const animate = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setAnimatedStats(statTargets.map((target) => Math.round(target * eased)));
+
+            if (progress < 1) {
+                frameId = requestAnimationFrame(animate);
+            }
+        };
+
+        frameId = requestAnimationFrame(animate);
+
+        return () => cancelAnimationFrame(frameId);
+    }, [memberCount, sundayAttendance, upcomingEventsCount, smallGroupsCount]);
 
     const scrollToFooter = () => {
         const footer = document.getElementById('footer-resources');
@@ -121,176 +149,214 @@ export default function Welcome({
                 </header>
 
                 {/* Hero Section */}
-                <section className="relative min-h-[600px] py-20 overflow-hidden">
-                    {/* Main gradient background */}
-                    <div className="absolute inset-0 bg-slate-950"></div>
+                <section className="apga-hero relative min-h-[640px] overflow-hidden bg-[#080711] text-white md:min-h-[680px]">
+                    <style>{`
+                        @keyframes apga-hero-enter { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+                        @keyframes apga-hero-drift { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(16px, -12px, 0); } }
+                        @keyframes apga-hero-line { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+                        .apga-hero-enter { animation: apga-hero-enter 900ms cubic-bezier(.22,1,.36,1) both; }
+                        .apga-hero-delay-1 { animation-delay: 120ms; }
+                        .apga-hero-delay-2 { animation-delay: 240ms; }
+                        .apga-hero-delay-3 { animation-delay: 360ms; }
+                        .apga-hero-drift { animation: apga-hero-drift 8s ease-in-out infinite; }
+                        .apga-hero-line { animation: apga-hero-line 6s ease-in-out infinite; }
+                        @media (prefers-reduced-motion: reduce) { .apga-hero-enter, .apga-hero-drift, .apga-hero-line { animation: none; } }
+                    `}</style>
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_22%_35%,rgba(190,24,93,0.3),transparent_36%),radial-gradient(ellipse_at_85%_65%,rgba(220,38,38,0.22),transparent_34%),linear-gradient(120deg,#080711_0%,#100c1d_52%,#090812_100%)]" />
+                    <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:72px_72px]" />
+                    <div className="apga-hero-drift absolute -right-24 top-24 h-96 w-96 rounded-full border border-red-400/20 md:h-[30rem] md:w-[30rem]" />
+                    <div className="apga-hero-drift absolute -right-8 top-40 h-64 w-64 rounded-full border border-red-300/10" style={{ animationDelay: '-2s' }} />
+                    <div className="absolute bottom-0 left-0 h-px w-full overflow-hidden bg-white/10"><div className="apga-hero-line h-full w-1/3 bg-gradient-to-r from-transparent via-red-400 to-transparent" /></div>
 
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 via-slate-800/10 to-red-900/20 animate-pulse"></div>
-
-                    {/* Decorative blurred shapes */}
-                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-25 animate-pulse" style={{animationDelay: '1s'}}></div>
-                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
-
-                    {/* Grid pattern overlay */}
-                    <div className="absolute inset-0 opacity-5">
-                        <div className="absolute inset-0" style={{
-                            backgroundImage: 'linear-gradient(0deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)',
-                            backgroundSize: '50px 50px'
-                        }}></div>
-                    </div>
-
-                    {/* Radial gradient accent */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
-
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="max-w-4xl mx-auto text-center">
-                            <div className="inline-flex items-center bg-slate-800/80 backdrop-blur-xl border border-red-700/80 px-5 py-2 mb-6 rounded-full hover:border-red-600 transition-all duration-300">
-                                <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
-                                <span className="text-xs font-bold text-slate-100">Apostolic Power Glorious Assembly Worldwide</span>
+                    <div className="relative z-10 mx-auto flex min-h-[640px] max-w-7xl items-center px-6 py-20 md:min-h-[680px] md:px-10">
+                        <div className="grid w-full items-center gap-16 lg:grid-cols-[1.15fr_0.85fr]">
+                            <div className="max-w-3xl">
+                                <div className="apga-hero-enter inline-flex items-center gap-3 border-l-2 border-red-400 pl-4 text-xs font-semibold uppercase tracking-[0.3em] text-red-200">
+                                    <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_14px_rgba(248,113,113,0.9)]" />
+                                    Apostolic Power Glorious Assembly Worldwide
+                                </div>
+                                <h1 className="apga-hero-enter apga-hero-delay-1 mt-7 text-5xl font-semibold leading-[0.95] tracking-[-0.04em] text-white sm:text-6xl lg:text-8xl">
+                                    Growing God's
+                                    <span className="block bg-gradient-to-r from-white via-red-200 to-red-500 bg-clip-text text-transparent">Kingdom together.</span>
+                                </h1>
+                                <p className="apga-hero-enter apga-hero-delay-2 mt-8 max-w-xl text-base leading-7 text-slate-300 md:text-lg">A living church community for spiritual growth, meaningful fellowship, and a faith that moves beyond Sunday.</p>
+                                <div className="apga-hero-enter apga-hero-delay-3 mt-9 flex flex-col gap-3 sm:flex-row">
+                                    <Link href={route('register')} className="group inline-flex items-center justify-center gap-3 rounded-full bg-red-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_36px_rgba(239,68,68,0.25)] transition hover:-translate-y-1 hover:bg-red-400">
+                                        Join the movement <span className="transition-transform group-hover:translate-x-1">→</span>
+                                    </Link>
+                                    <button type="button" onClick={scrollToFooter} className="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold text-slate-200 transition hover:border-red-300/70 hover:bg-white/5">Explore APGA</button>
+                                </div>
                             </div>
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-900 dark:text-white drop-shadow-2xl leading-tight">
-                                Growing God's Kingdom
-                                <br />
-                                <span className="bg-gradient-to-r from-slate-900 via-red-500 to-red-500 bg-clip-text text-transparent drop-shadow-lg">Together in Faith</span>
-                            </h1>
-                            <p className="text-slate-200 mb-6 max-w-2xl mx-auto leading-relaxed backdrop-blur-sm bg-slate-900/70 dark:bg-slate-950/80 rounded-lg p-5 border border-red-800/50">
-                                Welcome to APGA Worldwide - A faith-based community dedicated to spiritual growth, fellowship, and making a difference in the world. Track attendance, manage events, invite friends, and build meaningful connections.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                                <Link
-                                    href={route('register')}
-                                    className="relative overflow-hidden rounded-lg bg-red-600 hover:bg-red-700 px-7 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300"
-                                >
-                                    <span className="relative">Register Now</span>
-                                </Link>
-                                <button
-                                    type="button"
-                                    onClick={scrollToFooter}
-                                    className="border-2 border-red-700 text-slate-100 hover:text-white backdrop-blur-sm bg-slate-900/70 hover:bg-slate-800/90 px-7 py-3 rounded-lg font-semibold text-base transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-red-900/40 group relative overflow-hidden"
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-100/10 dark:via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
-                                    <span className="relative">Learn More</span>
-                                </button>
+
+                            <div className="apga-hero-enter apga-hero-delay-2 relative hidden min-h-[330px] lg:block">
+                                <div className="absolute right-8 top-0 h-72 w-72 rounded-full border border-red-300/20" />
+                                <div className="absolute right-20 top-12 h-48 w-48 rounded-full border border-dashed border-red-300/25" />
+                                <div className="absolute right-[8.5rem] top-[10.5rem] h-3 w-3 rounded-full bg-red-300 shadow-[0_0_28px_8px_rgba(248,113,113,0.35)]" />
+                                <div className="absolute bottom-3 left-0 border-l border-red-300/50 pl-5 text-sm text-slate-400">
+                                    <p className="font-mono text-xs uppercase tracking-[0.28em] text-red-300">Community signal</p>
+                                    <p className="mt-3 max-w-[210px] leading-6">Faith, people, and purpose moving in the same direction.</p>
+                                </div>
+                                <div className="absolute right-0 top-12 w-40 border-t border-white/15 pt-3 text-right text-[10px] uppercase tracking-[0.25em] text-slate-500">Est.  Worldwide<br /><span className="text-red-300">Together in faith</span></div>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {/* Stats Section */}
-                <section className="relative py-20 overflow-hidden">
-                    {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-slate-950"></div>
+                <section className="apga-pulse relative overflow-hidden bg-[#050816] py-20 text-white md:py-28">
+                    <style>{`
+                        @keyframes apga-pulse-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+                        @keyframes apga-pulse-sheen { from { transform: translateX(-120%); } to { transform: translateX(420%); } }
+                        @keyframes apga-pulse-scan { from { transform: translateX(-100%); } to { transform: translateX(100vw); } }
+                        .apga-pulse-card { animation: apga-pulse-rise 800ms cubic-bezier(.22,1,.36,1) both; }
+                        .apga-pulse-card:nth-child(2) { animation-delay: 120ms; }
+                        .apga-pulse-card:nth-child(3) { animation-delay: 240ms; }
+                        .apga-pulse-card:nth-child(4) { animation-delay: 360ms; }
+                        .apga-pulse-card:hover .apga-pulse-sheen { animation: apga-pulse-sheen 900ms ease-out; }
+                        .apga-pulse-scan { animation: apga-pulse-scan 7s ease-in-out infinite; }
+                        @media (prefers-reduced-motion: reduce) {
+                            .apga-pulse-card, .apga-pulse-scan { animation: none; }
+                        }
+                    `}</style>
+                    <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+                    <div className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-red-500/70 to-transparent" />
+                    <div className="apga-pulse-scan absolute left-0 top-1/2 h-px w-1/3 bg-gradient-to-r from-transparent via-red-300 to-transparent blur-[1px]" />
 
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-slate-900/20 animate-pulse"></div>
+                    <div className="relative z-10 mx-auto max-w-7xl px-6">
+                        <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                            <div className="max-w-xl">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-red-300">APGA in motion</p>
+                                <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white md:text-5xl">The pulse of our church.</h2>
+                            </div>
+                            <p className="max-w-xs text-sm leading-6 text-slate-400">A live glimpse of the people, gatherings, and moments shaping this week.</p>
+                        </div>
 
-                    {/* Decorative blurred shapes for depth */}
-                    <div className="absolute top-1/2 left-0 w-96 h-96 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-25 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-10 dark:opacity-20 animate-pulse" style={{animationDelay: '1.5s'}}></div>
-
-                    {/* Content */}
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{memberCount}</div>
-                                    <div className="text-xs md:text-sm text-slate-300">Total Members</div>
+                        <div className="grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 xl:grid-cols-4">
+                            {[
+                                { label: 'Total Members', value: animatedStats[0], index: '01', accent: 'from-red-300 to-rose-600', detail: 'People in the family' },
+                                { label: 'Sunday Attendance', value: animatedStats[1], index: '02', accent: 'from-orange-200 to-red-500', detail: 'Gathered in worship' },
+                                { label: 'Upcoming Events', value: animatedStats[2], index: '03', accent: 'from-fuchsia-200 to-red-500', detail: 'Moments on the calendar' },
+                                { label: 'Small Groups', value: animatedStats[3], index: '04', accent: 'from-amber-200 to-orange-500', detail: 'Circles growing together' },
+                            ].map((stat) => (
+                                <div key={stat.label} className="apga-pulse-card group relative min-h-[230px] overflow-hidden bg-[#0b1022] p-6 transition-colors duration-500 hover:bg-[#111832] md:p-8">
+                                    <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${stat.accent}`} />
+                                    <div className="apga-pulse-sheen absolute -left-1/2 top-0 h-full w-1/4 -skew-x-12 bg-white/10 opacity-0" />
+                                    <div className="flex items-start justify-between">
+                                        <span className="font-mono text-xs tracking-[0.3em] text-slate-500">{stat.index}</span>
+                                        <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.9)] transition-transform duration-500 group-hover:scale-150" />
+                                    </div>
+                                    <div className="mt-12 flex items-end gap-2">
+                                        <span className="text-5xl font-semibold tracking-tight text-white md:text-6xl">{stat.value.toLocaleString()}</span>
+                                        <span className="mb-2 text-red-300">+</span>
+                                    </div>
+                                    <p className="mt-4 text-sm font-semibold text-slate-200">{stat.label}</p>
+                                    <p className="mt-1 text-xs text-slate-500">{stat.detail}</p>
+                                    <div className="absolute bottom-0 left-0 h-px w-0 bg-red-400 transition-all duration-500 group-hover:w-full" />
                                 </div>
-                            </div>
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{sundayAttendance}</div>
-                                    <div className="text-xs md:text-sm text-slate-300">Sunday Attendance</div>
-                                </div>
-                            </div>
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{upcomingEventsCount}</div>
-                                    <div className="text-xs md:text-sm text-slate-300">Upcoming Events</div>
-                                </div>
-                            </div>
-                            <div className="group relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-red-200/20 to-red-200/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="relative backdrop-blur-sm bg-slate-900/85 border border-red-800/70 hover:border-red-700 rounded-lg p-4 transition-all duration-300 group-hover:bg-slate-900/95">
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{smallGroupsCount}</div>
-                                    <div className="text-xs md:text-sm text-slate-300">Small Groups</div>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </section>
 
                 {/* Church service schedule */}
-                <section className="relative overflow-hidden bg-[#120d0d] py-20 md:py-24">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(239,68,68,0.18),_transparent_30%),linear-gradient(90deg,_rgba(69,10,10,0.52),_transparent_40%,_rgba(69,10,10,0.52))]"></div>
-                    <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="mb-10 text-center">
-                            <span className="inline-block rounded-full border border-red-700/70 bg-red-900/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-red-200 sm:text-xs">
-                                Weekly rhythm
-                            </span>
-                            <h2 className="mt-5 text-3xl font-bold text-white md:text-5xl">This Week at APGA Worldwide</h2>
+                <section className="apga-week relative overflow-hidden bg-[#10090b] py-20 text-white md:py-28">
+                    <style>{`
+                        @keyframes apga-week-flow { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+                        @keyframes apga-week-rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+                        .apga-week-flow { animation: apga-week-flow 8s linear infinite; }
+                        .apga-week-item { animation: apga-week-rise 700ms cubic-bezier(.22,1,.36,1) both; }
+                        .apga-week-item:nth-child(2) { animation-delay: 100ms; }
+                        .apga-week-item:nth-child(3) { animation-delay: 200ms; }
+                        .apga-week-item:nth-child(4) { animation-delay: 300ms; }
+                        .apga-week-item:nth-child(5) { animation-delay: 400ms; }
+                        @media (prefers-reduced-motion: reduce) { .apga-week-flow, .apga-week-item { animation: none; } }
+                    `}</style>
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(190,24,93,0.2),transparent_42%),linear-gradient(120deg,#10090b,#1d0b10_52%,#0d0a12)]" />
+                    <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:58px_58px]" />
+                    <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+                        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                            <div>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-red-300">Weekly rhythm</p>
+                                <h2 className="mt-4 max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-6xl">A week with purpose.</h2>
+                            </div>
+                            <p className="max-w-sm border-l border-red-400/50 pl-5 text-sm leading-6 text-slate-400">From worship to prayer, every gathering is another way to find your people and deepen your faith.</p>
                         </div>
 
-                        <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-5">
-                            {[
-                                { title: 'Sunday Worship', time: 'Weekly', detail: 'Main Sanctuary · Family worship service', tone: 'from-red-600 to-red-700' },
-                                { title: 'Monday Program', time: 'Occasional Special Program', detail: 'Special church gathering & fellowship', tone: 'from-orange-500 to-amber-500' },
-                                { title: 'Tuesday Meeting', time: 'Every First & Last Tuesday Of The Month', detail: 'Monthly leadership and community rhythm', tone: 'from-rose-600 to-pink-500' },
-                                { title: 'Wednesday Prayer', time: 'Weekly', detail: 'Prayer & deliverance meeting', tone: 'from-red-700 to-orange-500' },
-                                { title: 'Friday Fellowship', time: 'Every First & Last Friday of The Month', detail: 'Youth & teens discipleship and fellowship', tone: 'from-red-700 to-rose-600' },
-                            ].map((service) => (
-                                <div
-                                    key={service.title}
-                                    className="group min-h-[220px] rounded-[28px] border border-red-800/70 bg-slate-900/80 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.5)] transition duration-300 hover:-translate-y-1 hover:border-red-600 hover:shadow-[0_22px_55px_rgba(127,29,29,0.35)]"
-                                >
-                                    <div className={`mb-5 inline-flex rounded-full bg-gradient-to-r ${service.tone} px-3 py-2 text-[9px] font-bold uppercase tracking-[0.22em] text-white shadow-lg shadow-red-950/30`}>
-                                        {service.time}
+                        <div className="relative">
+                            <div className="absolute left-[8%] right-[8%] top-5 hidden h-px overflow-hidden bg-red-900/80 xl:block"><div className="apga-week-flow h-full w-1/4 bg-gradient-to-r from-transparent via-red-300 to-transparent" /></div>
+                            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+                                {[
+                                    { day: 'SUN', title: 'Sunday Worship', time: 'Weekly', detail: 'Main Sanctuary · Family worship service', tone: 'from-red-500 to-rose-700', featured: true },
+                                    { day: 'MON', title: 'Monday Program', time: 'Occasional special program', detail: 'Special church gathering & fellowship', tone: 'from-orange-400 to-amber-600' },
+                                    { day: 'TUE', title: 'Tuesday Meeting', time: 'First & last Tuesday', detail: 'Monthly leadership and community rhythm', tone: 'from-fuchsia-400 to-rose-600' },
+                                    { day: 'WED', title: 'Wednesday Prayer', time: 'Weekly', detail: 'Prayer & deliverance meeting', tone: 'from-red-500 to-orange-500' },
+                                    { day: 'FRI', title: 'Friday Fellowship', time: 'First & last Friday', detail: 'Youth & teens discipleship and fellowship', tone: 'from-rose-500 to-red-700' },
+                                ].map((service, index) => (
+                                    <div key={service.title} className={`apga-week-item group relative overflow-hidden border border-red-900/70 bg-[#15101a]/90 p-5 transition duration-500 hover:-translate-y-2 hover:border-red-400/70 hover:bg-[#1b1320] ${service.featured ? 'min-h-[290px] md:col-span-2 xl:col-span-1 xl:-mt-5 xl:min-h-[330px] xl:p-7' : 'min-h-[250px]'}`}>
+                                        <div className="flex items-center justify-between">
+                                            <span className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${service.tone} text-[10px] font-black tracking-[0.18em] text-white shadow-lg shadow-red-950/30`}>{service.day}</span>
+                                            <span className="font-mono text-xs text-red-300/70">0{index + 1}</span>
+                                        </div>
+                                        <div className={`mt-8 h-1 w-16 bg-gradient-to-r ${service.tone} transition-all duration-500 group-hover:w-28`} />
+                                        <h3 className={`mt-5 font-semibold leading-tight text-white ${service.featured ? 'text-3xl' : 'text-2xl'}`}>{service.title}</h3>
+                                        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-red-200">{service.time}</p>
+                                        <p className="mt-3 text-sm leading-6 text-slate-400">{service.detail}</p>
+                                        {service.featured && <span className="absolute bottom-5 right-5 text-3xl text-red-400/30 transition duration-500 group-hover:translate-x-1 group-hover:text-red-300/70">↗</span>}
                                     </div>
-                                    <h3 className="text-2xl font-bold leading-tight text-white xl:text-[1.8rem]">{service.title}</h3>
-                                    <p className="mt-3 text-sm leading-relaxed text-slate-300">{service.detail}</p>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 {/* Ministries section */}
-                <section className="relative py-20 overflow-hidden bg-slate-950">
-                    <div className="relative max-w-7xl mx-auto px-6 z-10">
-                        <div className="mb-12 text-center">
-                            <span className="inline-block rounded-full border border-red-700/70 bg-red-900/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-red-200">
-                                Ministries
-                            </span>
-                            <h2 className="mt-5 text-3xl font-bold text-white md:text-4xl">Places to Grow, Serve, and Belong</h2>
-                        </div>
-
-                        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-                            {[
-                                { name: 'Children’s Church', text: 'Nurturing the next generation with discipleship, creativity, and biblical teaching.' },
-                                { name: 'Youth Ministry', text: 'Empowering teenagers and young adults through mentorship, music, and purpose-driven community.' },
-                                { name: 'Women’s Fellowship', text: 'Building spiritual strength, prayer support, and sisterhood across every season of life.' },
-                                { name: 'Men’s Forum', text: 'Developing godly leadership, accountability, and service in the home and church.' },
-                            ].map((ministry) => (
-                                <div key={ministry.name} className="rounded-2xl border border-red-800/60 bg-slate-900/80 p-5 text-left shadow-md shadow-red-950/20">
-                                    <div className="mb-3 h-2.5 w-16 rounded-full bg-gradient-to-r from-red-500 to-rose-500"></div>
-                                    <h3 className="text-xl font-bold text-white">{ministry.name}</h3>
-                                    <p className="mt-3 text-sm leading-relaxed text-slate-300">{ministry.text}</p>
+                <section className="apga-ministries relative overflow-hidden bg-[#070914] py-20 text-white md:py-28">
+                    <style>{`
+                        @keyframes apga-ministry-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+                        @keyframes apga-ministry-orbit { from { transform: rotate(0deg) translateX(8px) rotate(0deg); } to { transform: rotate(360deg) translateX(8px) rotate(-360deg); } }
+                        .apga-ministry-card { animation: apga-ministry-rise 700ms cubic-bezier(.22,1,.36,1) both; }
+                        .apga-ministry-card:nth-child(2) { animation-delay: 120ms; }
+                        .apga-ministry-card:nth-child(3) { animation-delay: 240ms; }
+                        .apga-ministry-card:nth-child(4) { animation-delay: 360ms; }
+                        .apga-ministry-orbit { animation: apga-ministry-orbit 12s linear infinite; }
+                        @media (prefers-reduced-motion: reduce) { .apga-ministry-card, .apga-ministry-orbit { animation: none; } }
+                    `}</style>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_80%,rgba(220,38,38,0.16),transparent_28%),radial-gradient(circle_at_90%_15%,rgba(190,24,93,0.14),transparent_30%),linear-gradient(135deg,#070914,#0d1020_55%,#100a12)]" />
+                    <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+                    <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-8">
+                        <div className="grid items-end gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+                            <div className="relative">
+                                <div className="apga-ministry-orbit absolute -left-8 -top-16 hidden h-44 w-44 rounded-full border border-red-400/20 lg:block" />
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-red-300">Ministries</p>
+                                <h2 className="mt-5 max-w-lg text-4xl font-semibold leading-[1.05] tracking-tight text-white md:text-6xl">Find your place to grow.</h2>
+                                <p className="mt-6 max-w-md text-sm leading-7 text-slate-400 md:text-base">There is room for your story, your gifts, and your next faithful step. Discover a community built around becoming and belonging.</p>
+                                <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+                                    <Link href={route('ministries')} className="group inline-flex items-center gap-3 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-1 hover:bg-red-400">Explore ministries <span className="transition-transform group-hover:translate-x-1">→</span></Link>
+                                    <Link href={route('units')} className="inline-flex rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-red-300/70 hover:bg-white/5">Church units</Link>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
 
-                        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                            <Link href={route('ministries')} className="rounded-full bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-500">
-                                Explore Ministries
-                            </Link>
-                            <Link href={route('units')} className="rounded-full border border-red-700 bg-slate-900 px-6 py-3 font-semibold text-red-100 transition hover:bg-red-700 hover:text-white">
-                                Explore Church Units
-                            </Link>
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                {[
+                                    { name: 'Children’s Church', text: 'Nurturing the next generation with discipleship, creativity, and biblical teaching.', code: '01', accent: 'from-red-400 to-rose-600', tag: 'Next generation' },
+                                    { name: 'Youth Ministry', text: 'Empowering teenagers and young adults through mentorship, music, and purpose-driven community.', code: '02', accent: 'from-orange-300 to-red-500', tag: 'Purpose & energy' },
+                                    { name: 'Women’s Fellowship', text: 'Building spiritual strength, prayer support, and sisterhood across every season of life.', code: '03', accent: 'from-fuchsia-300 to-rose-600', tag: 'Strength together' },
+                                    { name: 'Men’s Forum', text: 'Developing godly leadership, accountability, and service in the home and church.', code: '04', accent: 'from-amber-200 to-orange-500', tag: 'Lead & serve' },
+                                ].map((ministry) => (
+                                    <div key={ministry.name} className="apga-ministry-card group relative min-h-[210px] overflow-hidden border border-white/10 bg-white/[0.045] p-6 backdrop-blur-sm transition duration-500 hover:-translate-y-1 hover:border-red-300/50 hover:bg-white/[0.08]">
+                                        <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${ministry.accent}`} />
+                                        <div className="flex items-start justify-between">
+                                            <span className="font-mono text-xs tracking-[0.3em] text-slate-500">{ministry.code}</span>
+                                            <span className="text-xs text-red-300 opacity-0 transition duration-500 group-hover:opacity-100">Explore ↗</span>
+                                        </div>
+                                        <div className={`mt-8 h-1 w-12 bg-gradient-to-r ${ministry.accent} transition-all duration-500 group-hover:w-24`} />
+                                        <h3 className="mt-5 text-xl font-semibold text-white">{ministry.name}</h3>
+                                        <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-red-200/80">{ministry.tag}</p>
+                                        <p className="mt-3 text-sm leading-6 text-slate-400">{ministry.text}</p>
+                                        <div className="absolute bottom-0 left-0 h-px w-0 bg-red-400 transition-all duration-500 group-hover:w-full" />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -497,141 +563,88 @@ export default function Welcome({
                 </section>
 
                 {/* Call to Action Section */}
-                <section className="relative py-24 overflow-hidden bg-slate-950">
-                    {/* Decorative blurred shapes */}
-                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-200 dark:bg-red-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 dark:opacity-30 animate-pulse"></div>
-                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-200 dark:bg-red-600 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-12 dark:opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
+                <section className="apga-cta relative overflow-hidden bg-[#080711] py-24 text-white md:py-32">
+                    <style>{`
+                        @keyframes apga-cta-pulse { 0%, 100% { opacity: .35; transform: scale(.92); } 50% { opacity: .8; transform: scale(1.08); } }
+                        @keyframes apga-cta-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+                        .apga-cta-pulse { animation: apga-cta-pulse 5s ease-in-out infinite; }
+                        .apga-cta-rise { animation: apga-cta-rise 800ms cubic-bezier(.22,1,.36,1) both; }
+                        .apga-cta-rise-delay { animation-delay: 140ms; }
+                        .apga-cta-rise-delay-2 { animation-delay: 280ms; }
+                        @media (prefers-reduced-motion: reduce) { .apga-cta-pulse, .apga-cta-rise { animation: none; } }
+                    `}</style>
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(190,24,93,0.2),transparent_32%),linear-gradient(120deg,#080711,#130b19_52%,#090812)]" />
+                    <div className="apga-cta-pulse absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-400/20" />
+                    <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:64px_64px]" />
 
-                    {/* Content */}
-                    <div className="container mx-auto px-6 relative z-10 text-center">
-                        <h2 className="text-4xl font-bold mb-6 text-white drop-shadow-lg">Ready to Join Our Community?</h2>
-                        <p className="text-slate-200 mb-8 max-w-2xl mx-auto backdrop-blur-sm bg-slate-900/70 rounded-xl p-6 border border-red-800/50">
-                            Take the first step in your spiritual journey. Register today to access attendance tracking, connect with church members, and stay updated on all church activities.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link
-                                href={route('register')}
-                                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 shadow-2xl hover:shadow-red-500/50 relative group overflow-hidden"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
-                                <span className="relative">Create Account</span>
-                            </Link>
-                            <button className="border-2 border-red-700 text-slate-100 hover:text-white backdrop-blur-sm bg-slate-900/80 hover:bg-slate-800/90 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-red-900/40 group relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/10 dark:via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-500"></div>
-                                <span className="relative">Schedule a Visit</span>
-                            </button>
+                    <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+                        <div className="apga-cta-rise mx-auto flex w-fit items-center gap-3 border border-red-300/30 bg-red-950/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.34em] text-red-200">
+                            <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_14px_rgba(248,113,113,0.9)]" />
+                            Your next step starts here
+                        </div>
+                        <h2 className="apga-cta-rise apga-cta-rise-delay mt-8 text-4xl font-semibold tracking-tight text-white md:text-7xl">Come as you are.<span className="block bg-gradient-to-r from-white via-red-200 to-red-500 bg-clip-text text-transparent">Grow with us.</span></h2>
+                        <p className="apga-cta-rise apga-cta-rise-delay-2 mx-auto mt-7 max-w-2xl text-base leading-7 text-slate-300 md:text-lg">Take the first step in your spiritual journey. Join a community where faith becomes friendship, service becomes purpose, and every week makes room for you.</p>
+                        <div className="apga-cta-rise apga-cta-rise-delay-2 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                            <Link href={route('register')} className="group inline-flex items-center gap-3 rounded-full bg-red-500 px-8 py-4 text-sm font-bold text-white shadow-[0_15px_42px_rgba(239,68,68,0.3)] transition hover:-translate-y-1 hover:bg-red-400">Create your account <span className="transition-transform group-hover:translate-x-1">→</span></Link>
+                            <button type="button" onClick={scrollToFooter} className="inline-flex items-center gap-3 rounded-full border border-white/20 px-8 py-4 text-sm font-semibold text-slate-200 transition hover:border-red-300/70 hover:bg-white/5">Explore the community <span>↓</span></button>
+                        </div>
+                        <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-500">
+                            <span>Worship</span><span className="h-1 w-1 rounded-full bg-red-400" /><span>Belonging</span><span className="h-1 w-1 rounded-full bg-red-400" /><span>Purpose</span>
                         </div>
                     </div>
                 </section>
 
                 {/* Testimonials */}
-                <section className="relative py-24 overflow-hidden bg-slate-950">
-                    {/* Premium gradient background */}
-                    <div className="absolute inset-0 bg-slate-950"></div>
+                <section className="apga-voices relative overflow-hidden bg-[#070914] py-24 text-white md:py-32">
+                    <style>{`
+                        @keyframes apga-voices-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+                        @keyframes apga-voices-drift { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(14px, -10px); } }
+                        .apga-voices-rise { animation: apga-voices-rise 750ms cubic-bezier(.22,1,.36,1) both; }
+                        .apga-voices-delay { animation-delay: 160ms; }
+                        .apga-voices-delay-2 { animation-delay: 320ms; }
+                        .apga-voices-drift { animation: apga-voices-drift 7s ease-in-out infinite; }
+                        @media (prefers-reduced-motion: reduce) { .apga-voices-rise, .apga-voices-drift { animation: none; } }
+                    `}</style>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_45%,rgba(220,38,38,0.16),transparent_28%),radial-gradient(circle_at_88%_15%,rgba(190,24,93,0.14),transparent_28%),linear-gradient(135deg,#070914,#0d1020_55%,#100a12)]" />
+                    <div className="apga-voices-drift absolute -right-24 top-16 h-80 w-80 rounded-full border border-red-400/15" />
+                    <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:64px_64px]" />
 
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-slate-900/20 animate-pulse"></div>
-
-                    {/* Decorative blurred shapes */}
-                    <div className="absolute top-1/2 left-0 w-96 h-96 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-15 dark:opacity-20 animate-pulse"></div>
-                    <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-red-200 dark:bg-red-700 rounded-full mix-blend-multiply dark:mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-15 animate-pulse" style={{animationDelay: '1.5s'}}></div>
-
-                    {/* Content */}
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                                What Members Say
-                            </h2>
-                            <p className="text-lg text-gray-300">
-                                Hear from members of our church community
-                            </p>
+                    <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-8">
+                        <div className="mb-14 grid items-end gap-8 lg:grid-cols-[0.75fr_1.25fr]">
+                            <div>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-red-300">Voices of the house</p>
+                                <h2 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-6xl">Belonging sounds like this.</h2>
+                            </div>
+                            <p className="max-w-md border-l border-red-400/50 pl-5 text-sm leading-7 text-slate-400">Real community is heard in the stories people carry home: welcomed, encouraged, and ready to serve.</p>
                         </div>
 
-                        {/* Desktop: 3 cards in a row */}
-                        <div className="hidden md:grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                            {[
-                                {
-                                    quote: "The church community here is so welcoming and supportive. The attendance tracking system has really helped me stay connected with church activities.",
-                                    name: "John Doe",
-                                    title: "Church Member",
-                                    gradient: "from-red-400 to-red-400"
-                                },
-                                {
-                                    quote: "I love how easy it is to invite friends and track our progress. The invitation league has really motivated us to evangelize more.",
-                                    name: "Sarah Smith",
-                                    title: "Small Group Leader",
-                                    gradient: "from-red-400 to-red-400"
-                                },
-                                {
-                                    quote: "The platform makes church management so much easier. We can focus on spiritual growth instead of administrative headaches.",
-                                    name: "Pastor Michael",
-                                    title: "Church Leadership",
-                                    gradient: "from-red-400 to-red-400"
-                                }
-                            ].map((testimonial, index) => (
-                                <div key={index} className="backdrop-blur-sm bg-slate-900/85 border border-red-800/70 rounded-2xl p-8 shadow-2xl transition-all duration-300 group hover:bg-slate-900/95 hover:-translate-y-2">
-                                    <div className="text-5xl text-slate-300 mb-4 drop-shadow-lg group-hover:scale-110 transition-transform">"</div>
-                                    <p className="text-base text-slate-100 mb-6 italic leading-relaxed min-h-[160px]">
-                                        {testimonial.quote}
-                                    </p>
-                                    <div className="flex items-center space-x-4">
-                                        <div className={`w-12 h-12 bg-gradient-to-br ${testimonial.gradient} rounded-full shadow-lg`}></div>
-                                        <div className="text-left">
-                                            <div className="font-semibold text-slate-100">{testimonial.name}</div>
-                                            <div className="text-sm text-slate-300">{testimonial.title}</div>
-                                        </div>
+                        <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+                            <div className="apga-voices-rise group relative overflow-hidden border border-red-300/30 bg-gradient-to-br from-red-950/60 via-[#15101d] to-[#0d1020] p-7 md:p-10">
+                                <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-red-500/10 blur-3xl transition duration-700 group-hover:bg-red-500/20" />
+                                <div className="relative z-10 flex h-full flex-col justify-between">
+                                    <div>
+                                        <div className="flex items-start justify-between"><span className="font-serif text-7xl leading-none text-red-300/70">“</span><span className="font-mono text-xs tracking-[0.3em] text-red-300/70">01 / 03</span></div>
+                                        <p className="mt-6 max-w-2xl text-2xl font-medium leading-relaxed text-white md:text-3xl">The church community here is so welcoming and supportive. The attendance tracking system has really helped me stay connected with church activities.</p>
+                                    </div>
+                                    <div className="mt-12 flex items-center gap-4 border-t border-white/10 pt-5">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-300 to-rose-600 text-sm font-bold text-white shadow-[0_0_24px_rgba(248,113,113,0.25)]">JD</div>
+                                        <div><p className="font-semibold text-white">John Doe</p><p className="text-sm text-slate-400">Church Member</p></div>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-
-                        {/* Mobile: Horizontal scroll with smooth slide */}
-                        <div className="md:hidden relative">
-                            <div className="overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
-                                <div className="flex space-x-6 px-6">
-                                    {[
-                                        {
-                                            quote: "The church community here is so welcoming and supportive. The attendance tracking system has really helped me stay connected.",
-                                            name: "John Doe",
-                                            title: "Church Member",
-                                            gradient: "from-red-400 to-red-400"
-                                        },
-                                        {
-                                            quote: "I love how easy it is to invite friends and track our progress. The invitation league motivates us to evangelize more.",
-                                            name: "Sarah Smith",
-                                            title: "Small Group Leader",
-                                            gradient: "from-red-400 to-red-400"
-                                        },
-                                        {
-                                            quote: "The platform makes church management so much easier. We can focus on spiritual growth instead of admin work.",
-                                            name: "Pastor Michael",
-                                            title: "Church Leadership",
-                                            gradient: "from-red-400 to-red-400"
-                                        }
-                                    ].map((testimonial, index) => (
-                                        <div key={index} className="flex-shrink-0 w-[85vw] snap-center">
-                                            <div className="backdrop-blur-sm bg-slate-900/85 border border-red-800/70 rounded-2xl p-6 shadow-2xl transition-all duration-300 h-full">
-                                                <div className="text-5xl text-slate-300 mb-4 drop-shadow-lg">"</div>
-                                                <p className="text-base text-slate-100 mb-6 italic leading-relaxed">
-                                                    {testimonial.quote}
-                                                </p>
-                                                <div className="flex items-center space-x-4">
-                                                    <div className={`w-12 h-12 bg-gradient-to-br ${testimonial.gradient} rounded-full shadow-lg flex-shrink-0`}></div>
-                                                    <div className="text-left">
-                                                        <div className="font-semibold text-slate-100">{testimonial.name}</div>
-                                                        <div className="text-sm text-slate-300">{testimonial.title}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
-                            {/* Scroll indicator dots */}
-                            <div className="flex justify-center space-x-2 mt-4">
-                                <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                                <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                                <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+
+                            <div className="grid gap-4">
+                                {[
+                                    { quote: 'I love how easy it is to invite friends and track our progress. The invitation league has really motivated us to evangelize more.', name: 'Sarah Smith', title: 'Small Group Leader', initials: 'SS', code: '02 / 03', accent: 'from-orange-300 to-red-500' },
+                                    { quote: 'The platform makes church management so much easier. We can focus on spiritual growth instead of administrative headaches.', name: 'Pastor Michael', title: 'Church Leadership', initials: 'PM', code: '03 / 03', accent: 'from-fuchsia-300 to-rose-600' },
+                                ].map((testimonial) => (
+                                    <div key={testimonial.name} className="apga-voices-rise apga-voices-delay group relative overflow-hidden border border-white/10 bg-white/[0.045] p-6 transition duration-500 hover:-translate-y-1 hover:border-red-300/50 hover:bg-white/[0.08]">
+                                        <div className="flex items-start justify-between"><span className="font-serif text-5xl leading-none text-red-300/60">“</span><span className="font-mono text-xs tracking-[0.25em] text-slate-500">{testimonial.code}</span></div>
+                                        <p className="mt-4 text-base leading-7 text-slate-200">{testimonial.quote}</p>
+                                        <div className="mt-6 flex items-center gap-3 border-t border-white/10 pt-4"><div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${testimonial.accent} text-xs font-bold text-white`}>{testimonial.initials}</div><div><p className="text-sm font-semibold text-white">{testimonial.name}</p><p className="text-xs text-slate-500">{testimonial.title}</p></div></div>
+                                        <div className="absolute bottom-0 left-0 h-px w-0 bg-red-400 transition-all duration-500 group-hover:w-full" />
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
