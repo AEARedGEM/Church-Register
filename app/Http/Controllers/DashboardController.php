@@ -430,7 +430,10 @@ class DashboardController extends Controller
     private function getChurchHealth(): array
     {
         $attendance = Schema::hasTable('attendance_records')
-            ? \App\Models\AttendanceRecord::query()->count()
+            ? \App\Models\AttendanceRecord::query()
+                ->where('service_type', 'main_service')
+                ->whereIn('status', ['present', 'late'])
+                ->count()
             : 0;
         $prayerRequests = Schema::hasTable('church_prayer_requests')
             ? ChurchPrayerRequest::query()->whereIn('status', ['pending', 'prayed'])->count()
@@ -442,10 +445,20 @@ class DashboardController extends Controller
             ? Event::query()->where('start_date', '>=', now())->orderBy('start_date')->first()
             : null;
         $currentWeekAttendance = Schema::hasTable('attendance_records')
-            ? \App\Models\AttendanceRecord::query()->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count()
+            ? \App\Models\AttendanceRecord::query()
+                ->where('service_type', 'main_service')
+                ->whereIn('status', ['present', 'late'])
+                ->whereDate('service_date', '>=', now()->startOfWeek()->toDateString())
+                ->whereDate('service_date', '<=', now()->endOfWeek()->toDateString())
+                ->count()
             : 0;
         $previousWeekAttendance = Schema::hasTable('attendance_records')
-            ? \App\Models\AttendanceRecord::query()->whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])->count()
+            ? \App\Models\AttendanceRecord::query()
+                ->where('service_type', 'main_service')
+                ->whereIn('status', ['present', 'late'])
+                ->whereDate('service_date', '>=', now()->subWeek()->startOfWeek()->toDateString())
+                ->whereDate('service_date', '<=', now()->subWeek()->endOfWeek()->toDateString())
+                ->count()
             : 0;
         $attendanceChange = $previousWeekAttendance > 0
             ? round((($currentWeekAttendance - $previousWeekAttendance) / $previousWeekAttendance) * 100)

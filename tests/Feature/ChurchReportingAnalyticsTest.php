@@ -102,7 +102,66 @@ class ChurchReportingAnalyticsTest extends TestCase
             ->where('analytics.scoreTrend', '+12')
             ->where('analytics.attendanceComparison', '+40')
             ->where('analytics.invitationComparison', '+10')
+            ->where('analytics.liveAttendance.total', 280)
+            ->where('analytics.liveAttendance.present', 280)
+            ->where('analytics.liveAttendance.late', 0)
+            ->where('analytics.liveAttendance.byService.main_service', 280)
+            ->has('analytics.liveAttendance.weeklyTrend', 8)
         );
+    }
+
+    public function test_church_reports_dashboard_exposes_server_summary_insights(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
+
+        foreach (range(1, 120) as $index) {
+            AttendanceRecord::create([
+                'user_id' => $user->id,
+                'service_type' => 'main_service',
+                'service_date' => '2026-09-06',
+                'status' => 'present',
+                'first_timer' => $index <= 15,
+                'recorded_by' => $user->id,
+            ]);
+        }
+
+        foreach (range(1, 160) as $index) {
+            AttendanceRecord::create([
+                'user_id' => $user->id,
+                'service_type' => 'main_service',
+                'service_date' => '2026-09-13',
+                'status' => 'present',
+                'first_timer' => $index <= 18,
+                'recorded_by' => $user->id,
+            ]);
+        }
+
+        $this->actingAs($user)->post('/church-admin/reports', [
+            'period_type' => 'weekly',
+            'title' => 'Week 1 Worship Report',
+            'report_date' => '2026-09-01',
+            'summary' => 'Strong worship attendance with more youth involvement.',
+            'new_members_count' => 5,
+            'prayer_requests_count' => 8,
+        ]);
+
+        $this->actingAs($user)->post('/church-admin/reports', [
+            'period_type' => 'weekly',
+            'title' => 'Week 2 Worship Report',
+            'report_date' => '2026-09-08',
+            'summary' => 'A second week of strong growth and prayer coverage.',
+            'new_members_count' => 7,
+            'prayer_requests_count' => 10,
+        ]);
+
+        $this->actingAs($user)
+            ->get('/church-admin/reports')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('analytics.leadershipSummary', 'Latest church pulse: Week 2 Worship Report (2026-09-08) - attendance 160, first timers 18, prayer requests 10.')
+                ->where('analytics.leadershipInsight', 'The strongest reporting period is weekly with 280 recorded attendees.')
+            );
     }
 
     public function test_church_reports_dashboard_can_filter_analytics_by_period_type(): void

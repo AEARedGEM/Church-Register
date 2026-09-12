@@ -115,6 +115,163 @@ class ChurchAdminDashboardTest extends TestCase
         );
     }
 
+    public function test_admin_attendance_stats_api_returns_live_json_metrics(): void
+    {
+        $admin = $this->admin();
+
+        foreach ([
+            ['present', false, 'main_service'],
+            ['late', true, 'main_service'],
+            ['absent', false, 'main_service'],
+            ['present', false, 'sunday_school'],
+        ] as [$status, $firstTimer, $serviceType]) {
+            AttendanceRecord::create([
+                'user_id' => $admin->id,
+                'service_type' => $serviceType,
+                'service_date' => now()->format('Y-m-d'),
+                'status' => $status,
+                'first_timer' => $firstTimer,
+                'recorded_by' => $admin->id,
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->getJson('/api/attendance/stats')
+            ->assertOk()
+            ->assertJsonPath('data.total', 3)
+            ->assertJsonPath('data.present', 2)
+            ->assertJsonPath('data.late', 1)
+            ->assertJsonPath('data.first_timers', 1)
+            ->assertJsonPath('data.by_service.main_service', 2)
+            ->assertJsonPath('data.by_service.sunday_school', 1);
+    }
+
+    public function test_regular_member_cannot_access_admin_attendance_api(): void
+    {
+        /** @var User $member */
+        $member = User::factory()->create(['email' => 'member-api@example.com']);
+
+        $this->actingAs($member)
+            ->getJson('/api/attendance/stats')
+            ->assertForbidden();
+    }
+
+    public function test_health_endpoint_reports_app_database_cache_queue_and_scheduler_status(): void
+    {
+        $this->getJson('/api/health')
+            ->assertOk()
+            ->assertJsonPath('status', 'ok')
+            ->assertJsonPath('database.connected', true)
+            ->assertJsonPath('cache.connected', true)
+            ->assertJsonPath('queue.enabled', true)
+            ->assertJsonPath('scheduler.configured', true)
+            ->assertJsonPath('app.env', 'testing');
+    }
+
+    public function test_admin_attendance_trends_api_returns_eight_service_weeks(): void
+    {
+        $admin = $this->admin();
+
+        AttendanceRecord::create([
+            'user_id' => $admin->id,
+            'service_type' => 'main_service',
+            'service_date' => now()->startOfWeek()->format('Y-m-d'),
+            'status' => 'present',
+            'first_timer' => false,
+            'recorded_by' => $admin->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->getJson('/api/attendance/trends')
+            ->assertOk()
+            ->assertJsonCount(8, 'data')
+            ->assertJsonPath('data.7.total', 1);
+    }
+
+    public function test_admin_attendance_report_api_filters_records_and_returns_metadata(): void
+    {
+        $admin = $this->admin();
+        $profile = $admin->memberProfile()->create([
+            'first_name' => 'Grace',
+            'last_name' => 'Member',
+            'membership_status' => 'member',
+            'is_active' => true,
+        ]);
+
+        foreach ([
+            ['2026-09-06', 'present', true, 'main_service'],
+            ['2026-09-06', 'absent', false, 'main_service'],
+            ['2026-09-13', 'late', false, 'sunday_school'],
+        ] as [$serviceDate, $status, $firstTimer, $serviceType]) {
+            AttendanceRecord::create([
+                'user_id' => $admin->id,
+                'member_profile_id' => $profile->id,
+                'service_type' => $serviceType,
+                'service_date' => $serviceDate,
+                'status' => $status,
+                'first_timer' => $firstTimer,
+                'recorded_by' => $admin->id,
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->getJson('/api/attendance/report?from=2026-09-01&to=2026-09-10&service_type=main_service')
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.member', 'Grace Member')
+            ->assertJsonPath('meta.total_records', 2)
+            ->assertJsonPath('meta.qualifying_records', 1)
+            ->assertJsonPath('meta.first_timers', 1)
+            ->assertJsonPath('meta.filters.service_type', 'main_service');
+    }
+
+    public function test_member_dashboard_health_counts_qualifying_main_service_attendance_by_service_date(): void
+    {
+        $user = $this->admin();
+        $currentWeek = now()->startOfWeek();
+        $previousWeek = $currentWeek->copy()->subWeek();
+
+        foreach (['present', 'late', 'absent'] as $status) {
+            AttendanceRecord::create([
+                'user_id' => $user->id,
+                'service_type' => 'main_service',
+                'service_date' => $currentWeek->copy()->addDays(6)->format('Y-m-d'),
+                'status' => $status,
+                'first_timer' => false,
+                'recorded_by' => $user->id,
+                'created_at' => now()->subDays(20),
+                'updated_at' => now()->subDays(20),
+            ]);
+        }
+
+        AttendanceRecord::create([
+            'user_id' => $user->id,
+            'service_type' => 'main_service',
+            'service_date' => $previousWeek->copy()->addDays(6)->format('Y-m-d'),
+            'status' => 'present',
+            'first_timer' => false,
+            'recorded_by' => $user->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        AttendanceRecord::create([
+            'user_id' => $user->id,
+            'service_type' => 'sunday_school',
+            'service_date' => $currentWeek->copy()->addDays(6)->format('Y-m-d'),
+            'status' => 'present',
+            'first_timer' => false,
+            'recorded_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertInertia(fn ($page) => $page
+                ->where('churchHealth.attendance', 3)
+                ->where('churchHealth.attendance_change', 100)
+            );
+    }
+
     public function test_church_member_directory_is_accessible_to_authenticated_users(): void
     {
         $user = $this->admin();

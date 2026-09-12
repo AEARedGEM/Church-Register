@@ -210,4 +210,64 @@ class ChurchInvitationReferralFeatureTest extends TestCase
                 ->where('validatedInvitationCounts.0.validated_count', 1)
             );
     }
+
+    public function test_admin_invitation_api_returns_stats_and_validated_leaderboard(): void
+    {
+        /** @var User $inviter */
+        $inviter = User::factory()->create(['name' => 'League Member']);
+        $secondInviter = User::factory()->create(['name' => 'Second Member']);
+        $inviteeOne = User::factory()->create();
+        $inviteeTwo = User::factory()->create();
+        $inviteeThree = User::factory()->create();
+
+        ChurchInvitation::create([
+            'inviter_id' => $inviter->id,
+            'invitee_id' => $inviteeOne->id,
+            'referral_code' => $inviter->referral_code,
+            'registered_at' => '2026-09-01 10:00:00',
+            'validated_at' => '2026-09-06 10:00:00',
+        ]);
+        ChurchInvitation::create([
+            'inviter_id' => $inviter->id,
+            'invitee_id' => $inviteeTwo->id,
+            'referral_code' => $inviter->referral_code,
+            'registered_at' => '2026-09-02 10:00:00',
+            'validated_at' => '2026-09-07 10:00:00',
+        ]);
+        ChurchInvitation::create([
+            'inviter_id' => $secondInviter->id,
+            'invitee_id' => $inviteeThree->id,
+            'referral_code' => $secondInviter->referral_code,
+            'registered_at' => '2026-09-03 10:00:00',
+        ]);
+
+        /** @var User $admin */
+        $admin = User::factory()->create(['email' => 'crownpaysme19@gmail.com']);
+
+        $this->actingAs($admin)
+            ->getJson('/api/invitations/stats?from=2026-09-01&to=2026-09-03')
+            ->assertOk()
+            ->assertJsonPath('data.total', 3)
+            ->assertJsonPath('data.pending', 1)
+            ->assertJsonPath('data.validated', 2)
+            ->assertJsonPath('data.validation_rate', 67);
+
+        $this->actingAs($admin)
+            ->getJson('/api/invitations/leaderboard?from=2026-09-06&to=2026-09-07')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.rank', 1)
+            ->assertJsonPath('data.0.name', 'League Member')
+            ->assertJsonPath('data.0.validated_count', 2);
+    }
+
+    public function test_regular_member_cannot_access_invitation_api(): void
+    {
+        /** @var User $member */
+        $member = User::factory()->create(['email' => 'invitation-api-member@example.com']);
+
+        $this->actingAs($member)
+            ->getJson('/api/invitations/stats')
+            ->assertForbidden();
+    }
 }

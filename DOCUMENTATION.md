@@ -28,6 +28,8 @@ ATTENDANCE SECTION:
 — APGAW BELIEVER'S FOUNDATION CLASS
 — APGAW SCHOOL OF MINISTRY
 
+
+## UNITS
 Church Presbytery 
 Church Administration Unit
 Sunday School Unit
@@ -84,6 +86,13 @@ The admin attendance workflows were reviewed against the live routes and backend
 - The shared browser session redirected unauthenticated requests to `/login`; authenticated visual verification requires an admin session.
 - Church report titles, summaries, member counts, prayer-request counts, and scorecards remain manually authored records. Their analytics and PDF export summarize those saved rows.
 - New church reports now automatically derive attendance and first-timer totals from raw present/late attendance records. Weekly reports use Monday-Sunday, monthly reports use the calendar month, quarterly reports use the calendar quarter, and annual reports use the calendar year containing the report date.
+- Member dashboard church-health attendance now counts only present/late main-service records and compares weeks using the actual service date, so late data entry and absent/excused records do not distort the dashboard.
+- The report center now includes a live attendance ledger showing qualifying present/late totals by status and service type alongside the saved report analytics.
+- The report center now includes an eight-week live attendance trend grouped by the actual service week, keeping raw attendance movement visible independently from manually authored report periods.
+- Added the first live JSON API surface: authenticated administrators can use `GET /api/attendance/stats` for attendance totals/status/service breakdowns and `GET /api/attendance/trends` for eight Monday-Sunday service-week buckets. Regular members receive `403 Forbidden`.
+- Added `GET /api/attendance/report` for authenticated administrators with optional `from`, `to`, `service_type`, and `status` filters. It returns normalized attendance records plus total, qualifying, and first-timer metadata for integrations and external report consumers.
+- Added protected invitation APIs: `GET /api/invitations/stats` reports registered, pending, validated, and validation-rate totals; `GET /api/invitations/leaderboard` returns ranked validated inviters. Both accept optional `from` and `to` dates; stats use registration dates and the leaderboard uses validation dates.
+- The admin absentee board now includes a responsive 6x3 follow-up screen sourced from the latest absentee records, with generated identity tiles and an explicit empty state; detailed absentee records remain available below it.
 
 The public church experience has been refined further:
 
@@ -151,6 +160,32 @@ The first security and regression slice is complete:
 - Verified the affected church feature suite: 25 tests passed with 227 assertions.
 
 Newsletter infrastructure is intentionally skipped for now. The active path is remaining security coverage, richer public media storytelling, report templates, and deployment readiness.
+
+### Progress Update - 2026-09-12
+
+- Refreshed the public media gallery to use live database-backed featured stories instead of static sample fallback cards whenever published church content exists.
+- Improved the editorial layout with stronger hero cards, hover depth, and cleaner story-grid presentation for sermons, testimonies, and media highlights.
+- Kept the legacy fallback only as a final safety net so the page remains resilient when no published content is available.
+- Fixed the church reporting analytics payload to include the server-backed leadership summary and insight strings the dashboard expects for summary cards and PDF exports.
+- Added regression coverage to keep the report summary text aligned with actual attendance, first-timer, and prayer data.
+- Enhanced the leadership PDF export with a branded APGA Worldwide cover, metrics cards, summary panels, and cleaner report-detail sections for church leadership use.
+- Refined the church admin dashboard into a premium operations center with a clearer quick-action command grid and stronger Sunday-service access entry points.
+- Expanded the reporting and dashboard narrative so the project is now aligned with the actual ministry-growth analytics and deployment-readiness roadmap.
+
+### Progress Update - 2026-09-12 (Operations Center Refresh)
+
+The next milestone after reporting and dashboard polish is operational clarity: admins should navigate into the most important workflows faster, without hiding the real attendance engine behind generic cards.
+
+- Added a premium quick-actions panel on the church admin dashboard for service register, reports, scorecards, absentee follow-up, workers meetings, media board, announcements, and newsletters.
+- Kept the real attendance register as the primary operational focus while making the supporting church workflows easier to access.
+- The dashboard now behaves like a church operations command center rather than a static summary page.
+- Validation remains focused on real backend behavior, not decorative placeholders.
+
+### Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 3.1 | 2026-09-12 | Admin dashboard refreshed into a premium operations center with live quick actions; reporting and roadmap documentation aligned with the current ministry-growth and deployment priorities |
 
 ### Progress Update - 2026-09-03
 
@@ -1159,8 +1194,9 @@ php artisan serve               # Start development server
 | 2.8 | 2026-09-03 | Added mandatory profile-photo upload for new members, existing-member replacement, storage validation, and admin directory display |
 | 2.9 | 2026-09-03 | Roadmap refreshed after profile-photo completion; security review, richer reporting/media, and deployment readiness are next |
 | 3.0 | 2026-09-03 | Secured member profile photos with private storage and authenticated owner/admin-only delivery |
+| 3.1 | 2026-09-12 | Refreshed the church admin dashboard into a premium operations center, extended reporting narrative, and aligned roadmap documentation with the current production-readiness work |
 
 ---
 
-**Last Updated**: 2026-09-03
-**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Board of Trustees Experience Live | ✅ Reporting & PDF Export Ready | ✅ Mandatory Member Photos Active | 🔜 Security review, richer reporting/media, and deployment readiness next
+**Last Updated**: 2026-09-12
+**Status**: ✅ Church Operations Foundation Live | ✅ Public Church Pages Active | ✅ Board of Trustees Experience Live | ✅ Reporting & PDF Export Ready | ✅ Mandatory Member Photos Active | ✅ Admin Operations Center Refined | 🔜 Security review, deployment readiness, and production verification next

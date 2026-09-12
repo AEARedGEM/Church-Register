@@ -39,6 +39,17 @@ interface ReportAnalytics {
     scoreTrend: string;
     attendanceComparison: string;
     invitationComparison: string;
+    newMembersTrend: string;
+    firstTimerTrend: string;
+    prayerMomentum: string;
+    engagementRate: string;
+    liveAttendance: {
+        total: number;
+        present: number;
+        late: number;
+        byService: Record<string, number>;
+        weeklyTrend: { label: string; value: number }[];
+    };
 }
 
 export default function ReportsDashboard({
@@ -136,102 +147,147 @@ export default function ReportsDashboard({
         const pdf = new jsPDF({ unit: 'pt', format: 'a4' });
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
+        const scopeLabel = periodType === 'all' ? 'All periods' : `${periodType.charAt(0).toUpperCase()}${periodType.slice(1)}`;
 
-        const drawHeader = () => {
+        const drawHeader = (includeSubtitle = true) => {
             pdf.setFillColor(120, 16, 23);
-            pdf.rect(0, 0, pageWidth, 64, 'F');
+            pdf.rect(0, 0, pageWidth, 62, 'F');
             pdf.setTextColor(255, 255, 255);
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(20);
-            pdf.text('APGA Worldwide Church Leadership Report', 40, 38);
+            pdf.text('APGA Worldwide', 40, 28);
             pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(11);
+            pdf.text('Church Leadership Report', 40, 46);
+            if (includeSubtitle) {
+                pdf.setTextColor(240, 240, 240);
+                pdf.text(scopeLabel, pageWidth - 110, 46, { align: 'right' });
+            }
         };
 
-        drawHeader();
+        const drawFooter = (page: number, totalPages: number) => {
+            pdf.setPage(page);
+            pdf.setDrawColor(226, 232, 240);
+            pdf.line(40, pageHeight - 42, pageWidth - 40, pageHeight - 42);
+            pdf.setTextColor(100, 116, 139);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(9);
+            pdf.text('APGA Worldwide | Church Leadership and Stewardship', 40, pageHeight - 25);
+            pdf.text(`Page ${page} of ${totalPages}`, pageWidth - 100, pageHeight - 25);
+        };
+
+        const summaryStats = [
+            ['Total attendance', analytics.totalAttendance],
+            ['First timers', analytics.totalFirstTimers],
+            ['New members', analytics.totalNewMembers],
+            ['Prayer requests', analytics.totalPrayerRequests],
+            ['Average attendance', analytics.averageAttendance],
+            ['Attendance trend', analytics.attendanceTrend],
+            ['Weekly growth', analytics.weeklyGrowth],
+            ['Strongest period', analytics.strongestPeriod],
+        ];
 
         pdf.setTextColor(30, 41, 59);
         pdf.setFontSize(11);
+        drawHeader();
 
-        const summaryLines = [
-            `Report scope: ${periodType === 'all' ? 'All periods' : periodType.charAt(0).toUpperCase() + periodType.slice(1)}`,
-            `Total attendance: ${analytics.totalAttendance}`,
-            `First timers: ${analytics.totalFirstTimers}`,
-            `New members: ${analytics.totalNewMembers}`,
-            `Prayer requests: ${analytics.totalPrayerRequests}`,
-            `Average attendance: ${analytics.averageAttendance}`,
-            `Attendance trend: ${analytics.attendanceTrend}`,
-            `Weekly growth: ${analytics.weeklyGrowth}`,
-            `Strongest period: ${analytics.strongestPeriod}`,
-        ];
+        pdf.setFillColor(248, 250, 252);
+        pdf.roundedRect(40, 84, pageWidth - 80, 100, 12, 12, 'F');
+        pdf.setDrawColor(225, 229, 234);
+        pdf.roundedRect(40, 84, pageWidth - 80, 100, 12, 12, 'S');
+        pdf.setTextColor(15, 23, 42);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(18);
+        pdf.text('Executive Summary', 58, 108);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(11);
+        const summaryText = pdf.splitTextToSize(analytics.leadershipSummary || 'No report summary available yet.', 430);
+        pdf.text(summaryText, 58, 130);
 
-        let y = 90;
-        summaryLines.forEach((line) => {
+        pdf.setTextColor(15, 23, 42);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(12);
+        pdf.text('Key metrics', 58, 192);
+
+        let metricX = 58;
+        let metricY = 208;
+        summaryStats.forEach(([label, value]) => {
+            const labelText = String(label);
+            const valueText = String(value);
+            pdf.setFillColor(255, 255, 255);
+            pdf.roundedRect(metricX, metricY, 120, 40, 8, 8, 'F');
+            pdf.setDrawColor(228, 232, 240);
+            pdf.roundedRect(metricX, metricY, 120, 40, 8, 8, 'S');
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(8);
+            pdf.setTextColor(100, 116, 139);
+            pdf.text(labelText.toUpperCase(), metricX + 10, metricY + 15);
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(11);
+            pdf.setTextColor(15, 23, 42);
+            pdf.text(valueText, metricX + 10, metricY + 30);
+            metricX += 132;
+            if (metricX > pageWidth - 210) {
+                metricX = 58;
+                metricY += 54;
+            }
+        });
+
+        let y = metricY + 70;
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(12);
+        pdf.text('Leadership insight', 40, y);
+        y += 16;
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(11);
+        const insightText = pdf.splitTextToSize(analytics.leadershipInsight || 'No insight available yet.', 500);
+        insightText.forEach((line: string) => {
             if (y > 760) {
                 pdf.addPage();
-                drawHeader();
+                drawHeader(false);
                 y = 60;
             }
             pdf.text(line, 40, y);
             y += 16;
         });
 
-        y += 12;
+        y += 10;
         pdf.setFont('helvetica', 'bold');
-        pdf.text('Executive summary', 40, y);
-        y += 18;
-        pdf.setFont('helvetica', 'normal');
-        const summaryText = pdf.splitTextToSize(analytics.leadershipSummary || 'No report summary available yet.', 500);
-        summaryText.forEach((line: string) => {
-            if (y > 760) {
-                pdf.addPage();
-                drawHeader();
-                y = 60;
-            }
-            pdf.text(line, 40, y);
-            y += 14;
-        });
-
-        y += 12;
-        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(12);
         pdf.text('Report detail', 40, y);
         y += 18;
         pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(10);
 
         reports.forEach((report, index) => {
             if (y > 720) {
                 pdf.addPage();
-                drawHeader();
+                drawHeader(false);
                 y = 60;
             }
 
+            pdf.setFillColor(249, 250, 251);
+            pdf.roundedRect(40, y - 12, pageWidth - 80, 66, 10, 10, 'F');
+            pdf.setDrawColor(226, 232, 240);
+            pdf.roundedRect(40, y - 12, pageWidth - 80, 66, 10, 10, 'S');
             pdf.setFont('helvetica', 'bold');
-            pdf.text(`${index + 1}. ${report.title}`, 40, y);
-            y += 18;
-
+            pdf.setFontSize(11);
+            pdf.text(`${index + 1}. ${report.title}`, 54, y + 6);
             pdf.setFont('helvetica', 'normal');
-            pdf.text(`Period: ${report.period_type.toUpperCase()}`, 40, y);
-            pdf.text(`Date: ${report.report_date}`, 220, y);
-            y += 16;
-            pdf.text(`Attendance: ${report.attendance_count}`, 40, y);
-            pdf.text(`First Timers: ${report.first_timers_count}`, 180, y);
-            pdf.text(`New Members: ${report.new_members_count}`, 300, y);
-            pdf.text(`Prayer Requests: ${report.prayer_requests_count}`, 430, y);
-            y += 22;
-
+            pdf.setFontSize(9);
+            pdf.text(`${report.period_type.toUpperCase()} • ${report.report_date}`, 54, y + 22);
+            pdf.text(`Attendance: ${report.attendance_count}`, 54, y + 36);
+            pdf.text(`First timers: ${report.first_timers_count}`, 190, y + 36);
+            pdf.text(`New members: ${report.new_members_count}`, 310, y + 36);
+            pdf.text(`Prayer requests: ${report.prayer_requests_count}`, 440, y + 36);
             if (report.summary) {
-                const summaryLines = pdf.splitTextToSize(report.summary, 500);
-                summaryLines.forEach((line: string) => {
-                    if (y > 760) {
-                        pdf.addPage();
-                        drawHeader();
-                        y = 60;
-                    }
-                    pdf.text(line, 40, y);
-                    y += 14;
+                const detailLines = pdf.splitTextToSize(report.summary, 500);
+                detailLines.slice(0, 2).forEach((line: string) => {
+                    pdf.text(line, 54, y + 50);
+                    y += 10;
                 });
             }
-
-            y += 12;
+            y += 80;
         });
 
         if (!reports.length) {
@@ -241,17 +297,10 @@ export default function ReportsDashboard({
 
         const totalPages = pdf.getNumberOfPages();
         for (let page = 1; page <= totalPages; page += 1) {
-            pdf.setPage(page);
-            pdf.setDrawColor(226, 232, 240);
-            pdf.line(40, pageHeight - 42, pageWidth - 40, pageHeight - 42);
-            pdf.setTextColor(100, 116, 139);
-            pdf.setFont('helvetica', 'normal');
-            pdf.setFontSize(9);
-            pdf.text('APGA Worldwide | Church Leadership and Stewardship', 40, pageHeight - 25);
-            pdf.text(`Page ${page} of ${totalPages}`, pageWidth - 100, pageHeight - 25);
+            drawFooter(page, totalPages);
         }
 
-        pdf.save('apga-church-leadership-summary.pdf');
+        pdf.save('apga-worldwide-church-report.pdf');
     };
 
     return (
@@ -327,6 +376,80 @@ export default function ReportsDashboard({
                         <div className="rounded-2xl bg-white p-4"><p className="text-xs uppercase tracking-[0.16em] text-slate-500">Score movement</p><p className="mt-2 text-2xl font-bold text-slate-900">{analytics.scoreTrend}</p></div>
                     </div>
                 </div>
+
+                <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div className="rounded-[26px] border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-700">New members</p>
+                        <p className="mt-3 text-3xl font-black text-slate-900">{analytics.newMembersTrend}</p>
+                        <p className="mt-2 text-xs text-emerald-800">movement this cycle</p>
+                    </div>
+                    <div className="rounded-[26px] border border-sky-200 bg-gradient-to-br from-sky-50 to-white p-5 shadow-sm">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-700">First timers</p>
+                        <p className="mt-3 text-3xl font-black text-slate-900">{analytics.firstTimerTrend}</p>
+                        <p className="mt-2 text-xs text-sky-800">new guest response</p>
+                    </div>
+                    <div className="rounded-[26px] border border-violet-200 bg-gradient-to-br from-violet-50 to-white p-5 shadow-sm">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-violet-700">Prayer momentum</p>
+                        <p className="mt-3 text-3xl font-black text-slate-900">{analytics.prayerMomentum}</p>
+                        <p className="mt-2 text-xs text-violet-800">care requests rising</p>
+                    </div>
+                    <div className="rounded-[26px] border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 shadow-sm">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-amber-700">Engagement rate</p>
+                        <p className="mt-3 text-3xl font-black text-slate-900">{analytics.engagementRate}</p>
+                        <p className="mt-2 text-xs text-amber-800">first-timer share</p>
+                    </div>
+                </div>
+
+                <section className="mb-8 overflow-hidden rounded-3xl border border-red-100 bg-slate-950 p-5 text-white shadow-sm">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-300">Live attendance ledger</p>
+                            <h2 className="mt-2 text-xl font-bold">What has actually been recorded</h2>
+                        </div>
+                        <p className="text-xs text-slate-400">Present and late records across all services</p>
+                    </div>
+                    <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+                        {[
+                            ['All qualifying', analytics.liveAttendance?.total ?? 0],
+                            ['Present', analytics.liveAttendance?.present ?? 0],
+                            ['Late', analytics.liveAttendance?.late ?? 0],
+                            ['Main service', analytics.liveAttendance?.byService?.main_service ?? 0],
+                            ['Sunday School', analytics.liveAttendance?.byService?.sunday_school ?? 0],
+                            ['Prayer meeting', analytics.liveAttendance?.byService?.prayer_meeting ?? 0],
+                        ].map(([label, value]) => (
+                            <div key={label} className="border border-white/10 bg-white/[0.06] p-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">{label}</p>
+                                <p className="mt-2 text-2xl font-bold text-white">{value}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="mb-8 rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-600">Live attendance movement</p>
+                            <h2 className="mt-2 text-xl font-bold text-slate-900">Eight-week service rhythm</h2>
+                        </div>
+                        <p className="text-sm text-slate-500">Raw present and late records by service week</p>
+                    </div>
+                    <div className="mt-6 grid grid-cols-4 gap-3 sm:grid-cols-8">
+                        {(analytics.liveAttendance?.weeklyTrend ?? []).map((week) => {
+                            const max = Math.max(...(analytics.liveAttendance?.weeklyTrend ?? []).map((item) => item.value), 1);
+                            const height = Math.max((week.value / max) * 100, week.value ? 10 : 3);
+
+                            return (
+                                <div key={week.label} className="group flex min-w-0 flex-col items-center gap-2">
+                                    <div className="flex h-36 w-full items-end justify-center rounded-xl bg-slate-50 p-2">
+                                        <div className="w-full rounded-lg bg-gradient-to-t from-red-700 to-orange-400 transition-all duration-500 group-hover:from-red-500 group-hover:to-amber-300" style={{ height: `${height}%` }} title={`${week.value} qualifying records`} />
+                                    </div>
+                                    <span className="text-[10px] font-semibold text-slate-500">{week.label}</span>
+                                    <span className="text-xs font-bold text-slate-800">{week.value}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </section>
 
                 <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">

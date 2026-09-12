@@ -58,10 +58,22 @@ const fallbackMedia: MediaItem[] = [
     },
 ];
 
-export default function Media({ media = fallbackMedia, flash }: { media?: MediaItem[]; flash?: { success?: string } }) {
+export default function Media({
+    media = fallbackMedia,
+    featuredMedia = [],
+    flash,
+}: {
+    media?: MediaItem[];
+    featuredMedia?: MediaItem[];
+    flash?: { success?: string };
+}) {
     const [activeType, setActiveType] = useState('all');
-    const featured = [...media].filter((item) => item.featured).slice(0, 3);
-    const filteredMedia = activeType === 'all' ? media : media.filter((item) => item.content_type === activeType);
+    const liveFeatured = (featuredMedia?.length ? featuredMedia : media.filter((item) => item.featured).length ? media.filter((item) => item.featured) : media)
+        .slice(0, 3);
+    const pinnedIds = new Set(liveFeatured.map((item) => item.id));
+    const filteredMedia = activeType === 'all'
+        ? media.filter((item) => !pinnedIds.has(item.id))
+        : media.filter((item) => item.content_type === activeType && !pinnedIds.has(item.id));
     const mediaTypes = ['all', ...Array.from(new Set(media.map((item) => item.content_type)))];
     const { data, setData, post, processing, reset } = useForm<{
         full_name: string;
@@ -131,23 +143,26 @@ export default function Media({ media = fallbackMedia, flash }: { media?: MediaI
                     </div>
 
                     <div className="mb-12 grid gap-6 md:grid-cols-3">
-                        {(featured.length ? featured : fallbackMedia.slice(0, 3)).map((item, index) => (
-                            <article key={item.id} className={`rounded-3xl border border-red-800/70 bg-slate-900/85 p-6 shadow-lg shadow-red-950/20 ${index === 0 ? 'md:col-span-2 md:p-8' : ''}`}>
-                                <div className="mb-4 flex items-center justify-between gap-3">
-                                    <div className="inline-flex rounded-full bg-red-700/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-red-200">
-                                    {formatType(item.content_type)}
+                        {liveFeatured.map((item, index) => (
+                            <article key={item.id} className={`group relative overflow-hidden rounded-3xl border border-red-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-red-950/70 p-6 shadow-[0_25px_60px_rgba(127,29,29,0.18)] transition duration-300 hover:-translate-y-1 hover:border-red-600/80 ${index === 0 ? 'md:col-span-2 md:p-8' : ''}`}>
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(239,68,68,0.18),_transparent_35%)]" />
+                                <div className="relative">
+                                    <div className="mb-4 flex items-center justify-between gap-3">
+                                        <div className="inline-flex rounded-full bg-red-700/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-red-200">
+                                            {formatType(item.content_type)}
+                                        </div>
+                                        {index === 0 && <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">Featured teaching</span>}
                                     </div>
-                                    {index === 0 && <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">Featured teaching</span>}
-                                </div>
-                                <h2 className={index === 0 ? 'text-3xl font-bold text-white md:text-4xl' : 'text-2xl font-bold text-white'}>{item.title}</h2>
-                                <p className="mt-2 text-xs uppercase tracking-[0.2em] text-slate-400">{item.speaker_name || 'APGA Worldwide'}</p>
-                                <p className="mt-4 text-sm leading-relaxed text-slate-300 md:max-w-3xl">{item.summary}</p>
-                                {item.scripture_reference && <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-amber-300">{item.scripture_reference}</p>}
-                                <div className="mt-6 flex items-center justify-between gap-3">
-                                    <span className="text-xs text-slate-400">{item.published_at ? new Date(item.published_at).toLocaleDateString() : 'Recent'}</span>
-                                    <Link href={route('media.detail', item.id)} className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">
-                                        Read more
-                                    </Link>
+                                    <h2 className={index === 0 ? 'text-3xl font-bold text-white md:text-4xl' : 'text-2xl font-bold text-white'}>{item.title}</h2>
+                                    <p className="mt-2 text-xs uppercase tracking-[0.2em] text-slate-400">{item.speaker_name || 'APGA Worldwide'}</p>
+                                    <p className="mt-4 text-sm leading-relaxed text-slate-300 md:max-w-3xl">{item.summary}</p>
+                                    {item.scripture_reference && <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-amber-300">{item.scripture_reference}</p>}
+                                    <div className="mt-6 flex items-center justify-between gap-3">
+                                        <span className="text-xs text-slate-400">{item.published_at ? new Date(item.published_at).toLocaleDateString() : 'Recent'}</span>
+                                        <Link href={route('media.detail', item.id)} className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">
+                                            Read more
+                                        </Link>
+                                    </div>
                                 </div>
                             </article>
                         ))}
@@ -155,7 +170,7 @@ export default function Media({ media = fallbackMedia, flash }: { media?: MediaI
 
                     <div className="grid gap-6 md:grid-cols-2">
                         {filteredMedia.map((item) => (
-                            <article key={item.id} className="rounded-3xl border border-red-800/70 bg-slate-900/85 p-6 shadow-lg shadow-red-950/20">
+                            <article key={item.id} className="group rounded-3xl border border-red-800/70 bg-slate-900/85 p-6 shadow-lg shadow-red-950/20 transition duration-300 hover:-translate-y-1 hover:border-red-600/80 hover:bg-slate-900">
                                 <div className="mb-4 inline-flex rounded-full bg-red-700/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-red-200">
                                     {formatType(item.content_type)}
                                 </div>

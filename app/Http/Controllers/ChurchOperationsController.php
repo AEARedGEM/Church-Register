@@ -16,6 +16,7 @@ use App\Models\ChurchUnitLeader;
 use App\Models\ChurchUnitMember;
 use App\Models\ChurchWorkersMeeting;
 use App\Models\ChurchInvitation;
+use App\Models\AttendanceRecord;
 use App\Models\Event;
 use Illuminate\Support\Collection;
 use App\Models\SmallGroup;
@@ -341,6 +342,42 @@ class ChurchOperationsController extends Controller
         $invitationComparison = $previousScorecard
             ? (int) $latestScorecard->invitation_count - (int) $previousScorecard->invitation_count
             : 0;
+        $newMembersTrend = $previousReport
+            ? (int) $latestReport->new_members_count - (int) $previousReport->new_members_count
+            : (int) ($latestReport->new_members_count ?? 0);
+        $firstTimerTrend = $previousReport
+            ? (int) $latestReport->first_timers_count - (int) $previousReport->first_timers_count
+            : (int) ($latestReport->first_timers_count ?? 0);
+        $prayerMomentum = $previousReport
+            ? (int) $latestReport->prayer_requests_count - (int) $previousReport->prayer_requests_count
+            : (int) ($latestReport->prayer_requests_count ?? 0);
+        $engagementRate = $totalAttendance > 0 ? (int) round((($reports->sum('first_timers_count') / $totalAttendance) * 100)) : 0;
+        $leadershipSummary = $latestReport
+            ? "Latest church pulse: {$latestReport->title} (" . Carbon::parse($latestReport->report_date)->format('Y-m-d') . ") - attendance {$latestReport->attendance_count}, first timers {$latestReport->first_timers_count}, prayer requests {$latestReport->prayer_requests_count}."
+            : 'No church reports are available yet.';
+        $leadershipInsight = $strongest
+            ? 'The strongest reporting period is ' . strtolower($strongest) . ' with ' . $periodTotals->get($strongest) . ' recorded attendees.'
+            : 'No attendance trend data yet.';
+        $liveAttendance = AttendanceRecord::query()
+            ->whereIn('status', ['present', 'late'])
+            ->get()
+            ->groupBy('service_type');
+        $liveAttendanceTotal = $liveAttendance->flatten(1)->count();
+        $trendStart = now()->startOfWeek()->subWeeks(7);
+        $liveWeeklyTrend = AttendanceRecord::query()
+            ->whereIn('status', ['present', 'late'])
+            ->whereDate('service_date', '>=', $trendStart->toDateString())
+            ->whereDate('service_date', '<=', now()->endOfWeek()->toDateString())
+            ->get()
+            ->groupBy(fn ($record) => $record->service_date->copy()->startOfWeek()->toDateString());
+        $liveWeeklySeries = collect(range(0, 7))->map(function (int $offset) use ($trendStart, $liveWeeklyTrend): array {
+            $week = $trendStart->copy()->addWeeks($offset);
+
+            return [
+                'label' => $week->format('M j'),
+                'value' => $liveWeeklyTrend->get($week->toDateString(), collect())->count(),
+            ];
+        })->all();
 
         return [
             'totalAttendance' => $totalAttendance,
@@ -362,6 +399,24 @@ class ChurchOperationsController extends Controller
             'scoreTrend' => $scoreTrend >= 0 ? "+{$scoreTrend}" : (string) $scoreTrend,
             'attendanceComparison' => $attendanceComparison >= 0 ? "+{$attendanceComparison}" : (string) $attendanceComparison,
             'invitationComparison' => $invitationComparison >= 0 ? "+{$invitationComparison}" : (string) $invitationComparison,
+            'newMembersTrend' => $newMembersTrend >= 0 ? "+{$newMembersTrend}" : (string) $newMembersTrend,
+            'firstTimerTrend' => $firstTimerTrend >= 0 ? "+{$firstTimerTrend}" : (string) $firstTimerTrend,
+            'prayerMomentum' => $prayerMomentum >= 0 ? "+{$prayerMomentum}" : (string) $prayerMomentum,
+            'engagementRate' => $engagementRate . '%',
+            'leadershipSummary' => $leadershipSummary,
+            'leadershipInsight' => $leadershipInsight,
+            'liveAttendance' => [
+                'total' => $liveAttendanceTotal,
+                'present' => AttendanceRecord::query()->where('status', 'present')->count(),
+                'late' => AttendanceRecord::query()->where('status', 'late')->count(),
+                'byService' => [
+                    'main_service' => $liveAttendance->get('main_service', collect())->count(),
+                    'sunday_school' => $liveAttendance->get('sunday_school', collect())->count(),
+                    'workers_meeting' => $liveAttendance->get('workers_meeting', collect())->count(),
+                    'prayer_meeting' => $liveAttendance->get('prayer_meeting', collect())->count(),
+                ],
+                'weeklyTrend' => $liveWeeklySeries,
+            ],
         ];
     }
 
